@@ -18,6 +18,8 @@ export interface SystemStatus {
 export async function checkSystem(): Promise<SystemStatus> {
   const res = await fetch(`${API_URL}/api/health`);
   if (!res.ok) throw new Error("Health check failed");
-  // TODO(Issue 4): fetch /api/categories and return them here
-  return { online: true, categories: [] };
+  const catRes = await fetch(`${API_URL}/api/categories`);
+  if (!catRes.ok) throw new Error("Category fetch failed");
+  const categories: Category[] = await catRes.json();
+  return { online: true, categories };
 }
