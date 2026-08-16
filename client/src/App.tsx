@@ -29,7 +29,17 @@ export default function App() {
         {state === "loading" ? "Loading…" : "Check System"}
       </button>
 
-      {state === "success" && <p className="mt-3">System Status: Online</p>}
+      {state === "success" && (
+        <div className="mt-3">
+          <p>System Status: Online</p>
+          <p className="fw-semibold mt-3">Supported Request Categories</p>
+          <ol>
+            {categories.map((c) => (
+              <li key={c.id}>{c.name}</li>
+            ))}
+          </ol>
+        </div>
+      )}
       {state === "error" && (
         <div className="mt-3">
           <p>System Status: Offline</p>
