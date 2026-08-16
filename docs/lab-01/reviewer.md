@@ -1,4 +1,4 @@
-# Lab 1 — Peer Review Record  (fill this in)
+# Lab 1 — Peer Review Record 
 
 **Author:** <Tammathorn Kananurak> — <67070503489> — GitHub: @Tammathorn
 **Peer reviewer:** <Pattarapon Sribuathong> — <67070503434> — GitHub: @PAKATO
