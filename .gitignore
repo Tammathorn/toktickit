@@ -22,3 +22,6 @@ server/prisma/*.db
 
 # course handout, not a deliverable
 docs/lab-02/spec/*.pdf
+
+# attachment uploads
+server/uploads/
