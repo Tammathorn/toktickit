@@ -1,10 +1,15 @@
-# TokTickIT — Lab 2 Handoff (rev. 2)
+# TokTickIT — Lab 2 Handoff (rev. 3)
 
 Context for a fresh chat or a fresh Claude Code session. Save this at
 `docs/lab-02/handoff.md` so both can read it.
 
 Author: Tammathorn Kananurak — 67070503489 — GitHub @Tammathorn
 Peer reviewer: 67070503434 — GitHub @PAKATO123 (display name PAKATO)
+
+**Changes in rev. 3:** Phase 1 is done and merged, so this file now records where the
+sprint actually stands rather than only what was planned. New section 4A gives the current
+state. The decision log has grown from C-01..C-41 to **C-01..C-49**. Section 7's Phase 1
+prompts are kept as a record of what was run, not as work still to do.
 
 **Changes in rev. 2:** repo path fixed to the real location (the move to `C:\dev` was
 cancelled); Playwright moved from `client/` to the repository root to match labsheet
@@ -187,6 +192,70 @@ written into tests.md:
 
 ---
 
+## 4A. Where the sprint stands — rev. 3
+
+**Phase 1 is complete and merged.** Issue **#10** (Sprint specification and test plan),
+branch `feature/1-sprint-spec`, merged to `lab2-staging` as **PR #18** on 2026-09-08.
+
+### Documents that landed
+
+| File | State |
+|---|---|
+| `docs/lab-02/specification.md` | FR-01..49, BR-01..65, AC-01..67, plus a per-field Create Ticket contract |
+| `docs/lab-02/api-spec.md` | All ten labsheet section 6 capabilities, fixed check order, error-code catalogue |
+| `docs/lab-02/ui-spec.md` | All nineteen appendix C bullets, validation message catalogue, pinned hex tokens |
+| `docs/lab-02/tests.md` | 103 planned tests across the six section 9.2 levels, 67 of 67 AC coverage |
+| `docs/lab-02/decisions.md` | **C-01..C-49** |
+| `docs/lab-02/ai-use.md` | Draft, Phase 1 prompts only — finished in Issue #17 |
+
+### Decisions added after the original C-01..C-41
+
+| Range | Covers |
+|---|---|
+| C-42..C-45 | Identity transport on non-creation endpoints; malformed `page`; download `disposition`; unknown versus inactive Requester |
+| C-46, C-47 | The unavailable attachment state; Selection screen screenshot location |
+| C-48 | `client/tests/lab-02/RequesterSelection.test.tsx` added to the section 12 client test set |
+| C-49 | Ticket Number assigned inside the creation transaction — closes the reviewer's comment on C-11 |
+
+C-22's demo seed path was corrected to `server/prisma/seed-demo.ts`, and C-27's status
+filter renamed `status` -> `currentStatus` for glossary consistency.
+
+### Peer review
+
+The reviewer's comment on **C-11** — the format was fixed but not the point at which the
+autoincrement id becomes available — is **closed** by C-49, applied across `decisions.md`,
+`specification.md` section 7 and `api-spec.md`.
+
+### What Phase 1 changed about the plan
+
+- One extra client test file, `RequesterSelection.test.tsx` (C-48). Section 12 names four
+  and none covers the Selection screen, which carries nine acceptance criteria.
+- **AC-54 has no automated test.** It is discharged by the manual visual checklist in
+  `tests.md` section 4. Do not let a later phase quietly add a weaker automated test and
+  call it covered.
+- `server/prisma/seed-demo.ts` does not exist yet. It is written with Issue #11.
+- Use `npx prisma migrate deploy`, never `npm run prisma:migrate` — that runs
+  `migrate dev`, which offers a reset on drift, and C-37 forbids a reset.
+
+### Issues remaining
+
+| # | Issue | Branch | State |
+|---|---|---|---|
+| 1 | Sprint specification and test plan | `feature/1-sprint-spec` | **Done** — Issue #10, PR #18 |
+| 2 | Data model, migration, seed | `feature/2-data-model` | Next |
+| 3 | Development Requester context | `feature/3-requester-context` | Backlog |
+| 4 | Create Ticket API and UI | `feature/4-create-ticket` | Backlog |
+| 5 | My Tickets list | `feature/5-my-tickets` | Backlog |
+| 6 | Ticket Detail and attachments | `feature/6-ticket-detail` | Backlog |
+| 7 | E2E and responsive evidence | `feature/7-e2e-visual` | Backlog |
+| 8 | Release integration and documentation | `feature/8-release-docs` | Backlog — includes Issue #17, finishing `ai-use.md` |
+
+**Before starting Issue 2:** screenshot the merged PR #18 with its timestamp. That is the
+Part 2 evidence that the specification preceded the implementation PRs, and it cannot be
+reconstructed later.
+
+---
+
 ## 5. Phase plan
 
 | Phase | Work | Estimate |
@@ -346,9 +415,12 @@ gh issue create --project "TokTickIT Individual Sprints" --title "Release integr
 
 ---
 
-## 7. Phase 1 prompts
+## 7. Phase 1 prompts — as run
 
-Run these one at a time. Read and decide between each — the decisions are the work.
+**These were run and Phase 1 is merged.** They are kept as the record of what was actually
+issued, and as the pattern for later phases: read first and write nothing, decide, then
+write. `ai-use.md` carries the abbreviated versions plus the audit and review prompts that
+followed them.
 
 ### 1.1 — Read first, write nothing
 
