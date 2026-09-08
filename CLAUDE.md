@@ -215,6 +215,23 @@ branch operation (`git branch`, `git checkout -b`, `git switch`, `git rebase`).
 When work reaches a commit point, **print the suggested commands** in a code block and
 let the user run them. Read-only inspection (`git status`, `git log`, `git diff`) is fine.
 
+### Pre-commit inspection - owed before every commit point
+
+Inspecting the working tree before a commit is a duty, not an option. At every commit
+point, before printing any command:
+
+1. Run `git status` and `git diff --stat`.
+2. Report **exactly which files would be staged** - name them, do not summarise as
+   "the usual files".
+3. Flag anything unexpected: build output, uploaded attachments, `node_modules`,
+   secrets or `.env` files, screenshots that do not belong to this task, and any file
+   unrelated to the work in hand.
+4. Only then print the commands for the user to run.
+
+The user runs every mutating command. The inspection is the part that is owed first, and
+a commit point reached without it is incomplete work. Say plainly when something looks
+wrong rather than printing the commands anyway and leaving the user to notice.
+
 Branch model for reference when suggesting commands:
 
 ```
