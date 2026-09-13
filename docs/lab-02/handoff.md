@@ -204,7 +204,7 @@ branch `feature/1-sprint-spec`, merged to `lab2-staging` as **PR #18** on 2026-0
 | `docs/lab-02/specification.md` | FR-01..49, BR-01..65, AC-01..67, plus a per-field Create Ticket contract |
 | `docs/lab-02/api-spec.md` | All ten labsheet section 6 capabilities, fixed check order, error-code catalogue |
 | `docs/lab-02/ui-spec.md` | All nineteen appendix C bullets, validation message catalogue, pinned hex tokens |
-| `docs/lab-02/tests.md` | 103 planned tests across the six section 9.2 levels, 67 of 67 AC coverage |
+| `docs/lab-02/tests.md` | 111 planned tests: 103 across the six section 9.2 levels plus DB-01..DB-08 added in Issue #11, 67 of 67 AC coverage |
 | `docs/lab-02/decisions.md` | **C-01..C-49** |
 | `docs/lab-02/ai-use.md` | Draft, Phase 1 prompts only — finished in Issue #17 |
 

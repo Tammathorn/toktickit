@@ -1,5 +1,9 @@
 // Prisma schema — datasource and generator are pre-wired.
 // Your DATABASE_URL lives in server/.env (copy it from .env.example).
+//
+// Lab 2 models follow docs/lab-02/specification.md section 7 exactly.
+// Prisma's default table naming is accepted throughout: no @@map, no @map.
+// Never run `prisma migrate reset` — it destroys the Lab 1 seed data (C-37).
 
 generator client {
   provider = "prisma-client-js"
@@ -11,10 +15,130 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
-// Issue 3 — IT request categories. Seeded by prisma/seed.ts.
+// Enums — C-23 and C-21.
+// TicketStatus carries values unreachable in Lab 2 so the status filter is a
+// real control and Lab 3 needs no enum migration (BR-09).
+// ---------------------------------------------------------------------------
+enum RequestedPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum TicketStatus {
+  NEW
+  IN_PROGRESS
+  RESOLVED
+  CLOSED
+  CANCELLED
+}
+
+// ---------------------------------------------------------------------------
+// Issue 3 (Lab 1) — IT request categories. Seeded by prisma/seed.ts.
+// Lab 2 adds isActive (C-05). GET /api/categories keeps its {id, name} shape
+// in id order, so the Lab 1 Supertest assertion continues to pass.
 // ---------------------------------------------------------------------------
 model Category {
   id        Int      @id @default(autoincrement())
   name      String   @unique
   createdAt DateTime @default(now())
+  isActive  Boolean  @default(true)
+
+  tickets Ticket[]
+}
+
+// ---------------------------------------------------------------------------
+// Lab 2 — the service, application, device or platform a Ticket affects.
+// A flat list, never scoped to a Category (C-24).
+// ---------------------------------------------------------------------------
+model RelatedSystem {
+  id        Int      @id @default(autoincrement())
+  name      String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  tickets Ticket[]
+}
+
+// ---------------------------------------------------------------------------
+// Lab 2 — the Development Requester. Model name per C-31; labelled
+// "Development Requester" in the UI.
+//
+// This is NOT authentication. No password, hash, session, token or role field
+// exists, and none is added (BR-65). Lab 3 attaches authentication to this
+// model without touching Ticket.requesterId (LC-02).
+// ---------------------------------------------------------------------------
+model RequesterUser {
+  id        Int      @id @default(autoincrement())
+  name      String
+  email     String   @unique
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+
+  tickets Ticket[]
+}
+
+// ---------------------------------------------------------------------------
+// Lab 2 — the Ticket.
+//
+// ticketNumber is nullable because the six digits are this row's own
+// autoincrement id, which does not exist until the insert completes. Create and
+// update run inside one transaction (C-49), so the column is never null outside
+// that transaction. PostgreSQL permits repeated nulls under a unique
+// constraint, so nullable and @unique do not conflict.
+//
+// Both foreign keys take Prisma's default onDelete for a required relation,
+// Restrict, and neither overrides it: Lab 2 contains no delete path at all.
+// ---------------------------------------------------------------------------
+model Ticket {
+  id                Int               @id @default(autoincrement())
+  ticketNumber      String?           @unique
+  requesterId       Int
+  categoryId        Int
+  relatedSystemId   Int
+  summary           String
+  description       String            @db.Text
+  requestedPriority RequestedPriority @default(MEDIUM)
+  itPriority        RequestedPriority?
+  currentStatus     TicketStatus      @default(NEW)
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  requester     RequesterUser @relation(fields: [requesterId], references: [id])
+  category      Category      @relation(fields: [categoryId], references: [id])
+  relatedSystem RelatedSystem @relation(fields: [relatedSystemId], references: [id])
+  attachments   Attachment[]
+
+  // Every My Tickets query is scoped to one Requester before anything else
+  // happens (BR-22), so every index is led by requesterId.
+  @@index([requesterId, createdAt(sort: Desc)])
+  @@index([requesterId, currentStatus])
+  @@index([requesterId, categoryId])
+  @@index([requesterId, relatedSystemId])
+}
+
+// ---------------------------------------------------------------------------
+// Lab 2 — the Attachment.
+//
+// Soft removal is a flag plus two nullable companions rather than a separate
+// archive table: the metadata must stay visible on Ticket Detail (BR-50), so the
+// row must remain in the table the detail query already reads.
+// ---------------------------------------------------------------------------
+model Attachment {
+  id               Int       @id @default(autoincrement())
+  ticketId         Int
+  originalFilename String
+  storedFilename   String    @unique
+  mimeType         String
+  sizeBytes        Int
+  uploadedAt       DateTime  @default(now())
+  isRemoved        Boolean   @default(false)
+  removedAt        DateTime?
+  removalReason    String?
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+
+  // Ticket Detail always reads a Ticket's attachments split by removal state
+  // (BR-50), and the five-active check (BR-44) counts on exactly this pair.
+  @@index([ticketId, isRemoved])
 }

@@ -1,20 +1,17 @@
 import { getPrisma } from "../src/prisma.js";
+import { seedGraded, gradedSeedSummary } from "../src/seed/graded-seed.js";
 
-// Issue 3 — seed the four supported categories.
-// The four names are: Account and Access, Hardware, Software, Network.
-// Requirement: running the seed twice must NOT create duplicates.
-// Hint: prisma.category.upsert({ where:{name}, update:{}, create:{name} }).
+// The graded seed — labsheet section 5.3. Safe to run repeatedly (upsert).
+// The logic lives in src/seed/graded-seed.ts so the data-model tests can call it
+// directly rather than shelling out to this runner.
 async function main() {
   const prisma = getPrisma();
-  const names = ["Account and Access", "Hardware", "Software", "Network"];
-  for (const name of names) {
-    await prisma.category.upsert({
-      where: { name },
-      update: {},
-      create: { name },
-    });
-  }
-  console.log(`Seeded ${names.length} categories.`);
+  await seedGraded(prisma);
+  const s = gradedSeedSummary();
+  console.log(
+    `Seeded ${s.categories} categories, ${s.relatedSystems} related systems, ` +
+      `${s.activeRequesters} active and ${s.inactiveRequesters} inactive Development Requesters.`,
+  );
 }
 
 main()
