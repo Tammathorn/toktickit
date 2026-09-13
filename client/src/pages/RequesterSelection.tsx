@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { useRequester } from "../requester/RequesterContext.js";
+import { INTERNAL_ERROR_MESSAGE } from "../validation.js";
 
 // Development Requester Selection — ui-spec.md section 10, LS 8.1.
 // A testing mechanism that stands in for login until Lab 3 (BR-03). The screen
@@ -21,9 +22,6 @@ export const EMPTY_MESSAGE =
 export const STALE_MESSAGE =
   "Your previous Development Requester is no longer available. Choose another.";
 
-// ui-spec.md 6.1, INTERNAL_ERROR. The only text a failed request ever shows.
-export const INTERNAL_ERROR_MESSAGE =
-  "Something went wrong on our side. Your work has not been lost - please try again.";
 
 export default function RequesterSelection() {
   const { loadState, requesters, staleNotice, select, reload } = useRequester();

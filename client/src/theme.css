@@ -164,12 +164,18 @@ h1, h2, h3 { line-height: 1.25; }
 .tk-nav-link {
   color: var(--tk-surface);
   padding: 0.5rem 1rem;
+  white-space: nowrap;
   border-bottom: 3px solid transparent;
 }
 .tk-nav-link:hover, .tk-nav-link:focus { color: var(--tk-pale); }
 .tk-nav-link-active { font-weight: 600; border-bottom-color: var(--tk-pale); }
 .tk-requester { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.tk-requester-name { color: var(--tk-surface); }
+.tk-requester-name { color: var(--tk-surface); white-space: nowrap; }
+/* Tablet band: the header is tight, so the label above the name goes */
+@media (min-width: 768px) and (max-width: 991.98px) {
+  .tk-requester-label { display: none; }
+  .tk-nav-link { padding-left: 0.5rem; padding-right: 0.5rem; }
+}
 .tk-requester-label { color: var(--tk-pale); font-size: 0.875rem; }
 .tk-btn-on-primary {
   --bs-btn-color: var(--tk-surface);
@@ -194,3 +200,45 @@ h1, h2, h3 { line-height: 1.25; }
   .tk-header .tk-btn-on-primary { justify-content: flex-start; }
   .tk-nav-link-active { border-bottom-width: 3px; }
 }
+
+/* ---- Create Ticket (section 11, 14.1) --------------------------------- */
+
+.tk-required { color: var(--tk-danger); }
+.tk-invalid-feedback {
+  display: block;
+  margin-top: 0.25rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--tk-danger);
+}
+.tk-counter { margin-top: 0.25rem; }
+.tk-readonly { background-color: var(--tk-readonly-bg); }
+.tk-readonly-placeholder { color: var(--tk-text-muted); }
+.tk-description { min-height: 7.5rem; height: auto; resize: vertical; }
+.tk-actions { margin-top: 1.5rem; }
+
+.tk-chip-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.tk-chip {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem;
+  padding: 0.5rem 0.75rem;
+  border: 1px solid var(--tk-border);
+  border-radius: 0.375rem;
+  background-color: var(--tk-surface);
+}
+.tk-chip-invalid { border-color: var(--tk-danger); }
+.tk-chip-body { display: flex; flex-direction: column; min-width: 0; }
+.tk-chip-name { font-weight: 500; overflow-wrap: anywhere; }
+.tk-chip-remove { height: auto; padding: 0 0.25rem; }
+
+.tk-success { border-color: var(--tk-secondary); }
+.tk-success .tk-ticket-number { font-weight: 600; margin-bottom: 0.5rem; }
+.tk-upload-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.tk-upload-row { display: flex; flex-wrap: wrap; align-items: center; gap: 0.5rem; }
+.tk-upload-name { font-weight: 500; }
+.tk-upload-ok { color: var(--tk-primary); font-weight: 500; }
+.tk-upload-ok::before { content: "\2713\00a0"; }
+.tk-upload-failed { display: inline-flex; flex-wrap: wrap; align-items: center; gap: 0.25rem; }
+.btn-sm { height: 2rem; font-size: 0.875rem; }
