@@ -170,6 +170,7 @@ Each rule has exactly one message, per field where the rule applies per field.
 | BR-34 | `relatedSystemId` | `Select an active Related System from the list.` |
 | BR-34 | `requestedPriority` | `Requested Priority must be Low, Medium or High.` |
 | BR-47 | `removalReason` | `A removal reason is required.` |
+| api-spec 3.1 | `ticketNumber`, `createdAt`, `updatedAt`, `currentStatus`, `itPriority` | `<name> is system generated and cannot be supplied.` - one message, with the offending field name substituted. Reachable only by a request that bypasses the form, so the client never renders it; it is listed so the server emits nothing absent from this table (BR-35). Added with Issue #13 |
 
 A single message per rule is what makes AC-23 checkable: an empty Ticket Summary and a
 4-character Ticket Summary both violate BR-31 and both produce the BR-31 string, so the

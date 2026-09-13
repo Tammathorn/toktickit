@@ -16,6 +16,8 @@ export const MESSAGES = {
   relatedSystemInvalid: "Select an active Related System from the list.",
   requestedPriorityInvalid: "Requested Priority must be Low, Medium or High.",
   removalReason: "A removal reason is required.",
+  // api-spec.md 3.1: a system-generated field supplied in the body.
+  systemGenerated: (name: string) => `${name} is system generated and cannot be supplied.`,
 } as const;
 
 export const SUMMARY_MIN = 5;
@@ -70,7 +72,7 @@ export function validateTicketShape(body: Record<string, unknown>): {
   const values: Partial<ValidTicketInput> = {};
 
   for (const name of SYSTEM_FIELDS) {
-    if (body[name] !== undefined) fields[name] = `${name} is system generated and cannot be supplied.`;
+    if (body[name] !== undefined) fields[name] = MESSAGES.systemGenerated(name);
   }
 
   const summary = textInRange(body.summary, SUMMARY_MIN, SUMMARY_MAX);

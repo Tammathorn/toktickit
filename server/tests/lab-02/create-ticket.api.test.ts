@@ -173,6 +173,8 @@ describe("POST /api/tickets", () => {
     expect(res.status).toBe(400);
     expect(res.body.error.code).toBe("VALIDATION_FAILED");
     expect(Object.keys(res.body.error.fields).sort()).toEqual(["currentStatus", "ticketNumber"]);
+    expect(res.body.error.fields.ticketNumber).toBe(MESSAGES.systemGenerated("ticketNumber"));
+    expect(res.body.error.fields.ticketNumber).toBe("ticketNumber is system generated and cannot be supplied.");
   });
 
   it("API-12 refuses an inactive Requester with 403 REQUESTER_INACTIVE, and an unknown one with 404 (AC-63, AC-65)", async () => {
