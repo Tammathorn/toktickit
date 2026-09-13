@@ -303,7 +303,9 @@ C-11). It is **assigned inside the creation transaction** - the row is inserted,
 updated with the number derived from its own `id` - so it is always a non-null string in
 the 201 body (C-49). A client never receives a Ticket without its Ticket Number, and no
 second request is needed to obtain one. `currentStatus` is `NEW` and `itPriority` is null
-(BR-02, BR-07).
+(BR-02, BR-07). `updatedAt` is always later than `createdAt`, never equal: the number-assigning
+update inside the transaction bumps Prisma's `@updatedAt` a few milliseconds after the insert
+(C-49).
 
 ```json
 {
@@ -319,7 +321,7 @@ second request is needed to obtain one. `currentStatus` is `NEW` and `itPriority
   "itPriority": null,
   "currentStatus": "NEW",
   "createdAt": "2026-09-05T04:12:33.000Z",
-  "updatedAt": "2026-09-05T04:12:33.000Z",
+  "updatedAt": "2026-09-05T04:12:33.041Z",
   "attachments": []
 }
 ```
@@ -392,7 +394,7 @@ The envelope is exactly C-27's.
       "itPriority": null,
       "currentStatus": "NEW",
       "createdAt": "2026-09-05T04:12:33.000Z",
-      "updatedAt": "2026-09-05T04:12:33.000Z"
+      "updatedAt": "2026-09-05T04:12:33.041Z"
     }
   ],
   "meta": {
@@ -459,7 +461,7 @@ distinguished by `isRemoved` (BR-50, FR-42).
   "itPriority": null,
   "currentStatus": "NEW",
   "createdAt": "2026-09-05T04:12:33.000Z",
-  "updatedAt": "2026-09-05T04:12:33.000Z",
+  "updatedAt": "2026-09-05T04:12:33.041Z",
   "attachments": [
     {
       "id": 7,

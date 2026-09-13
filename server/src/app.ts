@@ -28,7 +28,10 @@ app.get("/api/health", (_req: Request, res: Response) => {
 //   -> on failure, respond 500 with a safe message (no internal details)
 app.get("/api/categories", async (_req: Request, res: Response) => {
   try {
+    // BR-56 / C-05 — active rows only, still { id, name } in id order, so the
+    // Lab 1 Supertest assertion continues to pass unchanged.
     const categories = await getPrisma().category.findMany({
+      where: { isActive: true },
       orderBy: { id: "asc" },
       select: { id: true, name: true },
     });

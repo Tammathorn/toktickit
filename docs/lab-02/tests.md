@@ -25,12 +25,14 @@ a level in them.
 | `STYLE` | UI style | Vitest + Testing Library | Inside the same client files (C-09) |
 | `RESP` | Responsive | Playwright | `e2e/lab-02/requester-ticket-flow.spec.ts` (C-09) |
 | `E2E` | End to end | Playwright | `e2e/lab-02/requester-ticket-flow.spec.ts` |
+| `DB` | Data model (added in Issue #11, see section 7 item 7) | Vitest + Prisma against the real Postgres | `server/tests/lab-02/data-model.db.test.ts` |
 
-**Test file inventory.** Every path below exists in the `LS 12` tree. Two are additions,
+**Test file inventory.** Every path below exists in the `LS 12` tree. Three are additions,
 which `LS 12` permits because section 12 is a stated minimum:
 
 ```
 server/tests/lab-02/ticket-number.unit.test.ts      addition, per C-08
+server/tests/lab-02/data-model.db.test.ts           addition, Issue #11 (section 7 item 7)
 server/tests/lab-02/create-ticket.api.test.ts       LS 12
 server/tests/lab-02/my-tickets.api.test.ts          LS 12
 server/tests/lab-02/ticket-detail.api.test.ts       LS 12
@@ -53,7 +55,9 @@ projects (C-10). No test is skipped, `.only`, or commented out.
 
 ## 2. Planned Tests
 
-`Final` is left blank until the suite is run on the final `main` branch.
+111 planned tests: 103 across the six `LS 9.2` levels, plus DB-01..DB-08 in section 2.7.
+`Final` is left blank until the suite is run on the final `main` branch, except for the
+DB rows, which are marked from the Issue #11 run on `feature/2-data-model` (section 7 item 7).
 
 ### 2.1 Unit
 
@@ -192,6 +196,24 @@ Playwright, three viewport projects (C-10): desktop 1280, tablet 834, mobile 390
 | E2E-04 | E2E | AC-36 | Removed download blocked | The removed attachment offers no download, and a direct request returns 410 | `e2e/lab-02/requester-ticket-flow.spec.ts` | |
 | E2E-05 | E2E | AC-03, AC-39 | Cross-requester rejection | Direct navigation to another Requester's Ticket, and a direct attachment request, are both refused with 403 | `e2e/lab-02/requester-ticket-flow.spec.ts` | |
 | E2E-06 | E2E | AC-49, AC-50 | Empty and no-results | A Requester with no Tickets shows `No tickets yet`; a filter that excludes everything shows `No matches` | `e2e/lab-02/requester-ticket-flow.spec.ts` | |
+
+---
+
+### 2.7 Data model
+
+Added during Issue #11. The DB prefix is a seventh level outside `LS 9.2`; see section 7
+item 7 for why these rows exist.
+
+| Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
+|---|---|---|---|---|---|---|
+| DB-01 | Data model | DoD, LS 5.3, C-22, BR-11, C-33 | Graded seed content | Exactly the four Categories in id order, all active; at least six Related Systems; at least four active and at least one inactive Development Requester | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-02 | Data model | DoD, LS 5.3, C-37 | Seed idempotence | Running `seedGraded` a second time leaves the Category, RelatedSystem and RequesterUser counts unchanged | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-03 | Data model | Lab 1 regression, C-05, C-37 | Lab 1 rows survive the additive migration | Categories 1-4 keep their original ids and names; `isActive` defaulted to true for every existing row | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-04 | Data model | C-21, C-23 | Enum ranges | `TicketStatus` declares NEW, IN_PROGRESS, RESOLVED, CLOSED, CANCELLED in that order; `RequestedPriority` declares exactly LOW, MEDIUM, HIGH | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-05 | Data model | DoD, spec section 7, C-30, C-49 | Indexes | The four `Ticket` composite indexes and the `Attachment(ticketId, isRemoved)` index exist; `ticketNumber` is unique; `summary` and `description` carry no single-column index | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-06 | Data model | BR-01, BR-02, BR-07, C-49 | Ticket Number assigned inside the creation transaction | `createTicketWithNumber` returns a non-null number matching `^TKT-\d{4}-\d{6}$` derived from the row's own `id` and UTC `createdAt` year; `currentStatus` NEW and `itPriority` null; no Ticket with a null number is visible outside the transaction | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-07 | Data model | spec section 7, C-49, BR-50 | Column nullability | `Ticket.ticketNumber` is nullable; `Attachment.isRemoved` is not null while `removedAt` and `removalReason` are nullable | `server/tests/lab-02/data-model.db.test.ts` | Pass |
+| DB-08 | Data model | LS 5.1 | Relationships are foreign keys | Ticket -> RequesterUser, Ticket -> Category, Ticket -> RelatedSystem and Attachment -> Ticket exist as FK constraints | `server/tests/lab-02/data-model.db.test.ts` | Pass |
 
 ---
 
@@ -436,3 +458,12 @@ no unresolved row.
 
 6. **Lab 1 coverage is regression only.** UI-32 and API-44 assert the Lab 1 contract still
    holds. No new Lab 1 behaviour is tested, because none was added.
+
+7. **DB-01..DB-08 were added during Issue #11**, after the plan was written. The schema,
+   migration and seed carry Definition of Done items - "`schema.prisma` matches section 7,
+   including every index" and "`npm run prisma:seed` run twice creates no duplicate rows" -
+   that no planned test at any of the six `LS 9.2` levels covered, because none of the six
+   levels observes the database directly. `server/tests/lab-02/data-model.db.test.ts` is an
+   addition to the `LS 12` tree on the same basis as C-08 and C-48. Their `Final` column is
+   marked Pass from the run on `feature/2-data-model`, not from the final `main`; it is
+   re-run with the rest of the server suite in section 6.
