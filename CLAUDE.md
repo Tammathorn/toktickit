@@ -207,32 +207,34 @@ Every acceptance criterion maps to at least one planned test, and every planned 
 names its actual file path. Evidence is passing terminal output, recorded in
 `docs/lab-02/tests.md`.
 
-## Git rules - I do not run git
+## Git rules - working agreement
 
-**Never run:** `git commit`, `git push`, `git merge`, `gh pr` (any subcommand), or any
-branch operation (`git branch`, `git checkout -b`, `git switch`, `git rebase`).
+You run git and gh yourself. Two hard limits that never relax:
 
-When work reaches a commit point, **print the suggested commands** in a code block and
-let the user run them. Read-only inspection (`git status`, `git log`, `git diff`) is fine.
+- Never `git add .` or `git add -A`. Always stage explicit paths, and run
+  `git status` after staging to confirm what is actually staged.
+- Every `gh pr create` carries `--base lab2-staging`. GitHub defaults to
+  main, and labsheet 10.1 forbids developing directly on main or
+  lab2-staging.
 
-### Pre-commit inspection - owed before every commit point
+Never force-push, never rebase a pushed branch, never merge into main
+except through the single release PR. Commit messages carry no
+Co-Authored-By or Claude-Session trailer.
 
-Inspecting the working tree before a commit is a duty, not an option. At every commit
-point, before printing any command:
+### Pre-commit inspection - owed before every commit
+
+Inspecting the working tree before a commit is a duty, not an option. Before every
+commit:
 
 1. Run `git status` and `git diff --stat`.
-2. Report **exactly which files would be staged** - name them, do not summarise as
+2. Report **exactly which files are staged** - name them, do not summarise as
    "the usual files".
 3. Flag anything unexpected: build output, uploaded attachments, `node_modules`,
    secrets or `.env` files, screenshots that do not belong to this task, and any file
-   unrelated to the work in hand.
-4. Only then print the commands for the user to run.
+   unrelated to the work in hand. Leave such files unstaged and say so.
+4. Only then commit.
 
-The user runs every mutating command. The inspection is the part that is owed first, and
-a commit point reached without it is incomplete work. Say plainly when something looks
-wrong rather than printing the commands anyway and leaving the user to notice.
-
-Branch model for reference when suggesting commands:
+Branch model:
 
 ```
 main                          <- stable release, never commit directly
