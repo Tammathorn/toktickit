@@ -537,6 +537,8 @@ artifacts/lab-02/screenshots/
 │   ├── selection-<vp>-populated.png
 │   ├── selection-<vp>-empty.png
 │   ├── selection-<vp>-failure.png
+│   ├── selection-<vp>-dropdown.png     (addition: the open list, active names only)
+│   ├── selection-<vp>-selected.png     (addition: the shell after Continue)
 │   ├── create-<vp>-initial.png
 │   ├── create-<vp>-validation.png
 │   ├── create-<vp>-submitting.png
@@ -561,6 +563,9 @@ the three folder names. Its four states live under `create-ticket/` with a `sele
 prefix, which is where `LS 14` Part 6 asks for them: Part 6 covers Create Mode and
 explicitly requires the Selection screen, its dropdown, the selected-user display, the
 Change Requester action, and its loading and failure states.
+`selection-<vp>-dropdown.png` and `selection-<vp>-selected.png` were added with Issue #12
+because Part 6 asks for the dropdown and the selected-user display with Change Requester,
+which the four C-47 states do not show on their own.
 
 ---
 

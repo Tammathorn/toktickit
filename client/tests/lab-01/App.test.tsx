@@ -1,15 +1,15 @@
 import { describe, it, expect, vi, afterEach } from "vitest";
 import { render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import App from "../../src/App.js";
+import SystemCheck from "../../src/pages/SystemCheck.js";
 import * as api from "../../src/api.js";
 
-describe("App", () => {
+describe("SystemCheck (Lab 1, repointed per C-04)", () => {
   afterEach(() => vi.restoreAllMocks());
 
   // WORKED EXAMPLE — provided for you.
   it("renders the TokTickIT heading", () => {
-    render(<App />);
+    render(<SystemCheck />);
     expect(screen.getByText(/TokTickIT/i)).toBeInTheDocument();
   });
 
@@ -25,7 +25,7 @@ describe("App", () => {
         { id: 4, name: "Network" },
       ],
     });
-    render(<App />);
+    render(<SystemCheck />);
     await userEvent.click(screen.getByRole("button", { name: /check system/i }));
     expect(await screen.findByText(/System Status: Online/i)).toBeInTheDocument();
     expect(screen.getByText("Account and Access")).toBeInTheDocument();
@@ -34,7 +34,7 @@ describe("App", () => {
 
   it("shows an Offline error message when the API is unavailable", async () => {
     vi.spyOn(api, "checkSystem").mockRejectedValue(new Error("boom"));
-    render(<App />);
+    render(<SystemCheck />);
     await userEvent.click(screen.getByRole("button", { name: /check system/i }));
     expect(await screen.findByText(/System Status: Offline/i)).toBeInTheDocument();
     expect(screen.getByText(/Unable to connect to TokTickIT API/i)).toBeInTheDocument();

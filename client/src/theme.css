@@ -1,0 +1,196 @@
+/* TokTickIT Zen Green theme — ui-spec.md sections 1-4, 7, 9, 10.
+   Every colour is declared once here as a token. No component and no rule
+   below the token block uses a raw hex value; components consume the tokens
+   through Bootstrap's own CSS variables and the tk-* classes. */
+
+:root {
+  /* 2.1 fixed by the labsheet and CLAUDE.md */
+  --tk-primary: #006B3C;
+  --tk-secondary: #0B7A46;
+  --tk-pale: #EAF6EF;
+  --tk-bg: #F5F7F6;
+  /* 2.2 pinned */
+  --tk-surface: #FFFFFF;
+  --tk-text: #1F2A24;
+  /* 2.3 supporting */
+  --tk-text-muted: #5A6B62;
+  --tk-border: #D8E0DB;
+  --tk-readonly-bg: #EDF1EE;
+  --tk-danger: #A4262C;
+  --tk-warning: #8A5A00;
+
+  --tk-shadow: 0 1px 2px rgba(31, 42, 36, 0.06);
+  --tk-focus-ring: 0 0 0 3px rgba(11, 122, 70, 0.35);
+
+  /* Route Bootstrap's semantic colours through the tokens. */
+  --bs-body-bg: var(--tk-bg);
+  --bs-body-color: var(--tk-text);
+  --bs-secondary-color: var(--tk-text-muted);
+  --bs-border-color: var(--tk-border);
+  --bs-link-color: var(--tk-secondary);
+  --bs-link-hover-color: var(--tk-primary);
+  --bs-body-line-height: 1.5;
+}
+
+body {
+  background-color: var(--tk-bg);
+  color: var(--tk-text);
+}
+
+/* ---- Typography (section 3) ------------------------------------------ */
+
+h1, h2, h3 { line-height: 1.25; }
+.tk-title { font-size: 1.75rem; font-weight: 600; margin-bottom: 1rem; }
+.tk-section-title { font-size: 1.25rem; font-weight: 600; }
+.tk-label { font-size: 0.875rem; font-weight: 600; margin-bottom: 0.25rem; }
+.tk-muted { font-size: 0.8125rem; color: var(--tk-text-muted); }
+
+/* ---- Surfaces --------------------------------------------------------- */
+
+.tk-card {
+  background-color: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+  border-radius: 0.5rem;
+  box-shadow: var(--tk-shadow);
+  padding: 1.5rem;
+}
+@media (max-width: 767.98px) {
+  .tk-card { padding: 1rem; }
+}
+
+.tk-panel { border-radius: 0.375rem; padding: 1rem; margin-bottom: 1rem; }
+.tk-panel p:last-child { margin-bottom: 0; }
+.tk-panel-pale { background-color: var(--tk-pale); }
+.tk-panel-empty { background-color: var(--tk-readonly-bg); }
+.tk-panel-danger { background-color: var(--tk-surface); border: 1px solid var(--tk-danger); }
+.tk-panel-danger p { color: var(--tk-danger); font-weight: 500; }
+
+.tk-callout {
+  border-left: 4px solid;
+  padding: 0.75rem 1rem;
+  margin-bottom: 1rem;
+  border-radius: 0.375rem;
+  background-color: var(--tk-surface);
+}
+.tk-callout-warning { border-color: var(--tk-warning); color: var(--tk-warning); }
+
+.tk-status { color: var(--tk-text-muted); margin-bottom: 1rem; }
+.tk-status .spinner-border { color: var(--tk-secondary); }
+
+/* ---- Controls (section 4) -------------------------------------------- */
+
+.form-control, .form-select {
+  height: 2.5rem;
+  background-color: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+  color: var(--tk-text);
+  font-size: 1rem;
+}
+.form-control:focus, .form-select:focus, .btn:focus-visible, a:focus-visible {
+  border-color: var(--tk-secondary);
+  outline: none;
+  box-shadow: var(--tk-focus-ring);
+}
+.form-control[readonly] { background-color: var(--tk-readonly-bg); }
+.form-control:disabled, .form-select:disabled {
+  background-color: var(--tk-readonly-bg);
+  color: var(--tk-text-muted);
+  cursor: not-allowed;
+}
+.form-control[aria-invalid="true"], .form-select[aria-invalid="true"] { border-color: var(--tk-danger); }
+
+/* ---- Buttons (section 7) --------------------------------------------- */
+
+.btn { height: 2.5rem; font-size: 1rem; }
+.btn-primary {
+  --bs-btn-bg: var(--tk-primary);
+  --bs-btn-border-color: var(--tk-primary);
+  --bs-btn-color: var(--tk-surface);
+  --bs-btn-hover-bg: var(--tk-secondary);
+  --bs-btn-hover-border-color: var(--tk-secondary);
+  --bs-btn-hover-color: var(--tk-surface);
+  --bs-btn-active-bg: var(--tk-secondary);
+  --bs-btn-active-border-color: var(--tk-secondary);
+  --bs-btn-active-color: var(--tk-surface);
+}
+.btn-secondary {
+  --bs-btn-bg: var(--tk-surface);
+  --bs-btn-border-color: var(--tk-primary);
+  --bs-btn-color: var(--tk-primary);
+  --bs-btn-hover-bg: var(--tk-pale);
+  --bs-btn-hover-border-color: var(--tk-primary);
+  --bs-btn-hover-color: var(--tk-primary);
+  --bs-btn-active-bg: var(--tk-pale);
+  --bs-btn-active-border-color: var(--tk-primary);
+  --bs-btn-active-color: var(--tk-primary);
+}
+.tk-btn-tertiary {
+  --bs-btn-bg: transparent;
+  --bs-btn-border-color: transparent;
+  --bs-btn-color: var(--tk-secondary);
+  --bs-btn-hover-bg: transparent;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-hover-color: var(--tk-secondary);
+  --bs-btn-active-bg: transparent;
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-active-color: var(--tk-secondary);
+  text-decoration: none;
+}
+.tk-btn-tertiary:hover { text-decoration: underline; }
+.btn:disabled, .btn.disabled {
+  --bs-btn-disabled-bg: var(--tk-readonly-bg);
+  --bs-btn-disabled-border-color: var(--tk-border);
+  --bs-btn-disabled-color: var(--tk-text-muted);
+  opacity: 1;
+  cursor: not-allowed;
+}
+
+/* ---- Selection screen (section 10) ----------------------------------- */
+
+.tk-selection {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+.tk-selection-card { width: 100%; max-width: 32rem; }
+
+/* ---- Shell (section 9) ------------------------------------------------ */
+
+.tk-header { background-color: var(--tk-primary); color: var(--tk-surface); }
+.tk-header .navbar { padding-top: 0.5rem; padding-bottom: 0.5rem; }
+.tk-brand, .tk-brand:hover, .tk-brand:focus { color: var(--tk-surface); font-weight: 600; font-size: 1.25rem; }
+.tk-nav-link {
+  color: var(--tk-surface);
+  padding: 0.5rem 1rem;
+  border-bottom: 3px solid transparent;
+}
+.tk-nav-link:hover, .tk-nav-link:focus { color: var(--tk-pale); }
+.tk-nav-link-active { font-weight: 600; border-bottom-color: var(--tk-pale); }
+.tk-requester { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
+.tk-requester-name { color: var(--tk-surface); }
+.tk-requester-label { color: var(--tk-pale); font-size: 0.875rem; }
+.tk-btn-on-primary {
+  --bs-btn-color: var(--tk-surface);
+  --bs-btn-hover-color: var(--tk-surface);
+  --bs-btn-active-color: var(--tk-surface);
+}
+.tk-main { padding-top: 1.5rem; padding-bottom: 1.5rem; }
+
+@media (max-width: 767.98px) {
+  .tk-header .navbar-nav .nav-link,
+  .tk-header .tk-requester-name,
+  .tk-header .tk-btn-on-primary {
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    width: 100%;
+    padding-left: 0;
+    padding-right: 0;
+    gap: 0.25rem;
+  }
+  .tk-header .tk-requester { flex-direction: column; align-items: stretch; gap: 0; }
+  .tk-header .tk-btn-on-primary { justify-content: flex-start; }
+  .tk-nav-link-active { border-bottom-width: 3px; }
+}
