@@ -1,79 +1,50 @@
-import { defineConfig, devices } from '@playwright/test';
+import { defineConfig, devices } from "@playwright/test";
 
-/**
- * Read environment variables from file.
- * https://github.com/motdotla/dotenv
- */
-// import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: path.resolve(__dirname, '.env') });
+// Playwright configuration per decision C-10.
+//
+// Chromium only, three viewport projects named for the LS 8.7 bands - desktop
+// 1280, tablet 834, mobile 390 - one width inside each Bootstrap breakpoint
+// band that ui-spec.md section 1 fixes. `webServer` stays disabled: the API
+// needs the Docker Postgres container, and an automatic server would fail in a
+// way that looks like a test failure. The manual start sequence is in
+// docs/lab-02/tests.md section 5.
+//
+// Screenshots are written explicitly by each spec into
+// artifacts/lab-02/screenshots/{create-ticket,my-tickets,ticket-detail}/.
+// artifacts/ is tracked; test-results/, playwright-report/ and blob-report/ are
+// ignored.
 
-/**
- * See https://playwright.dev/docs/test-configuration.
- */
+export const CLIENT_URL = process.env.E2E_CLIENT_URL ?? "http://localhost:5173";
+export const API_URL = process.env.E2E_API_URL ?? "http://localhost:3000";
+
 export default defineConfig({
-  testDir: './e2e',
-  /* Run tests in files in parallel */
+  testDir: "./e2e",
   fullyParallel: true,
-  /* Fail the build on CI if you accidentally left test.only in the source code. */
   forbidOnly: !!process.env.CI,
-  /* Retry on CI only */
-  retries: process.env.CI ? 2 : 0,
-  /* Opt out of parallel tests on CI. */
+  retries: 0,
   workers: process.env.CI ? 1 : undefined,
-  /* Reporter to use. See https://playwright.dev/docs/test-reporters */
-  reporter: 'html',
-  /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
+  reporter: [["list"], ["html", { open: "never" }]],
   use: {
-    /* Base URL to use in actions like `await page.goto('')`. */
-    // baseURL: 'http://localhost:3000',
-
-    /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
-    trace: 'on-first-retry',
+    baseURL: CLIENT_URL,
+    trace: "on-first-retry",
   },
-
-  /* Configure projects for major browsers */
   projects: [
     {
-      name: 'chromium',
-      use: { ...devices['Desktop Chrome'] },
+      name: "desktop",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } },
     },
-
     {
-      name: 'firefox',
-      use: { ...devices['Desktop Firefox'] },
+      name: "tablet",
+      use: { ...devices["Desktop Chrome"], viewport: { width: 834, height: 1112 } },
     },
-
     {
-      name: 'webkit',
-      use: { ...devices['Desktop Safari'] },
+      name: "mobile",
+      use: {
+        ...devices["Desktop Chrome"],
+        viewport: { width: 390, height: 844 },
+        isMobile: true,
+        hasTouch: true,
+      },
     },
-
-    /* Test against mobile viewports. */
-    // {
-    //   name: 'Mobile Chrome',
-    //   use: { ...devices['Pixel 5'] },
-    // },
-    // {
-    //   name: 'Mobile Safari',
-    //   use: { ...devices['iPhone 12'] },
-    // },
-
-    /* Test against branded browsers. */
-    // {
-    //   name: 'Microsoft Edge',
-    //   use: { ...devices['Desktop Edge'], channel: 'msedge' },
-    // },
-    // {
-    //   name: 'Google Chrome',
-    //   use: { ...devices['Desktop Chrome'], channel: 'chrome' },
-    // },
   ],
-
-  /* Run your local dev server before starting the tests */
-  // webServer: {
-  //   command: 'npm run start',
-  //   url: 'http://localhost:3000',
-  //   reuseExistingServer: !process.env.CI,
-  // },
 });

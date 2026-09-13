@@ -1,0 +1,53 @@
+import { useState } from "react";
+import { checkSystem, Category } from "../api.js";
+
+// Lab 1 Check System screen, preserved as a component reachable at
+// /system-check (C-04). The Lab 1 test in tests/lab-01 renders this component.
+// UI states: idle, loading, success, error.
+type UiState = "idle" | "loading" | "success" | "error";
+
+export default function SystemCheck() {
+  const [state, setState] = useState<UiState>("idle");
+  const [categories, setCategories] = useState<Category[]>([]);
+
+  async function handleCheck() {
+    setState("loading");
+    try {
+      const result = await checkSystem();
+      setCategories(result.categories);
+      setState("success");
+    } catch {
+      setState("error");
+    }
+  }
+
+  return (
+    <div className="container py-5" style={{ maxWidth: 640 }}>
+      <h1 className="h3 mb-4">
+        TokTickIT <span className="text-success">IT Service Desk</span>
+      </h1>
+
+      <button className="btn btn-success" onClick={handleCheck} disabled={state === "loading"}>
+        {state === "loading" ? "Loading…" : "Check System"}
+      </button>
+
+      {state === "success" && (
+        <div className="mt-3">
+          <p>System Status: Online</p>
+          <p className="fw-semibold mt-3">Supported Request Categories</p>
+          <ol>
+            {categories.map((c) => (
+              <li key={c.id}>{c.name}</li>
+            ))}
+          </ol>
+        </div>
+      )}
+      {state === "error" && (
+        <div className="mt-3">
+          <p>System Status: Offline</p>
+          <p className="text-danger">Unable to connect to TokTickIT API</p>
+        </div>
+      )}
+    </div>
+  );
+}
