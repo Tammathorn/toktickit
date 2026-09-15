@@ -187,10 +187,30 @@ describe("Attachment section", () => {
     expect(screen.getByText("1 of 5 active")).toBeInTheDocument();
   });
 
+  it("STYLE-03 (hierarchy) renders Preview and Download as tertiary and Remove as destructive (ui-spec 7)", async () => {
+    await renderDetail();
+    const row = within(activeGroup()).getByRole("listitem");
+    expect(within(row).getByRole("button", { name: "Preview battery-report.pdf" })).toHaveClass("tk-btn-tertiary");
+    expect(within(row).getByRole("button", { name: "Download battery-report.pdf" })).toHaveClass("tk-btn-tertiary");
+    expect(within(row).getByRole("button", { name: "Remove battery-report.pdf" })).toHaveClass("btn-danger");
+    expect(screen.getByRole("link", { name: "Back to My Tickets" })).toHaveClass("btn-secondary");
+    // no primary action on the detail: it is read-only apart from the attachment lifecycle
+    expect(document.querySelectorAll("main .btn-primary")).toHaveLength(0);
+  });
+
   it("downloads an active attachment through the API and reports it (AC-30)", async () => {
     const download = vi.spyOn(api, "downloadAttachment").mockResolvedValue(new Blob(["%PDF"], { type: "application/pdf" }));
     window.URL.createObjectURL = vi.fn(() => "blob:mock");
     window.URL.revokeObjectURL = vi.fn();
+    // jsdom cannot navigate to a blob: URL. The component saves the file by
+    // clicking a detached anchor, so hand it one whose click is observable and inert.
+    const click = vi.fn();
+    const realCreate = document.createElement.bind(document);
+    vi.spyOn(document, "createElement").mockImplementation((tag: string, options?: ElementCreationOptions) => {
+      const el = realCreate(tag, options);
+      if (tag === "a") (el as HTMLAnchorElement).click = click;
+      return el;
+    });
     const user = userEvent.setup();
     await renderDetail();
     const row = within(activeGroup()).getByRole("listitem");
@@ -198,5 +218,6 @@ describe("Attachment section", () => {
     await user.click(within(row).getByRole("button", { name: "Download battery-report.pdf" }));
     expect(download).toHaveBeenCalledWith(7, 1, "attachment");
     expect(await within(row).findByText(/Downloaded battery-report\.pdf/)).toBeInTheDocument();
+    expect(click).toHaveBeenCalledTimes(1);
   });
 });

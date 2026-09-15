@@ -35,6 +35,9 @@ async function openForm(page: Page) {
   const category = page.getByLabel("Category", { exact: false });
   await expect(category).toBeEnabled();
   await expect(page.getByLabel("Related System", { exact: false })).toBeEnabled();
+  // Submit is disabled while reference data loads; let its 150 ms transition to
+  // the primary fill finish so no capture shows a half-painted button
+  await expect(page.getByRole("button", { name: "Submit Ticket" })).toHaveCSS("background-color", "rgb(0, 107, 60)");
   return { category };
 }
 

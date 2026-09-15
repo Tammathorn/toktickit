@@ -124,7 +124,7 @@ All six states apply to every input, select, textarea and file control.
 
 | State | Background | Border | Text | Other |
 |---|---|---|---|---|
-| **Editable** | `--tk-surface` | 1 px `--tk-border` | `--tk-text` | Height `2.5 rem`; every single-line control shares it (`LS 8.3`) |
+| **Editable** | `--tk-surface` | 1 px `--tk-border` | `--tk-text` | Height `2.5 rem` at `md` and above, `2.75 rem` below `md` so every control is a 44 px touch target (VIS-01 row 33, Issue #16); every single-line control and button shares the band's height (`LS 8.3`) |
 | **Read-only** | `--tk-readonly-bg` | 1 px `--tk-border` | `--tk-text` | `readonly` attribute, not `disabled`, so the value stays selectable and reachable by screen readers |
 | **Invalid** | `--tk-surface` | 1 px `--tk-danger` | `--tk-text` | `aria-invalid="true"`; message directly below (section 5) |
 | **Disabled** | `--tk-readonly-bg` | 1 px `--tk-border` | `--tk-text-muted` | `disabled`; cursor `not-allowed`; cannot receive focus or be activated |
@@ -540,6 +540,7 @@ artifacts/lab-02/screenshots/
 │   ├── selection-<vp>-failure.png
 │   ├── selection-<vp>-dropdown.png     (addition: the open list, active names only)
 │   ├── selection-<vp>-selected.png     (addition: the shell after Continue)
+│   ├── create-<vp>-focus.png           (addition: Ticket Summary focused, for VIS-01 row 35)
 │   ├── create-<vp>-initial.png
 │   ├── create-<vp>-validation.png
 │   ├── create-<vp>-submitting.png
@@ -573,6 +574,9 @@ the three folder names. Its four states live under `create-ticket/` with a `sele
 prefix, which is where `LS 14` Part 6 asks for them: Part 6 covers Create Mode and
 explicitly requires the Selection screen, its dropdown, the selected-user display, the
 Change Requester action, and its loading and failure states.
+`create-<vp>-focus.png` was added with Issue #16: VIS-01 row 35 asks for a focus screenshot and
+no fixed name covers one. RESP-06 writes it after the focus ring has painted.
+
 The three `detail-<vp>-*` additions were made with Issue #15 because `LS 14` Part 8 asks for
 attachment add, download and the blocked download of a removed file, which the four fixed
 names do not show on their own.
