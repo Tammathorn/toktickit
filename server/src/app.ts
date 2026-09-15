@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import cors from "cors";
 import { getPrisma } from "./prisma.js";
 import { sendInternalError } from "./lib/http-error.js";
+import { ticketsRouter } from "./routes/tickets.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the routes that
 // need the DB, so routes like /api/health stay free of database side effects.
 
@@ -38,7 +39,22 @@ app.get("/api/categories", async (_req: Request, res: Response) => {
     });
     res.status(200).json(categories);
   } catch {
-    res.status(500).json({ error: "Unable to load categories" });
+    sendInternalError(res);
+  }
+});
+
+// Lab 2, Issue #13 — GET /api/related-systems (api-spec.md 2.2). A flat list,
+// never scoped to a Category (C-24); active rows only, id order (BR-56).
+app.get("/api/related-systems", async (_req: Request, res: Response) => {
+  try {
+    const systems = await getPrisma().relatedSystem.findMany({
+      where: { isActive: true },
+      orderBy: { id: "asc" },
+      select: { id: true, name: true },
+    });
+    res.status(200).json(systems);
+  } catch {
+    sendInternalError(res);
   }
 });
 // ---------------------------------------------------------------------------
@@ -60,5 +76,8 @@ app.get("/api/requesters", async (_req: Request, res: Response) => {
   }
 });
 // ---------------------------------------------------------------------------
+
+// Lab 2 Ticket and Attachment endpoints (Issues #13-#15).
+app.use(ticketsRouter);
 
 export default app;
