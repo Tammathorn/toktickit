@@ -128,7 +128,8 @@ given request is deterministic and testable:
    inactive -> 403 `REQUESTER_INACTIVE`
 3. Load the addressed resource; absent -> 404
 4. Compare owner; mismatch -> 403
-5. For a download or preview, check removal state; removed -> 410
+5. For a download or preview, check removal state; removed -> 410, then validate
+   `disposition`; outside `{attachment, inline}` -> 400
 6. Apply business rules -> 422
 7. Perform the operation -> 200 or 201
 
@@ -141,8 +142,11 @@ Two orderings carry consequences and are deliberate:
 - **Step 4 precedes step 5** (C-13, C-20). A non-owner asking for a removed Attachment
   receives 403 and never learns it was removed (AC-37).
 
-`disposition` on the download route is validated at step 1 but applied only at step 7, so
-it can never change which of 403, 404 or 410 a caller receives (C-44).
+- **`disposition` is validated at step 5, not step 1** (C-44, C-52). It is the one query
+  parameter whose 400 is deferred: a step-1 400 would answer a non-owner or an unknown
+  Attachment differently depending on a parameter value, which is exactly the existence
+  leak C-13 and C-44 exist to prevent. So an invalid `disposition` never changes which of
+  403, 404 or 410 a caller receives; it is 400 only once the caller is entitled to the bytes.
 
 ---
 
@@ -656,8 +660,8 @@ from `sizeBytes`. There is no JSON body.
 | Status | Condition |
 |---|---|
 | 200 | The Attachment is active and the caller owns it (AC-30, AC-31) |
-| 400 | `id` not a positive integer; `requesterId` absent or unparseable; `disposition` outside `{attachment, inline}`, `INVALID_QUERY_PARAM` |
-| 403 | The Attachment's Ticket belongs to another Requester, `ATTACHMENT_FORBIDDEN`, returned whether or not the Attachment is removed because ownership is checked first (AC-37); or `requesterId` inactive, `REQUESTER_INACTIVE` |
+| 400 | `id` not a positive integer; `requesterId` absent or unparseable; or, for an active Attachment the caller owns, `disposition` outside `{attachment, inline}`, `INVALID_QUERY_PARAM` (C-52: this last check runs after 403, 404 and 410) |
+| 403 | The Attachment's Ticket belongs to another Requester, `ATTACHMENT_FORBIDDEN`, returned whether or not the Attachment is removed and whatever `disposition` says, because ownership is checked first (AC-37, C-52); or `requesterId` inactive, `REQUESTER_INACTIVE` |
 | 404 | No Attachment with that id, `ATTACHMENT_NOT_FOUND` (AC-64); or `requesterId` names no Requester, `REQUESTER_NOT_FOUND` |
 | 410 | The Attachment is soft-removed and the caller owns it, `ATTACHMENT_REMOVED` (AC-36) |
 | 500 | Unexpected error, `INTERNAL_ERROR` |

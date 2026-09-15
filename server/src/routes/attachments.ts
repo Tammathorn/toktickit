@@ -61,12 +61,10 @@ async function loadOwnedAttachment(req: Request, res: Response): Promise<Attachm
 // ---------------------------------------------------------------------------
 // GET /api/attachments/:id/download?requesterId=&disposition=attachment|inline
 // One ownership-checked route serves both download and preview (BR-49,
-// BR-54). Per C-44 the caller, ownership and removal state are settled BEFORE
-// disposition is looked at, so an invalid disposition never changes which of
-// 403, 404 or 410 a caller receives; it is 400 only once the caller is
-// entitled to the bytes. (api-spec 1.4 words this as "validated at step 1 but
-// applied at step 7"; a 400 at step 1 would contradict the sentence that
-// follows it, so the decision text is the one implemented.)
+// BR-54). Per C-44 and C-52 the caller, ownership and removal state are
+// settled BEFORE disposition is validated (step 5 of api-spec 1.4), so an
+// invalid disposition never changes which of 403, 404 or 410 a caller
+// receives; it is 400 only once the caller is entitled to the bytes.
 // ---------------------------------------------------------------------------
 attachmentsRouter.get(
   "/api/attachments/:id/download",
