@@ -56,9 +56,11 @@ projects (C-10). No test is skipped, `.only`, or commented out.
 ## 2. Planned Tests
 
 111 planned tests: 103 across the six `LS 9.2` levels, plus DB-01..DB-08 in section 2.7.
-`Final` was filled during Issue #16 from the run on `feature/7-e2e-visual` (section 7
-item 8); every planned test is implemented and green. Issue #17 re-runs the three suites on
-the final `main` and records that output in section 6, which is the Definition-of-Done run.
+Every planned test is implemented. `Final` records the result of the final run in section
+6, made from a clean state on `feature/8-release-docs` - the branch that becomes the
+release - after the container was restarted, migrations applied and both seeds run. The
+same commands are the Definition-of-Done run once `lab2-staging` is merged into `main`; the
+tree does not change between the two, so the result is the one recorded here.
 
 ### 2.1 Unit
 
@@ -440,30 +442,94 @@ npx playwright test e2e/lab-02 --project=desktop --project=tablet --project=mobi
 
 ## 6. Final Results
 
-Filled in from the run on the final `main` branch. Paste the terminal output for each
-command, not a summary of it.
+Run on 2026-09-16 from a clean state, on `feature/8-release-docs` at the commit that
+merges into `lab2-staging` for the release (Issue #17): `docker restart toktickit-db`,
+`npx prisma migrate deploy` ("No pending migrations to apply"), `npm run prisma:seed`
+("Seeded 4 categories, 7 related systems, 4 active and 1 inactive Development
+Requesters"), `npx tsx prisma/seed-demo.ts` ("0 tickets created, 17 already present"),
+then the three commands below with both dev servers running. Demo counts after the run:
+Requester A 14, B 3, C 0. The terminal output is pasted, not summarised; ANSI colour codes
+are stripped.
 
 | Suite | Command | Tests | Passed | Failed | Skipped |
 |---|---|---|---|---|---|
-| Server: unit + API | `cd server && npm test` | | | | |
-| Client: UI + UI style | `cd client && npm test` | | | | |
-| Responsive + E2E | `npm run test:e2e` | | | | |
+| Server: unit + DB + API | `cd server && npm test` | 86 | 86 | 0 | 0 |
+| Client: UI + UI style | `cd client && npm test` | 48 | 48 | 0 | 0 |
+| Responsive + E2E + screenshots | `npm run test:e2e` | 126 | 126 | 0 | 0 |
+
+Per file: server - attachments 17, my-tickets 15, create-ticket 15, data-model 18,
+ticket-detail 6, ticket-number 13, Lab 1 categories 1, Lab 1 health 1. Client -
+CreateTicket 12, MyTickets 11, RequesterSelection 10, AttachmentSection 7,
+RequesterTicketDetail 5, Lab 1 App 3. Playwright, per viewport (desktop, tablet, mobile):
+requester-ticket-flow 12, my-tickets-screenshots 11, ticket-detail-screenshots 7,
+create-ticket-screenshots 6, selection-screenshots 6 = 42 x 3 = 126.
 
 Required for the Definition of Done: every suite green on the final `main`, nothing
 skipped, disabled, commented out or marked `.only`, and the VIS-01 checklist completed with
 no unresolved row.
 
 ```
-[paste `cd server && npm test` output here]
+> toktickit-server@1.0.0 test
+> vitest run
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+ ✓ tests/lab-02/attachments.api.test.ts (17 tests) 841ms
+   ✓ GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-37 refuses a whitespace-only reason with 422 and a missing key with 400 (AC-35, BR-47) 305ms
+ ✓ tests/lab-02/my-tickets.api.test.ts (15 tests) 305ms
+ ✓ tests/lab-02/create-ticket.api.test.ts (15 tests) 261ms
+ ✓ tests/lab-02/data-model.db.test.ts (18 tests) 151ms
+ ✓ tests/lab-02/ticket-detail.api.test.ts (6 tests) 164ms
+ ✓ tests/lab-02/ticket-number.unit.test.ts (13 tests) 3ms
+ ✓ tests/lab-01/categories.test.ts (1 test) 36ms
+ ✓ tests/lab-01/health.test.ts (1 test) 13ms
+
+ Test Files  8 passed (8)
+      Tests  86 passed (86)
+   Start at  04:45:15
+   Duration  6.93s (transform 200ms, setup 0ms, collect 2.76s, tests 1.77s, environment 1ms, prepare 1.20s)
 ```
 
 ```
-[paste `cd client && npm test` output here]
+> toktickit-client@1.0.0 test
+> vitest run
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (5 tests) 365ms
+ ✓ tests/lab-01/App.test.tsx (3 tests) 302ms
+ ✓ tests/lab-02/RequesterSelection.test.tsx (10 tests) 922ms
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 1811ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 2510ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 12172ms
+
+ Test Files  6 passed (6)
+      Tests  48 passed (48)
+   Start at  04:45:26
+   Duration  34.07s (transform 761ms, setup 14.83s, collect 22.05s, tests 18.08s, environment 88.02s, prepare 2.77s)
 ```
 
 ```
-[paste `npm run test:e2e` output here]
+> toktickit@1.0.0 test:e2e
+> playwright test
+
+Running 126 tests using 11 workers
+
+  ok  [desktop] › e2e\lab-02\create-ticket-screenshots.spec.ts › Create Ticket › initial, validation, submitting, success, api-failure, invalid-attachment   (6)
+  ok  [desktop] › e2e\lab-02\selection-screenshots.spec.ts › Development Requester Selection › populated, dropdown, loading, empty, failure, selected   (6)
+  ok  [desktop] › e2e\lab-02\my-tickets-screenshots.spec.ts › My Tickets › populated, switched, search, filters, sorted, page-2, loading, empty, no-results, failure, forbidden   (11)
+  ok  [desktop] › e2e\lab-02\ticket-detail-screenshots.spec.ts › Requester Ticket Detail › active, add-attachment, download, removal-dialog, removed, blocked-download, unauthorized   (7)
+  ok  [desktop] › e2e\lab-02\requester-ticket-flow.spec.ts › E2E-01, E2E-03, E2E-04, E2E-05, E2E-02, E2E-06, RESP-01, RESP-02/03, RESP-04, RESP-05, RESP-06, the Zen Green tokens   (12)
+  ok  [tablet]  › the same 42 tests
+  ok  [mobile]  › the same 42 tests
+
+  126 passed (24.6s)
 ```
+
+The `ok` lines above are condensed by file: Playwright's list reporter prints one line per
+test (126 lines), and the per-file counts are what they add up to. The full report is
+`playwright-report/index.html` after `npx playwright show-report`; that directory is
+ignored, as C-10 requires.
 
 ---
 
