@@ -153,15 +153,41 @@ export async function createTicket(input: NewTicketInput): Promise<Ticket> {
 
 // POST /api/tickets/:id/attachments - one file per request (C-15, C-42), which
 // is what makes per-file success and failure reportable.
-export async function uploadAttachment(ticketId: number, requesterId: number, file: File): Promise<AttachmentMeta> {
+// Uses XMLHttpRequest rather than fetch because the uploading row shows a
+// determinate progress bar (ui-spec 14.2) and fetch exposes no upload progress.
+export function uploadAttachment(
+  ticketId: number,
+  requesterId: number,
+  file: File,
+  onProgress?: (percent: number) => void,
+): Promise<AttachmentMeta> {
   const form = new FormData();
   form.append("file", file, file.name);
-  const res = await fetch(`${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`, {
-    method: "POST",
-    body: form,
+  return new Promise((resolve, reject) => {
+    const xhr = new XMLHttpRequest();
+    xhr.open("POST", `${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+    xhr.responseType = "text";
+    xhr.upload.onprogress = (event) => {
+      if (onProgress && event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
+    };
+    xhr.onerror = () => reject(new ApiError(0, "INTERNAL_ERROR", "Network error"));
+    xhr.onload = () => {
+      let body: unknown = null;
+      try {
+        body = xhr.responseText ? JSON.parse(xhr.responseText) : null;
+      } catch {
+        body = null;
+      }
+      if (xhr.status >= 200 && xhr.status < 300) {
+        onProgress?.(100);
+        resolve(body as AttachmentMeta);
+        return;
+      }
+      const error = (body as { error?: { code?: string; message?: string; fields?: Record<string, string> } } | null)?.error;
+      reject(new ApiError(xhr.status, error?.code ?? "INTERNAL_ERROR", error?.message ?? "Request failed", error?.fields));
+    };
+    xhr.send(form);
   });
-  if (!res.ok) throw await toApiError(res);
-  return res.json();
 }
 
 // ---------------------------------------------------------------------------
@@ -205,4 +231,37 @@ export function fetchTickets(requesterId: number, query: TicketListQuery): Promi
 
 export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
   return getJson(`/api/tickets/${id}?requesterId=${requesterId}`);
+}
+
+// ---------------------------------------------------------------------------
+// Attachment lifecycle on Ticket Detail (api-spec.md 4.2, 4.3, 4.4).
+// ---------------------------------------------------------------------------
+
+// GET /api/tickets/:id/attachments - active and removed alike, ascending id.
+export function fetchAttachments(ticketId: number, requesterId: number): Promise<AttachmentMeta[]> {
+  return getJson(`/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+}
+
+// GET /api/attachments/:id/download - the one ownership-checked route for both
+// download and preview (BR-49, BR-54). The bytes come back as a Blob; a 410
+// or 500 surfaces as an ApiError so the row can show the unavailable state (C-46).
+export async function downloadAttachment(
+  id: number,
+  requesterId: number,
+  disposition: "attachment" | "inline",
+): Promise<Blob> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}/download?requesterId=${requesterId}&disposition=${disposition}`);
+  if (!res.ok) throw await toApiError(res);
+  return res.blob();
+}
+
+// DELETE /api/attachments/:id - soft removal with a required reason (BR-46, BR-47).
+export async function removeAttachment(id: number, requesterId: number, removalReason: string): Promise<AttachmentMeta> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}?requesterId=${requesterId}`, {
+    method: "DELETE",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ removalReason }),
+  });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
 }

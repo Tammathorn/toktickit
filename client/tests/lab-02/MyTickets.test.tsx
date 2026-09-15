@@ -68,13 +68,15 @@ afterEach(() => vi.restoreAllMocks());
 describe("My Tickets", () => {
   it("UI-21 shows a loading state until the list request settles (AC-52)", async () => {
     let release!: (value: api.TicketListPage) => void;
-    vi.spyOn(api, "fetchTickets").mockImplementation(() => new Promise((resolve) => (release = resolve)));
+    const fetchTickets = vi.spyOn(api, "fetchTickets").mockImplementation(() => new Promise((resolve) => (release = resolve)));
     renderList();
 
     const region = await screen.findByRole("region", { name: "Ticket list" });
     expect(region).toHaveAttribute("aria-busy", "true");
     expect(within(region).queryByRole("table")).not.toBeInTheDocument();
 
+    // the request is issued from an effect after the first paint
+    await waitFor(() => expect(fetchTickets).toHaveBeenCalled());
     release(page(A_ROWS));
     expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Ticket list" })).not.toHaveAttribute("aria-busy", "true");
@@ -128,7 +130,7 @@ describe("My Tickets", () => {
     renderList("/tickets?search=nothing-here");
 
     const heading = await screen.findByRole("heading", { name: "No matches" });
-    const panel = heading.closest(".tk-empty")!;
+    const panel = heading.closest(".tk-empty") as HTMLElement;
     expect(within(panel).getByText("No tickets match your search or filters.")).toBeInTheDocument();
     // the panel's own action, in addition to the toolbar's (FR-35)
     expect(within(panel).getByRole("button", { name: "Clear filters" })).toBeInTheDocument();
