@@ -6,6 +6,7 @@ import { resolveRequester, requireRequesterQuery } from "../lib/requester.js";
 import { validateTicketShape, validateTicketReferences, type ValidTicketInput } from "../lib/validation.js";
 import { createTicketWithNumber } from "../lib/ticket-repository.js";
 import { loadTicketDto } from "../lib/ticket-dto.js";
+import { parseListQuery, listWhere, listOrderBy, type ListQuery } from "../lib/list-query.js";
 import { uploadSingleFile, unlinkQuietly, UnsupportedFileTypeError } from "../lib/uploads.js";
 
 export const ticketsRouter = Router();
@@ -41,6 +42,95 @@ ticketsRouter.post("/api/tickets", async (req: Request, res: Response) => {
     const input = values as ValidTicketInput;
     const created = await createTicketWithNumber(prisma, { requesterId: caller.id, ...input });
     res.status(201).json(await loadTicketDto(prisma, created.id));
+  } catch {
+    sendInternalError(res);
+  }
+});
+
+// ---------------------------------------------------------------------------
+// GET /api/tickets — api-spec.md 3.2. Query parameters are validated first
+// (400 INVALID_QUERY_PARAM naming each offending parameter), then the caller
+// is resolved, then the query runs scoped to that Requester before any
+// search, filter or sort applies (BR-22). C-27 envelope; C-43 page rules.
+// ---------------------------------------------------------------------------
+ticketsRouter.get(
+  "/api/tickets",
+  (req: Request, res: Response, next) => {
+    const parsed = parseListQuery(req.query as Record<string, unknown>);
+    if (!parsed.ok) {
+      sendError(res, 400, "INVALID_QUERY_PARAM", "Some search or filter values are not valid.", parsed.fields);
+      return;
+    }
+    res.locals.listQuery = parsed.query;
+    next();
+  },
+  requireRequesterQuery,
+  async (_req: Request, res: Response) => {
+    const prisma = getPrisma();
+    const q = res.locals.listQuery as ListQuery;
+    const requesterId: number = res.locals.requesterId;
+    try {
+      const where = listWhere(requesterId, q);
+      const [total, rows] = await Promise.all([
+        prisma.ticket.count({ where }),
+        prisma.ticket.findMany({
+          where,
+          orderBy: listOrderBy(q),
+          skip: (q.page - 1) * q.pageSize,
+          take: q.pageSize,
+          select: {
+            id: true,
+            ticketNumber: true,
+            summary: true,
+            category: { select: { id: true, name: true } },
+            relatedSystem: { select: { id: true, name: true } },
+            requestedPriority: true,
+            itPriority: true,
+            currentStatus: true,
+            createdAt: true,
+            updatedAt: true,
+          },
+        }),
+      ]);
+      res.status(200).json({
+        data: rows,
+        meta: {
+          page: q.page,
+          pageSize: q.pageSize,
+          total,
+          totalPages: Math.ceil(total / q.pageSize),
+          sort: q.sort,
+        },
+      });
+    } catch {
+      sendInternalError(res);
+    }
+  },
+);
+
+// ---------------------------------------------------------------------------
+// GET /api/tickets/:id — api-spec.md 3.3. Caller resolved before the Ticket is
+// looked up (C-45); 404 if absent, 403 TICKET_FORBIDDEN if another Requester
+// owns it (BR-21, C-13). The body of a 403 carries no Ticket field.
+// ---------------------------------------------------------------------------
+ticketsRouter.get("/api/tickets/:id", requireRequesterQuery, async (req: Request, res: Response) => {
+  const prisma = getPrisma();
+  const id = /^\d+$/.test(req.params.id) && Number(req.params.id) > 0 ? Number(req.params.id) : null;
+  if (id === null) {
+    sendError(res, 400, "INVALID_QUERY_PARAM", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
+    return;
+  }
+  try {
+    const ticket = await prisma.ticket.findUnique({ where: { id }, select: { id: true, requesterId: true } });
+    if (!ticket) {
+      sendError(res, 404, "TICKET_NOT_FOUND", "That ticket does not exist.");
+      return;
+    }
+    if (ticket.requesterId !== res.locals.requesterId) {
+      sendError(res, 403, "TICKET_FORBIDDEN", "You do not have access to that item.");
+      return;
+    }
+    res.status(200).json(await loadTicketDto(prisma, id));
   } catch {
     sendInternalError(res);
   }

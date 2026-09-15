@@ -55,7 +55,7 @@ describe("Development Requester Selection", () => {
     expect(
       await screen.findByText("No active Development Requester is available. Seed the database and reload."),
     ).toBeInTheDocument();
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Development Requester" })).not.toBeInTheDocument();
     expect(screen.getByRole("button", { name: "Continue" })).toBeDisabled();
   });
 
@@ -104,7 +104,7 @@ describe("Development Requester Selection", () => {
 
     expect(await screen.findByRole("banner")).toHaveTextContent("Kanya Somsri");
     expect(window.localStorage.getItem(STORAGE_KEY)).toBe("2");
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Development Requester" })).not.toBeInTheDocument();
   });
 
   it("UI-06 restores a stored selection on mount and the shell shows the name", async () => {
@@ -113,7 +113,7 @@ describe("Development Requester Selection", () => {
     render(<App />);
 
     expect(await screen.findByRole("banner")).toHaveTextContent("Nattapong Wong");
-    expect(screen.queryByRole("combobox")).not.toBeInTheDocument();
+    expect(screen.queryByRole("combobox", { name: "Development Requester" })).not.toBeInTheDocument();
   });
 
   it("UI-07 clears a stored id absent from the active list and explains why", async () => {

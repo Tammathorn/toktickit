@@ -551,7 +551,13 @@ artifacts/lab-02/screenshots/
 │   ├── list-<vp>-loading.png
 │   ├── list-<vp>-empty.png
 │   ├── list-<vp>-no-results.png
-│   └── list-<vp>-failure.png
+│   ├── list-<vp>-failure.png
+│   ├── list-<vp>-switched.png      (addition: Requester B's list after switching from A)
+│   ├── list-<vp>-search.png        (addition: search active)
+│   ├── list-<vp>-filters.png       (addition: Category and Current Status filters active)
+│   ├── list-<vp>-sorted.png        (addition: Ticket Number ascending)
+│   ├── list-<vp>-page-2.png        (addition: second page)
+│   └── list-<vp>-forbidden.png     (addition: the 403 when B opens one of A's Tickets)
 └── ticket-detail/
     ├── detail-<vp>-active.png
     ├── detail-<vp>-removed.png
@@ -564,6 +570,11 @@ the three folder names. Its four states live under `create-ticket/` with a `sele
 prefix, which is where `LS 14` Part 6 asks for them: Part 6 covers Create Mode and
 explicitly requires the Selection screen, its dropdown, the selected-user display, the
 Change Requester action, and its loading and failure states.
+The six `list-<vp>-*` additions were made with Issue #14 because `LS 14` Part 7 asks for the
+switch from A to B, search, filters, sort, pagination and a cross-requester rejection, which
+the five fixed names do not cover. The rejection is captured on the Ticket Detail route,
+since that is where a Requester meets the 403, but filed under `my-tickets/` as Part 7 evidence.
+
 `selection-<vp>-dropdown.png` and `selection-<vp>-selected.png` were added with Issue #12
 because Part 6 asks for the dropdown and the selected-user display with Change Requester,
 which the four C-47 states do not show on their own.
