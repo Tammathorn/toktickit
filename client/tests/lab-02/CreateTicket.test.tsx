@@ -258,6 +258,35 @@ describe("Create Ticket", () => {
     }
   });
 
+  it("STYLE-04 (shading) gives read-only and editable controls different surfaces in the theme (ui-spec 4)", () => {
+    const css = fs.readFileSync(path.resolve(__dirname, "../../src/theme.css"), "utf8");
+    // editable controls sit on the surface token, read-only ones on the read-only token
+    expect(css).toMatch(/\.form-control, \.form-select \{[^}]*background-color: var\(--tk-surface\)/);
+    expect(css).toMatch(/\.tk-readonly \{ background-color: var\(--tk-readonly-bg\); \}/);
+    expect(css).toMatch(/\.form-control\[readonly\] \{ background-color: var\(--tk-readonly-bg\); \}/);
+    // and the two tokens differ, so the shading is real
+    const token = (name: string) => css.match(new RegExp(`${name}: (#[0-9A-Fa-f]{6})`))![1].toUpperCase();
+    expect(token("--tk-readonly-bg")).not.toBe(token("--tk-surface"));
+  });
+
+  it("STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket", async () => {
+    vi.spyOn(api, "createTicket").mockResolvedValue(CREATED);
+    const user = userEvent.setup();
+    await renderForm();
+    const primaries = document.querySelectorAll("main .btn-primary");
+    expect(primaries).toHaveLength(1);
+    expect(primaries[0]).toHaveTextContent("Submit Ticket");
+    expect(screen.getByRole("link", { name: "Cancel" })).toHaveClass("btn-secondary");
+    expect(screen.getByRole("button", { name: "Change Requester" })).toHaveClass("tk-btn-tertiary");
+
+    await fillValid(user);
+    await user.click(screen.getByRole("button", { name: "Submit Ticket" }));
+    const panel = await screen.findByRole("status", { name: "Ticket created" });
+    expect(within(panel).getByRole("link", { name: "View Ticket" })).toHaveClass("btn-primary");
+    expect(within(panel).getByRole("button", { name: "Create another ticket" })).toHaveClass("btn-secondary");
+    expect(document.querySelectorAll("main .btn-primary")).toHaveLength(1);
+  });
+
   it("STYLE-10 defines the Zen Green tokens on :root", () => {
     const css = fs.readFileSync(path.resolve(__dirname, "../../src/theme.css"), "utf8");
     const root = css.slice(css.indexOf(":root {"), css.indexOf("}", css.indexOf(":root {")));
