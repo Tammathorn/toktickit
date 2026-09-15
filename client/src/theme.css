@@ -214,7 +214,8 @@ h1, h2, h3 { line-height: 1.25; }
 .tk-counter { margin-top: 0.25rem; }
 .tk-readonly { background-color: var(--tk-readonly-bg); }
 .tk-readonly-placeholder { color: var(--tk-text-muted); }
-.tk-description { min-height: 7.5rem; height: auto; resize: vertical; }
+textarea.form-control { height: auto; resize: vertical; }
+.tk-description { min-height: 7.5rem; }
 .tk-actions { margin-top: 1.5rem; }
 
 .tk-chip-list { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -417,3 +418,45 @@ h1, h2, h3 { line-height: 1.25; }
   padding: 0.5rem 0.75rem;
 }
 .tk-prewrap { white-space: pre-wrap; }
+
+/* ---- Attachments (section 14) ----------------------------------------- */
+
+.tk-attachment-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.tk-attachment {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 0.5rem 1rem;
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--tk-border);
+  border-radius: 0.375rem;
+  background-color: var(--tk-surface);
+}
+.tk-attachment-body { display: flex; flex-direction: column; gap: 0.125rem; min-width: 0; flex: 1 1 16rem; }
+.tk-attachment-name { font-weight: 600; overflow-wrap: anywhere; }
+.tk-attachment-actions { display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; }
+.tk-attachment-note { font-size: 0.8125rem; color: var(--tk-primary); font-weight: 500; }
+.tk-attachment-invalid { border-color: var(--tk-danger); }
+.tk-attachment-removed { background-color: var(--tk-readonly-bg); color: var(--tk-text-muted); }
+.tk-attachment-removed .tk-attachment-name { color: var(--tk-text-muted); }
+.tk-attachment-unavailable .tk-attachment-note { color: var(--tk-warning); }
+.tk-badge-removed { background-color: var(--tk-surface); color: var(--tk-warning); border: 1px solid var(--tk-warning); }
+.tk-progress { height: 0.5rem; margin: 0.25rem 0; }
+.tk-progress .progress-bar { background-color: var(--tk-secondary); }
+.tk-attachment-preview { flex-basis: 100%; margin: 0.5rem 0 0; }
+.tk-attachment-preview img { max-width: 100%; max-height: 24rem; border: 1px solid var(--tk-border); border-radius: 0.375rem; }
+
+.btn-danger {
+  --bs-btn-bg: var(--tk-danger);
+  --bs-btn-border-color: var(--tk-danger);
+  --bs-btn-color: var(--tk-surface);
+  --bs-btn-hover-bg: var(--tk-danger);
+  --bs-btn-hover-border-color: var(--tk-danger);
+  --bs-btn-hover-color: var(--tk-surface);
+  --bs-btn-active-bg: var(--tk-danger);
+  --bs-btn-active-border-color: var(--tk-danger);
+  --bs-btn-active-color: var(--tk-surface);
+}
+.tk-dialog { border: 1px solid var(--tk-border); border-radius: 0.5rem; }
+.tk-dialog .modal-header, .tk-dialog .modal-footer { border-color: var(--tk-border); }

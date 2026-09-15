@@ -8,6 +8,7 @@ import { createTicketWithNumber } from "../lib/ticket-repository.js";
 import { loadTicketDto } from "../lib/ticket-dto.js";
 import { parseListQuery, listWhere, listOrderBy, type ListQuery } from "../lib/list-query.js";
 import { uploadSingleFile, unlinkQuietly, UnsupportedFileTypeError } from "../lib/uploads.js";
+import { toAttachmentDto } from "./attachments.js";
 
 export const ticketsRouter = Router();
 
@@ -142,7 +143,11 @@ ticketsRouter.get("/api/tickets/:id", requireRequesterQuery, async (req: Request
 // is parsed, so a refused caller never gets a file onto disk; the only
 // post-write refusal is the five-slot rule, and that unlinks first (BR-41).
 // ---------------------------------------------------------------------------
-async function loadOwnedTicket(req: Request, res: Response): Promise<number | null> {
+async function loadOwnedTicket(
+  req: Request,
+  res: Response,
+  forbiddenCode: "ATTACHMENT_FORBIDDEN" | "TICKET_FORBIDDEN" = "ATTACHMENT_FORBIDDEN",
+): Promise<number | null> {
   const id = /^\d+$/.test(req.params.id) ? Number(req.params.id) : null;
   if (id === null || id <= 0) {
     sendError(res, 400, "VALIDATION_FAILED", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
@@ -154,11 +159,27 @@ async function loadOwnedTicket(req: Request, res: Response): Promise<number | nu
     return null;
   }
   if (ticket.requesterId !== res.locals.requesterId) {
-    sendError(res, 403, "ATTACHMENT_FORBIDDEN", "You do not have access to that item.");
+    sendError(res, 403, forbiddenCode, "You do not have access to that item.");
     return null;
   }
   return ticket.id;
 }
+
+// ---------------------------------------------------------------------------
+// GET /api/tickets/:id/attachments — api-spec.md 4.2. Every Attachment on the
+// owned Ticket, active and removed alike, ascending id; the removed ones keep
+// their metadata and reason (BR-50).
+// ---------------------------------------------------------------------------
+ticketsRouter.get("/api/tickets/:id/attachments", requireRequesterQuery, async (req: Request, res: Response) => {
+  try {
+    const ticketId = await loadOwnedTicket(req, res, "TICKET_FORBIDDEN");
+    if (ticketId === null) return;
+    const rows = await getPrisma().attachment.findMany({ where: { ticketId }, orderBy: { id: "asc" } });
+    res.status(200).json(rows.map(toAttachmentDto));
+  } catch {
+    sendInternalError(res);
+  }
+});
 
 ticketsRouter.post(
   "/api/tickets/:id/attachments",

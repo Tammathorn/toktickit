@@ -562,7 +562,10 @@ artifacts/lab-02/screenshots/
     ├── detail-<vp>-active.png
     ├── detail-<vp>-removed.png
     ├── detail-<vp>-removal-dialog.png
-    └── detail-<vp>-unauthorized.png
+    ├── detail-<vp>-unauthorized.png
+    ├── detail-<vp>-add-attachment.png    (addition: a file added from the detail)
+    ├── detail-<vp>-download.png          (addition: after a successful download)
+    └── detail-<vp>-blocked-download.png  (addition: the C-46 unavailable state after a 410)
 ```
 
 The Development Requester Selection screen has no folder of its own because `LS 12` fixes
@@ -570,6 +573,10 @@ the three folder names. Its four states live under `create-ticket/` with a `sele
 prefix, which is where `LS 14` Part 6 asks for them: Part 6 covers Create Mode and
 explicitly requires the Selection screen, its dropdown, the selected-user display, the
 Change Requester action, and its loading and failure states.
+The three `detail-<vp>-*` additions were made with Issue #15 because `LS 14` Part 8 asks for
+attachment add, download and the blocked download of a removed file, which the four fixed
+names do not show on their own.
+
 The six `list-<vp>-*` additions were made with Issue #14 because `LS 14` Part 7 asks for the
 switch from A to B, search, filters, sort, pagination and a cross-requester rejection, which
 the five fixed names do not cover. The rejection is captured on the Ticket Detail route,

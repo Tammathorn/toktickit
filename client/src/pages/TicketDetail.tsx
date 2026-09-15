@@ -5,11 +5,12 @@ import { useRequester } from "../requester/RequesterContext.js";
 import { formatDisplayTimestamp } from "../format.js";
 import { messageForCode } from "../validation.js";
 import { PriorityBadge, StatusBadge, titleCase } from "../components/Badge.js";
+import AttachmentSection from "../components/AttachmentSection.js";
 
-// Requester Ticket Detail - ui-spec.md section 13. Issue #14 lands the load
-// states and Card 1 (the read-only Ticket information), because the Part 7
-// cross-requester rejection is captured on this screen. Card 2, the
-// attachment lifecycle, lands with Issue #15.
+// Requester Ticket Detail - ui-spec.md section 13. Two clearly separated
+// cards: Card 1 is the read-only Ticket information (BR-61, AC-53) and Card 2
+// the attachment lifecycle (AttachmentSection). Nothing of the IT Staff
+// workflow is rendered, not even as a placeholder (BR-63).
 
 type LoadState =
   | { kind: "loading" }
@@ -77,7 +78,7 @@ export default function TicketDetail({ id }: { id: number }) {
   const t = load.ticket;
   return (
     <section aria-labelledby="ticket-detail-title">
-      <div className="card tk-card mb-3">
+      <div className="card tk-card mb-3" role="region" aria-label="Ticket information">
         <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
           <h1 id="ticket-detail-title" className="tk-title mb-0">{t.ticketNumber}</h1>
           <StatusBadge value={t.currentStatus} />
@@ -95,6 +96,8 @@ export default function TicketDetail({ id }: { id: number }) {
           <div className="col-12"><dt>Description</dt><dd className="tk-readonly-value tk-prewrap">{t.description}</dd></div>
         </dl>
       </div>
+
+      <AttachmentSection key={t.id} ticketId={t.id} requesterId={requesterId} initial={t.attachments} />
 
       <Link to="/tickets" className="btn btn-secondary">Back to My Tickets</Link>
     </section>
