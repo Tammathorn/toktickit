@@ -163,3 +163,46 @@ export async function uploadAttachment(ticketId: number, requesterId: number, fi
   if (!res.ok) throw await toApiError(res);
   return res.json();
 }
+
+// ---------------------------------------------------------------------------
+// My Tickets (api-spec.md 3.2) and one owned Ticket (3.3).
+// ---------------------------------------------------------------------------
+
+export type TicketListRow = Omit<Ticket, "requesterId" | "requester" | "description" | "attachments">;
+
+export interface TicketListMeta {
+  page: number;
+  pageSize: number;
+  total: number;
+  totalPages: number;
+  sort: string;
+}
+
+export interface TicketListPage {
+  data: TicketListRow[];
+  meta: TicketListMeta;
+}
+
+// The C-27 query, as strings straight from the address bar. Empty values are
+// not sent, so the server's defaults apply.
+export interface TicketListQuery {
+  search?: string;
+  categoryId?: string;
+  relatedSystemId?: string;
+  currentStatus?: string;
+  sort?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export function fetchTickets(requesterId: number, query: TicketListQuery): Promise<TicketListPage> {
+  const params = new URLSearchParams({ requesterId: String(requesterId) });
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== "") params.set(key, String(value));
+  }
+  return getJson(`/api/tickets?${params.toString()}`);
+}
+
+export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
+  return getJson(`/api/tickets/${id}?requesterId=${requesterId}`);
+}

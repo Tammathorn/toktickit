@@ -17,26 +17,37 @@ import {
 
 interface RouterValue {
   path: string;
-  navigate: (to: string) => void;
+  /** The query string, including the leading "?" or empty. My Tickets keeps its state here. */
+  search: string;
+  navigate: (to: string, options?: { replace?: boolean }) => void;
 }
 
 const RouterContext = createContext<RouterValue | null>(null);
 
+function currentLocation() {
+  return { path: window.location.pathname, search: window.location.search };
+}
+
 export function RouterProvider({ children }: { children: ReactNode }) {
-  const [path, setPath] = useState(() => window.location.pathname);
+  const [location, setLocation] = useState(currentLocation);
 
   useEffect(() => {
-    const onPopState = () => setPath(window.location.pathname);
+    const onPopState = () => setLocation(currentLocation());
     window.addEventListener("popstate", onPopState);
     return () => window.removeEventListener("popstate", onPopState);
   }, []);
 
-  const navigate = useCallback((to: string) => {
-    window.history.pushState({}, "", to);
-    setPath(new URL(to, window.location.origin).pathname);
+  const navigate = useCallback((to: string, options?: { replace?: boolean }) => {
+    if (options?.replace) window.history.replaceState({}, "", to);
+    else window.history.pushState({}, "", to);
+    setLocation(currentLocation());
   }, []);
 
-  return <RouterContext.Provider value={{ path, navigate }}>{children}</RouterContext.Provider>;
+  return (
+    <RouterContext.Provider value={{ path: location.path, search: location.search, navigate }}>
+      {children}
+    </RouterContext.Provider>
+  );
 }
 
 export function useRouter(): RouterValue {
