@@ -579,71 +579,82 @@ Per `LS 13.1`. Each item is verifiable by reading a named file or running a name
 
 **Implementation**
 
-- [ ] Every FR-01..FR-49 is implemented and can be exercised in the running application.
-- [ ] Every BR-01..BR-65 is enforced where the rule says it is enforced - client rules in
+- [x] Every FR-01..FR-49 is implemented and can be exercised in the running application.
+- [x] Every BR-01..BR-65 is enforced where the rule says it is enforced - client rules in
       the client, backend rules in the backend.
-- [ ] `git grep -n` finds no password, session, token, role, comment, note, actions-taken
+- [x] `git grep -n` finds no password, session, token, role, comment, note, actions-taken
       or status-transition code anywhere in `client/src` or `server/src` (LS 4.2).
-- [ ] `server/prisma/schema.prisma` matches section 7, including every index.
-- [ ] `npx prisma migrate status` reports no pending migration.
-- [ ] `npm run prisma:seed` run twice creates no duplicate rows (LS 5.3).
+- [x] `server/prisma/schema.prisma` matches section 7, including every index.
+- [x] `npx prisma migrate status` reports no pending migration.
+- [x] `npm run prisma:seed` run twice creates no duplicate rows (LS 5.3).
 
 **Tests**
 
-- [ ] `cd server && npm test` passes on the final `main` branch, including the Lab 1 suite.
-- [ ] `cd client && npm test` passes on the final `main` branch, including the repointed
+- [x] `cd server && npm test` passes on the final `main` branch, including the Lab 1 suite.
+- [x] `cd client && npm test` passes on the final `main` branch, including the repointed
       Lab 1 suite (C-04).
-- [ ] `npm run test:e2e` passes from the repository root on the final `main` branch.
-- [ ] All six test levels from `LS 9.2` are present: unit, API, UI component, UI style,
+- [x] `npm run test:e2e` passes from the repository root on the final `main` branch.
+- [x] All six test levels from `LS 9.2` are present: unit, API, UI component, UI style,
       responsive, E2E.
-- [ ] Every AC-01..AC-67 maps to at least one test in `tests.md`, and every planned test
+- [x] Every AC-01..AC-67 maps to at least one test in `tests.md`, and every planned test
       names a file path that exists.
-- [ ] The boundary cases are covered by passing tests: Ticket Summary at 4, 5, 120 and 121
+- [x] The boundary cases are covered by passing tests: Ticket Summary at 4, 5, 120 and 121
       characters; Description at 19, 20, 5000 and 5001; the fifth and the sixth active
       attachment; a file at 5 MB and one just over; page sizes 10, 25, 50 and one outside
       the set; the last page and one page beyond it.
-- [ ] No test is skipped, disabled, commented out or marked `.only` - verifiable by
+- [x] No test is skipped, disabled, commented out or marked `.only` - verifiable by
       `git grep -n "\.skip\|\.only\|xit(\|xdescribe("`.
 
 **UI**
 
-- [ ] Every screen matches `ui-spec.md` at 1280, 834 and 390 px.
-- [ ] The visual checklist in `tests.md` is completed, with no unresolved item.
-- [ ] Screenshots exist under `artifacts/lab-02/screenshots/{create-ticket,my-tickets,ticket-detail}/`.
-- [ ] The four Zen Green hex tokens fixed in section 6 appear unchanged in the built CSS,
+- [x] Every screen matches `ui-spec.md` at 1280, 834 and 390 px.
+- [x] The visual checklist in `tests.md` is completed, with no unresolved item.
+- [x] Screenshots exist under `artifacts/lab-02/screenshots/{create-ticket,my-tickets,ticket-detail}/`.
+- [x] The four Zen Green hex tokens fixed in section 6 appear unchanged in the built CSS,
       and the two tokens `LS 7` states as descriptions - the white card surface and the
       dark charcoal-green body text - carry the hex values `ui-spec.md` assigns them.
-- [ ] The Selection screen carries the "not a login screen" disclaimer (BR-03, AC-08).
+- [x] The Selection screen carries the "not a login screen" disclaimer (BR-03, AC-08).
 
 **Review**
 
 - [ ] Every Issue was implemented on its own feature branch and merged into `lab2-staging`
       through a peer-reviewed PR (LS 10.1).
-- [ ] `docs/lab-02/reviewer.md` records reviewer identity, PR links, comments given and
+- [x] `docs/lab-02/reviewer.md` records reviewer identity, PR links, comments given and
       received, responses and approvals.
-- [ ] One release PR merged `lab2-staging` into `main`.
+- [x] One release PR merged `lab2-staging` into `main`.
 
 **Documentation**
 
-- [ ] `specification.md`, `api-spec.md`, `ui-spec.md`, `tests.md`, `decisions.md`,
+- [x] `specification.md`, `api-spec.md`, `ui-spec.md`, `tests.md`, `decisions.md`,
       `reviewer.md` and `ai-use.md` all exist under `docs/lab-02/`.
-- [ ] `specification.md` and `api-spec.md` do not contradict each other on any endpoint.
-- [ ] Every endpoint implemented in `server/src` conforms to `api-spec.md` on path, method,
+- [x] `specification.md` and `api-spec.md` do not contradict each other on any endpoint.
+- [x] Every endpoint implemented in `server/src` conforms to `api-spec.md` on path, method,
       request shape, response shape and status code, with a Supertest assertion for each.
-- [ ] `ui-spec.md` defines exactly one validation message per rule in BR-30..BR-34, and the
+- [x] `ui-spec.md` defines exactly one validation message per rule in BR-30..BR-34, and the
       client and server strings match it (BR-35, AC-23).
-- [ ] README setup and test commands are current and were run as written.
-- [ ] `server/.env.example` lists `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`; no `.env` is tracked.
+- [x] README setup and test commands are current and were run as written.
+- [x] `server/.env.example` lists `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`; no `.env` is tracked.
 
 **Demonstration**
 
-- [ ] The six Create Ticket states are captured (LS 14 Part 6).
-- [ ] The four Selection screen states are captured: loading, populated, empty and API
+- [x] The six Create Ticket states are captured (LS 14 Part 6).
+- [x] The four Selection screen states are captured: loading, populated, empty and API
       failure (LS 8.1, LS 14 Part 6).
-- [ ] Requester A to B switching is captured showing A's tickets disappear (LS 14 Part 7).
+- [x] Requester A to B switching is captured showing A's tickets disappear (LS 14 Part 7).
 - [ ] Attachment add, preview, download, soft removal with reason, retained metadata and
       blocked download of a removed file are captured (LS 14 Part 8).
-- [ ] A cross-requester rejection is captured showing the 403 (BR-21).
+- [x] A cross-requester rejection is captured showing the 403 (BR-21).
+
+**Verified 2026-09-17 against `main`.** 30 of 32 items are ticked from a named file, command
+or PR: the three suites on `main` at `d48cbd2` (server 86, client 48, Playwright 126), the
+`git grep` checks, DB-01..DB-08 for the schema and seed, VIS-01 in `tests.md` section 4, the
+93 files under `artifacts/lab-02/screenshots/`, and PRs #18-#26. The item-3 `git grep`
+matches only ARIA `role=` attributes, a download-status `note` label and a `refsToken`
+refresh counter - none implements an excluded feature. Two items stay unticked: **peer
+review on every PR** - one of eight feature PRs (#18) was reviewed, seven were merged
+without review, as `reviewer.md` records; and **the attachment preview capture** - preview
+is asserted by API-36 and appears as a control in `detail-<vp>-active.png`, but no capture
+shows it open.
 
 ---
 
