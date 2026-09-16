@@ -8,10 +8,10 @@ three suites were run from that commit with both dev servers up. For each of the
 parts this lists which repository files and committed screenshots satisfy it, and which
 pieces can only come from the GitHub web UI or the IDE and must be captured by hand.
 
-Updated 2026-09-17: `artifacts/lab-02/evidence/` now holds the README / `.gitignore`
-renders, the Part 6 `requesterId` proof, and the sixteen hand captures of GitHub and VS Code
-that were moved there from the root `screenshot/` folder (since removed) and renamed for
-their content. Rows marked **[evidence]** point at them.
+Updated 2026-09-17 (second pass): `artifacts/lab-02/evidence/` holds 34 PNGs - the README /
+`.gitignore` renders, the Part 6 `requesterId` proof, and the hand captures of GitHub, VS Code
+and the running app, renamed `part<N>-...` for the report part each serves. Superseded and
+redundant captures were deleted. Rows marked **[evidence]** point at them.
 
 Screenshot paths are relative to `artifacts/lab-02/screenshots/`. `<vp>` means the three
 files `desktop`, `tablet`, `mobile` (1280 / 834 / 390 px, C-10).
@@ -26,13 +26,13 @@ by hand - **[IDE]** screenshot the editor by hand.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Commit graph on `main` showing eight feature PRs into `lab2-staging` and one release PR into `main` | **[evidence]** `evidence/part1-commit-graph-main.png` (2105 x 1510) - `git log --graph` in the terminal from `d48cbd2 (HEAD -> main) Merge pull request #26` down through #25..#18 and the Lab 1 merges, branch labels visible | done; the **[GitHub]** `Pull requests > Closed` list is still outstanding (see below) |
-| Project board with every Issue in Done | **[evidence]** `evidence/part1-board-done-partial.png` (Done = 12; cards #3 #4 #5 #2 #10 #11 #12 #13 #14 #15 visible, **#16 and #17 are below the fold**). Workflow progression for Issue #10: `part1-board-backlog-2026-09-04.png` (all eight in Backlog, four Lab 1 Issues Done), `part1-board-backlog-2026-09-08.png` (same state, 8 Sep), `part1-board-issue10-specified.png`, `part1-board-issue10-pr-review.png`, `part1-board-issue10-done.png` | **[GitHub]** retake the Done view so #16 and #17 are inside the frame (Recapture 1) |
-| Rendered `reviewer.md` with both-direction comments | `docs/lab-02/reviewer.md` **[repo]** - sections 1, 2 and 4 are complete; section 3 (reviews given to the partner) is an empty table by design and says so. PR #18 review thread: **[evidence]** `evidence/part1-pr18-review-and-author-reply.png` (1095 x 1122, merged state, the *Changes requested* comment on C-11 by @PAKATO123 and the author's reply in one frame - the primary capture); `part1-pr18-open-changes-requested.png` (the PR while still Open, reviewer comment only) and `part1-pr18-merged-review-thread.png` (just after merge, reply below the fold) are earlier versions of the same thread | **[GitHub]** render of `reviewer.md` on `main` still outstanding |
+| Commit graph on `main` showing eight feature PRs into `lab2-staging` and one release PR into `main` | **[evidence]** `evidence/part1-commit-graph-main.png` (2105 x 1510) - `git log --graph` from `d48cbd2 (HEAD -> main) Merge pull request #26` down through #25..#18 and the Lab 1 merges, branch labels visible. `evidence/part1-pr-list-closed.png` (820 x 1352) - GitHub `Pull requests`, `is:pr state:closed`: #26 down to #18 and the five Lab 1 PRs, all merged; #18 carries the *Changes requested* marker. Base branches are not shown in the list view; the graph and `reviewer.md` section 1 give them | done |
+| Project board with every Issue in Done | **[evidence]** `evidence/part1-board-all-done.png` (1795 x 1045) - Done = 12 with every card in frame: Lab 1 #2 #3 #4 #5 and Lab 2 #10..#17; every other column 0. Progression for Issue #10: `part1-board-backlog-2026-09-04.png` (sprint start, #10..#17 in Backlog), `part1-board-issue10-specified.png`, `part1-board-issue10-pr-review.png`, `part1-board-issue10-done.png` | done |
+| Rendered `reviewer.md` with both-direction comments | **[evidence]** `evidence/part1-reviewer-md-rendered.png` (2877 x 1470) - GitHub render on `main`: title, author / reviewer / repository / branch-model table, section 1 summary rows #18..#22 (the rest is below the fold; the file is 189 lines). PR #18 thread: `part1-pr18-review-and-author-reply.png` (1072 x 1110, merged state, the *Changes requested* comment on C-11 and the author's reply in one frame - primary) and `part1-pr18-open-changes-requested.png` (the PR while still Open, review requested, comment only). `part1-pr19-merged-no-review.png` (1620 x 1215) - PR #19 merged, *Conversation 0*, no review; it also shows a review request sent to @PAKATO123 on 16 Sep, after the merge, which produced nothing. Section 3 of the file (reviews given) is an empty table by design | done. The rendered capture stops at row #22; the `reviewer.md` text itself is the record |
 | README | `README.md` **[repo]** | **[evidence]** `evidence/part1-readme.png` (full render, 1040 x 7564 px, GFM via the GitHub markdown API, header shows `main @ d48cbd2`) and the same content cut into six page-sized files `evidence/part1-readme-page-1of6.png` ... `part1-readme-page-6of6.png` (1040 x 1470 px each) for the PDF. No hand capture needed |
 | `.gitignore` | `.gitignore` **[repo]** - `node_modules/`, `.env`, `dist/`, `build/`, `*.log`, `/test-results/`, `/playwright-report/`, `/blob-report/`, `server/uploads/`, `docs/lab-02/spec/*.pdf` | **[evidence]** `evidence/part1-gitignore.png` (all 27 lines, numbered, 900 x 900 px). No hand capture needed |
-| `.env.example` with `UPLOAD_DIR` and `MAX_UPLOAD_BYTES` placeholders (C-38) | `server/.env.example` **[repo]** | **[IDE]** open the file |
-| Directory tree matching labsheet section 12 | **[evidence]** VS Code Explorer, one subtree per file: `evidence/part1-tree-docs-lab-02.png` (`docs/lab-02/` with all seven named files plus `handoff.md` and `spec/`), `part1-tree-client-tests-lab-02.png` (`client/tests/lab-02/`, five `.test.tsx`), `part1-tree-e2e-lab-02.png` (`e2e/lab-02/`, five specs), `part1-tree-artifacts-screenshots.png` (`artifacts/lab-02/screenshots/`, three folders). `part1-tree-docs-lab-02-crop.png` is a tighter crop of the docs view that stops before `ui-spec.md` - redundant | **[IDE]** still missing: `server/tests/lab-02/` (six test files) and a collapsed root view (Recapture 2 and 3). Retake `part1-tree-artifacts-screenshots.png` after `feature/9-evidence` merges so `artifacts/lab-02/evidence/` and `evidence.md` appear |
+| `.env.example` with `UPLOAD_DIR` and `MAX_UPLOAD_BYTES` placeholders (C-38) | `server/.env.example` **[repo]** | **[IDE]** still missing - open `server/.env.example`. (A capture of `client/.env.example` was taken by mistake and deleted; the Lab 2 variables live in the server file) |
+| Directory tree matching labsheet section 12 | **[evidence]** VS Code Explorer, one subtree per file: `evidence/part1-tree-docs-lab-02.png` (`docs/lab-02/` with all seven named files plus `handoff.md` and `spec/`), `part1-tree-client-tests-lab-02.png` (`client/tests/lab-02/`, five `.test.tsx`), `part1-tree-e2e-lab-02.png` (`e2e/lab-02/`, five specs), `part1-tree-artifacts-screenshots.png` (`artifacts/lab-02/screenshots/`, three folders) | **[IDE]** still missing: `server/tests/lab-02/` (six test files - the capture named for it showed `client/tests` and was deleted) and one collapsed root view. Take both after the evidence PR merges so `artifacts/lab-02/evidence/` appears |
 
 Gaps to be aware of when writing Part 1: `reviewer.md` records one review in eight
 (PR #18), the other seven merged without review, and section 3 is empty. It also leaves
@@ -44,17 +44,17 @@ rather than around them.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Rendered `specification.md` with numbered FR / BR / AC / DoD | `docs/lab-02/specification.md` **[repo]** - section 4 FR-01.., section 5 BR-01.., section 9 AC-01.., section 10 Definition of Done | **[GitHub]** open the file on `main` so the tables render; capture section 4, section 5, section 9 and section 10 |
-| Proof the spec preceded the implementation PRs | `git log --format="%h %ci %s" -- docs/lab-02/specification.md` shows `b8b0c6a 2026-09-08 17:24 +0700` as the commit that added it; PR #18 merged 2026-09-08 10:25 UTC; the first implementation PR #19 opened 2026-09-13 16:40 UTC | **[GitHub]** PR #18 page showing its merge timestamp, next to PR #19's opened timestamp; or the commit page for `b8b0c6a`. `evidence/part1-pr18-merged-review-thread.png` shows *merged ... 2 minutes ago* - a relative time, not a date - so it does not settle this on its own |
+| Rendered `specification.md` with numbered FR / BR / AC / DoD | **[evidence]** GitHub renders on `main`, one per section: `evidence/part2-spec-section4-fr.png` (section 4 heading, FR-01..FR-08 of 49), `part2-spec-section5-br.png` (section 5 heading, BR-01..BR-09 of 65), `part2-spec-section9-ac.png` (section 9 heading, AC-01..AC-13 of 67), `part2-spec-section10-dod.png` (AC-66, AC-67, the *67 acceptance criteria* count, and section 10 Definition of Done - Implementation, Tests and UI groups). Each shows the first rows of its table; the counts (49 / 65 / 67) are stated in the file | done. Note: the Definition of Done checkboxes are **unticked** in the file on `main`; the report verifies each item instead |
+| Proof the spec preceded the implementation PRs | `git log --format="%h %ci %s" -- docs/lab-02/specification.md` shows `b8b0c6a 2026-09-08 17:24 +0700` as the commit that added it; PR #18 merged 2026-09-08 10:25 UTC; the first implementation PR #19 opened 2026-09-13 16:40 UTC (both from `gh pr view`, recorded in `reviewer.md` section 2) | **[evidence]** `evidence/part1-pr18-review-and-author-reply.png` (merged into `lab2-staging`, *last week*) and `part1-pr19-merged-no-review.png` (merged, *3 days ago*) show the order only as relative times. `reviewer.md` section 2 carries the absolute UTC timestamps. An absolute-date capture (hover the time on either PR) is still optional |
 | Supporting documents | `docs/lab-02/api-spec.md`, `docs/lab-02/decisions.md` (C-01..C-52) **[repo]** | optional **[GitHub]** render of the decisions table |
 
 ## Part 3 (10 pts) - Test plan, traceability, passing output from `main`
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Planned test table with real file paths | `docs/lab-02/tests.md` **[repo]** section 2 (2.1 unit ... 2.7 data model) | **[GitHub]** render of section 2 |
-| AC traceability | `docs/lab-02/tests.md` section 3 | **[GitHub]** render of section 3 |
-| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[GitHub]** render of section 6 |
+| Planned test table with real file paths | `docs/lab-02/tests.md` **[repo]** section 2 (2.1 unit ... 2.7 data model) | **[evidence]** `evidence/part3-tests-md-rendered.png` (2875 x 1445) - GitHub render on `main`: title, sources, section 1 strategy table with the seven prefixes and where each lives. Sections 2, 3 and 6 are below the fold - **[GitHub]** still missing: a capture of section 2 (planned table), section 3 (traceability) and section 6 (final results) |
+| AC traceability | `docs/lab-02/tests.md` section 3 | **[GitHub]** render of section 3 still missing |
+| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[GitHub]** render of section 6 still missing; Appendix A of this file is the `main` run |
 | Passing output from `main` | Appendix A of this file: the ANSI-stripped output of `cd server && npm test`, `cd client && npm test`, `npx playwright test e2e/lab-02` run on `main` at `d48cbd2` on 2026-09-16 (Start at 23:29:03, 23:30:08 and the 13.3 s Playwright run). Note that the paste in `tests.md` section 6 was made on `feature/8-release-docs` before the release merge; the `main` run is the one in Appendix A | **[IDE]** terminal panel showing the three commands with `git branch --show-current` printing `main` in the same panel |
 | Test files exist where the plan says | `server/tests/lab-02/{create-ticket.api,my-tickets.api,ticket-detail.api,attachments.api,ticket-number.unit,data-model.db}.test.ts`, `client/tests/lab-02/{CreateTicket,MyTickets,RequesterTicketDetail,AttachmentSection,RequesterSelection}.test.tsx`, `e2e/lab-02/requester-ticket-flow.spec.ts` | **[IDE]** Explorer |
 
@@ -62,7 +62,7 @@ rather than around them.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Rendered `ai-use.md`: LLM named, 6-10 key prompts, reflection | `docs/lab-02/ai-use.md` **[repo]** - section 1 names the LLM, section 2 has the ten-row prompt table, section 3 is the reflection | **[GitHub]** render of the file on `main` |
+| Rendered `ai-use.md`: LLM named, 6-10 key prompts, reflection | `docs/lab-02/ai-use.md` **[repo]** - section 1 names the LLM, section 2 has the ten-row prompt table, section 3 is the reflection | **[evidence]** `evidence/part4-ai-use-md-rendered.png` (2875 x 1375) - GitHub render on `main`: title, section 1 *The LLM I used* table (Claude Opus 5, Claude Code) and the working-agreement paragraph. Sections 2 and 3 are below the fold - **[GitHub]** capture of the prompt table and reflection still missing |
 
 ## Part 5 (0 pts) - Development Requester Selection
 
@@ -78,7 +78,7 @@ prefix because labsheet section 12 fixes three folder names (ui-spec section 15)
 | Empty | `create-ticket/selection-<vp>-empty.png` |
 | Failure with Retry | `create-ticket/selection-<vp>-failure.png` |
 
-Nothing here needs a hand capture.
+Also **[evidence]** `evidence/part5-selection-browser-localhost.png` (2877 x 1280) - the same screen in Edge at `localhost:5173` with the address bar visible, dropdown unselected, Continue disabled, the *This is not a login screen* wording readable. Nothing else needs a hand capture.
 
 ## Part 6 (10 pts) - Create Ticket in six states, plus the selector
 
@@ -92,6 +92,8 @@ Nothing here needs a hand capture.
 | Invalid attachment | `create-ticket/create-<vp>-invalid-attachment.png` |
 | Focused field (VIS-01 row 35) | `create-ticket/create-<vp>-focus.png` |
 | Selector, dropdown, selected-user display, Change Requester, loading, failure | the six `selection-<vp>-*.png` listed under Part 5 |
+
+Also **[evidence]** `evidence/part6-create-ticket-browser-localhost.png` (2797 x 1462) - the initial state in the browser as Anucha Prasert (Requester A): Ticket Number *Generated on submission*, Ticket Date and Requester read-only, Medium preset, counters 0 / 120 and 0 / 5000, attachment hint.
 
 `requesterId` proof - **[evidence]** `evidence/part6-requesterid-proof.png` (1100 x 1511 px):
 
@@ -134,7 +136,7 @@ Nothing here needs a hand capture.
 
 Demo counts backing these captures: Requester A 14, B 3, C 0 (`server/prisma/seed-demo.ts`,
 C-22; the seed printed "0 tickets created, 17 already present" before this run). Nothing
-here needs a hand capture.
+here needs a hand capture. Also **[evidence]** `evidence/part7-my-tickets-browser-localhost.png` (2867 x 1665) - My Tickets in the browser as Anucha Prasert: toolbar (search, Category, Related System, Current Status, Sort = Newest first) and the six-column table with TKT-2026-000001..000007 of the demo seed, priority and status badges.
 
 ## Part 8 (5 pts) - Ticket Detail and the attachment lifecycle
 
@@ -156,9 +158,9 @@ are in Appendix A.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Rendered `ui-spec.md` | `docs/lab-02/ui-spec.md` **[repo]** - section 2 tokens, section 7 button hierarchy, section 15 screenshot paths, section 16 checklist | **[GitHub]** render of the file on `main` |
+| Rendered `ui-spec.md` | `docs/lab-02/ui-spec.md` **[repo]** - section 2 tokens, section 7 button hierarchy, section 15 screenshot paths, section 16 checklist | **[evidence]** `evidence/part9-ui-spec-md-rendered.png` (2865 x 1450) - GitHub render on `main`: title *Lab 2 UI Specification - Zen Green Theme*, preamble, section 1 breakpoint table. Section 2 (tokens) is below the fold - **[GitHub]** capture of section 2 still missing |
 | Desktop / tablet / mobile of each screen | One state per screen at all three widths: `create-ticket/selection-<vp>-populated.png`, `create-ticket/create-<vp>-initial.png`, `my-tickets/list-<vp>-populated.png`, `ticket-detail/detail-<vp>-active.png` - 12 files that show the table-to-cards change at 390 px and the collapsed navbar | **[png]** |
-| Completed visual checklist | `docs/lab-02/tests.md` section 4 (4.1 colour ... 4.6 accessibility), VIS-01 with every row ticked in the D / T / M columns and the two rows that needed a fix noted under the tables; section 2's planned-test table shows `Pass` on all 111 rows | **[GitHub]** render of section 4 |
+| Completed visual checklist | `docs/lab-02/tests.md` section 4 (4.1 colour ... 4.6 accessibility), VIS-01 with every row ticked in the D / T / M columns and the two rows that needed a fix noted under the tables; section 2's planned-test table shows `Pass` on all 111 rows | **[GitHub]** render of section 4 still missing |
 | Responsive assertions ran | RESP-01..RESP-06 lines in Appendix A, for all three projects | terminal |
 
 ## Screenshot inventory (checked 2026-09-16)
@@ -176,7 +178,7 @@ captured on 15 Sep 2026 at 23:42 local, after the `theme.css` touch-target and f
 change in the same commit (`2ed6643`, 23:43), and a full re-run on `main` today
 reproduced the same layouts, differing only in run-specific dates and Ticket Numbers.
 
-## `artifacts/lab-02/evidence/` (25 PNGs, untracked until `feature/9-evidence` is committed)
+## `artifacts/lab-02/evidence/` - 34 PNGs
 
 Generated on 2026-09-17 from `main @ d48cbd2`:
 
@@ -187,71 +189,64 @@ Generated on 2026-09-17 from `main @ d48cbd2`:
 | `part1-gitignore.png` | 900 x 900 | Part 1 - `.gitignore`, 27 numbered lines |
 | `part6-requesterid-proof.png` | 1100 x 1511 | Part 6 - `TKT-2026-000484` / `requesterId` 4 / Siriporn Chaiyo, 200 vs 403 |
 
-Hand-captured (GitHub web UI, VS Code, terminal), moved from the root `screenshot/` folder
-on 2026-09-17 and renamed for what each shows. Four byte-identical duplicates of the tree
-captures were dropped in the move.
+Hand-captured (GitHub web UI, VS Code, Edge, terminal):
 
-| File | Size (px) | Taken | Shows | Use |
-|---|---|---|---|---|
-| `part1-commit-graph-main.png` | 2105 x 1510 | 16 Sep | `git log --graph` on `main`: #26 -> #25 ... #18 with branch labels, then the Lab 1 history | **Part 1 primary** |
-| `part1-board-done-partial.png` | 2812 x 1400 | 16 Sep | Board, Done = 12; #2 #3 #4 #5 #10..#15 visible, #16 #17 below the fold | Part 1 - **retake** |
-| `part1-board-backlog-2026-09-04.png` | 2867 x 1390 | 4 Sep | Board at sprint start: #10..#17 in Backlog, Lab 1 #2..#5 Done | Part 1 - sprint start |
-| `part1-board-backlog-2026-09-08.png` | 2877 x 1320 | 8 Sep | Same state as above, four days later | redundant with the 4 Sep capture |
-| `part1-board-issue10-specified.png` | 2877 x 1335 | 4 Sep | #10 in Specified | Part 1 - workflow |
-| `part1-board-issue10-pr-review.png` | 2875 x 1112 | 8 Sep | #10 in PR Review | Part 1 - workflow |
-| `part1-board-issue10-done.png` | 2865 x 1310 | 8 Sep | #10 in Done, Done = 5 | Part 1 - workflow |
-| `part1-pr18-review-and-author-reply.png` | 1095 x 1122 | 16 Sep | PR #18 merged; the *Changes requested* comment by @PAKATO123 and the author's C-49 reply in one frame | **Part 1 primary** for the review record |
-| `part1-pr18-open-changes-requested.png` | 2437 x 1360 | 8 Sep | PR #18 while Open: reviewer requested, review comment, no reply yet | Part 1 - optional |
-| `part1-pr18-merged-review-thread.png` | 2855 x 1407 | 8 Sep | PR #18 *merged 2 minutes ago*, review comment; reply cut off | Part 1 - optional |
-| `part1-tree-docs-lab-02.png` | 680 x 1197 | 16 Sep | Explorer: `docs/lab-02/` with `spec/`, `ai-use.md` ... `ui-spec.md` | **Part 1 tree** |
-| `part1-tree-docs-lab-02-crop.png` | 667 x 597 | 16 Sep | Same subtree, tighter crop, stops at `tests.md` | redundant |
-| `part1-tree-client-tests-lab-02.png` | 722 x 722 | 16 Sep | Explorer: `client/tests/lab-02/`, five `.test.tsx` | **Part 1 tree** |
-| `part1-tree-e2e-lab-02.png` | 665 x 360 | 16 Sep | Explorer: `e2e/lab-02/`, five specs | **Part 1 tree** |
-| `part1-tree-artifacts-screenshots.png` | 715 x 432 | 16 Sep | Explorer: `artifacts/lab-02/screenshots/`, three folders | Part 1 tree - **retake after merge** (no `evidence/` yet) |
-| `part1-terminal-git-status-main-restore.png` | 1065 x 1440 | 16 Sep | PowerShell: `git status` on `main` listing 51 regenerated screenshots, then `git checkout --` and a clean status | not needed for any part; leave out of the PDF |
+| File | Size (px) | Shows | Use |
+|---|---|---|---|
+| `part1-commit-graph-main.png` | 2105 x 1510 | `git log --graph` on `main`: #26 -> #25 ... #18 with branch labels, then Lab 1 | Part 1 primary |
+| `part1-pr-list-closed.png` | 820 x 1352 | `Pull requests`, closed: #26..#18 merged (#18 marked *Changes requested*), plus Lab 1 #9..#1 | Part 1 |
+| `part1-board-all-done.png` | 1795 x 1045 | Board, Done = 12, all cards in frame (#2..#5, #10..#17), other columns 0 | Part 1 primary |
+| `part1-board-backlog-2026-09-04.png` | 2867 x 1390 | Board at sprint start: #10..#17 in Backlog, Lab 1 #2..#5 Done | Part 1 - start |
+| `part1-board-issue10-specified.png` | 2877 x 1335 | #10 in Specified | Part 1 - workflow |
+| `part1-board-issue10-pr-review.png` | 2875 x 1112 | #10 in PR Review | Part 1 - workflow |
+| `part1-board-issue10-done.png` | 2865 x 1310 | #10 in Done, Done = 5 | Part 1 - workflow |
+| `part1-reviewer-md-rendered.png` | 2877 x 1470 | `reviewer.md` on `main`: header table and summary rows #18..#22 | Part 1 |
+| `part1-pr18-review-and-author-reply.png` | 1072 x 1110 | PR #18 merged; *Changes requested* comment and the author's reply in one frame | Part 1 primary (review) |
+| `part1-pr18-open-changes-requested.png` | 2437 x 1360 | PR #18 while Open: review requested, comment, no reply yet | Part 1 - optional |
+| `part1-pr19-merged-no-review.png` | 1620 x 1215 | PR #19 merged into `lab2-staging`, *Conversation 0*, no review; post-merge review request on 16 Sep | Part 1 / Part 2 |
+| `part1-tree-docs-lab-02.png` | 680 x 1197 | Explorer: `docs/lab-02/` | Part 1 tree |
+| `part1-tree-client-tests-lab-02.png` | 722 x 722 | Explorer: `client/tests/lab-02/` | Part 1 tree |
+| `part1-tree-e2e-lab-02.png` | 665 x 360 | Explorer: `e2e/lab-02/` | Part 1 tree |
+| `part1-tree-artifacts-screenshots.png` | 715 x 432 | Explorer: `artifacts/lab-02/screenshots/` (predates `evidence/`) | Part 1 tree |
+| `part2-spec-section4-fr.png` | 2815 x 1437 | `specification.md` section 4, FR-01..FR-08 | Part 2 |
+| `part2-spec-section5-br.png` | 2807 x 1455 | section 5, BR-01..BR-09 | Part 2 |
+| `part2-spec-section9-ac.png` | 2812 x 1412 | section 9, AC-01..AC-13 | Part 2 |
+| `part2-spec-section10-dod.png` | 2815 x 1472 | AC-66..67, *67 acceptance criteria*, section 10 Definition of Done (boxes unticked) | Part 2 |
+| `part3-tests-md-rendered.png` | 2875 x 1445 | `tests.md` on `main`: title, section 1 strategy table | Part 3 (top of file only) |
+| `part4-ai-use-md-rendered.png` | 2875 x 1375 | `ai-use.md` on `main`: title, section 1 LLM table | Part 4 (top of file only) |
+| `part5-selection-browser-localhost.png` | 2877 x 1280 | Edge at `localhost:5173`: Selection screen, *not a login screen* text, Continue disabled | Part 5 / 6 |
+| `part6-create-ticket-browser-localhost.png` | 2797 x 1462 | Create Ticket initial state as Anucha Prasert | Part 6 |
+| `part7-my-tickets-browser-localhost.png` | 2867 x 1665 | My Tickets as Anucha Prasert, toolbar and table, TKT-2026-000001..000007 | Part 7 |
+| `part9-ui-spec-md-rendered.png` | 2865 x 1450 | `ui-spec.md` on `main`: title, preamble, section 1 breakpoints | Part 9 (top of file only) |
 
-Readability: the GitHub board and PR captures are full-screen at about 2850 px wide with
-13-14 px UI text. They read at 100 % but will shrink to roughly 40 % on an A4 page; crop
-each to the columns or thread that matters before placing it, or retake at browser zoom
-150 %. The terminal, Explorer and 1095 px PR capture are fine as they are.
+Deleted on 2026-09-17 as superseded or redundant: `part1-board-done-partial.png` (replaced by
+`part1-board-all-done.png`), `part1-board-backlog-2026-09-08.png` (same state as the 4 Sep
+capture), `part1-pr18-merged-review-thread.png` (reply cut off; the reply capture covers it),
+`part1-tree-docs-lab-02-crop.png` (subset), `part1-terminal-git-status-main-restore.png` (not
+evidence for any part), an unnamed duplicate of the PR #18 thread, and a capture labelled as
+`server/tests` that actually showed `client/tests` and `client/.env.example`.
 
-## Recapture list
-
-1. **Board, all Lab 2 Issues Done** - `part1-board-done-partial.png` stops at #15. Scroll
-   the Done column (or switch the view to table layout, or zoom the browser out) so
-   #10..#17 are all inside the frame with the `Done` header count.
-2. **`server/tests/lab-02/`** in the Explorer - no capture exists. Six files:
-   `attachments.api`, `create-ticket.api`, `data-model.db`, `my-tickets.api`,
-   `ticket-detail.api`, `ticket-number.unit`.
-3. **Root tree, collapsed** - one Explorer view with `artifacts client docs e2e server`
-   and `.gitignore CLAUDE.md package.json playwright.config.ts README.md` at the root.
-   Take it after `feature/9-evidence` is merged so `artifacts/lab-02/` shows `evidence/`,
-   `evidence.md` and `screenshots/`. That retake supersedes
-   `part1-tree-artifacts-screenshots.png`.
-4. **Part 2 timestamps** - PR #18 merged date beside PR #19 opened date (hover the relative
-   time, or use the commit page for `b8b0c6a`).
-
-The existing tree captures do **not** need retaking because of the removed `screenshot/`
-folder: each is scoped to a subtree (`docs/lab-02`, `client/tests/lab-02`, `e2e/lab-02`,
-`artifacts/lab-02/screenshots`) and none shows the repository root, so the folder never
-appeared in them.
+Readability: the full-screen GitHub captures are about 2850 px wide with 13-14 px UI text.
+They read at 100 % but shrink to roughly 40 % on an A4 page; crop each to the table or
+thread that matters before placing it. The 820-1800 px captures (PR list, board-all-done,
+PR #18 reply, PR #19) and the Explorer subtrees place well as they are.
 
 ## Still missing - hand list
 
-1. **[GitHub]** Board with #10..#17 all in Done, inside one frame (Recapture 1).
-2. **[GitHub]** `Pull requests > Closed`: PRs #18-#26 merged, bases visible (#18-#25 into
-   `lab2-staging`, #26 into `main`).
-3. **[GitHub]** PR #18 merged timestamp beside PR #19 opened timestamp (Part 2 proof).
-4. **[GitHub]** Rendered `specification.md`, `tests.md`, `ai-use.md`, `ui-spec.md`,
-   `reviewer.md` on `main`.
-5. **[IDE]** `server/tests/lab-02/` expanded (Recapture 2); collapsed root tree after the
-   evidence merge (Recapture 3); `server/.env.example` open.
-6. **[IDE]** Terminal with `git branch --show-current` = `main` and the three test commands,
-   or use Appendix A.
+1. **[IDE]** `server/tests/lab-02/` expanded (six files: `attachments.api`, `create-ticket.api`,
+   `data-model.db`, `my-tickets.api`, `ticket-detail.api`, `ticket-number.unit`).
+2. **[IDE]** `server/.env.example` open, showing `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`.
+3. **[IDE]** One collapsed root tree (`artifacts client docs e2e server`, `.gitignore`,
+   `CLAUDE.md`, `package.json`, `playwright.config.ts`, `README.md`), taken after the
+   evidence PR merges so `artifacts/lab-02/evidence/` is in it.
+4. **[GitHub]** `tests.md` scrolled to section 2 (planned table), section 3 (traceability),
+   section 4 (VIS-01) and section 6 (final results).
+5. **[GitHub]** `ai-use.md` scrolled to section 2 (prompt table) and section 3 (reflection).
+6. **[GitHub]** `ui-spec.md` scrolled to section 2 (tokens).
+7. **[GitHub]** optional: an absolute-date view of PR #18 merged / PR #19 opened.
 
-Done and in `evidence/`: commit graph, PR #18 review thread, README, `.gitignore`,
-Issue #10 board progression, the `docs/lab-02` / `client/tests/lab-02` / `e2e/lab-02` /
-`artifacts/lab-02/screenshots` trees, Part 6 `requesterId` proof.
+Everything else in the nine parts is covered by `artifacts/lab-02/screenshots/` (93 files),
+the generated renders, and the hand captures listed above.
 
 ---
 
