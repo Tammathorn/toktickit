@@ -31,8 +31,8 @@ by hand - **[IDE]** screenshot the editor by hand.
 | Rendered `reviewer.md` with both-direction comments | **[evidence]** `evidence/part1-reviewer-md-rendered.png` (2877 x 1470) - GitHub render on `main`: title, author / reviewer / repository / branch-model table, section 1 summary rows #18..#22 (the rest is below the fold; the file is 189 lines). PR #18 thread: `part1-pr18-review-and-author-reply.png` (1072 x 1110, merged state, the *Changes requested* comment on C-11 and the author's reply in one frame - primary) and `part1-pr18-open-changes-requested.png` (the PR while still Open, review requested, comment only). `part1-pr19-merged-no-review.png` (1620 x 1215) - PR #19 merged, *Conversation 0*, no review; it also shows a review request sent to @PAKATO123 on 16 Sep, after the merge, which produced nothing. Section 3 of the file (reviews given) is an empty table by design | done. The rendered capture stops at row #22; the `reviewer.md` text itself is the record |
 | README | `README.md` **[repo]** | **[evidence]** `evidence/part1-readme.png` (full render, 1040 x 7564 px, GFM via the GitHub markdown API, header shows `main @ d48cbd2`) and the same content cut into six page-sized files `evidence/part1-readme-page-1of6.png` ... `part1-readme-page-6of6.png` (1040 x 1470 px each) for the PDF. No hand capture needed |
 | `.gitignore` | `.gitignore` **[repo]** - `node_modules/`, `.env`, `dist/`, `build/`, `*.log`, `/test-results/`, `/playwright-report/`, `/blob-report/`, `server/uploads/`, `docs/lab-02/spec/*.pdf` | **[evidence]** `evidence/part1-gitignore.png` (all 27 lines, numbered, 900 x 900 px). No hand capture needed |
-| `.env.example` with `UPLOAD_DIR` and `MAX_UPLOAD_BYTES` placeholders (C-38) | `server/.env.example` **[repo]** | **[IDE]** still missing - open `server/.env.example`. (A capture of `client/.env.example` was taken by mistake and deleted; the Lab 2 variables live in the server file) |
-| Directory tree matching labsheet section 12 | **[evidence]** VS Code Explorer, one subtree per file: `evidence/part1-tree-docs-lab-02.png` (`docs/lab-02/` with all seven named files plus `handoff.md` and `spec/`), `part1-tree-client-tests-lab-02.png` (`client/tests/lab-02/`, five `.test.tsx`), `part1-tree-e2e-lab-02.png` (`e2e/lab-02/`, five specs), `part1-tree-artifacts-screenshots.png` (`artifacts/lab-02/screenshots/`, three folders) | **[IDE]** still missing: `server/tests/lab-02/` (six test files - the capture named for it showed `client/tests` and was deleted) and one collapsed root view. Take both after the evidence PR merges so `artifacts/lab-02/evidence/` appears |
+| `.env.example` with `UPLOAD_DIR` and `MAX_UPLOAD_BYTES` placeholders (C-38) | `server/.env.example` **[repo]** | **[evidence]** `evidence/part1-env-example.png` - the file rendered with line numbers; no real secret in it. Done |
+| Directory tree matching labsheet section 12 | **[evidence]** VS Code Explorer, one subtree per file: `evidence/part1-tree-docs-lab-02.png` (`docs/lab-02/` with all seven named files plus `handoff.md` and `spec/`), `part1-tree-client-tests-lab-02.png` (`client/tests/lab-02/`, five `.test.tsx`), `part1-tree-e2e-lab-02.png` (`e2e/lab-02/`, five specs), `part1-tree-artifacts-screenshots.png` (`artifacts/lab-02/screenshots/`, three folders) | **[evidence]** `evidence/part1-tree-server-tests-lab-02.png` - `server/tests/lab-02/` as a terminal listing (not an IDE capture). Optional: one collapsed root view from VS Code |
 
 Gaps to be aware of when writing Part 1: `reviewer.md` records one review in eight
 (PR #18), the other seven merged without review, and section 3 is empty. It also leaves
@@ -54,7 +54,7 @@ rather than around them.
 |---|---|---|
 | Planned test table with real file paths | `docs/lab-02/tests.md` **[repo]** section 2 (2.1 unit ... 2.7 data model) | **[evidence]** `evidence/part3-tests-md-rendered.png` (section 1 strategy) and the seven section-2 captures `evidence/part3-tests-section2-1-unit.png` ... `-7-data-model.png`, one per level, each row showing its file path and `Pass`. Done |
 | AC traceability | `docs/lab-02/tests.md` section 3 | **[evidence]** `evidence/part3-tests-section3-traceability.png` - AC-01..23 and AC-35..57 in frame with AC-54 = VIS-01 (manual); the other 21 rows are below the fold. Adequate; a second scroll is optional |
-| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[evidence]** `evidence/part3-terminal-e2e-126-passed.png` shows the Playwright `126 passed` tail only. **[IDE]** still missing: a terminal showing `git branch --show-current` = `main` with the server (86) and client (48) results - or paste Appendix A |
+| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[evidence]** `evidence/part3-terminal-main-suites.png` - branch name, server 86, client 48 in one image from a real run on `main @ ef2c910`; `evidence/part3-terminal-e2e-126-passed.png` - the Playwright `126 passed` tail. Done |
 | Passing output from `main` | Appendix A of this file: the ANSI-stripped output of `cd server && npm test`, `cd client && npm test`, `npx playwright test e2e/lab-02` run on `main` at `d48cbd2` on 2026-09-16 (Start at 23:29:03, 23:30:08 and the 13.3 s Playwright run). Note that the paste in `tests.md` section 6 was made on `feature/8-release-docs` before the release merge; the `main` run is the one in Appendix A | **[IDE]** terminal panel showing the three commands with `git branch --show-current` printing `main` in the same panel |
 | Test files exist where the plan says | `server/tests/lab-02/{create-ticket.api,my-tickets.api,ticket-detail.api,attachments.api,ticket-number.unit,data-model.db}.test.ts`, `client/tests/lab-02/{CreateTicket,MyTickets,RequesterTicketDetail,AttachmentSection,RequesterSelection}.test.tsx`, `e2e/lab-02/requester-ticket-flow.spec.ts` | **[IDE]** Explorer |
 
@@ -160,7 +160,7 @@ are in Appendix A.
 |---|---|---|
 | Rendered `ui-spec.md` | `docs/lab-02/ui-spec.md` **[repo]** - section 2 tokens, section 7 button hierarchy, section 15 screenshot paths, section 16 checklist | **[evidence]** `evidence/part9-ui-spec-md-rendered.png` (2865 x 1450) - GitHub render on `main`: title *Lab 2 UI Specification - Zen Green Theme*, preamble, section 1 breakpoint table. Section 2 (tokens) is below the fold - **[GitHub]** capture of section 2 still missing |
 | Desktop / tablet / mobile of each screen | One state per screen at all three widths: `create-ticket/selection-<vp>-populated.png`, `create-ticket/create-<vp>-initial.png`, `my-tickets/list-<vp>-populated.png`, `ticket-detail/detail-<vp>-active.png` - 12 files that show the table-to-cards change at 390 px and the collapsed navbar | **[png]** |
-| Completed visual checklist | `docs/lab-02/tests.md` section 4 (4.1 colour ... 4.6 accessibility), VIS-01 with every row ticked in the D / T / M columns and the two rows that needed a fix noted under the tables; section 2's planned-test table shows `Pass` on all 111 rows | **[GitHub]** render of section 4 still missing |
+| Completed visual checklist | `docs/lab-02/tests.md` section 4 (4.1 colour ... 4.6 accessibility), VIS-01 with every row ticked in the D / T / M columns and the two rows that needed a fix noted under the tables; section 2's planned-test table shows `Pass` on all 111 rows | **[evidence]** `evidence/part9-tests-section4-vis01.png` (one image) and `part9-tests-section4-vis01-page-1of3.png` ... `-3of3.png` (page slices), rendered through the GitHub markdown API. Done |
 | Responsive assertions ran | RESP-01..RESP-06 lines in Appendix A, for all three projects | terminal |
 
 ## Screenshot inventory (checked 2026-09-16)
@@ -178,7 +178,7 @@ captured on 15 Sep 2026 at 23:42 local, after the `theme.css` touch-target and f
 change in the same commit (`2ed6643`, 23:43), and a full re-run on `main` today
 reproduced the same layouts, differing only in run-specific dates and Ticket Numbers.
 
-## `artifacts/lab-02/evidence/` - 44 PNGs
+## `artifacts/lab-02/evidence/` - 51 PNGs
 
 Generated on 2026-09-17 from `main @ d48cbd2`:
 
@@ -188,6 +188,11 @@ Generated on 2026-09-17 from `main @ d48cbd2`:
 | `part1-readme-page-1of6.png` ... `-6of6.png` | 1040 x 1470 (last 1040 x 214) | Part 1 - the same render in page-sized slices |
 | `part1-gitignore.png` | 900 x 900 | Part 1 - `.gitignore`, 27 numbered lines |
 | `part6-requesterid-proof.png` | 1100 x 1511 | Part 6 - `TKT-2026-000484` / `requesterId` 4 / Siriporn Chaiyo, 200 vs 403 |
+| `part3-terminal-main-suites.png` | 1100 x 1679 | Part 3 - one session on `main @ ef2c910` (2026-09-17 05:19): `git branch --show-current` = main, `cd server && npm test` 8 files / 86 passed, `cd client && npm test` 6 files / 48 passed; real output, ANSI stripped |
+| `part9-tests-section4-vis01.png` | 1040 x 3306 | Part 9 - `tests.md` section 4 VIS-01 rendered through the GitHub markdown API, one image |
+| `part9-tests-section4-vis01-page-1of3.png` ... `-3of3.png` | 1040 x 1470 (last 1040 x 366) | Part 9 - the same render in page-sized slices: rows 1-17; rows 18-37 + notes on rows 14 and 33; notes on rows 35, 8, 37 |
+| `part1-tree-server-tests-lab-02.png` | 1000 x 900 | Part 1 - **terminal listing, not an IDE capture**: `ls -l server/tests/lab-02/`, `git ls-files server/tests`, and the `it(`/`test(` count per file (17 / 15 / 18 / 15 / 6 / 13) |
+| `part1-env-example.png` | 1000 x 900 | Part 1 - `server/.env.example`, all 7 lines: `UPLOAD_DIR=uploads`, `MAX_UPLOAD_BYTES=5242880`; `DATABASE_URL` is the Lab 1 Docker placeholder, no real secret; `.env` untracked |
 
 Hand-captured (GitHub web UI, VS Code, Edge, terminal):
 
@@ -243,14 +248,11 @@ PR #18 reply, PR #19) and the Explorer subtrees place well as they are.
 
 ## Still missing - hand list
 
-1. **[IDE]** `server/tests/lab-02/` expanded (six files: `attachments.api`, `create-ticket.api`,
-   `data-model.db`, `my-tickets.api`, `ticket-detail.api`, `ticket-number.unit`).
-2. **[IDE]** `server/.env.example` open, showing `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`.
-3. **[IDE]** Terminal on `main` with `git branch --show-current` and the server (86) and
-   client (48) results; the Playwright tail is already captured.
-4. **[GitHub]** `tests.md` section 4 (VIS-01) - the completed checklist with rows 33 and 35.
-5. Optional: `tests.md` section 6, `ai-use.md` rows 5-10 and section 3, `ui-spec.md`
-   section 2, one collapsed root tree, an absolute-date view of PR #18 / #19.
+Nothing required. Every report slot points at a file. Optional extras if wanted:
+`tests.md` section 6 rendered, `ai-use.md` rows 5-10 and section 3, `ui-spec.md` section 2,
+one collapsed root tree from VS Code (the `server/tests/lab-02` evidence is a terminal
+listing), an absolute-date view of PR #18 / #19, and a capture of the attachment preview
+open (the one Definition of Done demonstration item left unticked).
 
 Everything else in the nine parts is covered by `artifacts/lab-02/screenshots/` (93 files),
 the generated renders, and the hand captures listed above.

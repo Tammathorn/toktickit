@@ -97,8 +97,8 @@ named documents plus `handoff.md`.
 [IMAGE: evidence/part1-tree-client-tests-lab-02.png — caption: client/tests/lab-02]
 [IMAGE: evidence/part1-tree-e2e-lab-02.png — caption: e2e/lab-02]
 [IMAGE: evidence/part1-tree-artifacts-screenshots.png — caption: artifacts/lab-02/screenshots]
-[IMAGE: (hand capture, still to take) VS Code Explorer: server/tests/lab-02 expanded — caption: server/tests/lab-02, six test files]
-[IMAGE: (hand capture, still to take) server/.env.example open in the editor — caption: UPLOAD_DIR and MAX_UPLOAD_BYTES placeholders, no real values]
+[IMAGE: evidence/part1-tree-server-tests-lab-02.png — caption: server/tests/lab-02: the six test files (terminal listing, with git ls-files and the test count per file)]
+[IMAGE: evidence/part1-env-example.png — caption: server/.env.example: UPLOAD_DIR and MAX_UPLOAD_BYTES placeholders; the real .env is untracked]
 
 ---
 
@@ -154,7 +154,9 @@ evidence is reproducible even though the comparison is human. tests.md states th
 than substituting an automated test that would assert something narrower.
 
 **Passing output from `main`.** Run on 2026-09-16 at `d48cbd2` with the Postgres
-container, the idempotent seeds and both dev servers up; nothing skipped or marked `.only`.
+container, the idempotent seeds and both dev servers up, and the server and client suites
+run again on `main` at `ef2c910` on 2026-09-17 with the same counts; nothing skipped or
+marked `.only`.
 The Lab 1 tests (`health`, `categories`, `App`) still pass alongside.
 
 | Suite | Command | Result |
@@ -177,7 +179,7 @@ on `feature/8-release-docs`; the `main` run is recorded verbatim in
 [IMAGE: evidence/part3-tests-section2-7-data-model.png — caption: 2.7 Data model DB-01 onwards]
 [IMAGE: evidence/part3-tests-section3-traceability.png — caption: Section 3 traceability, "All 67 criteria": AC-01..23 and AC-35..57 in frame, AC-54 marked VIS-01 (manual); the remaining rows continue below]
 [IMAGE: evidence/part3-terminal-e2e-126-passed.png — caption: Playwright tail: tests 100–126 and "126 passed"]
-[IMAGE: (hand capture, still to take) terminal on main showing `git branch --show-current` and the server (86) and client (48) results — or paste evidence.md Appendix A as text]
+[IMAGE: evidence/part3-terminal-main-suites.png — caption: One session on main @ ef2c910: git branch --show-current, server suite 86 passed, client suite 48 passed]
 
 ---
 
@@ -336,4 +338,6 @@ computed styles and bounding boxes, not assumed. Two rows did not pass on first 
   guards every Create Ticket capture.
 
 [IMAGE: screenshots/create-ticket/create-mobile-focus.png — caption: Row 35: Ticket Summary focused at 390 px with the ring painted; controls at 44 px (row 33)]
-[IMAGE: (hand capture, still to take) tests.md section 4 — caption: VIS-01 completed, all rows ticked D/T/M, rows 33 and 35 annotated]
+[IMAGE: evidence/part9-tests-section4-vis01-page-1of3.png — caption: VIS-01 rows 1–17: colour and tokens, fields, buttons and badges]
+[IMAGE: evidence/part9-tests-section4-vis01-page-2of3.png — caption: VIS-01 rows 18–37 and the notes on rows 14 and 33]
+[IMAGE: evidence/part9-tests-section4-vis01-page-3of3.png — caption: VIS-01 notes on rows 35, 8 and 37]
