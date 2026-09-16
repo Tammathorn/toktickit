@@ -3,7 +3,7 @@
 TokTickIT - Requester-facing ticketing MVP.
 Tammathorn Kananurak - 67070503489 - GitHub @Tammathorn.
 Repository: https://github.com/Tammathorn/toktickit - final branch `main` at `d48cbd2`
-(release PR #26), evidence PRs #27 and the feature/10-evidence-final PR after it.
+(release PR #26), evidence PRs #27, #30 and #__NEXTPR__ after it.
 
 Every image slot below names a file in the repository. Paths beginning `screenshots/` are
 under `artifacts/lab-02/screenshots/`; paths beginning `evidence/` are under
@@ -62,7 +62,7 @@ without review, and reviewer.md says so for each, row by row. Section 3 of revie
 reviewer.md was committed in PR #25, before the release PR existed, so its release row still
 reads *"filled in when opened"*. What happened: the release PR was opened as #26 on
 2026-09-15 21:51 UTC, received no review, and was merged to `main` on 2026-09-16. Two
-follow-up PRs (#27 and the feature/10-evidence-final PR) added this report's evidence after the release; neither was
+follow-up PRs (#27, #30, #__NEXTPR__) added this report's evidence after the release; none was
 reviewed either.
 
 [IMAGE: evidence/part1-reviewer-md-rendered.png
@@ -97,6 +97,8 @@ named documents plus `handoff.md`.
 [IMAGE: evidence/part1-tree-client-tests-lab-02.png — caption: client/tests/lab-02]
 [IMAGE: evidence/part1-tree-e2e-lab-02.png — caption: e2e/lab-02]
 [IMAGE: evidence/part1-tree-artifacts-screenshots.png — caption: artifacts/lab-02/screenshots]
+[IMAGE: (hand capture, still to take) VS Code Explorer: server/tests/lab-02 expanded — caption: server/tests/lab-02, six test files]
+[IMAGE: (hand capture, still to take) server/.env.example open in the editor — caption: UPLOAD_DIR and MAX_UPLOAD_BYTES placeholders, no real values]
 
 ---
 
@@ -115,8 +117,9 @@ every item verifiable by a named file or command. The 52 approved decisions behi
 implementation PR, #19, was opened on **2026-09-13 16:40 UTC** - five days later. The
 reviewer's C-11 comment was answered in the specification (C-49) before any code existed.
 
-Partial: the Definition of Done checkboxes in the file are not ticked on `main`; Part 3 and
-Part 9 below verify each item instead.
+The Definition of Done boxes were ticked in PR #__NEXTPR__ after each item was re-verified against
+the repository; two items stay unticked - peer review on every PR (Part 1 explains) and a
+capture of the attachment preview open (Part 8 has the control, not the opened file).
 
 [IMAGE: evidence/part2-spec-section4-fr.png — caption: Section 4, FR-01 onwards]
 [IMAGE: evidence/part2-spec-section5-br.png — caption: Section 5, BR-01 onwards with the area column]
@@ -165,9 +168,16 @@ on `feature/8-release-docs`; the `main` run is recorded verbatim in
 `artifacts/lab-02/evidence.md` Appendix A.
 
 [IMAGE: evidence/part3-tests-md-rendered.png — caption: tests.md on main: the six-level strategy and file inventory]
-[IMAGE: (hand capture, still to take) tests.md section 2 planned table — caption: Planned tests with real file paths and Pass status]
-[IMAGE: (hand capture, still to take) tests.md section 3 — caption: AC traceability, 67 of 67]
-[IMAGE: (hand capture, still to take) terminal on main with the three commands, or paste evidence.md Appendix A — caption: Server 86, client 48, e2e 126 passing on main]
+[IMAGE: evidence/part3-tests-section2-1-unit.png — caption: Section 2 planned tests: "111 planned tests" and 2.1 Unit, each row with its file path and Final = Pass]
+[IMAGE: evidence/part3-tests-section2-2-api.png — caption: 2.2 API and integration (API-01 onwards)]
+[IMAGE: evidence/part3-tests-section2-3-ui.png — caption: 2.3 UI component (UI-01 onwards), API-44 Lab 1 regression above it]
+[IMAGE: evidence/part3-tests-section2-4-style.png — caption: 2.4 UI style (STYLE-01 onwards)]
+[IMAGE: evidence/part3-tests-section2-5-responsive.png — caption: 2.5 Responsive RESP-01..06; RESP-05 is the AC-54 screenshot producer]
+[IMAGE: evidence/part3-tests-section2-6-e2e.png — caption: 2.6 End to end E2E-01..06]
+[IMAGE: evidence/part3-tests-section2-7-data-model.png — caption: 2.7 Data model DB-01 onwards]
+[IMAGE: evidence/part3-tests-section3-traceability.png — caption: Section 3 traceability, "All 67 criteria": AC-01..23 and AC-35..57 in frame, AC-54 marked VIS-01 (manual); the remaining rows continue below]
+[IMAGE: evidence/part3-terminal-e2e-126-passed.png — caption: Playwright tail: tests 100–126 and "126 passed"]
+[IMAGE: (hand capture, still to take) terminal on main showing `git branch --show-current` and the server (86) and client (48) results — or paste evidence.md Appendix A as text]
 
 ---
 
@@ -184,7 +194,7 @@ working agreement changed mid-sprint from "print the commands, I run them" to th
 running git with explicit-path staging and `--base lab2-staging` on every PR, and why.
 
 [IMAGE: evidence/part4-ai-use-md-rendered.png — caption: ai-use.md on main: the LLM and interface table]
-[IMAGE: (hand capture, still to take) ai-use.md section 2 — caption: The ten key prompts]
+[IMAGE: evidence/part4-ai-use-section2-prompts.png — caption: Section 2 key prompts, rows 1–4 of ten (phase, purpose, prompt, what it produced)]
 
 ---
 
