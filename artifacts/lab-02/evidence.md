@@ -52,9 +52,9 @@ rather than around them.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Planned test table with real file paths | `docs/lab-02/tests.md` **[repo]** section 2 (2.1 unit ... 2.7 data model) | **[evidence]** `evidence/part3-tests-md-rendered.png` (2875 x 1445) - GitHub render on `main`: title, sources, section 1 strategy table with the seven prefixes and where each lives. Sections 2, 3 and 6 are below the fold - **[GitHub]** still missing: a capture of section 2 (planned table), section 3 (traceability) and section 6 (final results) |
-| AC traceability | `docs/lab-02/tests.md` section 3 | **[GitHub]** render of section 3 still missing |
-| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[GitHub]** render of section 6 still missing; Appendix A of this file is the `main` run |
+| Planned test table with real file paths | `docs/lab-02/tests.md` **[repo]** section 2 (2.1 unit ... 2.7 data model) | **[evidence]** `evidence/part3-tests-md-rendered.png` (section 1 strategy) and the seven section-2 captures `evidence/part3-tests-section2-1-unit.png` ... `-7-data-model.png`, one per level, each row showing its file path and `Pass`. Done |
+| AC traceability | `docs/lab-02/tests.md` section 3 | **[evidence]** `evidence/part3-tests-section3-traceability.png` - AC-01..23 and AC-35..57 in frame with AC-54 = VIS-01 (manual); the other 21 rows are below the fold. Adequate; a second scroll is optional |
+| Final pass status | `docs/lab-02/tests.md` section 6 - summary table 86 / 48 / 126, all passed | **[evidence]** `evidence/part3-terminal-e2e-126-passed.png` shows the Playwright `126 passed` tail only. **[IDE]** still missing: a terminal showing `git branch --show-current` = `main` with the server (86) and client (48) results - or paste Appendix A |
 | Passing output from `main` | Appendix A of this file: the ANSI-stripped output of `cd server && npm test`, `cd client && npm test`, `npx playwright test e2e/lab-02` run on `main` at `d48cbd2` on 2026-09-16 (Start at 23:29:03, 23:30:08 and the 13.3 s Playwright run). Note that the paste in `tests.md` section 6 was made on `feature/8-release-docs` before the release merge; the `main` run is the one in Appendix A | **[IDE]** terminal panel showing the three commands with `git branch --show-current` printing `main` in the same panel |
 | Test files exist where the plan says | `server/tests/lab-02/{create-ticket.api,my-tickets.api,ticket-detail.api,attachments.api,ticket-number.unit,data-model.db}.test.ts`, `client/tests/lab-02/{CreateTicket,MyTickets,RequesterTicketDetail,AttachmentSection,RequesterSelection}.test.tsx`, `e2e/lab-02/requester-ticket-flow.spec.ts` | **[IDE]** Explorer |
 
@@ -62,7 +62,7 @@ rather than around them.
 
 | Needs | Evidence | Source |
 |---|---|---|
-| Rendered `ai-use.md`: LLM named, 6-10 key prompts, reflection | `docs/lab-02/ai-use.md` **[repo]** - section 1 names the LLM, section 2 has the ten-row prompt table, section 3 is the reflection | **[evidence]** `evidence/part4-ai-use-md-rendered.png` (2875 x 1375) - GitHub render on `main`: title, section 1 *The LLM I used* table (Claude Opus 5, Claude Code) and the working-agreement paragraph. Sections 2 and 3 are below the fold - **[GitHub]** capture of the prompt table and reflection still missing |
+| Rendered `ai-use.md`: LLM named, 6-10 key prompts, reflection | `docs/lab-02/ai-use.md` **[repo]** - section 1 names the LLM, section 2 has the ten-row prompt table, section 3 is the reflection | **[evidence]** `evidence/part4-ai-use-md-rendered.png` (2875 x 1375) - GitHub render on `main`: title, section 1 *The LLM I used* table (Claude Opus 5, Claude Code) and the working-agreement paragraph. Sections 2 and 3 are below the fold. **[evidence]** `evidence/part4-ai-use-section2-prompts.png` adds section 2 rows 1-4 of ten. Section 3 (reflection) and rows 5-10 are not captured; the file itself is the record |
 
 ## Part 5 (0 pts) - Development Requester Selection
 
@@ -178,7 +178,7 @@ captured on 15 Sep 2026 at 23:42 local, after the `theme.css` touch-target and f
 change in the same commit (`2ed6643`, 23:43), and a full re-run on `main` today
 reproduced the same layouts, differing only in run-specific dates and Ticket Numbers.
 
-## `artifacts/lab-02/evidence/` - 34 PNGs
+## `artifacts/lab-02/evidence/` - 44 PNGs
 
 Generated on 2026-09-17 from `main @ d48cbd2`:
 
@@ -218,6 +218,16 @@ Hand-captured (GitHub web UI, VS Code, Edge, terminal):
 | `part6-create-ticket-browser-localhost.png` | 2797 x 1462 | Create Ticket initial state as Anucha Prasert | Part 6 |
 | `part7-my-tickets-browser-localhost.png` | 2867 x 1665 | My Tickets as Anucha Prasert, toolbar and table, TKT-2026-000001..000007 | Part 7 |
 | `part9-ui-spec-md-rendered.png` | 2865 x 1450 | `ui-spec.md` on `main`: title, preamble, section 1 breakpoints | Part 9 (top of file only) |
+| `part3-tests-section2-1-unit.png` | 1280 x 1097 | `tests.md` section 2 intro ("111 planned tests") and 2.1 Unit, UNIT-01..05, Final = Pass | Part 3 |
+| `part3-tests-section2-2-api.png` | 1307 x 1440 | 2.2 API, API-01..12 | Part 3 |
+| `part3-tests-section2-3-ui.png` | 1320 x 1475 | API-43/44 tail, 2.3 UI component, UI-01..09 | Part 3 |
+| `part3-tests-section2-4-style.png` | 1267 x 1237 | 2.4 UI style, STYLE-01..08 (cropped to the table, no GitHub chrome) | Part 3 |
+| `part3-tests-section2-5-responsive.png` | 1287 x 1300 | STYLE-10 tail, 2.5 Responsive, RESP-01..06 | Part 3 |
+| `part3-tests-section2-6-e2e.png` | 1325 x 632 | 2.6 End to end, E2E-01..06 | Part 3 |
+| `part3-tests-section2-7-data-model.png` | 1320 x 1327 | 2.7 Data model, DB-01..06 | Part 3 |
+| `part3-tests-section3-traceability.png` | 1317 x 1425 | Section 3, "All 67 criteria": AC-01..23 and AC-35..57 in frame, AC-54 = VIS-01 (manual); AC-24..34 and AC-58..67 below the fold | Part 3 (partial) |
+| `part3-terminal-e2e-126-passed.png` | 2800 x 1565 | Playwright list reporter tail, tests 100-126 and "126 passed (20.7s)" - the author's own run; no branch name, no server / client output | Part 3 (partial) |
+| `part4-ai-use-section2-prompts.png` | 1287 x 1470 | `ai-use.md` section 2, prompts 1-4 of ten with phase, purpose, prompt and result; rows 5-10 below the fold | Part 4 (partial) |
 
 Deleted on 2026-09-17 as superseded or redundant: `part1-board-done-partial.png` (replaced by
 `part1-board-all-done.png`), `part1-board-backlog-2026-09-08.png` (same state as the 4 Sep
@@ -236,14 +246,11 @@ PR #18 reply, PR #19) and the Explorer subtrees place well as they are.
 1. **[IDE]** `server/tests/lab-02/` expanded (six files: `attachments.api`, `create-ticket.api`,
    `data-model.db`, `my-tickets.api`, `ticket-detail.api`, `ticket-number.unit`).
 2. **[IDE]** `server/.env.example` open, showing `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`.
-3. **[IDE]** One collapsed root tree (`artifacts client docs e2e server`, `.gitignore`,
-   `CLAUDE.md`, `package.json`, `playwright.config.ts`, `README.md`), taken after the
-   evidence PR merges so `artifacts/lab-02/evidence/` is in it.
-4. **[GitHub]** `tests.md` scrolled to section 2 (planned table), section 3 (traceability),
-   section 4 (VIS-01) and section 6 (final results).
-5. **[GitHub]** `ai-use.md` scrolled to section 2 (prompt table) and section 3 (reflection).
-6. **[GitHub]** `ui-spec.md` scrolled to section 2 (tokens).
-7. **[GitHub]** optional: an absolute-date view of PR #18 merged / PR #19 opened.
+3. **[IDE]** Terminal on `main` with `git branch --show-current` and the server (86) and
+   client (48) results; the Playwright tail is already captured.
+4. **[GitHub]** `tests.md` section 4 (VIS-01) - the completed checklist with rows 33 and 35.
+5. Optional: `tests.md` section 6, `ai-use.md` rows 5-10 and section 3, `ui-spec.md`
+   section 2, one collapsed root tree, an absolute-date view of PR #18 / #19.
 
 Everything else in the nine parts is covered by `artifacts/lab-02/screenshots/` (93 files),
 the generated renders, and the hand captures listed above.
