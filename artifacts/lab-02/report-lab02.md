@@ -3,7 +3,7 @@
 TokTickIT - Requester-facing ticketing MVP.
 Tammathorn Kananurak - 67070503489 - GitHub @Tammathorn.
 Repository: https://github.com/Tammathorn/toktickit - final branch `main` at `d48cbd2`
-(release PR #26), evidence PRs #27, #30 and #__NEXTPR__ after it.
+(release PR #26), evidence PRs #27, #30 and #31 after it.
 
 Every image slot below names a file in the repository. Paths beginning `screenshots/` are
 under `artifacts/lab-02/screenshots/`; paths beginning `evidence/` are under
@@ -62,7 +62,7 @@ without review, and reviewer.md says so for each, row by row. Section 3 of revie
 reviewer.md was committed in PR #25, before the release PR existed, so its release row still
 reads *"filled in when opened"*. What happened: the release PR was opened as #26 on
 2026-09-15 21:51 UTC, received no review, and was merged to `main` on 2026-09-16. Two
-follow-up PRs (#27, #30, #__NEXTPR__) added this report's evidence after the release; none was
+follow-up PRs (#27, #30, #31) added this report's evidence after the release; none was
 reviewed either.
 
 [IMAGE: evidence/part1-reviewer-md-rendered.png
@@ -117,7 +117,7 @@ every item verifiable by a named file or command. The 52 approved decisions behi
 implementation PR, #19, was opened on **2026-09-13 16:40 UTC** - five days later. The
 reviewer's C-11 comment was answered in the specification (C-49) before any code existed.
 
-The Definition of Done boxes were ticked in PR #__NEXTPR__ after each item was re-verified against
+The Definition of Done boxes were ticked in PR #31 after each item was re-verified against
 the repository; two items stay unticked - peer review on every PR (Part 1 explains) and a
 capture of the attachment preview open (Part 8 has the control, not the opened file).
 
