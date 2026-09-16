@@ -1,0 +1,28 @@
+{
+  "name": "toktickit",
+  "version": "1.0.0",
+  "description": "TokTickIT - Playwright end-to-end tests for the CPE 334 labs.",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "test:e2e": "playwright test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Tammathorn/toktickit.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Tammathorn/toktickit/issues"
+  },
+  "homepage": "https://github.com/Tammathorn/toktickit#readme",
+  "devDependencies": {
+    "@playwright/test": "^1.62.1",
+    "@types/node": "^26.4.1"
+  }
+}

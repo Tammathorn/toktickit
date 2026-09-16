@@ -1,51 +1,44 @@
-import { useState } from "react";
-import { checkSystem, Category } from "./api.js";
+import { RouterProvider, useRouter } from "./router.js";
+import { RequesterProvider, useRequester } from "./requester/RequesterContext.js";
+import AppShell from "./components/AppShell.js";
+import RequesterSelection from "./pages/RequesterSelection.js";
+import MyTickets from "./pages/MyTickets.js";
+import CreateTicket from "./pages/CreateTicket.js";
+import TicketDetail from "./pages/TicketDetail.js";
+import SystemCheck from "./pages/SystemCheck.js";
 
-// UI states you must handle for Issue 4: idle, loading, success, error.
-type UiState = "idle" | "loading" | "success" | "error";
+// Route table. /system-check is the Lab 1 screen (C-04) and is not
+// Requester-scoped; every other path is, so without a valid selection the
+// Selection screen renders instead of it (BR-15, FR-10, AC-02).
+function Screen() {
+  const { path } = useRouter();
+  const { selected } = useRequester();
+
+  if (path === "/system-check") return <SystemCheck />;
+  if (!selected) return <RequesterSelection />;
+
+  // Keying the shell by Requester id remounts every screen on a switch, which
+  // discards A's data in memory and refetches for B (BR-14, AC-11).
+  const detail = /^\/tickets\/(\d+)$/.exec(path);
+  return (
+    <AppShell key={selected.id}>
+      {path === "/tickets/new" ? (
+        <CreateTicket />
+      ) : detail ? (
+        <TicketDetail id={Number(detail[1])} />
+      ) : (
+        <MyTickets />
+      )}
+    </AppShell>
+  );
+}
 
 export default function App() {
-  const [state, setState] = useState<UiState>("idle");
-  const [categories, setCategories] = useState<Category[]>([]);
-
-  async function handleCheck() {
-    setState("loading");
-    try {
-      const result = await checkSystem();
-      setCategories(result.categories);
-      setState("success");
-    } catch {
-      setState("error");
-    }
-  }
-
   return (
-    <div className="container py-5" style={{ maxWidth: 640 }}>
-      <h1 className="h3 mb-4">
-        TokTickIT <span className="text-success">IT Service Desk</span>
-      </h1>
-
-      <button className="btn btn-success" onClick={handleCheck} disabled={state === "loading"}>
-        {state === "loading" ? "Loading…" : "Check System"}
-      </button>
-
-      {state === "success" && (
-        <div className="mt-3">
-          <p>System Status: Online</p>
-          <p className="fw-semibold mt-3">Supported Request Categories</p>
-          <ol>
-            {categories.map((c) => (
-              <li key={c.id}>{c.name}</li>
-            ))}
-          </ol>
-        </div>
-      )}
-      {state === "error" && (
-        <div className="mt-3">
-          <p>System Status: Offline</p>
-          <p className="text-danger">Unable to connect to TokTickIT API</p>
-        </div>
-      )}
-    </div>
+    <RouterProvider>
+      <RequesterProvider>
+        <Screen />
+      </RequesterProvider>
+    </RouterProvider>
   );
 }
