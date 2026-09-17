@@ -37,13 +37,11 @@ No commit went directly to `main` or `lab2-staging`.
 
 **Project board.** `TokTickIT Individual Sprints`, columns Backlog / Specified / Started /
 PR Review / Fixing / Done. Issues #10–#17 all sit in Done; the Lab 1 Issues #2–#5 remain
-there from Sprint 1.
-
-[IMAGE: evidence/part1-board-backlog-2026-09-04.png
- — caption: Sprint start, 4 Sep: #10–#17 in Backlog]
-
-[IMAGE: evidence/part1-board-issue10-pr-review.png
- — caption: Issue #10 in PR Review while PR #18 awaited its reviewer]
+there from Sprint 1. The board was captured three times: at sprint start on 4 Sep with
+#10–#17 in Backlog (`evidence/part1-board-backlog-2026-09-04.png`), mid-sprint with Issue
+#10 in PR Review while PR #18 awaited its reviewer
+(`evidence/part1-board-issue10-pr-review.png`), and at sprint end with everything in Done.
+The end-of-sprint capture is placed here; the other two are in the repository.
 
 [IMAGE: evidence/part1-board-all-done.png
  — caption: Sprint end: Done = 12, every other column empty]
@@ -56,7 +54,9 @@ generated from an autoincremented id that does not exist until after the insert.
 settled it as a create-then-update inside one Prisma `$transaction`, recorded as decision
 C-49 in the same PR before merge. The reviewer did not return, so GitHub still shows
 *Changes requested*; reviewer.md does not mark #18 as approved. PRs #19–#25 were merged
-without review, and reviewer.md says so for each, row by row. Section 3 of reviewer.md
+without review, and reviewer.md says so for each, row by row;
+`evidence/part1-pr19-merged-no-review.png` is PR #19's page, representative of #19–#25,
+merged with Conversation 0 and no review. Section 3 of reviewer.md
 (reviews I gave on my partner's PRs) is an empty table because I gave none.
 
 reviewer.md was committed in PR #25, before the release PR existed, so its release row still
@@ -70,9 +70,6 @@ reviewed either.
 
 [IMAGE: evidence/part1-pr18-review-and-author-reply.png
  — caption: PR #18: the Changes-requested comment on C-11 and the reply that became C-49]
-
-[IMAGE: evidence/part1-pr19-merged-no-review.png
- — caption: PR #19, representative of #19–#25: merged with Conversation 0, no review]
 
 **README and .gitignore.** README.md covers stack, prerequisites, repository layout, setup
 (Docker Postgres, `migrate deploy`, seeds), running, the three test commands, the API
@@ -91,12 +88,12 @@ lab-02/` holds the four named tests plus `RequesterSelection.test.tsx` (C-48);
 `server/tests/lab-02/` holds the five named tests plus `data-model.db.test.ts`; `e2e/lab-02/`
 holds `requester-ticket-flow.spec.ts` plus four screenshot specs; `artifacts/lab-02/` holds
 the three screenshot folders plus `evidence/` and this report; `docs/lab-02/` holds the seven
-named documents plus `handoff.md`.
+named documents plus `handoff.md`. Each folder was captured on GitHub at `main`; the two
+that show the section 12 layout most directly, `docs/lab-02/` and `server/tests/lab-02/`,
+are placed here. The others are `evidence/part1-tree-client-tests-lab-02.png`,
+`evidence/part1-tree-e2e-lab-02.png` and `evidence/part1-tree-artifacts-screenshots.png`.
 
 [IMAGE: evidence/part1-tree-docs-lab-02.png — caption: docs/lab-02]
-[IMAGE: evidence/part1-tree-client-tests-lab-02.png — caption: client/tests/lab-02]
-[IMAGE: evidence/part1-tree-e2e-lab-02.png — caption: e2e/lab-02]
-[IMAGE: evidence/part1-tree-artifacts-screenshots.png — caption: artifacts/lab-02/screenshots]
 [IMAGE: evidence/part1-tree-server-tests-lab-02.png — caption: server/tests/lab-02: the six test files (terminal listing, with git ls-files and the test count per file)]
 [IMAGE: evidence/part1-env-example.png — caption: server/.env.example: UPLOAD_DIR and MAX_UPLOAD_BYTES placeholders; the real .env is untracked]
 
@@ -116,6 +113,9 @@ every item verifiable by a named file or command. The 52 approved decisions behi
 `b8b0c6a` on 2026-09-08 and merged through PR #18 on **2026-09-08 10:25 UTC**. The first
 implementation PR, #19, was opened on **2026-09-13 16:40 UTC** - five days later. The
 reviewer's C-11 comment was answered in the specification (C-49) before any code existed.
+The PR pages that show this order are the Part 1 captures
+`evidence/part1-pr18-review-and-author-reply.png` (PR #18 merged into lab2-staging) and
+`evidence/part1-pr19-merged-no-review.png` (PR #19 opened after it).
 
 The Definition of Done boxes were ticked in PR #31 after each item was re-verified against
 the repository; two items stay unticked - peer review on every PR (Part 1 explains) and a
@@ -125,7 +125,6 @@ capture of the attachment preview open (Part 8 has the control, not the opened f
 [IMAGE: evidence/part2-spec-section5-br.png — caption: Section 5, BR-01 onwards with the area column]
 [IMAGE: evidence/part2-spec-section9-ac.png — caption: Section 9, AC-01 onwards]
 [IMAGE: evidence/part2-spec-section10-dod.png — caption: "67 acceptance criteria" and section 10 Definition of Done]
-[IMAGE: evidence/part1-pr18-review-and-author-reply.png — caption: PR #18 merged into lab2-staging before PR #19 (see also part1-pr19-merged-no-review.png)]
 
 ---
 
@@ -172,11 +171,15 @@ on `feature/8-release-docs`; the `main` run is recorded verbatim in
 [IMAGE: evidence/part3-tests-md-rendered.png — caption: tests.md on main: the six-level strategy and file inventory]
 [IMAGE: evidence/part3-tests-section2-1-unit.png — caption: Section 2 planned tests: "111 planned tests" and 2.1 Unit, each row with its file path and Final = Pass]
 [IMAGE: evidence/part3-tests-section2-2-api.png — caption: 2.2 API and integration (API-01 onwards)]
-[IMAGE: evidence/part3-tests-section2-3-ui.png — caption: 2.3 UI component (UI-01 onwards), API-44 Lab 1 regression above it]
-[IMAGE: evidence/part3-tests-section2-4-style.png — caption: 2.4 UI style (STYLE-01 onwards)]
-[IMAGE: evidence/part3-tests-section2-5-responsive.png — caption: 2.5 Responsive RESP-01..06; RESP-05 is the AC-54 screenshot producer]
-[IMAGE: evidence/part3-tests-section2-6-e2e.png — caption: 2.6 End to end E2E-01..06]
-[IMAGE: evidence/part3-tests-section2-7-data-model.png — caption: 2.7 Data model DB-01 onwards]
+
+Sections 2.3 to 2.7 of the planned table - UI component (UI-01 onwards, with the API-44
+Lab 1 regression above it), UI style (STYLE-01 onwards), Responsive (RESP-01..06, where
+RESP-05 is the AC-54 screenshot producer), End to end (E2E-01..06) and Data model (DB-01
+onwards) - use the same columns as 2.1 and 2.2 above. Their captures are
+`evidence/part3-tests-section2-3-ui.png`, `evidence/part3-tests-section2-4-style.png`,
+`evidence/part3-tests-section2-5-responsive.png`, `evidence/part3-tests-section2-6-e2e.png`
+and `evidence/part3-tests-section2-7-data-model.png`.
+
 [IMAGE: evidence/part3-tests-section3-traceability.png — caption: Section 3 traceability, "All 67 criteria": AC-01..23 and AC-35..57 in frame, AC-54 marked VIS-01 (manual); the remaining rows continue below]
 [IMAGE: evidence/part3-terminal-e2e-126-passed.png — caption: Playwright tail: tests 100–126 and "126 passed"]
 [IMAGE: evidence/part3-terminal-main-suites.png — caption: One session on main @ ef2c910: git branch --show-current, server suite 86 passed, client suite 48 passed]
@@ -228,9 +231,9 @@ to five attachments (JPG, PNG, WEBP, PDF, 5 MB each). Validation messages come f
 single catalogue in ui-spec.md section 6 that client and server both quote (BR-35). The
 Ticket Number is assigned by the backend inside one transaction (C-49) in the form
 `TKT-YYYY-NNNNNN`. All six states are captured at desktop, tablet and mobile; the desktop
-set is placed here.
+set is placed here. The same initial screen as served in the browser at localhost:5173,
+with the address bar in frame, is `evidence/part6-create-ticket-browser-localhost.png`.
 
-[IMAGE: evidence/part6-create-ticket-browser-localhost.png — caption: Create Ticket in the browser, initial state]
 [IMAGE: screenshots/create-ticket/create-desktop-initial.png — caption: 1 Initial: reference data loaded, Medium preset]
 [IMAGE: screenshots/create-ticket/create-desktop-validation.png — caption: 2 Validation failure: catalogue message under each field, no request sent]
 [IMAGE: screenshots/create-ticket/create-desktop-submitting.png — caption: 3 Submitting: busy button, fields locked]
@@ -262,9 +265,10 @@ pagination; every value lives in the address bar so a URL reproduces the view. E
 no-results are distinct states (C-28): *No tickets yet* with a Create Ticket action versus
 *No matches* with Clear filters. The demo seed (`server/prisma/seed-demo.ts`, C-22, kept
 out of the graded seed) gives Requester A 14 Tickets, B 3, C 0. Ownership is checked by the
-backend on every request: B opening one of A's Tickets receives `403` (C-13).
+backend on every request: B opening one of A's Tickets receives `403` (C-13). The list as
+served in the browser at localhost:5173 as Requester A, address bar in frame, is
+`evidence/part7-my-tickets-browser-localhost.png`.
 
-[IMAGE: evidence/part7-my-tickets-browser-localhost.png — caption: My Tickets in the browser as Requester A]
 [IMAGE: screenshots/my-tickets/list-desktop-populated.png — caption: Requester A, page 1, newest first]
 [IMAGE: screenshots/my-tickets/list-desktop-switched.png — caption: After Change Requester A -> B: A's Tickets are gone, B's three are listed]
 [IMAGE: screenshots/my-tickets/list-desktop-search.png — caption: Search narrows the list; Clear filters appears]
@@ -337,7 +341,13 @@ computed styles and bounding boxes, not assumed. Two rows did not pass on first 
   computed border and box-shadow before capturing `create-<vp>-focus.png`, and the same wait
   guards every Create Ticket capture.
 
+The completed checklist renders to three pages,
+`evidence/part9-tests-section4-vis01-page-{1,2,3}of3.png`. Page 1 holds rows 1–17 (colour
+and tokens, fields, buttons and badges) and is in the repository. Pages 2 and 3 are placed
+here: page 2 carries rows 18–37 ticked per viewport, including row 33 (n/a at D and T,
+ticked at M) and row 35, and the notes on rows 14 and 33; page 3 carries the note on row 35
+- the check that failed on first reading and was fixed - and the notes on rows 8 and 37.
+
 [IMAGE: screenshots/create-ticket/create-mobile-focus.png — caption: Row 35: Ticket Summary focused at 390 px with the ring painted; controls at 44 px (row 33)]
-[IMAGE: evidence/part9-tests-section4-vis01-page-1of3.png — caption: VIS-01 rows 1–17: colour and tokens, fields, buttons and badges]
-[IMAGE: evidence/part9-tests-section4-vis01-page-2of3.png — caption: VIS-01 rows 18–37 and the notes on rows 14 and 33]
-[IMAGE: evidence/part9-tests-section4-vis01-page-3of3.png — caption: VIS-01 notes on rows 35, 8 and 37]
+[IMAGE: evidence/part9-tests-section4-vis01-page-2of3.png — caption: VIS-01 page 2 of 3: rows 18–37 with row 33 and row 35, and the notes on rows 14 and 33]
+[IMAGE: evidence/part9-tests-section4-vis01-page-3of3.png — caption: VIS-01 page 3 of 3: the row 35 note (first capture taken before the focus ring painted; RESP-06 now waits for it) and the notes on rows 8 and 37]
