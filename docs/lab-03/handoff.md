@@ -187,19 +187,19 @@ required, and the status is terminal. Any other move returns 409
 
 ## 5. Issues, branches, and estimates
 
-| # | Issue | Branch | Estimate | Feeds Part |
-|---|---|---|---|---|
-| 1 | Sprint 3 engineering contract | `feature/lab3-1-contract` | 5–7 h | 2, 3 |
-| 2 | User migration, schema, and seed | `feature/lab3-2-data-migration` | 3–4 h | 2, 3 |
-| 3 | Authentication foundation | `feature/lab3-3-authentication` | 4–5 h | 5 |
-| 4 | Authorization and Requester regression | `feature/lab3-4-authz-regression` | 5–7 h | 3, 5, 7 |
-| 5 | IT Staff Ticket Queue | `feature/lab3-5-staff-queue` | 3–4 h | 6 |
-| 6 | IT Staff ticket operations, comments, notes | `feature/lab3-6-staff-ticket-ops` | 6–8 h | 7 |
-| 7 | Administrator user management | `feature/lab3-7-user-admin` | 3–5 h | 8 |
-| 8 | E2E and responsive/visual evidence | `feature/lab3-8-e2e-visual` | 3–4 h | 3, 9 |
-| 9 | Release integration and documentation | `feature/lab3-9-release-docs` | 3 h | 1, 4 |
+| # | GitHub | Issue | Branch | Estimate | Feeds Part |
+|---|---|---|---|---|---|
+| 1 | #37 | Sprint 3 engineering contract | `feature/lab3-1-contract` | 5–7 h | 2, 3 |
+| 2 | #38 | User migration, schema, and seed | `feature/lab3-2-data-migration` | 3–4 h | 2, 3 |
+| 3 | #39 | Authentication foundation | `feature/lab3-3-authentication` | 4–5 h | 5 |
+| 4 | #40 | Authorization and Requester regression | `feature/lab3-4-authz-regression` | 5–7 h | 3, 5, 7 |
+| 5 | #41 | IT Staff Ticket Queue | `feature/lab3-5-staff-queue` | 3–4 h | 6 |
+| 6 | #42 | IT Staff ticket operations, comments, notes | `feature/lab3-6-staff-ticket-ops` | 6–8 h | 7 |
+| 7 | #43 | Administrator user management | `feature/lab3-7-user-admin` | 3–5 h | 8 |
+| 8 | #44 | E2E and responsive/visual evidence | `feature/lab3-8-e2e-visual` | 3–4 h | 3, 9 |
+| 9 | #45 | Release integration and documentation | `feature/lab3-9-release-docs` | 3 h | 1, 4 |
 
-GitHub assigns the Issue numbers, probably from #37. Order: **1 → 2 → 3 → 4**, then 5 → 6,
+Issues #37–#45 were created in Phase 0. Order: **1 → 2 → 3 → 4**, then 5 → 6,
 with 7 independent after 4. Then 8 and 9. **Issue 1 merges before any code Issue starts.**
 All work flows feature branch → `lab3-staging` → one release PR → `main`.
 
