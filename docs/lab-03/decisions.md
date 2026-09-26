@@ -1,0 +1,153 @@
+# TokTickIT Lab 3 - Approved Decision Log
+
+Status: **Approved**. These decisions are settled and binding on
+`specification.md`, `api-spec.md`, `ui-spec.md` and `tests.md`. Where the labsheet
+leaves a choice open, the decision below is the choice. Where the labsheet
+contradicts itself, the decision below is the resolution.
+
+Owner: Tammathorn Kananurak (67070503489). Lab 3, Sprint 3.
+
+Labsheet references are to `docs/lab-03/spec/Lab_3_sheet.pdf`. Lab 2 rules are cited as
+`L2 BR-21`. Numbering continues the Lab 2 log so decision IDs stay unique across labs;
+FR, BR and AC numbering restarts at 01, as the labsheet requires.
+
+The recommendations in `docs/lab-03/handoff.md` section 4 are superseded by this file. The
+`D-xx` tag in the Topic column names the handoff row each decision came from, so the two
+documents stay traceable to one another.
+
+## Decision table
+
+### Authentication and session
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-53 | Password hashing (D-01) | scrypt from `node:crypto`. A per-user 16-byte salt; stored as `scrypt$N$r$p$salt$hash`; compared with `timingSafeEqual`. | No new dependency under the stack rule, no native build on Windows, and it is memory-hard. | - |
+| C-54 | Session mechanism (D-02) | A database `Session` table holding an opaque token. 32 random bytes travel in cookie `tt_session`; only the SHA-256 of the token is stored. Cookie flags `HttpOnly; SameSite=Strict; Path=/`. | Logout really invalidates the session, as 6.1 requires. Deactivation, role change and a new initial password can kill sessions at once. There is no signing secret to manage. | - |
+| C-55 | Session lifetime and revocation | 8 hours absolute, with no sliding renewal. Logout ends the calling session only. Deactivation, a role change and a new initial password each end **all** of that user's sessions. `requireAuth` also rejects a session whose user is inactive. | Logout really invalidates the session, as 6.1 requires; deactivation, role change and a new initial password can kill sessions at once. | - |
+| C-56 | Cookie transport across ports (D-03) | The Vite dev server proxies `/api` to the API, making the app same-origin. `VITE_API_URL` is set explicitly to the empty string, because `client/src/api.ts` uses `??` and an unset variable would still fall back to `http://localhost:3000`. The wildcard `app.use(cors())` is removed, or pinned to `CLIENT_ORIGIN`. | Same-origin makes `SameSite=Strict` work and removes a class of CORS bugs. It is a one-line `vite.config.ts` change. | - |
+| C-57 | Cookie port scope | Cookies ignore port, so the `tt_session` cookie set for `localhost` also reaches the API on `:3000` directly, and any other service on `localhost`. | Accepted as a local-only risk. | - |
+| C-58 | CSRF (D-04) | `SameSite=Strict`, plus rejecting any state-changing request whose `Origin` header is present and is not `CLIENT_ORIGIN`. Two tests are required and named in `tests.md`: a foreign `Origin` is rejected, and a missing `Origin` is accepted. | Proportionate for a local lab, and 6.1 asks for CSRF considerations to be justified in the contract. | - |
+| C-59 | Login failures (D-13) | Unknown email, wrong password and a NULL `passwordHash` all return one generic 401. An inactive account returns 403 `ACCOUNT_INACTIVE`, and only after the password has been verified. No lockout. Emails are stored lower-case and compared case-insensitively. | Inactive status is revealed only to someone who already holds the password, which gives 8.1 its "clear response without exposing information". Account unlocking is excluded by 4.2, so a lockout could never be undone. | L2 C-33 (the inactive-Requester 403 moves to the login path) |
+| C-60 | Password policy (D-14) | 8 to 128 characters; upper and lower case; a digit; a special character. The new password must differ from the current one. The confirmation field must match. **One** validator, shared by Change Password, Administrator create and Administrator set-initial-password. | It matches the mock-up. One validator means one test set. | - |
+| C-61 | Password-change gate and current user | `GET /api/auth/me` works while `mustChangePassword` is true, so the Change Password screen can show the user's name and role. `POST /api/auth/change-password` requires the current password. | The Change Password screen needs the user's name. Requiring the current password means a stolen session alone cannot change the password. | - |
+| C-62 | Public endpoints (D-11) | `GET /api/health`, `GET /api/categories`, `GET /api/related-systems` and `POST /api/auth/login`. Every other route requires a session. | Reference lists are not sensitive, and the Lab 1 tests stay unchanged. | - |
+| C-63 | Check order | Fixed for every protected route: session -> password-change gate -> role -> parse parameters -> load the resource -> ownership -> body validation. | Role is checked before the Ticket is loaded, so a Requester calling an Internal Notes endpoint gets 403 whether or not the Ticket exists - the status code never reveals existence (6.2, AC-04). Parameters are parsed after the role check, so a malformed id cannot probe a forbidden endpoint either. | L2 C-45, L2 C-52 (both are stated against the Lab 2 order) |
+| C-64 | Client-supplied `requesterId` (D-10) | Ignored. A `requesterId` in a query string or a request body has no effect; the authenticated identity is used. Identity no longer travels in the request at all, so the Lab 2 caller-resolution statuses 400 `REQUESTER_REQUIRED`, 404 `REQUESTER_NOT_FOUND` and 403 `REQUESTER_INACTIVE` cease to exist. | AC-03's wording: "the backend still applies the authenticated identity". | **L2 C-12**, **L2 C-42**, **L2 C-45** |
+
+### Authorization
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-65 | Non-visible resources (D-09) | 404 when the role could access this kind of resource but this one is not theirs. 403 when the role may never perform the operation at all - a Requester calling the queue or an Internal Notes endpoint. | It meets 6.2 without leaking existence. AC-04, "rejected without exposing note content", still holds, and C-63 places the role check before the resource is loaded so a 403 also says nothing about existence. | **L2 C-13**, **L2 C-20** |
+| C-66 | Administrator ticket powers (D-12) | Option (a). An Administrator holds every IT Staff ticket permission: queue, staff detail, claim, assign and reassign, IT Priority, status changes, Public Comments and Internal Notes. A Ticket Owner may be an active IT Staff **or** Administrator user. Navigation for an Administrator shows the Queue and User Management. | 4.5 lets an Administrator be the Ticket Owner, and an owner has to be able to act on the Ticket. 4.3 allows this when the matrix says so explicitly, and this row is that statement. Role-restriction evidence comes from Requester -> staff routes and non-Administrator -> user management. | - |
+
+### Data model, migration and seed
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-67 | `RequesterUser` -> `User` (D-05) | Rename the table in place. The migration is hand-edited to `ALTER TABLE ... RENAME`, and its primary key and email-unique constraint are renamed with it. No `DROP TABLE` anywhere. | Ids, and so every `Ticket.requesterId`, survive untouched. Prisma generates DROP + CREATE for a model rename, so the migration must be created with `--create-only` and edited. | L2 C-31 |
+| C-68 | `Ticket.requesterId` column name | Unchanged. The foreign key keeps the name `requesterId` and continues to point at the renamed table. | It still means "who submitted the Ticket". Renaming it touches four indexes, `list-query.ts`, `ticket-dto.ts` and the migration's data path for no change in behavior. | - |
+| C-69 | Role storage (D-06) | A PostgreSQL enum `UserRole` with `REQUESTER`, `IT_STAFF`, `ADMINISTRATOR`. | One role per user, from a fixed set. It matches the Lab 2 enum style. | - |
+| C-70 | `TicketStatus` enum migration order | `OPEN`, `WAITING_FOR_REQUESTER` and `REOPENED` are added in their own migration, applied **before** the migration that renames the table and adds the new columns. No migration uses a value it has just added. The enum then carries eight values, all of them reachable. | A new enum value cannot be used in the same migration that adds it. | **L2 C-21** |
+| C-71 | IT Priority | `itPriority` is backfilled from `requestedPriority` for every existing row, then made `NOT NULL`, and is set from `requestedPriority` on create. | 4.5 says IT Priority starts as a copy of Requested Priority. Backfilling old Tickets the same way gives one rule for old and new Tickets, and `NOT NULL` lets the queue sort and filter on it without a null case. | **L2 C-07** |
+| C-72 | Existing users' passwords and seeded personas (D-07 + D-08) | The migration sets `passwordHash` NULL and `mustChangePassword` true for every existing user; a NULL hash can never authenticate, and returns the same generic 401 as a wrong password (C-59). The seed then, **only where `passwordHash IS NULL`**, sets the documented local-dev password and clears `mustChangePassword` for the named personas, in a single write. The dedicated first-login account is created flagged and is never updated by the seed. Any other migrated user receives a password when an Administrator sets an initial one. | One answer to 5.2, and the seed never touches a password a person has changed. | - |
+| C-73 | Comments versus notes storage (D-16) | Two tables: `PublicComment` and `InternalNote`. | A notes query structurally cannot leak into the comments endpoint. | - |
+| C-74 | Comment and note content (D-17) | Trim; reject empty; 1 to 2000 characters. Rendered as plain text, never through `dangerouslySetInnerHTML`, with `white-space: pre-wrap`. Newest first. Author and creation time are set by the server. | 4.6 asks for justified length limits and safe rendering. | - |
+
+### Tickets and workflow
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-75 | Claim, assign and reassign (D-18) | **Claim** assigns the caller only if the Ticket is unassigned, through a conditional update, and returns 409 `ALREADY_OWNED` if another user won the race. **Assign and reassign** accept any active IT Staff or Administrator. Unassign is allowed. An inactive owner stays displayed as "(inactive)" until reassigned. | A natural, testable conflict case for 8.6. | - |
+| C-76 | "Problem Appears Resolved" (D-19) | A flag `requesterResolvedAt` - a timestamp, not a status. The Ticket's status does not change (BR-05). Only the owning Requester may set it, and only while the status is Open, In Progress, Waiting for Requester or Reopened. It is cleared only by a move to Resolved, Closed or Cancelled. **No automatic Public Comment is posted.** Staff see a badge in the queue and on the detail screen. | It keeps IT Staff responsible for formally resolving the Ticket. | - |
+| C-77 | Same-status move | A status change whose target equals the current status returns 400. | The UI never offers it, so the request is a client error; a silent success would hide bugs. | - |
+| C-78 | Queue query (D-23) | Search by ticket number and summary. Filter by `currentStatus`, `itPriority`, `owner` (`me`, `unassigned`, or a user id) and `categoryId`. Sort by created, updated, IT priority, ticket number or status. Default: exclude Closed and Cancelled, sort IT priority high to low then oldest first. Page size 10, 25 or 50, default 10. A bad parameter returns 400 `INVALID_QUERY_PARAM`. | It reuses `server/src/lib/list-query.ts` and L2 C-43's paging semantics. | - |
+
+### Administration
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-79 | Initial password, create and reset (D-20) | The Administrator types it, validated by C-60. A reset sets `mustChangePassword` true and revokes that user's sessions. | The simplest approved local-lab behavior. The mock-up's "send reset email" checkbox is excluded. | - |
+| C-80 | Last-active-Administrator rule (D-21) | Enforced on **both** deactivation and role change, inside a transaction that locks the active-Administrator rows. | It can be reached two ways: the sole Administrator demoting themselves, or two Administrators deactivating each other at the same moment. Without locking, the race leaves zero Administrators. | - |
+| C-81 | Self-protection (D-22) | Self-deactivation is blocked. Self role change is **not** blocked; C-80 handles it. | If self role change were also blocked, the last-Administrator rule could never be triggered from the UI, and Part 8 has to demonstrate it. | - |
+| C-82 | Duplicate email | 409 `EMAIL_TAKEN`, presented at the email field. | It conflicts with existing data rather than being malformed input, and showing it at the email field tells the Administrator exactly what to fix. | - |
+
+### Testing, tooling and repository
+
+| ID | Topic | Decision | Reason | Supersedes |
+|---|---|---|---|---|
+| C-83 | Test data isolation and migration evidence (D-15) | Supertest runs against a separate `toktickit_test` database: a Vitest global setup points `DATABASE_URL` at it and runs `migrate deploy` plus the seed. E2E runs against the dev database and reuses fixed accounts; the create-user spec runs on the desktop project only, with an `@e2e.test` email. Migration evidence has two halves: the automated shape test `server/tests/lab-03/migration.db.test.ts`, and a **rehearsal** - restore `lab2-final.dump` into `toktickit_rehearsal`, capture row counts and tickets per requester, `migrate deploy`, capture the counts again together with the `migrate diff --exit-code` drift check. Both halves are saved under `artifacts/lab-03/migration/`. The dev database is migrated only after the rehearsal passes. | Migration evidence has two halves. There is no clutter in the Part 8 screenshot, and L2 C-37 still protects the dev database. | - |
+| C-84 | Test file names | Labsheet section 12 filenames are authoritative. The section 10 example table disagrees twice - `server/tests/lab-03/notes.api.test.ts` and `e2e/lab-03/first-login.spec.ts` - and is disregarded in both; the files are `comments-notes.api.test.ts` and `authentication.spec.ts`. | Same ground as L2 C-02. | - |
+| C-85 | Client routing | The hand-rolled History-API router in `client/src/router.tsx` is extended with route guards. No router library is added. | No new dependency without approval. The existing router already handles paths and navigation; route guards are a small addition. | **L2 C-51** (changed: C-51 allowed a library if the route count grew; it does not) |
+| C-86 | Migration commands | `server/package.json`'s `prisma:migrate` script is repointed from `prisma migrate dev` to `prisma migrate deploy`. | `migrate dev` offers a reset, and a reset destroys the seed data L2 C-37 protects. | - |
+| C-87 | The Lab 1 Check System screen | `/system-check` stays public. | It calls only public endpoints. | - |
+| C-88 | Branches and decision IDs (D-24) | Feature branches are named `feature/lab3-N-slug`; decisions continue at C-53. | The Lab 2 branch names still exist on origin. | - |
+| C-89 | Test levels | Eight levels, per labsheet section 10: unit, API/integration, UI component, UI style, responsive, security/authorization, migration/regression and E2E. The level is carried by the Test ID column, not by the file name. Security tests live in `server/tests/lab-03/authorization.api.test.ts` plus role tests inside each API test file; migration tests in `server/tests/lab-03/migration.db.test.ts` plus the C-83 rehearsal artifact; regression is the adapted Lab 2 suites. | As L2 C-09 - fill every level without changing the section 12 tree. | **L2 C-09** (six levels) |
+| C-90 | Playwright configuration for Lab 3 | The same three viewport projects - desktop 1280, tablet 834, mobile 390 - Chromium only, with `webServer` still disabled. Lab 3 screenshots go to `artifacts/lab-03/screenshots/{authentication,staff-queue,staff-ticket-detail,user-management}/`. A setup project writes one `storageState` per role into `e2e/.auth/`, which is gitignored. | Logging in once per role keeps the three-viewport run fast, and every spec starts from a known identity. | L2 C-10 (extended) |
+| C-91 | Seed composition | The graded seed now holds what labsheet 5.3 requires: accounts for all three roles, realistic Tickets across Requesters, statuses, priorities and owned or unassigned ownership, and harmless example Public Comments and Internal Notes. It stays idempotent through a stable natural key: the seed finds an existing Ticket by (Requester email, summary). `server/prisma/seed-demo.ts` keeps only the extra volume needed for queue and My Tickets pagination. | 5.3 now names Tickets, comments and notes, so C-22's premise is gone; keeping the volume data separate keeps the graded seed readable. On the key: `ticketNumber` cannot be the key because it comes from the row id (L2 C-49). Email is used instead of `requesterId` because ids differ between the dev and test databases. It needs no schema change and matches the Lab 2 demo seed. The seed stops with an error if two seeded Tickets share a Requester and summary, so the key can never match the wrong row. | **L2 C-22** |
+| C-92 | Terminology | The canonical glossary in `specification.md` section 11 is carried forward and extended with User, Role, Ticket Owner, IT Priority, Public Comment, Internal Note, Session and Initial Password. | As L2 C-40. | L2 C-40 (extended) |
+
+---
+
+## Carried from Lab 2
+
+All of C-01 to C-52 remain the record of Lab 2 and continue to bind Lab 2 behavior on the
+final `main`. Fifteen of them change in Lab 3.
+
+### Superseded or changed
+
+| ID | Lab 2 decision | Status in Lab 3 | Replaced by |
+|---|---|---|---|
+| C-07 | `Ticket.itPriority` is a nullable column, never settable | **Superseded.** Backfilled from Requested Priority, made `NOT NULL`, and set on create. | C-71 |
+| C-09 | Six test levels, the level carried by the Test ID column | **Changed.** Eight levels; the Test ID column still carries the level. | C-89 |
+| C-10 | Playwright: Chromium, three viewports, `webServer` disabled, Lab 2 screenshot folders | **Carried with additions.** Same projects; Lab 3 screenshot folders and a per-role `storageState` setup project. | C-90 |
+| C-12 | `requesterId` in the POST body and as `?requesterId=` on GETs | **Superseded.** Identity never travels in the request. | C-64 |
+| C-13 | 403 when a Ticket or Attachment exists but belongs to another Requester, deliberately leaking its existence | **Superseded.** 404, because labsheet 6.2 forbids the leak now that a security boundary exists. | C-65 |
+| C-20 | A removed file returns 410 to the owner and 403 to a non-owner | **Superseded.** 410 to the owner is unchanged; a non-owner now receives 404. C-13 and C-20 were linked and move together. | C-65 |
+| C-21 | The status enum carries five values, only `NEW` reachable | **Superseded.** Eight values, all reachable. | C-70 |
+| C-22 | The graded seed contains no Tickets; demonstration data lives in `seed-demo.ts` | **Changed.** 5.3 now requires Tickets, comments and notes in the graded seed; `seed-demo.ts` keeps only the pagination volume. | C-91 |
+| C-31 | The model is `RequesterUser`; the UI label is "Development Requester" | **Superseded.** The model is `User`. The UI says "Requester", the role; "Development Requester" disappears. | C-67 |
+| C-32 | The selected Requester is held in React context and persisted in `localStorage` | **Superseded.** No identity is held in browser storage at all. The client learns who it is from `/api/auth/me` and the session cookie. | C-54, C-56 |
+| C-33 | An inactive Requester is hidden from the selector, is refused with 403, and keeps their data | **Changed.** An inactive user cannot log in and loses existing sessions. Their Tickets and Attachments are kept (`L2 LC-01`). An inactive IT Staff user cannot be assigned and stays shown as "(inactive)" on Tickets they already own. | C-59, C-55, C-75 |
+| C-40 | A canonical glossary fixes each term once | **Carried and extended.** Eight Lab 3 terms are added. | C-92 |
+| C-42 | `requesterId` as a query parameter on every endpoint except `POST /api/tickets` | **Superseded.** The parameter is ignored wherever it appears. | C-64 |
+| C-45 | An unknown `requesterId` returns 404 and an inactive one 403, both resolved before the addressed resource is loaded | **Superseded.** There is no client-supplied caller to resolve; the inactive case moves to the login path. | C-64, C-59, C-63 |
+| C-51 | Client routing is the hand-rolled `router.tsx`, and Lab 3 may adopt a library if the route count grows | **Changed.** The router is kept and extended with guards; no library is adopted. | C-85 |
+
+### Carried unchanged
+
+C-01 project guardrail - C-02 section 12 test file names - C-03 client test path
+(`client/tests/lab-NN/`) - C-04 Lab 1 SystemCheck component - C-05 reference-data
+`isActive` - C-06 screen modes, edit deferred - C-08 unit test location - C-11 Ticket
+Number format - C-14 upload rejection statuses - C-15 two-step attachment upload -
+C-16 multer - C-17 attachment storage - C-18 attachment slot accounting - C-19 removal
+reason required - C-23 Requested Priority values - C-24 Related System scoping -
+C-25 field validation bounds - C-26 duplicate submission - C-27 ticket-list query
+contract - C-28 empty versus no-results - C-29 sort order - C-30 searchable fields -
+C-34 Ticket Date - C-35 AI use document name - C-36 specification file name -
+C-37 migration strategy, never `migrate reset` - C-38 environment variables -
+C-39 timestamp handling - C-41 product name TokTickIT - C-43 malformed `page` -
+C-44 download and preview selection - C-46 unavailable attachment state -
+C-47 Selection screen screenshot location - C-48 Selection screen test file -
+C-49 Ticket Number assignment point - C-50 Ticket Number year versus displayed date -
+C-52 check order for `disposition`.
+
+---
+
+## Notes
+
+- C-13 and C-20 were linked in Lab 2, and a change to either had to be reflected in the
+  other. C-65 changes both together.
+- C-64 removes three error codes from the contract - `REQUESTER_REQUIRED`,
+  `REQUESTER_NOT_FOUND` and `REQUESTER_INACTIVE`. `api-spec.md` section 1.3's catalogue and
+  every test that asserts them must be updated, not left to fail.
+- C-71 changes the meaning of four existing Lab 2 tests that assert `itPriority` is null:
+  `server/tests/lab-02/data-model.db.test.ts` DB-06, `create-ticket.api.test.ts` API-03,
+  `client/tests/lab-02/MyTickets.test.tsx` line 217, and `RequesterTicketDetail.test.tsx`
+  STYLE-07. Each is rewritten, not deleted; `tests.md` records the disposition.
+- C-70 also fixes `server/tests/lab-02/data-model.db.test.ts` DB-04, which asserts the
+  `TicketStatus` enum equals exactly its five Lab 2 values in declared order. That
+  assertion is updated to the eight Lab 3 values in the same commit as the enum migration.
+- C-83's rehearsal is the only evidence that the C-67 rename preserved ticket ownership.
+  `migration.db.test.ts` runs against a freshly created `toktickit_test`, which has no Lab
+  2 history to preserve, so it can prove schema shape and seed invariants and nothing more.

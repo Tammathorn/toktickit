@@ -118,6 +118,8 @@ because `vite.config.ts` only collects files matching `tests/**/*.test.tsx`.
 
 ## 4. Decisions to settle in Phase 1 — with recommendations
 
+Superseded by `docs/lab-03/decisions.md`.
+
 The labsheet says you choose these *with the specification agent*. The recommendations below
 are starting positions to argue with, not answers to paste. Record your choices, in your own
 reasoning, as **C-53 onward** in `docs/lab-03/decisions.md`. Continuing the Lab 2 numbering
