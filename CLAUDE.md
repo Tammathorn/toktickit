@@ -1,12 +1,16 @@
 # TokTickIT - Project Constraints
 
-CPE 334 Lab 2 (Individual Sprint 2). The Requester-facing ticketing MVP, built on the
-Lab 1 vertical slice: React UI -> Express REST API -> Prisma ORM -> PostgreSQL.
+CPE 334 Lab 3 (Individual Sprint 3). Users, Roles, IT Staff Ticketing and Admin Screens,
+built on the Lab 2 Requester MVP: React UI -> Express REST API -> Prisma ORM -> PostgreSQL.
 
-These constraints come from `docs/lab-02/spec/` and from the approved decisions in
-`docs/lab-02/decisions.md`. They override default preferences and "better"
-alternatives. When a rule here conflicts with what seems technically nicer, the rule
-wins - this is graded coursework against a fixed contract.
+These constraints come from `docs/lab-03/spec/Lab_3_sheet.pdf` and the approved decisions in
+`docs/lab-03/decisions.md` (C-53..C-92). They override default preferences and "better"
+alternatives. When a rule here conflicts with what seems technically nicer, the rule wins -
+this is graded coursework against a fixed contract.
+
+Lab 2 history lives in `docs/lab-02/`. Its log C-01..C-52 still binds Lab 2 behavior;
+`docs/lab-03/decisions.md` records which rows Lab 3 supersedes. Cite a Lab 2 rule as
+`L2 C-13` or `L2 BR-21`, never bare.
 
 ## Repository path
 
@@ -14,9 +18,8 @@ wins - this is graded coursework against a fixed contract.
 C:\Downloads\Lab1_Starter_Scaffold\toktickit
 ```
 
-That is the only path. There is no `C:\dev\toktickit`; any command in an older document
-that says otherwise is wrong. Always work from inside this directory so relative paths
-resolve.
+That is the only path. There is no `C:\dev\toktickit`; any command in an older document that
+says otherwise is wrong. Always work from inside this directory so relative paths resolve.
 
 ## Mandatory stack - no substitutions
 
@@ -26,53 +29,83 @@ resolve.
 | Backend | Node.js + Express + TypeScript |
 | Database | PostgreSQL + Prisma |
 | Architecture | REST-style APIs |
-| Testing | Vitest (frontend/unit) + Supertest (API) |
+| Testing | Vitest (frontend/unit) + Supertest (API) + Playwright (E2E) |
 
 **Never install, scaffold, import, or suggest:** Next.js, Tailwind, Drizzle, Jest, or any
-authentication library. Also out of scope: any other framework, database, ORM, or UI
-library.
+other framework, database, ORM, or UI library.
 
-If a task seems to need one of these, stop and say so rather than substituting.
+**Authentication libraries stay banned** unless a decision row approves one: `passport`,
+`jsonwebtoken`, `bcrypt`, `bcryptjs`, `argon2`, `express-session`, and any hosted or
+third-party identity service. Lab 3 builds authentication from `node:crypto` and Prisma
+alone. If a task seems to need one of these, stop and say so rather than substituting.
 
-### Dependencies added for Lab 2
+**Approved dependencies:** Playwright, for the root-level `e2e/` folder only, installed at
+the repository root and not inside `client/`; and multer, for attachment multipart parsing.
+No other new dependency without asking first. Client routing stays the hand-rolled
+`client/src/router.tsx` extended with route guards; no router library (C-85).
 
-- **Playwright** is in scope, for the root-level `e2e/` folder only. It is installed at
-  the repository root, not inside `client/`. Do not add Playwright tests anywhere else.
-- **multer** is approved for attachment upload (multipart parsing).
+**The approved authentication mechanism.** Passwords: scrypt from `node:crypto`, per-user
+16-byte salt, stored `scrypt$N$r$p$salt$hash`, compared with `timingSafeEqual` (C-53).
+Sessions: rows in a `Session` table; a 32-byte opaque token in the `tt_session` cookie with
+only its SHA-256 stored; `HttpOnly; SameSite=Strict; Path=/`; 8 hours absolute, no sliding
+renewal (C-54, C-55). The Vite dev server proxies `/api`, so the app is same-origin, and
+`VITE_API_URL` is set explicitly to the empty string (C-56). CSRF cover is `SameSite=Strict`
+plus an `Origin` check on state-changing requests (C-58).
 
-No other new dependency is added without asking first.
+## Scope - Lab 3
 
-## Scope - Lab 2 is Requester-facing only
-
-Four screens: Development Requester Selection, Create Ticket, My Tickets, Requester
-Ticket Detail. Five entities: RequesterUser, Ticket, Attachment, Category,
+Nine screens: Login, Change Password, My Tickets, Create Ticket, Requester Ticket Detail,
+IT Staff Ticket Queue, IT Staff Ticket Detail, User Management, and the Lab 1 Check System
+page. Entities: User, Session, Ticket, Attachment, PublicComment, InternalNote, Category,
 RelatedSystem.
 
 In scope:
 
-1. Development Requester selection and switching
-2. Create Ticket, with validation and a backend-generated Ticket Number
-3. My Tickets - search, filtering, sorting, pagination, ownership
-4. Requester Ticket Detail, read-only, with the attachment lifecycle
-5. Attachment upload, download, and soft removal
-6. Loading, empty, no-results, and safe failure states throughout
-7. Responsive behavior at desktop, tablet, and mobile
+1. Login, logout, current user, and mandatory first-login password change
+2. Three roles - Requester, IT Staff, Administrator - with role-based navigation, and
+   server-side authorization and ownership on every protected route
+3. Migration from the Development Requester selector to the authenticated User, with every
+   Lab 2 Requester function continuing on the authenticated identity
+4. IT Staff Ticket Queue - search, filters, sorting, pagination
+5. IT Staff Ticket Detail - ownership, IT Priority, permitted status changes
+6. Public Comments and Internal Notes, append-only, and the Requester "Problem Appears
+   Resolved" action (C-76)
+7. Minimalist Administrator user management
+8. Loading, saving, success, validation, empty, no-results, forbidden and safe failure
+   states throughout, at desktop, tablet, and mobile
 
-**Never add:** authentication, login, logout, passwords, password hashing, sessions,
-tokens, authenticated identities, real role-based authorization, IT Staff dashboard or
-queue, claiming or reassigning tickets, changing IT Priority, public comments, internal
-notes, actions taken, any status change beyond the initial `New`, or administrator
-management of users, roles, or reference data.
+**Never add** (labsheet 4.2 and 8.5): email of any kind - invitations, password-reset mail,
+initial passwords by mail; multi-factor authentication; SSO; social login; self-registration
+or Requester-created accounts; Actions Taken; SLA calculation; escalation rules;
+notification services; dashboards or KPI analytics beyond simple queue counts;
+multi-tenancy, organizations or departments; extended user profiles and profile photos;
+multiple roles per user; role history or account-audit screens; user deletion; bulk user
+operations; user import or export; account lockout, unlocking or recovery; administrator
+approval workflows; user-list pagination; multi-column sorting; multiple simultaneous
+filters; production deployment or cloud infrastructure; and administrator management of
+reference data (Categories, Related Systems) - 8.5 asks for one User Management screen
+only.
 
-Those arrive in Labs 3-4. Do not "prepare" for them with extra routes, screens, or
-controls.
+The Resolution Summary and the "Service Actions" tab in the mock-up are Lab 4. Do not
+"prepare" for Lab 4 with extra routes, screens, or controls.
 
-## The Development Requester selector is not authentication
+## Security rules
 
-It is a temporary testing mechanism that stands in for login until Lab 3. The UI must
-say so on the selection screen, in plain words. Never describe it as a login, never
-treat the selected identity as a secure claim, and never build authorization on top of
-it. Ownership checks still run in the backend on every request.
+Not style preferences - every one is graded in Part 7 or Part 8.
+
+- **Identity comes only from the session.** A `requesterId` in a query string or a request
+  body is ignored (C-64). Never trust a client-supplied identity for anything.
+- **Role checks run in server middleware**, not in a screen. A hidden or disabled button is
+  useful feedback; it is not a security control.
+- **404 for a resource the caller may not see; 403 for an operation the role may never
+  perform** (C-65). A Requester calling a queue or Internal Notes endpoint gets 403, and
+  gets it before the resource is loaded, so the status reveals nothing about existence.
+- **The check order is fixed** (C-63): session -> password-change gate -> role -> parse
+  parameters -> load the resource -> ownership -> body validation.
+- **Never return or log a password, a `passwordHash`, or a session token**, on any path,
+  including error paths.
+- **Seeded passwords are local-development only**, documented in the README, and never a
+  real personal password.
 
 ## Zen Green theme tokens
 
@@ -88,187 +121,164 @@ Use these values exactly:
 | Text | Dark charcoal-green | Body text - not pure black |
 
 Read-only fields use soft gray-green or warm ivory shading. Errors are dark red with the
-message directly below the field. Success must not rely on color alone.
+message directly below the field. Success must not rely on color alone. New screens must
+look like part of the same application, not a second visual system. Public Comments and
+Internal Notes must be visually distinct.
 
 ## Required repository structure
 
-Labsheet section 12. `e2e/` and `artifacts/` are legitimate top-level directories,
-alongside `client/` and `server/`.
+Labsheet section 12, the Lab 3 minimum, alongside the existing `lab-01` and `lab-02` trees.
 
 ```
-toktickit/
- |- client/
- |    |- src/
- |    \- tests/
- |          |- lab-01/
- |          \- lab-02/
- |                |- CreateTicket.test.tsx
- |                |- MyTickets.test.tsx
- |                |- RequesterTicketDetail.test.tsx
- |                \- AttachmentSection.test.tsx
- |- server/
- |    |- prisma/
- |    |- src/
- |    \- tests/
- |          |- lab-01/
- |          \- lab-02/
- |                |- create-ticket.api.test.ts
- |                |- my-tickets.api.test.ts
- |                |- ticket-detail.api.test.ts
- |                |- attachments.api.test.ts
- |                \- ticket-number.unit.test.ts
- |- e2e/
- |    \- lab-02/
- |          \- requester-ticket-flow.spec.ts
- |- artifacts/
- |    \- lab-02/screenshots/{create-ticket,my-tickets,ticket-detail}/
- |- docs/
- |    |- lab-01/
- |    \- lab-02/
- |          |- specification.md
- |          |- api-spec.md
- |          |- ui-spec.md
- |          |- tests.md
- |          |- decisions.md
- |          |- reviewer.md
- |          \- ai-use.md
- |- playwright.config.ts
- |- package.json
- |- .gitignore
- \- README.md
+client/tests/lab-03/   Login  ChangePassword  StaffTicketQueue  StaffTicketDetail
+                       UserManagement                                  (.test.tsx)
+server/tests/lab-03/   auth  authorization  staff-queue  staff-ticket-detail
+                       comments-notes  users-admin            (.api.test.ts)
+                       migration.db.test.ts
+e2e/lab-03/            authentication  staff-ticket-flow  user-administration  (.spec.ts)
+artifacts/lab-03/      screenshots/{authentication,staff-queue,staff-ticket-detail,
+                       user-management}/   migration/
+docs/lab-03/           specification.md  api-spec.md  ui-spec.md  tests.md
+                       decisions.md  reviewer.md  ai-use.md  handoff.md
 ```
 
 Section 12 is a **minimum**. Files may be added; the named files must not be renamed,
-relocated, or removed. Client tests go in `client/tests/lab-02/` because
-`client/vite.config.ts` includes only `tests/**/*.test.tsx` - any other location
-collects zero tests and still reports success.
+relocated, or removed. Where labsheet section 10's example table disagrees with section 12
+on a filename, section 12 wins (C-84). Client tests go in `client/tests/lab-03/` because
+`client/vite.config.ts` includes only `tests/**/*.test.tsx` - any other location collects
+zero tests and still reports success.
 
-`artifacts/` is tracked; it is screenshot evidence. `test-results/`,
-`playwright-report/`, `blob-report/` and `server/uploads/` stay ignored.
+`artifacts/` is tracked; it is evidence. `test-results/`, `playwright-report/`,
+`blob-report/`, `server/uploads/`, `e2e/.auth/` and `docs/lab-03/spec/*.pdf` stay ignored.
 
 ## The contract
 
-Once written, these four documents are the contract:
+These five documents are the contract:
 
 ```
-docs/lab-02/specification.md
-docs/lab-02/api-spec.md
-docs/lab-02/ui-spec.md
-docs/lab-02/tests.md
+docs/lab-03/specification.md   api-spec.md   ui-spec.md   tests.md   decisions.md
 ```
 
-`docs/lab-02/decisions.md` records the approved decisions behind them, C-01 through
-C-41.
+`decisions.md` records C-53..C-92 and which Lab 2 decisions they supersede.
+`docs/lab-03/phase1-analysis.md` is the codebase survey they were written against; it is
+reference, not contract.
 
-If a task appears to need behavior that none of these cover, **stop and ask** rather
-than inventing a rule. Do not silently resolve a conflict between two of them - report
-it.
+If a task appears to need behavior that none of these cover, **stop and ask** rather than
+inventing a rule. Do not silently resolve a conflict between two of them - report it.
 
-## Lab 1 must keep working
+## Lab 1 and Lab 2 must keep working
 
-Lab 1 behavior and its tests keep passing on the final `main`. Per decision C-04, the
-Check System page becomes a component reachable at a route, and the Lab 1 test is
-repointed at that component rather than at the app root.
+Lab 1 and Lab 2 behavior and their tests keep passing on the final `main`.
 
-**Never delete or skip a test to make a suite green.** If a test fails, fix the cause or
-report it.
+**Never delete or skip a test to make a suite green.** A Lab 2 test may be *adapted* to log
+in, and an assertion may be *rewritten* where a decision changed the behavior it asserts. A
+test is **retired only when a decision row names its replacement**. Any drop in a suite count
+must match a retirement row in `docs/lab-03/tests.md`; count by test ID, not by file. If a
+test fails, fix the cause or report it.
 
-The Lab 1 API contract is unchanged:
+The Lab 1 API contract is unchanged and stays public (C-62):
 
 ```
 GET /api/health     -> 200 { "status": "ok", "service": "TokTickIT API" }
 GET /api/categories -> 200 [ { "id": 1, "name": "Account and Access" }, ... ]
 ```
 
-`GET /api/categories` keeps returning the four seeded categories in id order with the
-same `{id, name}` shape, even though `Category` gains an `isActive` column (C-05).
+`/api/related-systems` and `POST /api/auth/login` are also public, and `/system-check` stays
+public (C-87). Every other route requires a session.
 
-Seeds stay idempotent - use `upsert`, so re-running creates no duplicates. Never run
-`prisma migrate reset`; it destroys the Lab 1 seed data (C-37).
+## Database and migrations
+
+- **Never run `prisma migrate reset`** - it destroys seed data (L2 C-37).
+- **Never run `npm run prisma:migrate`** - until C-86 repoints it in Issue 2 it still runs
+  `migrate dev`, which can offer a reset.
+- Apply migrations with `npx prisma migrate deploy`. Create them with
+  `npx prisma migrate dev --create-only` and edit the SQL before applying. If Prisma offers
+  a reset, answer no and stop.
+- The `RequesterUser` -> `User` rename is `ALTER TABLE ... RENAME`, never DROP + CREATE
+  (C-67). `Ticket.requesterId` keeps its column name (C-68). New enum values go in their own
+  migration, before the migration that uses them (C-70).
+- Prove zero drift after every migration with `npx prisma migrate diff ... --exit-code`.
+- Seeds stay idempotent - `upsert`, or the `(Requester email, summary)` key for Tickets
+  (C-91). Re-running creates no duplicates and never overwrites a changed password (C-72).
+- The dev database is migrated only after the C-83 rehearsal passes.
 
 ## Product name
 
 The product is **TokTickIT** everywhere - headings, page titles, component names, test
-assertions, documentation. The labsheet illustration on page 9 renders it "TikTockIT";
-that is a typo in the image and is not followed (C-41).
+assertions, documentation. The labsheet illustration renders it "TikTockIT"; that is a typo
+in the image and is not followed (L2 C-41).
 
 ## Required tests
 
-Six levels, per labsheet section 9.2: unit, API/integration, UI component, UI style,
-responsive, and E2E.
+Eight levels, per labsheet section 10: unit, API/integration, UI component, UI style,
+responsive, **security/authorization**, **migration/regression**, and E2E. The level is
+carried by the Test ID column, not by the file name (C-89).
 
 | Tool | Covers |
 | --- | --- |
-| Vitest | Ticket Number format (unit), UI components, UI style assertions |
-| Supertest | Create Ticket, My Tickets, Ticket Detail, Attachments |
-| Playwright | The end-to-end Requester flow and three-viewport screenshots |
+| Vitest | Unit, UI components, UI style assertions |
+| Supertest | Auth, authorization, queue, staff detail, comments and notes, user admin, migration |
+| Playwright | Authentication, the staff flow, user administration, three viewports (C-90) |
 
-Every acceptance criterion maps to at least one planned test, and every planned test
-names its actual file path. Evidence is passing terminal output, recorded in
-`docs/lab-02/tests.md`.
+A security claim needs a test, not a code reading: the route-inventory test in
+`authorization.api.test.ts` walks the Express router and fails if any non-public route
+answers without a session. Name tests so the terminal output reads as evidence, for example
+`Requester GET /api/tickets/:id/internal-notes -> 403, no note content`.
+
+Every acceptance criterion maps to at least one planned test, and every planned test names
+its actual file path. Write the tests first, run them, and capture the failing output before
+implementing. Evidence is passing terminal output, recorded in `docs/lab-03/tests.md`.
 
 ## Git rules - working agreement
 
 You run git and gh yourself. Two hard limits that never relax:
 
-- Never `git add .` or `git add -A`. Always stage explicit paths, and run
-  `git status` after staging to confirm what is actually staged.
-- Every `gh pr create` carries `--base lab2-staging`. GitHub defaults to
-  main, and labsheet 10.1 forbids developing directly on main or
-  lab2-staging.
+- Never `git add .` or `git add -A`. Always stage explicit paths, and run `git status` after
+  staging to confirm what is actually staged.
+- Every `gh pr create` carries `--base lab3-staging`. GitHub defaults to main, and labsheet
+  11.1 forbids developing directly on main or lab3-staging.
 
-Never force-push, never rebase a pushed branch, never merge into main
-except through the single release PR. Commit messages carry no
-Co-Authored-By or Claude-Session trailer.
+Never force-push, never rebase a pushed branch, never merge into main except through the
+single release PR. Commit messages carry no Co-Authored-By or Claude-Session trailer.
 
 ### Pre-commit inspection - owed before every commit
 
-Inspecting the working tree before a commit is a duty, not an option. Before every
-commit:
+Inspecting the working tree before a commit is a duty, not an option. Before every commit:
 
 1. Run `git status` and `git diff --stat`.
-2. Report **exactly which files are staged** - name them, do not summarise as
-   "the usual files".
-3. Flag anything unexpected: build output, uploaded attachments, `node_modules`,
-   secrets or `.env` files, screenshots that do not belong to this task, and any file
-   unrelated to the work in hand. Leave such files unstaged and say so.
+2. Report **exactly which files are staged** - name them, do not summarise as "the usual
+   files".
+3. Flag anything unexpected: build output, uploaded attachments, `node_modules`, secrets or
+   `.env` files, Playwright storage state, screenshots that do not belong to this task, and
+   any file unrelated to the work in hand. Leave such files unstaged and say so.
 4. Only then commit.
 
-Branch model:
+Branch model (C-88): `main` is the stable release and `lab3-staging` the integration
+branch; neither is ever committed to directly. Feature branches are
+`feature/lab3-N-slug`, N = 1..9: `1-contract`, `2-data-migration`, `3-authentication`,
+`4-authz-regression`, `5-staff-queue`, `6-staff-ticket-ops`, `7-user-admin`,
+`8-e2e-visual`, `9-release-docs`.
 
-```
-main                          <- stable release, never commit directly
- \- lab2-staging              <- integration branch, never commit directly
-      |- feature/1-sprint-spec
-      |- feature/2-data-model
-      |- feature/3-requester-context
-      |- feature/4-create-ticket
-      |- feature/5-my-tickets
-      |- feature/6-ticket-detail
-      |- feature/7-e2e-visual
-      \- feature/8-release-docs
-```
+Every feature branch opens a PR into `lab3-staging` (not `main` - GitHub defaults to `main`,
+so the base must be changed). After all nine merge, one release PR goes
+`lab3-staging -> main`. Peer review is mandatory on every PR.
 
-Every feature branch opens a PR into `lab2-staging` (not `main` - GitHub defaults to
-`main`, so the base must be changed). After all eight merge, one release PR goes
-`lab2-staging -> main`. Peer review is mandatory on every PR.
-
-Commit message style: short, imperative, prefixed - `feat:` `fix:` `test:` `docs:`
-`chore:`.
+Commit message style: short, imperative, prefixed - `feat:` `fix:` `test:` `docs:` `chore:`.
 
 ## Secrets
 
 `.env` is never committed; `.env.example` is. Database credentials must not appear in any
 tracked file. `node_modules/`, `dist/`, `build/` stay ignored.
 
-New Lab 2 variables (`UPLOAD_DIR`, `MAX_UPLOAD_BYTES`) go into `server/.env.example` with
-placeholder values only.
+New Lab 3 variables go into `server/.env.example` with placeholder values only, alongside
+the Lab 2 `UPLOAD_DIR` and `MAX_UPLOAD_BYTES`. No password hash, session token, or signing
+secret of any kind enters a tracked file.
 
 ## Working style
 
 Small tasks with clear constraints. The user is responsible for every file, command,
-dependency, and test - so explain what changed and why, and never generate code they
-would not be able to explain.
+dependency, and test - so explain what changed and why, and never generate code they would
+not be able to explain.
 
-Verify by reading the file or running the command. Do not infer from what looks
-plausible, and do not report work as done without evidence.
+Verify by reading the file or running the command. Do not infer from what looks plausible,
+and do not report work as done without evidence.
