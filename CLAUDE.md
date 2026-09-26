@@ -4,7 +4,7 @@ CPE 334 Lab 3 (Individual Sprint 3). Users, Roles, IT Staff Ticketing and Admin 
 built on the Lab 2 Requester MVP: React UI -> Express REST API -> Prisma ORM -> PostgreSQL.
 
 These constraints come from `docs/lab-03/spec/Lab_3_sheet.pdf` and the approved decisions in
-`docs/lab-03/decisions.md` (C-53..C-92). They override default preferences and "better"
+`docs/lab-03/decisions.md` (C-53 onward). They override default preferences and "better"
 alternatives. When a rule here conflicts with what seems technically nicer, the rule wins -
 this is graded coursework against a fixed contract.
 
@@ -159,7 +159,7 @@ These five documents are the contract:
 docs/lab-03/specification.md   api-spec.md   ui-spec.md   tests.md   decisions.md
 ```
 
-`decisions.md` records C-53..C-92 and which Lab 2 decisions they supersede.
+`decisions.md` records C-53 onward and which Lab 2 decisions they supersede.
 `docs/lab-03/phase1-analysis.md` is the codebase survey they were written against; it is
 reference, not contract.
 
