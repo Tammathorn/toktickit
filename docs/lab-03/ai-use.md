@@ -150,8 +150,8 @@ Sent verbatim, opening:
 > C-91 open item: the seed finds an existing Ticket by (Requester email, summary). Reason:
 > "ticketNumber cannot be the key because it comes from the row id (L2 C-49). Email is used
 > instead of requesterId because ids differ between the dev and test databases. It needs no
-> schema change and matches the Lab 2 demo seed. The seed> stops with an error if two seeded Tickets share a Requester and summary, so the key can
-> never match the wrong row."
+> schema change and matches the Lab 2 demo seed. The seed stops with an error if two seeded
+> Tickets share a Requester and summary, so the key can never match the wrong row."
 > Move it out of the Notes and into C-91.
 >
 > Keep the four reasons you replaced (C-55, C-70, C-84, C-86).
@@ -256,8 +256,12 @@ ordered migrations, 117 ACs, the Definition of Done, and a list of ten gaps wher
   C-98: `CLOSED` and `CANCELLED` are both terminal and `REOPENED` is reachable only from
   `RESOLVED`. This is exactly the failure `decisions.md` exists to prevent, and it happened
   inside the document whose job is to be the contract.
-- Assumption A-07 put every refusal of a well-formed request at 422, including
-  `LAST_ADMINISTRATOR`.
+- **Assumption A-07 put every refusal of a well-formed request at 422**, including
+  `LAST_ADMINISTRATOR`, which depends on the state of the other `User` rows and is therefore
+  a conflict. Coding it as an assumption rather than asking was the smaller version of the
+  same mistake: a status code the whole test suite would have been written against, settled
+  in a footnote. C-100 draws the line - 409 for a conflict with the state of the resource or
+  the rows it depends on, 422 for a refusal about the submitted value - and A-07 is gone.
 
 ---
 
