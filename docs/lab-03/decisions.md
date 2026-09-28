@@ -109,6 +109,30 @@ The Gap column names the gap each row closes.
 | C-103 | Attachments and staff | G-05 | IT Staff and Administrator users may list and download a Ticket's Attachments. Upload and soft removal stay Requester-owner operations. | 8.4 gives the staff screen the *existing* Attachments; no clause gives staff a write. Read without write is the narrowest reading that still satisfies 8.4. | - |
 | C-104 | Unassigning a Ticket that is being worked on | - | Unassigning a Ticket whose status is `IN_PROGRESS`, `WAITING_FOR_REQUESTER` or `RESOLVED` is refused 409 `OWNER_REQUIRED`; the Ticket is moved to `OPEN` first. Reassigning such a Ticket to another eligible user stays allowed, because it never leaves the Ticket without an owner. | C-93 says a Ticket being worked on must have someone accountable. Checking that only at the moment of the status change left a hole: the Ticket could be unassigned a second later and sit in a worked status with nobody accountable. This keeps C-93 true at all times rather than at one instant. | C-93 (its "checked on the transition, not held continuously" reading) |
 
+### Gaps closed after the `api-spec.md` and `ui-spec.md` drafts
+
+Four rows, closing the four items those two documents declared and refused to resolve on
+their own authority - three silences in this log, and one disagreement inside
+`specification.md` itself. `api-spec.md` section 12 and `ui-spec.md` section 25 listed each
+with options and a recommendation; these are the answers.
+
+| ID | Topic | Declared as | Decision | Reason | Supersedes |
+|---|---|---|---|---|---|
+| C-105 | The assignable-users endpoint | `api-spec.md` 12.1, `ui-spec.md` 25.2 | A staff endpoint, **IT Staff and Administrator only**, returning the `id`, `name` and `role` of active IT Staff and Administrator users. **No email address.** | The owner picker needs the list, and the user-admin API is Administrator-only. | - |
+| C-106 | A wrong current password on change-password | `api-spec.md` 12.2, `ui-spec.md` 25.1 | **422 `CURRENT_PASSWORD_INCORRECT`**, shown at the current-password field. **Never 401.** | The client treats 401 as an expired session and sends the user to Login. | - |
+| C-107 | The user list's order | `api-spec.md` 12.3, `ui-spec.md` 25.3 | Fixed, **by name ascending, then id**. No user-controlled sort. | 8.5 does not require sorting, and a fixed order keeps tests and screenshots stable. | - |
+| C-108 | The queue at tablet width | `ui-spec.md` 25.4 | Keep Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner and Last Updated. **Hide** Created, Category and Requested Priority - they stay on the detail screen. **`specification.md` section 6 is corrected to match FR-39**, so the conflict is fixed at its source rather than worked around. `tests.md` RESP-04 is tightened to assert exactly these columns. | At tablet width the columns that pick the next piece of work stay; the rest is one click away. | Corrects `specification.md` section 6, which named Related System - a column FR-39 never creates |
+
+C-106 lands where C-100 already drew the line: the refusal is about the value submitted, not
+about the state of a resource, so it is 422 rather than 409. It adds a ninth code to the
+catalogue and a second code to the 422 bucket alongside `ASSIGNEE_NOT_ELIGIBLE` and
+`SELF_DEACTIVATION`.
+
+C-108 is the only row in this log that **changes `specification.md` rather than adding to
+it**. The section 6 sentence and FR-39 disagreed, and `CLAUDE.md` requires a conflict between
+contract documents to be reported rather than resolved locally - it was reported, and this row
+is the resolution, applied at the source so the two stop disagreeing.
+
 ---
 
 ## Carried from Lab 2

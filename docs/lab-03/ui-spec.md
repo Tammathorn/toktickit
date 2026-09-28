@@ -202,7 +202,7 @@ exactly one message, so a test asserts one constant rather than guessing which v
 | BR-13 | `newPassword` | `New Password must be different from your current password.` |
 | BR-13 | `confirmPassword` | `The confirmation does not match the new password.` |
 | BR-15 | `currentPassword` | `Current Password is required.` |
-| BR-15 | `currentPassword` | `That is not your current password.` - the wrong-password refusal. **Pending decision, section 25 item 1**, which fixes its status code |
+| BR-105 | `currentPassword` | `That is not your current password.` - the 422 `CURRENT_PASSWORD_INCORRECT` refusal, rendered below the field like any other field message (C-106) |
 | BR-99 | `name` | `Name is required and must be between 1 and 100 characters.` |
 | BR-99 | `email` | `Email Address is required and must be a valid address of at most 254 characters.` |
 | BR-75 | `role` | `Role is required.` |
@@ -247,6 +247,7 @@ maps to an `api-spec.md` section 1.3 error code.
 | `EMAIL_TAKEN` | 409 | `That email address is already in use.` - shown **at the email field**, not as a banner (BR-77, FR-62) |
 | `LAST_ADMINISTRATOR` | 409 | `There must always be at least one active Administrator.` |
 | `SELF_DEACTIVATION` | 422 | `You cannot deactivate your own account.` |
+| `CURRENT_PASSWORD_INCORRECT` | 422 | *No banner.* It carries `fields.currentPassword` and renders below that field as the section 6.1 message (BR-105, C-106) |
 | `ASSIGNEE_NOT_ELIGIBLE` | 422 | `That user cannot own a ticket. Choose an active IT Staff or Administrator user.` |
 | `INVALID_QUERY_PARAM` | 400 | `Some search or filter values are not valid. Clear filters to return to the default list.` |
 | `VALIDATION_FAILED` | 400 | *No banner of its own.* Its content is the per-field `fields` object, and those strings are the section 6.1 catalogue rendered beside each control (BR-87). A banner would duplicate them and violate `LS 8.3`, which forbids one mysterious error at the top standing in for field-level messages. Carried from Lab 2 |
@@ -543,7 +544,7 @@ two implementations that agree today.
 | Validating | Field-level messages from section 6.1; the confirmation mismatch is caught here, with no request sent (AC-26) |
 | Saving | Button busy and disabled; all three fields disabled |
 | Success | The success treatment of section 20 - a `--tk-pale` panel with a check icon **and** the text `Your password has been changed.` - then automatic continuation to the role's landing screen (FR-18, AC-28) |
-| Wrong current password | The message at the Current Password field, not as a banner (section 6.1). The New Password and Confirm values are retained; Current Password is cleared and focused |
+| Wrong current password | On 422 `CURRENT_PASSWORD_INCORRECT`, the message at the Current Password field, not as a banner (section 6.1, C-106). The New Password and Confirm values are retained; Current Password is cleared and focused. **The user is not sent to Login** - a 422 is not a session failure, which is precisely why C-106 refuses 401 here |
 | API failure | The `INTERNAL_ERROR` banner with `Retry`; all three fields cleared, because a retained password on a failed change is a hazard and the person must retype anyway |
 
 Success is never conveyed by colour alone (`CLAUDE.md`): the panel carries an icon and a sentence.
@@ -695,7 +696,7 @@ control exists that the API cannot serve.
 | Search | `search` | Text input, label `Search`, placeholder `Ticket Number or Ticket Summary`, debounced 300 ms, resets `page` to 1 |
 | Current Status filter | `currentStatus` | Select. Default option `Open tickets` - **not** `All statuses`, because the default excludes Closed and Cancelled (BR-72). The list then offers all eight statuses individually, plus `All statuses` |
 | IT Priority filter | `itPriority` | Select, `All IT priorities` default |
-| Ticket Owner filter | `owner` | Select: `Any owner`, `Assigned to me`, `Unassigned`, then each active IT Staff and Administrator user by name. **Depends on section 25 item 2** for its data source |
+| Ticket Owner filter | `owner` | Select: `Any owner`, `Assigned to me`, `Unassigned`, then each active IT Staff and Administrator user by name, from `GET /api/staff/assignable-users` (C-105) |
 | Category filter | `categoryId` | Select, `All categories` default |
 | Sort | `sort` | Select of the five permitted fields x two directions, plus the default option |
 | Clear filters | - | Secondary button, **rendered only when a search or a non-default filter is active** |
@@ -773,24 +774,25 @@ appear on Ticket Detail.
 
 ### 15.3 Tablet, at `md`
 
-The same table, with three of FR-39's nine columns **dropped to a second line** beneath the Ticket
-Summary as muted `label: value` pairs rather than removed, because a staff user triaging on a
-tablet still needs those values.
+Six of FR-39's nine columns are **kept**; the other three are **hidden**, not moved to a second
+line (C-108, BR-107).
 
-| Kept as columns | Moved to the second line |
+| Kept as columns | Hidden |
 |---|---|
-| Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner, Last Updated | Category, Created, Requested Priority |
+| Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner, Last Updated | Created, Category, Requested Priority |
 
-The six kept columns are the ones the queue is scanned and acted on by: the identifier, the
-description, the two things that decide what to pick up next, who has it, and how stale it is.
+*At tablet width the columns that pick the next piece of work stay; the rest is one click away* -
+the three hidden values are all present on IT Staff Ticket Detail (section 16.1), so nothing
+becomes unreachable, and a six-column table at 834 px stays scannable where a nine-column one
+does not.
 
-> **Conflict, reported not resolved - section 25 item 4.** `specification.md` section 6 says the
-> tablet table drops "Category and **Related System**", but Related System is not a queue column:
-> FR-39's nine columns do not include it, and section 15.2 of this document excludes it with a
-> reason. Section 6 therefore names a column that cannot be dropped because it was never there,
-> and says nothing about Created or Requested Priority. This document follows **FR-39**, which is
-> the enumerated list, and places Category on the second line as section 6 intends. The placement
-> of Created and Requested Priority is not settled by either, and is declared in section 25.
+The hidden columns are **absent from the DOM at this width**, not merely visually suppressed, so
+RESP-04 can assert exactly six columns rather than asserting that three are invisible.
+
+> C-108 also corrected `specification.md` section 6, which had said the tablet table drops
+> "Category and **Related System**" - a column FR-39 never creates and section 15.2 excludes with
+> a reason. That conflict was reported by this document rather than resolved locally, and the
+> decision fixed it at its source; section 6 and FR-39 now agree.
 
 ### 15.4 Mobile, below `md`
 
@@ -862,7 +864,7 @@ in colour** (section 4, `specification.md` section 6).
 | Control | Shown when | Behaviour |
 |---|---|---|
 | `Claim` | The Ticket is unassigned | Primary. Assigns the caller. Busy label `Claiming…` (FR-44) |
-| `Assign to…` / `Reassign to…` | Always / when owned | A select of active IT Staff and Administrator users, then `Save Changes`. **Depends on section 25 item 2** for its data source |
+| `Assign to…` / `Reassign to…` | Always / when owned | A select populated from `GET /api/staff/assignable-users` (C-105), then `Save Changes` |
 | `Unassign` | The Ticket is owned | Tertiary. Sends `ownerId: null` |
 
 **Losing the claim race** is a first-class state, not an error banner: the `ALREADY_OWNED` message
@@ -941,7 +943,7 @@ Page title `User Management` at `h1`.
 (BR-84, FR-66, AC-98). `LS 4.2` excludes user-list pagination, multi-column sorting and multiple
 simultaneous filters, so the controls do not exist to be disabled.
 
-The list is ordered by **name ascending** - see section 25 item 3.
+The list is returned in a **fixed order, name ascending then id** (C-107, BR-106). No column header sorts, and no sort control exists - `LS 8.5` does not ask for sorting, and a fixed order keeps tests and screenshots stable.
 
 **Desktop and tablet table**, the five columns `LS 8.5` names:
 
@@ -1328,20 +1330,23 @@ conversions.
 
 ---
 
-## 25. Rules this document needed and could not find
+## 25. Rules this document needed and could not find - all closed
 
-Four items. Each is recorded with options and a recommendation, and **none is resolved on this
-document's authority** (`CLAUDE.md`). Items 1 to 3 are shared with `api-spec.md` section 12 and
-are the same gaps seen from the UI side. **Item 4 is different in kind**: it is not a silence in
-the contract but a disagreement inside `specification.md` between its section 6 and its FR-39,
-which `CLAUDE.md` requires be reported rather than silently resolved.
+Four items were declared here when this document was first written. Each was recorded with
+options and a recommendation, and **none was resolved on this document's authority**
+(`CLAUDE.md`). All four are now closed by decision rows, and the sections above cite those rows
+directly. The table is kept as the record of what was open and what closed it.
 
-| # | Gap | Where it bites | Options | Recommendation |
-|---|---|---|---|---|
-| 1 | **The wrong-current-password refusal has no fixed status code**, so this document cannot say whether its message renders as a field message or a banner. Section 6.1 lists it as a field message on that assumption | Section 6.1, section 11 | (a) 400 `VALIDATION_FAILED` with `fields.currentPassword`, rendering below the field. (b) 422, rendering as a banner. (c) 401, which C-99's reasoning rules out | **(a).** BR-87 wants one message per rule directly below its field, and the other two failures of the same form are already 400 with `fields`. Same as `api-spec.md` section 12 item 2 |
-| 2 | **No endpoint supplies the list of assignable users**, so the Queue's Ticket Owner filter and the detail screen's assign control have no data source | Sections 15.1, 16.2 | (a) `GET /api/staff/assignable-users` as drafted in `api-spec.md` 8.7. (b) Widen `GET /api/users` to IT Staff, contradicting BR-39. (c) Drop the assign control and the by-user filter, contradicting FR-45 and BR-71 | **(a).** Same as `api-spec.md` section 12 item 1. Until it exists, both controls are specified but not buildable |
-| 3 | **The user list's sort order is unnamed.** BR-84 says "one sort column" without naming it, and section 17.1 states name ascending on that assumption | Section 17.1 | (a) Name ascending. (b) Created date descending, newest first. (c) Role then name | **(a).** The screen exists to find a person in, and `LS 4.2` excludes multi-column sorting, so the one column should be the one a person scans. Same as `api-spec.md` section 12 item 3 |
-| 4 | **`specification.md` disagrees with itself about the queue's tablet columns.** Section 6 says the tablet table drops "Category and **Related System**"; FR-39's nine columns contain no Related System, and section 15.2 of this document excludes it with a reason. Section 6 also says nothing about Created or Requested Priority at tablet width. This is a conflict inside the governing document, which `CLAUDE.md` requires be reported rather than resolved locally | Section 15.3 | (a) Correct `specification.md` section 6 to read "Category, Created and Requested Priority", matching FR-39 and section 15.3. (b) Correct it to "Category" alone and keep Created and Requested Priority as tablet columns, accepting an eight-column tablet table. (c) Add Related System to FR-39 as a tenth queue column, which `LS 8.3` does not ask for | **(a).** FR-39 is the enumerated list and the one a test can be written against; section 6 is prose summarising it, and its "Related System" is a drafting slip carried over from the Lab 2 My Tickets table, which did have that filter. Option (c) would add a column no requirement asks for |
+| # | Gap | Closed by | Answer |
+|---|---|---|---|
+| 1 | **The wrong-current-password refusal had no fixed status code**, so this document could not say whether its message rendered as a field message or a banner | **C-106** | 422 `CURRENT_PASSWORD_INCORRECT`, rendered at the Current Password field, never 401 (sections 6.1, 6.2, 11). This document had recommended 400; the decision took 422, and the rendering is unchanged either way |
+| 2 | **No endpoint supplied the list of assignable users**, so the Queue's Ticket Owner filter and the detail screen's assign control had no data source | **C-105** | `GET /api/staff/assignable-users`, IT Staff and Administrator only, `{ id, name, role }` and never an email address. Both controls now name it (sections 15.1, 16.2) |
+| 3 | **The user list's sort order was unnamed.** BR-84 said "one sort column" without naming it | **C-107** | A fixed order, name ascending then id, with no user-controlled sort at all (section 17.1) |
+| 4 | **`specification.md` disagreed with itself about the queue's tablet columns** - section 6 dropped "Category and Related System", a column FR-39 never creates, and said nothing about Created or Requested Priority. Reported rather than resolved, per `CLAUDE.md` | **C-108** | Six columns kept, three hidden, and **`specification.md` section 6 corrected at its source** so the two stop disagreeing (section 15.3, BR-107) |
+
+Item 4 is the only one of the four that changed a governing document rather than adding to it,
+and it is the case `CLAUDE.md`'s "report, do not resolve" rule exists for: this document could
+have quietly followed either side and no test would have caught the disagreement.
 
 Two readings were **narrow enough to take without a decision row**, recorded so an auditor can see
 they were noticed rather than missed:

@@ -356,10 +356,16 @@ one rule, as do the seven Administrator rules and the password-change gate of BR
 | BR-102 | Password handling; Logout | A successful self-service password change ends all of that user's **other** sessions and keeps the calling one. A stolen session is locked out by the password change. | C-97 |
 | BR-103 | Failures | A well-formed request that is refused answers **409** when the refusal is a conflict with the state of the resource or of the rows it depends on - `ALREADY_OWNED`, `OWNER_REQUIRED`, `INVALID_STATUS_TRANSITION`, `RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN`, `LAST_ADMINISTRATOR` - and **422** when it is about the submitted value - an ineligible assignee, and `SELF_DEACTIVATION`. A same-status move stays 400. Lab 2's five-active-attachment refusal keeps its 422 as a carried Lab 2 contract and is not re-coded here. | C-100, C-77, `L2 BR-39` |
 
-**103 business rules.** BR-96 to BR-103 were added after decisions C-93 to C-104 closed the
-gaps the first draft listed. They are appended rather than inserted so that the earlier IDs,
-and the acceptance criteria tracing to them, stay stable; the Area column remains the
-grouping key.
+| BR-104 | IT Staff assignment | The list of users a Ticket may be assigned to is served by its own staff endpoint, readable by IT Staff and Administrator users and by nobody else. It carries the id, name and role of active IT Staff and Administrator users, and **never an email address**. An inactive user is absent from it, because an inactive user cannot be assigned (BR-30). | C-105 |
+| BR-105 | Password handling; Validation | A change-password request whose current password does not verify is refused **422 `CURRENT_PASSWORD_INCORRECT`**, presented at the current-password field. It is never 401: the client treats 401 as an expired session and would send the user back to Login, losing the session the change requires. | C-106, C-100 |
+| BR-106 | Administrator | The user list is returned in a fixed order - name ascending, then id - and offers no user-controlled sort. `LS 8.5` does not ask for sorting, and a fixed order keeps tests and screenshots stable. | C-107, BR-84 |
+| BR-107 | Queue query | At tablet width the queue keeps Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner and Last Updated as columns, and hides Created, Category and Requested Priority, which remain available on Ticket Detail. | C-108, FR-39 |
+
+**107 business rules.** BR-96 to BR-103 were added after decisions C-93 to C-104 closed the
+gaps the first draft listed, and BR-104 to BR-107 after C-105 to C-108 closed the four the
+`api-spec.md` and `ui-spec.md` drafts declared. They are appended rather than inserted so that
+the earlier IDs, and the acceptance criteria tracing to them, stay stable; the Area column
+remains the grouping key.
 
 ### 5.1 Status transition matrix
 
@@ -430,6 +436,7 @@ no outstanding password change. Cells give the status code for a well-formed req
 | Claim a Ticket | 401 | 403 | **403** | 200 / owned 409 | 200 / owned 409 |
 | Assign, reassign or unassign | 401 | 403 | **403** | 200 / ineligible 422 / unassign in a worked status 409 | 200 / ineligible 422 / unassign in a worked status 409 |
 | Set IT Priority | 401 | 403 | **403** | 200 | 200 |
+| List assignable users (C-105) | 401 | 403 | **403** | 200 | 200 |
 | Change Current Status | 401 | 403 | **403** | 200 / same 400 / not permitted 409 / no owner 409 | 200 / same 400 / not permitted 409 / no owner 409 |
 | List users, with search and role filter | 401 | 403 | **403** | **403** | 200 |
 | Create a user | 401 | 403 | **403** | **403** | 201 / duplicate 409 |
@@ -499,8 +506,10 @@ so the Requester knows who is handling their Ticket, and never the owner's email
 (BR-100).
 
 **IT Staff Ticket Queue.** Search box, the four filters, a sort control, page-size control
-and pagination. Desktop: a table of the nine columns in FR-39. Tablet: the same table with
-Category and Related System dropped to a second line. Mobile: one card per Ticket carrying
+and pagination. Desktop: a table of the nine columns in FR-39. Tablet: the same table keeping
+Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner and Last Updated, with
+Created, Category and Requested Priority hidden and reachable on the detail screen (C-108).
+Mobile: one card per Ticket carrying
 Ticket Number, Ticket Summary, status and IT Priority badges, owner and last updated. Modes:
 list. States: loading, populated, empty, no-results, invalid query, forbidden, failure.
 
@@ -773,6 +782,7 @@ and none is permitted.
 | IT Staff ticket detail | `GET` per Ticket | Carries owner, comments and notes; the Requester DTO does not |
 | Claim, assign, reassign, unassign | `POST` or `PATCH` per Ticket | 409 `ALREADY_OWNED` on a lost claim race; 409 `OWNER_REQUIRED` on unassigning a Ticket that is being worked on (C-104) |
 | IT Priority | `PATCH` per Ticket | LOW, MEDIUM, HIGH |
+| Assignable users | `GET` | IT Staff and Administrator only; active staff users as id, name and role, never an email address (C-105) |
 | Current Status | `PATCH` per Ticket | Section 5.1 matrix; 400 on same status, 409 `INVALID_STATUS_TRANSITION` outside the matrix, 409 `OWNER_REQUIRED` on an unowned Ticket |
 | Administrator user list | `GET` with search and role filter | Administrator only; unpaginated |
 | Create a user | `POST` | 201; 409 `EMAIL_TAKEN` |
@@ -783,7 +793,9 @@ Status codes in use: **200, 201, 204, 400, 401, 403, 404, 409, 410, 413, 415, 42
 since Lab 2 are 401 (no session), 204 (logout) and 409, which carries six codes under
 BR-103: `ALREADY_OWNED`, `OWNER_REQUIRED`, `INVALID_STATUS_TRANSITION`,
 `RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN` and `LAST_ADMINISTRATOR`. 422 keeps its
-Lab 2 meaning, including the five-active-attachment refusal (`L2 BR-39`).
+Lab 2 meaning, including the five-active-attachment refusal (`L2 BR-39`), and carries three
+Lab 3 codes: `ASSIGNEE_NOT_ELIGIBLE`, `SELF_DEACTIVATION` and `CURRENT_PASSWORD_INCORRECT`
+(BR-105, C-106).
 Three Lab 2 codes cease to exist with the caller resolver: `REQUESTER_REQUIRED`,
 `REQUESTER_NOT_FOUND` and `REQUESTER_INACTIVE` (C-64); `api-spec.md`'s error catalogue and
 every test asserting them is updated, not left to fail.
@@ -1063,13 +1075,14 @@ against the final `main`.
 ## 11. Assumptions and Decisions
 
 The reasoning behind every settled choice in this document is recorded once, in
-`docs/lab-03/decisions.md` as C-53..C-104, and is not repeated here. The decisions shaping
+`docs/lab-03/decisions.md` as C-53 onward, and is not repeated here. The decisions shaping
 this specification most directly are C-53 to C-56 (the authentication mechanism), C-59 and
 C-60 (login failures and the password policy), C-63 to C-66 (the check order, identity, the
 403/404 split and Administrator ticket powers), C-67 to C-72 (the migration), C-73 to C-78
 (comments, notes and the ticket workflow), C-79 to C-82 (administration), C-83, C-89 and C-91
-(test isolation, test levels and the seed), and C-93 to C-104, which closed the ten gaps the
-first draft of this document listed.
+(test isolation, test levels and the seed), C-93 to C-104, which closed the ten gaps the first
+draft of this document listed, and C-105 to C-108, which closed the four the `api-spec.md` and
+`ui-spec.md` drafts declared - C-108 by correcting section 6 of this document.
 
 ### Assumptions
 
@@ -1110,6 +1123,17 @@ what closed it; a gap found from here on is added to `decisions.md`, not resolve
 | G-08 | Whether a self-service password change revokes the user's other sessions. | C-97 | It ends every other session and keeps the calling one |
 | G-09 | Whether the Requester sees the Ticket Owner's name. | C-95 | The name yes, the email address never |
 | G-10 | Whether expired `Session` rows are ever deleted. | C-96 | Deleted by the lookup that finds them expired; no background job |
+
+**Four further gaps were declared by the later drafts and closed by C-105 to C-108.**
+`api-spec.md` section 12 and `ui-spec.md` section 25 each refused to resolve them locally and
+recorded them with options and a recommendation instead; the decision rows are the answers.
+
+| Gap | Declared in | Closed by | Answer |
+|---|---|---|---|
+| No endpoint lists the users a Ticket may be assigned to, and the user-admin API is Administrator-only | `api-spec.md` 12.1 | C-105 | A staff-only endpoint returning id, name and role of active staff users, never an email address (BR-104) |
+| No status code for a wrong current password on change-password | `api-spec.md` 12.2 | C-106 | 422 `CURRENT_PASSWORD_INCORRECT`, at the field, never 401 (BR-105) |
+| The user list's single sort column is unnamed | `api-spec.md` 12.3 | C-107 | Fixed, name ascending then id; no user-controlled sort (BR-106) |
+| **Section 6 of this document disagreed with FR-39** about the queue's tablet columns | `ui-spec.md` 25.4 | C-108 | Section 6 is corrected here to match FR-39 (BR-107). This is the one place a later decision changed this document rather than adding to it |
 
 Two further rows went with them. The first draft's section 5.1 let a `CLOSED` Ticket be
 reopened; no decision row permitted that, and the handoff section 4 draft matrix marks

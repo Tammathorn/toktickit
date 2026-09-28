@@ -13,8 +13,7 @@ are `BR-nn`, requirement references `FR-nn`, criterion references `AC-nn`, decis
 references `C-nn`; a Lab 2 rule is cited `L2 BR-nn` or `L2 C-nn`, never bare.
 
 Thirty endpoints are defined. Three are unchanged from Lab 1 and Lab 2, seven are Lab 2 endpoints
-whose contract changes, nineteen are new, and one - section 8.7 - is **pending a decision row**
-and is marked as such wherever it appears. One Lab 2 endpoint is removed (section 1.7). The
+whose contract changes, and twenty are new. One Lab 2 endpoint is removed (section 1.7). The
 inventory in section 11.1 is the authority on this count.
 
 Section 12 lists every place this document needed a rule that `specification.md` and
@@ -114,9 +113,10 @@ ownership failure, and 404 absorbs that meaning (C-65, superseding `L2 C-13` and
 The 409 / 422 line is C-100's and is not redrawn here: **409 when the refusal is a conflict
 with state**, **422 when it is about the submitted value**. Six codes are 409 -
 `ALREADY_OWNED`, `OWNER_REQUIRED`, `INVALID_STATUS_TRANSITION`,
-`RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN`, `LAST_ADMINISTRATOR`. Two are 422 -
-`ASSIGNEE_NOT_ELIGIBLE` and `SELF_DEACTIVATION`. `ATTACHMENT_LIMIT_REACHED` keeps its Lab 2
-422 as a carried contract and is not re-coded (BR-103).
+`RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN`, `LAST_ADMINISTRATOR`. Three are 422 -
+`ASSIGNEE_NOT_ELIGIBLE`, `SELF_DEACTIVATION` and `CURRENT_PASSWORD_INCORRECT` (C-106).
+`ATTACHMENT_LIMIT_REACHED` keeps its Lab 2 422 as a carried contract and is not re-coded
+(BR-103).
 
 ### 1.3 Error code catalogue
 
@@ -145,6 +145,7 @@ Every code the API can emit. A code absent from this table is a defect.
 | `ATTACHMENT_REMOVED` | 410 | The Attachment is soft-removed and the caller may see the Ticket (BR-44) |
 | `FILE_TOO_LARGE` | 413 | Upload over 5 MB (`L2 BR-43`) |
 | `UNSUPPORTED_FILE_TYPE` | 415 | Upload outside the permitted set (`L2 BR-42`) |
+| `CURRENT_PASSWORD_INCORRECT` | 422 | The current password supplied to change-password does not verify. Presented at the current-password field. **Never 401** (BR-105, C-106) |
 | `ASSIGNEE_NOT_ELIGIBLE` | 422 | The named assignee is a Requester, inactive, or unknown (BR-48) |
 | `SELF_DEACTIVATION` | 422 | An Administrator attempted to deactivate their own account (BR-79) |
 | `ATTACHMENT_LIMIT_REACHED` | 422 | The Ticket already holds five active Attachments (`L2 BR-44`) |
@@ -407,13 +408,19 @@ deleted**, so a stolen session is locked out by the password change (BR-102, C-9
 | Status | Condition |
 |---|---|
 | 200 | Changed. Gate cleared; other sessions revoked |
-| 400 | `VALIDATION_FAILED` - any rule above, `fields` naming `currentPassword`, `newPassword` or `confirmPassword`. **Pending decision, section 12 item 2:** a wrong `currentPassword` is reported here as `fields.currentPassword` |
+| 400 | `VALIDATION_FAILED` - a policy or confirmation rule above, `fields` naming `newPassword` or `confirmPassword` |
 | 401 | No valid session |
+| 422 | The current password does not verify, `CURRENT_PASSWORD_INCORRECT`, with `fields.currentPassword` carrying the catalogue message (BR-105, C-106) |
 | 500 | Unexpected error |
 
-A wrong current password is never 401. 401 means the session is gone, and the client would
-send the user back to Login and lose the session it must keep in order to change the password
-(BR-34, and the same reasoning C-99 applies to the gate).
+**A wrong current password is 422, never 401** (C-106). 401 means the session is gone, and the
+client treats it as an expired session: it would send the user back to Login and lose the very
+session the change requires (BR-34, and the same reasoning C-99 applies to the gate).
+
+It is 422 rather than 400 because C-100 draws that line by what the refusal depends on - this
+one is about the **value submitted**, not about a malformed body. The response still carries
+`fields.currentPassword`, so BR-87's rule that the message renders directly below its own
+control holds exactly as it does for a 400.
 
 ### 3.3 `POST /api/auth/logout`
 
@@ -1223,20 +1230,14 @@ A Requester's "Problem Appears Resolved" indication (4.4) appears nowhere in thi
 rules, by design (BR-59). It is a flag on the Ticket, not a transition, and it neither enables
 nor blocks any move here.
 
-### 8.7 `GET /api/staff/assignable-users` - PENDING A DECISION ROW
+### 8.7 `GET /api/staff/assignable-users`
 
-> **This endpoint is not in `specification.md` section 5.2 and no decision row covers it.**
-> It is documented here because FR-45 and the queue's `owner` filter cannot be built without
-> it, and left marked so that the gap is visible rather than silently resolved. It is
-> **item 1 of section 12** and needs a `C-105`. Do not implement it until that row exists.
-
-FR-45 requires the staff detail screen to offer assign and reassign "choosing from active IT
-Staff and Administrator users only", and BR-71 lets the queue filter by `owner` naming a user
-id. Both need a list of eligible users. An Administrator could read `GET /api/users` (9.1),
-but **IT Staff may not** - BR-39 and C-66 give IT Staff no user-administration permission
-whatsoever - so widening 9.1 is not available.
-
-The proposed contract, for the decision to accept or replace:
+**New, settled by C-105.** FR-45 requires the staff detail screen to offer assign and reassign
+"choosing from active IT Staff and Administrator users only", and BR-71 lets the queue filter by
+`owner` naming a user id. Both need a list of eligible users, and an Administrator could read
+`GET /api/users` (9.1) but **IT Staff may not** - BR-39 and C-66 give IT Staff no
+user-administration permission whatsoever. C-105 therefore adds this endpoint rather than
+widening 9.1: *the owner picker needs the list, and the user-admin API is Administrator-only.*
 
 | | |
 |---|---|
@@ -1244,6 +1245,7 @@ The proposed contract, for the decision to accept or replace:
 | **Role** | IT Staff, Administrator. A Requester receives 403 |
 | **Query parameters** | None |
 | **Serves** | FR-35 (the `owner` filter), FR-45 (assign and reassign) |
+| **Verified by** | SEC-27, API-116 |
 
 **Response 200** - active `IT_STAFF` and `ADMINISTRATOR` users only, ascending by name,
 unpaginated.
@@ -1252,10 +1254,11 @@ unpaginated.
 [ { "id": 7, "name": "Siriporn Chai", "role": "IT_STAFF" } ]
 ```
 
-Three keys and no more. **No email address**, because the screen needs a label and an id, and
-this list is readable by IT Staff, who hold no user-administration permission. Inactive users
-are absent, because an inactive user cannot be assigned (BR-30) - which is also why a Ticket's
-existing inactive owner comes from the Ticket DTO's `owner.isActive`, not from this list.
+Three keys and no more (BR-104). **No email address**, because the screen needs a label and an
+id, and this list is readable by IT Staff, who hold no user-administration permission. Inactive
+users are absent, because an inactive user cannot be assigned (BR-30) - which is also why a
+Ticket's existing inactive owner comes from the Ticket DTO's `owner.isActive`, not from this
+list.
 
 | Status | Condition |
 |---|---|
@@ -1299,9 +1302,13 @@ Replaces the removed `GET /api/requesters` (section 1.7, BR-93).
 | `search` | No | - | Free text. Matches name **or** email address, case-insensitively by substring | FR-57, AC-83 |
 | `role` | No | - | One of `REQUESTER`, `IT_STAFF`, `ADMINISTRATOR`. **The single optional filter** | FR-58, BR-84 |
 
-**No `page`, no `pageSize`, no `sort`.** The list is unpaginated by BR-84 and FR-66, and it
-carries **one** sort column. **Pending decision, section 12 item 3:** that column is `name`
-ascending, with `id` ascending as the tiebreak.
+**No `page`, no `pageSize`, no `sort`.** The list is unpaginated by BR-84 and FR-66, and its
+order is **fixed by C-107: `name` ascending, then `id` ascending** as the tiebreak. There is no
+user-controlled sort and no sort parameter to supply - `LS 8.5` does not ask for sorting, and a
+fixed order keeps tests and screenshots stable (BR-106).
+
+A `sort` parameter, if supplied, is ignored rather than refused: there is no sort contract for it
+to violate.
 
 Both active and inactive users are returned - Status is a column on the screen, not a filter
 (FR-56). A second simultaneous filter is excluded by `LS 4.2`.
@@ -1623,8 +1630,8 @@ section 7).
 ### 11.1 Endpoint inventory against the authorization matrix
 
 Every endpoint, mapped to the `specification.md` section 5.2 row that authorises it. A row of
-this table with no matrix row is a defect; section 8.7 is the one such case and is declared in
-section 12.
+this table with no matrix row is a defect. There are none: section 8.7 gained its matrix row with
+C-105.
 
 | § | Endpoint | Matrix row | Status |
 |---|---|---|---|
@@ -1653,14 +1660,15 @@ section 12.
 | 8.4 | `PATCH /api/staff/tickets/:id/owner` | Assign, reassign or unassign | New |
 | 8.5 | `PATCH /api/staff/tickets/:id/it-priority` | Set IT Priority | New |
 | 8.6 | `PATCH /api/staff/tickets/:id/status` | Change Current Status | New |
-| 8.7 | `GET /api/staff/assignable-users` | **none** | **Pending C-105, section 12 item 1** |
+| 8.7 | `GET /api/staff/assignable-users` | List assignable users (C-105) | New |
 | 9.1 | `GET /api/users` | List users, with search and role filter | New; replaces `GET /api/requesters` |
 | 9.2 | `POST /api/users` | Create a user | New |
 | 9.3 | `PATCH /api/users/:id` | Update name, email, role, activation | New |
 | 9.4 | `POST /api/users/:id/initial-password` | Set a new initial password for a user | New |
 
-**Thirty endpoints against twenty-four matrix rows.** The matrix names capabilities, not routes,
-so four of its rows cover more than one endpoint each:
+**Thirty endpoints against twenty-five matrix rows.** The matrix gained its twenty-fifth row,
+"List assignable users", with C-105. It names capabilities, not routes, so four of its rows cover
+more than one endpoint each:
 
 | Matrix row | Endpoints | Count |
 |---|---|---|
@@ -1669,9 +1677,9 @@ so four of its rows cover more than one endpoint each:
 | List or post Public Comments | 6.1, 6.2 | 2 |
 | List or create Internal Notes | 7.1, 7.2 | 2 |
 
-Those four rows cover nine endpoints. The remaining **twenty** matrix rows map one-to-one onto
-twenty of the remaining twenty-one endpoints, and section 8.7 is the twenty-first - the one
-endpoint with no matrix row at all (section 12 item 1).
+Those four rows cover nine endpoints. The remaining **twenty-one** matrix rows map one-to-one
+onto the remaining twenty-one endpoints. Every endpoint has a matrix row and every matrix row has
+an endpoint.
 
 Every matrix row is served by at least one endpoint above. No matrix row is unimplemented.
 
@@ -1686,13 +1694,13 @@ Every matrix row is served by at least one endpoint above. No matrix row is unim
 | FR-20 to FR-24 - authorization | Section 1.4, and the role line of every endpoint |
 | FR-25 to FR-32 - Requester regression, comments, resolution | 4.1 to 4.4, 5.1 to 5.4, 6.1, 6.2 |
 | FR-33 to FR-42 - the queue | 8.1 |
-| FR-43 to FR-50 - staff detail | 8.2 to 8.6, 5.1, 5.3, and 8.7 pending |
+| FR-43 to FR-50 - staff detail | 8.2 to 8.7, 5.1, 5.3 |
 | FR-51 to FR-55 - comments and notes | 6.1, 6.2, 7.1, 7.2 |
 | FR-56 to FR-66 - user management | 9.1 to 9.4 |
 | FR-67 to FR-70 - cross-cutting | Sections 1.1, 1.2, 1.3, and `ui-spec.md` |
 
-**FR-45 depends on section 8.7 and is therefore not fully served until C-105 exists.** That is
-the only requirement in this table with an unresolved dependency.
+**Every requirement in this table is fully served.** FR-45's dependency on section 8.7 was the
+one unresolved entry, and C-105 closed it.
 
 ### 11.3 Cross-cutting statuses
 
@@ -1709,18 +1717,23 @@ repeated in each endpoint's own table beyond a one-line entry:
 
 ---
 
-## 12. Rules this document needed and could not find
+## 12. Rules this document needed and could not find - all closed
 
-Three items. `CLAUDE.md` requires that a behaviour none of the five contract documents covers
-is escalated rather than invented, so each is recorded here with options and a recommendation
-and **none is resolved on this document's authority**. Each needs a row in `decisions.md`
-before the endpoint or field it governs is implemented.
+Three items were declared here when this document was first written. `CLAUDE.md` requires that a
+behaviour none of the contract documents covers is escalated rather than invented, so each was
+recorded with options and a recommendation and **none was resolved on this document's
+authority**. All three are now closed by decision rows, and the sections above cite those rows
+directly. The table is kept as the record of what was open and what closed it.
 
-| # | Gap | Where it bites | Options | Recommendation |
-|---|---|---|---|---|
-| 1 | **No endpoint lists the users a Ticket may be assigned to.** FR-45 requires the staff screen to choose from active IT Staff and Administrator users, and BR-71 lets the queue filter by a named owner id. `GET /api/users` is Administrator-only by BR-39 and C-66, so IT Staff cannot use it | Section 8.7; FR-35, FR-45 | (a) Add `GET /api/staff/assignable-users` as drafted in 8.7 - active `IT_STAFF` and `ADMINISTRATOR`, `{ id, name, role }`, no email. (b) Widen `GET /api/users` to IT Staff, which contradicts BR-39. (c) Drop the assign control and keep only Claim, which contradicts FR-45 | **(a).** It is the only option that does not contradict a rule already approved, and the narrow three-key shape keeps IT Staff away from user administration |
-| 2 | **No status or code for a wrong `currentPassword`** on 3.2. AC-27 requires the refusal; nothing fixes its code | Section 3.2 | (a) 400 `VALIDATION_FAILED` with `fields.currentPassword`. (b) 422, by C-100's "about the submitted value" line. (c) 401, which C-99's own reasoning rules out - the client would return to Login and lose the session it must keep | **(a).** The other two failures of this one form - the policy rules and the confirmation mismatch - are already 400 with `fields`, and C-100 itself rejects splitting one endpoint between two codes for refusals of the same kind. BR-87 also wants the message below the field |
-| 3 | **The user list's single sort column is unnamed.** BR-84 says "one sort column" without saying which | Section 9.1 | (a) `name` ascending, `id` ascending as tiebreak. (b) `createdAt` descending, newest first. (c) `role` then `name` | **(a).** The screen is a list to find a person in, and `LS 4.2` excludes multi-column sorting, so the one column should be the one a person scans |
+| # | Gap | Closed by | Answer |
+|---|---|---|---|
+| 1 | **No endpoint lists the users a Ticket may be assigned to.** FR-45 requires the staff screen to choose from active IT Staff and Administrator users, and BR-71 lets the queue filter by a named owner id. `GET /api/users` is Administrator-only by BR-39 and C-66, so IT Staff cannot use it | **C-105** | `GET /api/staff/assignable-users` (section 8.7): IT Staff and Administrator only, active `IT_STAFF` and `ADMINISTRATOR` users as `{ id, name, role }`, never an email address (BR-104) |
+| 2 | **No status or code for a wrong `currentPassword`** on 3.2. AC-27 requires the refusal; nothing fixed its code | **C-106** | **422 `CURRENT_PASSWORD_INCORRECT`**, presented at the current-password field, never 401 - the client treats 401 as an expired session and would send the user to Login (BR-105). This document had recommended 400; the decision took 422, which is where C-100 already draws the line for a refusal about the submitted value |
+| 3 | **The user list's single sort column is unnamed.** BR-84 says "one sort column" without saying which | **C-107** | Fixed order, `name` ascending then `id`, with no user-controlled sort at all (section 9.1, BR-106) |
+
+A fourth item was declared by `ui-spec.md` section 25 rather than here - the queue's tablet
+columns, where `specification.md` section 6 disagreed with FR-39 - and is closed by **C-108**,
+which corrected section 6 at its source.
 
 Two further readings were **narrow enough to take without a decision row**, and are recorded
 here so an auditor can see they were noticed rather than missed:
