@@ -114,22 +114,25 @@ account for is a bug, not a cleanup (`CLAUDE.md`).
 
 ## 2. Planned Tests
 
-**278 planned tests** across the eight `LS 10` levels. Every test names a file path from section
+**273 planned tests** across the eight `LS 10` levels. Every test names a file path from section
 1.1, and every path exists in the `LS 12` tree.
 
 | Level | Prefix | Planned |
 |---|---|---|
 | Unit | `UNIT` | 12 |
-| API / integration | `API` | 117 |
-| Security / authorization | `SEC` | 27 |
+| API / integration | `API` | 113 |
+| Security / authorization | `SEC` | 26 |
 | Migration / regression | `MIG` | 24 |
 | UI component | `UI` | 51 |
 | UI style | `STYLE` | 12 |
 | Responsive | `RESP` | 10 |
 | End to end | `E2E` | 25 |
-| **Total** | | **278** |
+| **Total** | | **273** |
 
-Every prefix numbers contiguously from 01, with no gaps and no duplicates. Two of the 24 `MIG`
+Five IDs were retired to the merges approved in section 9.1 - API-63, API-65, API-78, API-91 and
+SEC-12 - so `API` runs 01..117 and `SEC` 01..27 with those five absent. **Surviving IDs were not
+renumbered**, because every one is cited in the section 3 traceability matrix and renumbering to
+close five gaps would have rewritten a hundred references to save nothing. Two of the 24 `MIG`
 rows - MIG-21 and MIG-22 - are discharged by committed artifacts rather than by an assertion in a
 test file, and section 2.8 says so explicitly rather than counting them as automated tests.
 
@@ -211,8 +214,7 @@ reads as evidence, per `CLAUDE.md`: the name states the caller, the route, the s
 | SEC-08 | Security | AC-38, BR-42, C-65 | `Requester B GET Requester A's ticket -> 404, no ticket data` | 404 `TICKET_NOT_FOUND`; body carries no summary, description, number or any Ticket field | `server/tests/lab-03/authorization.api.test.ts` | |
 | SEC-09 | Security | AC-39, BR-42 | Cross-Requester attachment | Metadata, download and soft-removal of another Requester's attachment each give 404 | `server/tests/lab-03/authorization.api.test.ts` | |
 | SEC-10 | Security | BR-44, C-65 | Removed attachment does not leak to a non-owner | A non-owning Requester asking for a **removed** attachment gets 404, never 410 - so removal state does not leak. The owner gets 410 (AC-40) | `server/tests/lab-03/authorization.api.test.ts` | |
-| SEC-11 | Security | AC-96, BR-39 | `IT Staff -> every user-administration route -> 403` | All four of `GET /api/users`, `POST /api/users`, `PATCH /api/users/:id`, `POST /api/users/:id/initial-password` give 403 to IT Staff; no user data in any body | `server/tests/lab-03/authorization.api.test.ts` | |
-| SEC-12 | Security | AC-96, BR-39 | `Requester -> every user-administration route -> 403` | The same four routes give 403 to a Requester | `server/tests/lab-03/authorization.api.test.ts` | |
+| SEC-11 | Security | AC-96, BR-39 | `IT Staff and Requester -> every user-administration route -> 403` | Parameterised over both non-Administrator roles: all four of `GET /api/users`, `POST /api/users`, `PATCH /api/users/:id`, `POST /api/users/:id/initial-password` give 403 to each; no user data in any body. Merged from SEC-12 (section 9.1) | `server/tests/lab-03/authorization.api.test.ts` | |
 | SEC-13 | Security | BR-39, C-66 | Administrator holds every staff ticket permission | An Administrator succeeds on the queue, staff detail, claim, owner, IT Priority, status, comments and notes - all eight | `server/tests/lab-03/authorization.api.test.ts` | |
 | SEC-14 | Security | C-101, section 5.2 [1] | Staff cannot use the Requester routes | IT Staff and Administrator each get 403 on `POST /api/tickets`, `GET /api/tickets` and `GET /api/tickets/:id` | `server/tests/lab-03/authorization.api.test.ts` | |
 | SEC-15 | Security | C-103, section 5.2 [2] | Staff read attachments but do not write | IT Staff get 200 on metadata and download, and 403 on upload and soft-removal | `server/tests/lab-03/authorization.api.test.ts` | |
@@ -283,10 +285,8 @@ fails on any key whose name or contents reach note data.
 | API-59 | API | AC-117, BR-97 | The release path | A Ticket in `IN_PROGRESS` moved to `OPEN` then unassigned: both succeed, and it appears under `unassigned` | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-60 | API | api-spec 8.4 | Absent `ownerId` is not an unassign | A `PATCH` with an empty body gives 400, and the owner is unchanged | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-61 | API | AC-76, FR-47 | Set IT Priority | Each of LOW, MEDIUM, HIGH is stored and returned | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
-| API-62 | API | AC-109, BR-97, C-93 | Owner required to start work | Moving an **unassigned** Ticket to `IN_PROGRESS` gives 409 `OWNER_REQUIRED` and the status is unchanged; after a claim the same move succeeds | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
-| API-63 | API | BR-97 | Owner required for all three worked statuses | The same refusal for `WAITING_FOR_REQUESTER` and `RESOLVED` on an unassigned Ticket | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
-| API-64 | API | AC-77, BR-55 | Permitted transitions succeed | Every `Y` cell of section 5.1 succeeds on an owned Ticket | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
-| API-65 | API | AC-77, BR-55 | Refused transitions | Every `-` cell off the diagonal gives 409 `INVALID_STATUS_TRANSITION` and the status is unchanged | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
+| API-62 | API | AC-109, BR-97, C-93 | Owner required to start work | Data-driven over all three worked statuses: moving an **unassigned** Ticket to `IN_PROGRESS`, `WAITING_FOR_REQUESTER` and `RESOLVED` each gives 409 `OWNER_REQUIRED` with the status unchanged; after a claim, each move succeeds. Merged from API-63 (section 9.1) | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
+| API-64 | API | AC-77, BR-55 | The transition matrix over HTTP | One traversal of all 64 cells of section 5.1 on an owned Ticket: every `Y` cell succeeds, and every `-` cell off the diagonal gives 409 `INVALID_STATUS_TRANSITION` with the status unchanged. Merged from API-65 (section 9.1) | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-66 | API | AC-78, BR-56, C-77 | Same-status move | Each of the eight statuses targeting itself gives **400**, not 409 and not a silent 200 | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-67 | API | AC-81, BR-58, C-98 | Terminal statuses | From `CLOSED` and from `CANCELLED`, each of the **seven other** targets is refused 409 and the status is unchanged. The eighth - the status itself - is the diagonal and is 400 `SAME_STATUS` by BR-56, which API-66 covers; asserting 409 there would contradict it | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-68 | API | AC-112, BR-98, C-98 | Reopened only from Resolved | `RESOLVED -> REOPENED` succeeds; `REOPENED` requested from every other status gives 409 | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
@@ -304,8 +304,7 @@ fails on any key whose name or contents reach note data.
 |---|---|---|---|---|---|---|
 | API-76 | API | AC-48, BR-65, FR-28 | Owning Requester posts a comment | 201; author is the authenticated user, `createdAt` is server-set, and it appears first in the list | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-77 | API | BR-65, FR-52 | Client-supplied author and timestamp ignored | A body carrying `authorId` and `createdAt` is stored with the session's user and the server's clock | `server/tests/lab-03/comments-notes.api.test.ts` | |
-| API-78 | API | AC-49, BR-64 | Whitespace-only body | Refused, and **no row is created** | `server/tests/lab-03/comments-notes.api.test.ts` | |
-| API-79 | API | AC-50, BR-64 | Body length boundaries | 1 and 2000 characters succeed; 0 and 2001 are refused - four cases, on comments and on notes | `server/tests/lab-03/comments-notes.api.test.ts` | |
+| API-79 | API | AC-49, AC-50, BR-64 | Body length boundaries | 1 and 2000 characters succeed; 0 and 2001 are refused - four cases, on comments and on notes. The 0 case includes a **whitespace-only** body, which API-80's trim-before-measure rule makes the same case, and asserts **no row is created**. Merged from API-78 (section 9.1) | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-80 | API | BR-64 | Trim before measuring | A 2000-character body padded with spaces is accepted and stored trimmed | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-81 | API | AC-51 | HTML is stored as text | A body containing markup is stored and returned verbatim, unescaped and unaltered, so the client is the only escaping point | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-82 | API | AC-52, BR-66 | Line breaks preserved | A multi-line body round-trips with its newlines intact | `server/tests/lab-03/comments-notes.api.test.ts` | |
@@ -324,7 +323,6 @@ Every Administrator test `LS 10` lists, plus the rules `LS 4.4` adds.
 | Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
 |---|---|---|---|---|---|---|
 | API-90 | API | AC-82, FR-56 | The user list | Every user appears with name, email, role, isActive and mustChangePassword | `server/tests/lab-03/users-admin.api.test.ts` | |
-| API-91 | API | FR-56, BR-88 | The list carries no secret | No `passwordHash` and no field derived from it appears in any row | `server/tests/lab-03/users-admin.api.test.ts` | |
 | API-92 | API | AC-83, FR-57 | Search by name and by email | A name fragment and an email fragment each return the matching users, case-insensitively | `server/tests/lab-03/users-admin.api.test.ts` | |
 | API-93 | API | AC-84, FR-58 | Role filter | Each of the three roles returns only users holding it | `server/tests/lab-03/users-admin.api.test.ts` | |
 | API-94 | API | BR-84, FR-66, AC-98 | No pagination, no page size | `?page=2` and `?pageSize=25` do not paginate the result; the full list is returned | `server/tests/lab-03/users-admin.api.test.ts` | |
@@ -561,7 +559,7 @@ All **117** criteria, each with the planned tests that discharge it.
 | AC-15 | API-23 | AC-74 | API-56 |
 | AC-16 | API-21 | AC-75 | API-46, UI-18 |
 | AC-17 | API-22, E2E-04 | AC-76 | API-61, SEC-18, E2E-11 |
-| AC-18 | API-25 | AC-77 | API-64, API-65, UNIT-12, E2E-11 |
+| AC-18 | API-25 | AC-77 | API-64, UNIT-12, E2E-11 |
 | AC-19 | API-27 | AC-78 | API-66 |
 | AC-20 | API-28 | AC-79 | SEC-17 |
 | AC-21 | API-14 | AC-80 | UI-31, E2E-11 |
@@ -592,7 +590,7 @@ All **117** criteria, each with the planned tests that discharge it.
 | AC-46 | **MIG-22 (artifact)** | AC-105 | SEC-24 |
 | AC-47 | SEC-26 | AC-106 | RESP-01, RESP-06, RESP-08, **VIS-01 (manual)** |
 | AC-48 | API-76 | AC-107 | UI-33, STYLE-07, RESP-10, E2E-13 |
-| AC-49 | API-78 | AC-108 | MIG-23 |
+| AC-49 | API-79 | AC-108 | MIG-23 |
 | AC-50 | API-79 | AC-109 | API-62, E2E-09 |
 | AC-51 | API-81, UI-34 | AC-110 | API-72 |
 | AC-52 | API-82 | AC-111 | API-57, API-58 |
@@ -703,7 +701,7 @@ between them, plus 3 individual server tests inside files that are otherwise ada
 `phase1-analysis.md` section 3 note that "the server count drops by nothing" was corrected in that
 file: it counted files rather than test IDs, and three server tests do retire.
 
-Lab 3 then adds its own 278 planned tests on top of these figures.
+Lab 3 then adds its own 273 planned tests on top of these figures.
 
 ---
 
@@ -862,22 +860,25 @@ A test that guesses passes against the guess and hides the fact that nobody deci
 boundary, a migration, three roles and four screens - but a plan this size earns a check for
 assertions that exist twice. This section is that check.
 
-**Nothing below has been removed.** Each row is a proposal; a merge happens only when approved,
-and a merged row keeps both source IDs in its `Requirement / AC` column so the traceability
-matrix in section 3 stays complete.
+**The five merges below were approved and are applied.** Each surviving row names the ID it
+absorbed, every acceptance criterion the absorbed row carried was moved onto the survivor, and
+the section 3 traceability matrix still maps all 117 criteria. A sixth proposal was withdrawn
+before approval, for the reason given under the table.
 
-### 9.1 Proposed merges - the same assertion written twice
+### 9.1 Merges applied - the same assertion written twice
 
-| # | Tests | The duplication | Proposal | Saves |
+| # | Tests | The duplication | Applied as | Saved |
 |---|---|---|---|---|
-| 1 | **API-62, API-63** | API-62 asserts `OWNER_REQUIRED` on a move to `IN_PROGRESS` without an owner, then the claim-and-retry path. API-63 asserts the identical refusal for `WAITING_FOR_REQUESTER` and `RESOLVED`. The refusal is one rule (BR-97) over three values | Merge into one data-driven row over all three worked statuses, keeping API-62's claim-then-succeed round trip as its second half | 1 |
-| 2 | **SEC-11, SEC-12** | The same four user-administration routes asserted 403 for IT Staff and then for a Requester. One rule (BR-39), two callers | Merge into one row parameterised over both non-Administrator roles | 1 |
-| ~~3~~ | ~~SEC-19, SEC-20, SEC-21~~ | **Proposal withdrawn.** It was inconsistent with this review's own reasoning - see 9.2 | - | 0 |
-| 4 | **API-64, API-65** | API-64 walks every `Y` cell of the section 5.1 matrix; API-65 walks every `-` cell. They are two halves of one traversal of the same table | Merge into one row that walks all 64 cells and asserts the expected outcome per cell - which is also how UNIT-12 is written | 1 |
-| 5 | **API-78, API-79** | API-78 asserts a whitespace-only body is rejected; API-79 asserts the 0, 1, 2000 and 2001 boundaries. A whitespace-only body **is** the 0-after-trim case | Fold API-78 into API-79 as its 0-length case, keeping the "and nothing is stored" assertion | 1 |
-| 6 | **API-91, SEC-23** | API-91 asserts the user list carries no `passwordHash`; SEC-23 sweeps for passwords, hashes and tokens across a success and six failure paths, and its success path is `GET /api/users` - the same response API-91 inspects | Fold API-91's assertion into SEC-23's sweep | 1 |
+| 1 | **API-62 absorbs API-63** | API-62 asserted `OWNER_REQUIRED` on a move to `IN_PROGRESS` without an owner, then the claim-and-retry path. API-63 asserted the identical refusal for `WAITING_FOR_REQUESTER` and `RESOLVED`. One rule (BR-97) over three values | **API-62**, data-driven over all three worked statuses, keeping the claim-then-succeed round trip | 1 |
+| 2 | **SEC-11 absorbs SEC-12** | The same four user-administration routes asserted 403 for IT Staff and then again for a Requester. One rule (BR-39), two callers | **SEC-11**, parameterised over both non-Administrator roles. AC-96 still maps to it | 1 |
+| ~~3~~ | ~~SEC-19, SEC-20, SEC-21~~ | **Withdrawn before approval.** Inconsistent with this review's own reasoning - see below | Not applied; all three stay | 0 |
+| 4 | **API-64 absorbs API-65** | API-64 walked every `Y` cell of the section 5.1 matrix; API-65 walked every `-` cell. Two halves of one traversal of the same table | **API-64**, one traversal of all 64 cells asserting the expected outcome per cell - which is how UNIT-12 is already written. AC-77 still maps to it | 1 |
+| 5 | **API-79 absorbs API-78** | API-78 asserted a whitespace-only body is rejected; API-79 asserts the 0, 1, 2000 and 2001 boundaries. A whitespace-only body **is** the 0-after-trim case, which API-80 pins | **API-79**, whose 0-length case now includes the whitespace-only body and keeps the "no row is created" assertion. **AC-49 moved onto API-79** | 1 |
+| 6 | **SEC-23 absorbs API-91** | API-91 asserted the user list carries no `passwordHash`; SEC-23 sweeps for passwords, hashes and tokens across a success and six failure paths, and its success path is `GET /api/users` - the same response API-91 inspected | **SEC-23**, whose row now names `GET /api/users` explicitly as the success path it sweeps | 1 |
 
-**Five merges, saving five test IDs: 278 would become 273.**
+**Five merges applied, five test IDs retired: 278 becomes 273.** The retired IDs are API-63,
+API-65, API-78, API-91 and SEC-12. No assertion was lost - each moved onto the surviving row, and
+section 3 still maps all 117 acceptance criteria.
 
 **One proposal was withdrawn during review, and the reason matters more than the proposal.**
 Item 3 would have merged SEC-19, SEC-20 and SEC-21 - `requesterId` ignored on create, on list
