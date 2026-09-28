@@ -241,6 +241,7 @@ maps to an `api-spec.md` section 1.3 error code.
 | `ALREADY_OWNED` | 409 | `<name> claimed this ticket first. The ticket has been refreshed.` |
 | `OWNER_REQUIRED` | 409 | `This ticket needs a Ticket Owner first. Claim it or assign it, then try again.` |
 | `OWNER_REQUIRED` on unassign | 409 | `A ticket being worked on must keep its Ticket Owner. Move it to Open first, then unassign.` |
+| `TICKET_CLOSED` | 409 | `This ticket is closed - create a new ticket if the problem returns.` Reachable only by a request the screen does not offer, because the composers and write controls are not rendered on a terminal Ticket (sections 14.2, 14.4, 16.2, 16.3 and 16.4) |
 | `INVALID_STATUS_TRANSITION` | 409 | `That status change is not allowed from <current status>.` |
 | `SAME_STATUS` | 400 | *No banner.* The UI never offers the current status as a target, so this is a client defect; it surfaces as `INTERNAL_ERROR` |
 | `RESOLUTION_NOT_PERMITTED_IN_STATUS` | 409 | `You can only report this while the ticket is open or in progress.` |
@@ -635,7 +636,13 @@ their own words are distinguishable from a staff reply without relying on readin
 **Empty state:** `No comments yet.` in `--tk-text-muted`, with the composer still present - an
 empty comment list is not a dead end.
 
-**The composer.** A textarea labelled `Add a comment`, 3 rows, with:
+**The composer, on a Ticket that is not Closed or Cancelled.** On a terminal Ticket the composer
+is **not rendered at all** and the muted line `This ticket is closed - create a new ticket if the
+problem returns.` sits below the comment list instead (BR-108, C-109). The existing comments stay
+visible and readable - closure ends writing, not reading. A disabled textarea would invite typing
+that can never be sent.
+
+Otherwise, a textarea labelled `Add a comment`, 3 rows, with:
 
 - A **live character counter** `n / 2000` below the control, in `--tk-text-muted`, turning
   `--tk-danger` past 2000 (FR-53).
@@ -672,7 +679,18 @@ timestamp beneath it, and the action is replaced by the muted line
 AC-55, AC-59). The screen must not imply otherwise: the status badge is untouched and the comment
 list gains no entry.
 
-### 14.4 Addition: nothing else
+### 14.4 Addition: the terminal lock
+
+**On a Closed or Cancelled Ticket the Requester's screen is read-only** (BR-108, C-109): the
+Public Comment composer, the attachment upload control and every `Remove` action are **not
+rendered**, and the muted line `This ticket is closed - create a new ticket if the problem
+returns.` appears once, below the comment list. `Preview` and `Download` stay on active
+attachments, and every existing comment stays readable.
+
+The "Problem Appears Resolved" action is already absent in these statuses by FR-30 (section
+14.3), so the terminal rule adds nothing there.
+
+### 14.5 Addition: nothing else
 
 No status control, no IT Priority control, no assignment control, no Resolution Summary, no
 Service Actions tab and no placeholder for any of them (`specification.md` section 3). A Requester
@@ -884,10 +902,12 @@ by `specification.md` section 5.1, plus the current status shown as the unselect
 value (FR-48). A target outside the matrix is never offered, which is why `SAME_STATUS` and
 `INVALID_STATUS_TRANSITION` have no user-facing banner (section 6.2).
 
-On a terminal status - `CLOSED` or `CANCELLED` - the select is **not rendered**. In its place a
-muted line reads `This ticket is closed. No further status changes are possible.` or
-`This ticket is cancelled…` (BR-58, C-98). A disabled empty select would invite a click that can
-never succeed.
+**On a terminal status - `CLOSED` or `CANCELLED` - the whole operations card is read-only**
+(BR-108, C-109). The status select, the Claim, assign, reassign and unassign controls and the IT
+Priority select are all **not rendered**. In their place the card shows the current Ticket Owner
+and IT Priority as read-only values, above one muted line:
+`This ticket is closed - create a new ticket if the problem returns.` (or `…cancelled…`).
+A disabled control would invite a click that can never succeed.
 
 **Moving to Resolved, Closed or Cancelled requires a confirmation step before the request is
 sent** (BR-57, FR-48, AC-80). A modal, `role="dialog"`, `aria-modal="true"`, focus trapped and
@@ -913,7 +933,8 @@ Resolved clears it, and the callout disappears on the refetch.
 As Lab 2 (`docs/lab-02/ui-spec.md` section 14), headed `Attachments`, with active and removed in
 two labelled groups (FR-49).
 
-**Read-only for staff** (C-103): `Preview` and `Download` are offered on active attachments;
+**Read-only for staff** (C-103), and read-only for everyone on a terminal Ticket (BR-108):
+`Preview` and `Download` are offered on active attachments;
 **no upload control and no `Remove` control is rendered**, and the `n of 5 active` counter is shown
 without the add affordance. A removed attachment shows its reason and offers neither action, as in
 Lab 2 (`L2 BR-50`).
@@ -921,6 +942,12 @@ Lab 2 (`L2 BR-50`).
 ### 16.4 Card 4 - the two communication sections
 
 Section 19 fixes their relationship. Both are on this card, Public Comments first.
+
+**On a Closed or Cancelled Ticket neither composer is rendered** (BR-108, C-109). Both lists stay,
+with their entries readable, and the muted line
+`This ticket is closed - create a new ticket if the problem returns.` sits below them. The
+Internal Notes panel keeps its border and its standing `Not visible to the Requester.` label even
+with no composer - a closed private panel is still private.
 
 ---
 
@@ -1297,6 +1324,7 @@ conversions.
 - [ ] The distinction survives greyscale conversion
 - [ ] No Internal Note content, count or placeholder appears on any Requester screen
 - [ ] Neither list offers an edit or a delete control
+- [ ] On a Closed and on a Cancelled Ticket neither composer renders, both lists stay readable, and the closed-ticket line appears once
 
 **States**
 
@@ -1305,6 +1333,7 @@ conversions.
 - [ ] Forbidden and Not found are different components
 - [ ] Success carries an icon and a sentence, never colour alone
 - [ ] The claim conflict renders inline in the owner group, with the view refreshed
+- [ ] On a terminal Ticket the operations card renders no status, owner or IT Priority control, and no attachment upload or Remove control renders on any screen
 
 **Layout at 1280, 834 and 390 px**
 

@@ -114,20 +114,20 @@ account for is a bug, not a cleanup (`CLAUDE.md`).
 
 ## 2. Planned Tests
 
-**273 planned tests** across the eight `LS 10` levels. Every test names a file path from section
+**278 planned tests** across the eight `LS 10` levels. Every test names a file path from section
 1.1, and every path exists in the `LS 12` tree.
 
 | Level | Prefix | Planned |
 |---|---|---|
 | Unit | `UNIT` | 12 |
-| API / integration | `API` | 113 |
+| API / integration | `API` | 116 |
 | Security / authorization | `SEC` | 26 |
 | Migration / regression | `MIG` | 24 |
-| UI component | `UI` | 51 |
+| UI component | `UI` | 52 |
 | UI style | `STYLE` | 12 |
 | Responsive | `RESP` | 10 |
-| End to end | `E2E` | 25 |
-| **Total** | | **273** |
+| End to end | `E2E` | 26 |
+| **Total** | | **278** |
 
 Five IDs were retired to the merges approved in section 9.1 - API-63, API-65, API-78, API-91 and
 SEC-12 - so `API` runs 01..117 and `SEC` 01..27 with those five absent. **Surviving IDs were not
@@ -297,6 +297,8 @@ fails on any key whose name or contents reach note data.
 | API-73 | API | AC-55, BR-59, BR-60 | Resolution indication recorded | The owning Requester in Open, In Progress, Waiting for Requester and Reopened each succeeds, and Current Status is unchanged in all four | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-74 | API | AC-56, BR-60 | Resolution indication refused by status | New, Resolved, Closed and Cancelled each give 409 `RESOLUTION_NOT_PERMITTED_IN_STATUS` | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 | API-75 | API | AC-57, BR-42 | Resolution indication by a non-owner | A Requester who does not own the Ticket gets 404 | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
+| API-119 | API | AC-118, BR-108, C-109 | Terminal Tickets refuse ownership and priority writes | On a `CLOSED` and on a `CANCELLED` Ticket, claim, an owner change and an IT Priority change each give 409 `TICKET_CLOSED` with nothing changed. **A status change on the same Ticket still answers `INVALID_STATUS_TRANSITION`, not `TICKET_CLOSED`** - the code-reuse rule of C-109 | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
+| API-120 | API | AC-118, BR-108, C-109 | Terminal Tickets refuse attachment writes | On a `CLOSED` and on a `CANCELLED` Ticket, an upload and a soft removal each give 409 `TICKET_CLOSED`, with no `Attachment` row created and no file written and no existing row modified. Listing metadata still gives 200, and downloading an active Attachment still gives 200 | `server/tests/lab-03/staff-ticket-detail.api.test.ts` | |
 
 ### 2.6 API and integration - Public Comments and Internal Notes
 
@@ -315,6 +317,7 @@ fails on any key whose name or contents reach note data.
 | API-87 | API | BR-63, FR-51 | Append-only | No `PATCH` or `DELETE` route exists on either collection or on any individual comment or note - asserted against the router inventory | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-88 | API | BR-42 | Cross-Requester comments | A Requester listing or posting a comment on another Requester's Ticket gets 404 | `server/tests/lab-03/comments-notes.api.test.ts` | |
 | API-89 | API | api-spec 6.1, 10.7 | The row shape | Comment and note rows carry `id`, `body`, `author` with id, name and role, and `createdAt` - and **no author email** | `server/tests/lab-03/comments-notes.api.test.ts` | |
+| API-118 | API | AC-118, BR-108, C-109 | Terminal Tickets refuse comments and notes | On a `CLOSED` and on a `CANCELLED` Ticket, posting a Public Comment and creating an Internal Note each give 409 `TICKET_CLOSED` and **no row is created**; listing both still gives 200. A Requester who does **not** own the terminal Ticket still gets **404, not 409**, so the lock does not reveal existence | `server/tests/lab-03/comments-notes.api.test.ts` | |
 
 ### 2.7 API and integration - Administrator user management
 
@@ -438,6 +441,7 @@ module boundary.
 | UI-35 | UI | FR-53 | The live character counter | The counter tracks the body length and turns danger past 2000 | `client/tests/lab-03/StaffTicketDetail.test.tsx` | |
 | UI-36 | UI | FR-51, BR-63 | No edit or delete control | No comment and no note renders an edit or delete affordance | `client/tests/lab-03/StaffTicketDetail.test.tsx` | |
 | UI-37 | UI | C-103, FR-49 | Staff attachments are read-only | Preview and Download render; no upload control and no Remove control renders | `client/tests/lab-03/StaffTicketDetail.test.tsx` | |
+| UI-52 | UI | AC-118, BR-108, C-109 | A terminal Ticket renders read-only | On a `CLOSED` and on a `CANCELLED` Ticket: no status, owner or IT Priority control renders; neither composer renders; both lists still render their entries; the line `This ticket is closed - create a new ticket if the problem returns.` renders **once**; and the Internal Notes panel keeps its border and its standing label | `client/tests/lab-03/StaffTicketDetail.test.tsx` | |
 | UI-38 | UI | AC-82, FR-56 | The user list | Name, Email, Role, Status and Edit render for every user | `client/tests/lab-03/UserManagement.test.tsx` | |
 | UI-39 | UI | AC-98, FR-66, BR-84 | The excluded controls are absent | No delete control, no checkbox column, no bulk action, no import, no export, no pagination and no sortable header renders | `client/tests/lab-03/UserManagement.test.tsx` | |
 | UI-40 | UI | AC-83, AC-84 | Search and role filter | Each issues a request carrying its parameter and renders the returned rows | `client/tests/lab-03/UserManagement.test.tsx` | |
@@ -525,6 +529,7 @@ so rather than claiming full automation.
 | E2E-23 | E2E | AC-93, AC-94, `LS 14` Part 8 | Last Administrator prevented | With one active Administrator, both deactivation and a role change are refused with the banner | `e2e/lab-03/user-administration.spec.ts` | |
 | E2E-24 | E2E | AC-96, `LS 14` Part 8 | A non-Administrator is forbidden | An IT Staff user opening User Management sees the forbidden state and fetches no user data | `e2e/lab-03/user-administration.spec.ts` | |
 | E2E-25 | E2E | AC-89, AC-91 | Edit and reset | A user's four fields are edited and saved; a new initial password is set and that user's session stops working | `e2e/lab-03/user-administration.spec.ts` | |
+| E2E-26 | E2E | AC-118, BR-108, C-109 | A closed Ticket in the browser | The owning Requester opens a Closed Ticket: existing comments are readable, no composer and no upload control render, and the closed-ticket line shows. A direct `POST` to the comments endpoint returns 409 `TICKET_CLOSED` | `e2e/lab-03/staff-ticket-flow.spec.ts` | |
 
 **E2E-20 runs on the desktop project only**, and creates its user with an `@e2e.test` address, so
 three viewport runs do not create three users and drift the demo data (C-83). Every other row runs
@@ -538,7 +543,7 @@ the Requester DTO is shaped so that neither can happen (`api-spec.md` 10.2).
 
 ## 3. Acceptance-Criterion Traceability
 
-All **117** criteria, each with the planned tests that discharge it.
+All **118** criteria, each with the planned tests that discharge it.
 
 | AC | Planned tests | AC | Planned tests |
 |---|---|---|---|
@@ -600,9 +605,9 @@ All **117** criteria, each with the planned tests that discharge it.
 | AC-56 | API-74 | AC-115 | E2E-16 |
 | AC-57 | API-75 | AC-116 | API-24 |
 | AC-58 | SEC-16 | AC-117 | API-59 |
-| AC-59 | API-70, UI-32, E2E-15 | | |
+| AC-59 | API-70, UI-32, E2E-15 | AC-118 | API-118, API-119, API-120, UI-52, E2E-26 |
 
-**Coverage: 117 of 117.** Every criterion maps to at least one planned test.
+**Coverage: 118 of 118.** Every criterion maps to at least one planned test.
 
 ### 3.1 The criteria that are not discharged by an ordinary automated assertion
 
@@ -701,7 +706,7 @@ between them, plus 3 individual server tests inside files that are otherwise ada
 `phase1-analysis.md` section 3 note that "the server count drops by nothing" was corrected in that
 file: it counted files rather than test IDs, and three server tests do retire.
 
-Lab 3 then adds its own 273 planned tests on top of these figures.
+Lab 3 then adds its own 278 planned tests on top of these figures.
 
 ---
 
@@ -724,12 +729,12 @@ and this section is where its result is recorded.
 | Colour and tokens | 4 | | | |
 | Badges - all four families | 7 | | | |
 | Fields and forms | 6 | | | |
-| Comments and notes | 5 | | | |
-| States | 5 | | | |
+| Comments and notes | 6 | | | |
+| States | 6 | | | |
 | Layout | 5 | | | |
 | Accessibility | 4 | | | |
 | Naming and absence | 4 | | | |
-| **Total** | **40** | | | |
+| **Total** | **42** | | | |
 
 A row that fails is fixed **in the UI, not in the checklist**. Lab 2's two failures - the 40 px
 touch targets at 390 px, and a focus ring captured before it had painted - were both invisible to
@@ -862,7 +867,7 @@ assertions that exist twice. This section is that check.
 
 **The five merges below were approved and are applied.** Each surviving row names the ID it
 absorbed, every acceptance criterion the absorbed row carried was moved onto the survivor, and
-the section 3 traceability matrix still maps all 117 criteria. A sixth proposal was withdrawn
+the section 3 traceability matrix still maps all 118 criteria. A sixth proposal was withdrawn
 before approval, for the reason given under the table.
 
 ### 9.1 Merges applied - the same assertion written twice
@@ -878,7 +883,7 @@ before approval, for the reason given under the table.
 
 **Five merges applied, five test IDs retired: 278 becomes 273.** The retired IDs are API-63,
 API-65, API-78, API-91 and SEC-12. No assertion was lost - each moved onto the surviving row, and
-section 3 still maps all 117 acceptance criteria.
+section 3 still maps all 118 acceptance criteria.
 
 **One proposal was withdrawn during review, and the reason matters more than the proposal.**
 Item 3 would have merged SEC-19, SEC-20 and SEC-21 - `requesterId` ignored on create, on list

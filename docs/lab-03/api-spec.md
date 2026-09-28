@@ -111,9 +111,9 @@ Fixed by `specification.md` section 8. No endpoint returns a status absent from 
 ownership failure, and 404 absorbs that meaning (C-65, superseding `L2 C-13` and `L2 C-20`).
 
 The 409 / 422 line is C-100's and is not redrawn here: **409 when the refusal is a conflict
-with state**, **422 when it is about the submitted value**. Six codes are 409 -
+with state**, **422 when it is about the submitted value**. Seven codes are 409 -
 `ALREADY_OWNED`, `OWNER_REQUIRED`, `INVALID_STATUS_TRANSITION`,
-`RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN`, `LAST_ADMINISTRATOR`. Three are 422 -
+`RESOLUTION_NOT_PERMITTED_IN_STATUS`, `EMAIL_TAKEN`, `LAST_ADMINISTRATOR` and `TICKET_CLOSED`. Three are 422 -
 `ASSIGNEE_NOT_ELIGIBLE`, `SELF_DEACTIVATION` and `CURRENT_PASSWORD_INCORRECT` (C-106).
 `ATTACHMENT_LIMIT_REACHED` keeps its Lab 2 422 as a carried contract and is not re-coded
 (BR-103).
@@ -138,7 +138,8 @@ Every code the API can emit. A code absent from this table is a defect.
 | `USER_NOT_FOUND` | 404 | No User with that id (Administrator routes only) |
 | `ALREADY_OWNED` | 409 | Claim lost the race; another user is already the Ticket Owner (BR-46) |
 | `OWNER_REQUIRED` | 409 | A move into `IN_PROGRESS`, `WAITING_FOR_REQUESTER` or `RESOLVED` on an unowned Ticket, or an unassignment while the Ticket sits in one of those (BR-97, C-93, C-104) |
-| `INVALID_STATUS_TRANSITION` | 409 | The target status is not permitted from the current one by `specification.md` section 5.1 (BR-55) |
+| `TICKET_CLOSED` | 409 | A write was attempted on a `CLOSED` or `CANCELLED` Ticket: a Public Comment, an Internal Note, an Attachment upload or removal, an owner change or an IT Priority change (BR-108, C-109). A **status** change on a terminal Ticket keeps `INVALID_STATUS_TRANSITION` instead |
+| `INVALID_STATUS_TRANSITION` | 409 | The target status is not permitted from the current one by `specification.md` section 5.1 (BR-55), which includes every move out of `CLOSED` and `CANCELLED` |
 | `RESOLUTION_NOT_PERMITTED_IN_STATUS` | 409 | The resolution indication was attempted outside Open, In Progress, Waiting for Requester or Reopened (BR-60) |
 | `EMAIL_TAKEN` | 409 | The email address is already held by another User (BR-77) |
 | `LAST_ADMINISTRATOR` | 409 | The change would leave no active Administrator (BR-80) |
@@ -194,6 +195,12 @@ Four orderings carry consequences and are deliberate:
   leak, so ownership failure and absence are indistinguishable (C-65).
 - **Step 7 is last.** An unauthenticated or unauthorized caller never learns whether their
   body would have been accepted (BR-86).
+
+**The terminal-state check runs at step 7**, with the other business refusals, and applies to
+every write on a Ticket: a `CLOSED` or `CANCELLED` Ticket is read-only for every role (BR-108,
+C-109). It follows ownership, so a Requester who does not own a terminal Ticket still receives
+404 rather than 409 - the write-lock must not reveal that the Ticket exists. Reads and downloads
+are not subject to it.
 
 The Lab 2 ordering that resolved a client-supplied caller before the addressed resource
 (`L2 C-45`) has no Lab 3 counterpart: there is no client-supplied caller to resolve.
@@ -706,6 +713,7 @@ unchanged: JPG, JPEG, PNG, WEBP or PDF; 5 MB maximum; five active Attachments pe
 | 404 | No such Ticket, or a Requester who does not own it |
 | 413 | Over 5 MB, `FILE_TOO_LARGE` |
 | 415 | Outside the permitted types, `UNSUPPORTED_FILE_TYPE` |
+| 409 | The Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED`; nothing is stored and no file is written (BR-108) |
 | 422 | The Ticket already holds five active Attachments, `ATTACHMENT_LIMIT_REACHED`. **Keeps its Lab 2 422** as a carried contract and is not re-coded by C-100 (BR-103) |
 | 500 | Unexpected error. A failed insert leaves no row and no file on disk (`L2 BR-41`) |
 
@@ -766,6 +774,7 @@ limit (`L2 BR-44`).
 | 401 | No session |
 | 403 | Gate set; or the caller is IT Staff or Administrator |
 | 404 | No such Attachment, or its Ticket belongs to another Requester |
+| 409 | The Attachment's Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED` (BR-108) |
 | 422 | `removalReason` is empty after trimming, `REMOVAL_REASON_REQUIRED` (`L2 BR-47`) |
 | 500 | Unexpected error |
 
@@ -843,6 +852,7 @@ the control - sanitising on write would silently alter what a person typed.
 | 401 | No session |
 | 403 | Gate set |
 | 404 | No such Ticket, or a Requester who does not own it |
+| 409 | The Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED`; nothing is stored (BR-108, C-109) |
 | 500 | Unexpected error |
 
 **Any active IT Staff or Administrator may comment on any Ticket**, owned by them or not - the
@@ -897,6 +907,7 @@ one storage shape, one render path, two tables.
 | 401 | No session |
 | 403 | Gate set; or the caller is a Requester |
 | 404 | No such Ticket |
+| 409 | The Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED`; nothing is stored (BR-108) |
 | 500 | Unexpected error |
 
 Append-only, as 6.x: no edit route, no delete route, no column to write to.
@@ -1077,7 +1088,7 @@ from `NEW` to `OPEN` would bypass the section 5.1 matrix and its confirmations.
 | 401 | No session |
 | 403 | Gate set; or the caller is a Requester |
 | 404 | No such Ticket |
-| 409 | Already owned by another user, `ALREADY_OWNED`; the owner does not change, and the body's `error.message` names the current owner so the screen can show it (BR-46, FR-44, AC-71) |
+| 409 | Already owned by another user, `ALREADY_OWNED`; the owner does not change, and the body's `error.message` names the current owner so the screen can show it (BR-46, FR-44, AC-71). Or the Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED` (BR-108) |
 | 500 | Unexpected error |
 
 A caller who already owns the Ticket receives 409 as well. There is no separate "you already
@@ -1129,7 +1140,7 @@ unassign, which is why `owner.isActive` exists in the DTOs.
 | 401 | No session |
 | 403 | Gate set; or the caller is a Requester |
 | 404 | No such Ticket |
-| 409 | `ownerId: null` while the status is a worked one, `OWNER_REQUIRED` (AC-111) |
+| 409 | `ownerId: null` while the status is a worked one, `OWNER_REQUIRED` (AC-111); or the Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED` (BR-108) |
 | 422 | The named assignee is a Requester, inactive or unknown, `ASSIGNEE_NOT_ELIGIBLE` (AC-73) |
 | 500 | Unexpected error |
 
@@ -1165,6 +1176,7 @@ behind it, and the UI select can legitimately re-submit the current value.
 | 401 | No session |
 | 403 | Gate set; or the caller is a Requester, `FORBIDDEN_ROLE` (BR-50, AC-76) |
 | 404 | No such Ticket |
+| 409 | The Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED` (BR-108) |
 | 500 | Unexpected error |
 
 No ownership requirement: any active staff user may re-prioritise any Ticket (BR-96, AC-110).
@@ -1195,7 +1207,9 @@ name means one thing across the whole API (`L2 C-40`, C-92).
    offers it, so the request is a client error and a silent success would hide a bug.
 3. Not permitted from the current status by the section 5.1 matrix -> **409
    `INVALID_STATUS_TRANSITION`**, the Ticket unchanged (BR-55, AC-77). This covers every move
-   out of `CLOSED` and `CANCELLED`, both terminal, and every move to `REOPENED` from anything
+   out of `CLOSED` and `CANCELLED`, both terminal - a status change on a terminal Ticket keeps
+   this code rather than `TICKET_CLOSED`, because the matrix already refuses it and AC-81 and
+   API-67 already assert it (BR-108, C-109) - and every move to `REOPENED` from anything
    but `RESOLVED` (BR-58, BR-98, C-98, AC-81, AC-112).
 4. Target is `IN_PROGRESS`, `WAITING_FOR_REQUESTER` or `RESOLVED` and the Ticket has **no
    owner** -> **409 `OWNER_REQUIRED`**, the Ticket unchanged (BR-97, C-93, AC-109).

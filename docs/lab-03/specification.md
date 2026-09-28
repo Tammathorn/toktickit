@@ -319,7 +319,7 @@ one rule, as do the seven Administrator rules and the password-change gate of BR
 | BR-65 | Public Comments; Internal Notes | The author and the creation time are set by the server from the session. A client-supplied author or timestamp is ignored. | LS 4.6, C-64 |
 | BR-66 | Public Comments; Internal Notes | Content is rendered as plain text with `white-space: pre-wrap` and never through `dangerouslySetInnerHTML`. | C-74 |
 | BR-67 | Public Comments; Internal Notes | Both lists are ordered newest first. | C-74 |
-| BR-68 | Public Comments | The owning Requester, IT Staff and Administrator may all read and post Public Comments on a Ticket. | BR-04 |
+| BR-68 | Public Comments | The owning Requester, IT Staff and Administrator may all read and post Public Comments on a Ticket, **while it is not Closed or Cancelled** (BR-108). Reading stays available on a terminal Ticket; posting does not. | BR-04, C-109 |
 | BR-69 | Internal Notes | Internal Notes live in their own table, so a notes query cannot structurally leak into a comments response. | C-73 |
 | BR-70 | Internal Notes | A Requester calling any Internal Note endpoint is refused 403 before the Ticket is loaded, and receives no note content, no note count and no indication that notes exist. | BR-04, C-63, C-65 |
 | BR-71 | Queue query | The queue searches Ticket Number and Ticket Summary; filters on Current Status, IT Priority, Ticket Owner (`me`, `unassigned` or a user id) and Category; and sorts by created date, last updated, IT Priority, Ticket Number or Current Status. | C-78 |
@@ -347,7 +347,7 @@ one rule, as do the seven Administrator rules and the password-change gate of BR
 | BR-93 | Regression | `GET /api/requesters` is removed. The Administrator user list takes over its only legitimate purpose, and its Lab 2 test retires against that named replacement. | C-62, C-64 |
 | BR-94 | Regression | The selector, its React context, its `localStorage` key and its screen are deleted. No stale browser key is read anywhere, ever. | C-56, supersedes `L2 C-32` |
 | BR-95 | Regression | No test is deleted, skipped or weakened to make a suite green. A test retires only where a decision row names its replacement, and `tests.md` records the disposition. | `CLAUDE.md`, LS 10 |
-| BR-96 | IT Staff assignment; Status transitions | Any active IT Staff or Administrator user may act on any Ticket. Ownership is not required to set IT Priority, change status, post a Public Comment or write an Internal Note - the queue is shared work. | C-93 |
+| BR-96 | IT Staff assignment; Status transitions | Any active IT Staff or Administrator user may act on any **non-terminal** Ticket (BR-108). Ownership is not required to set IT Priority, change status, post a Public Comment or write an Internal Note - the queue is shared work. | C-93 |
 | BR-97 | Status transitions; IT Staff assignment | A Ticket whose status is `IN_PROGRESS`, `WAITING_FOR_REQUESTER` or `RESOLVED` must have a Ticket Owner at all times. A move into one of those statuses without an owner, and an unassignment while in one of them, are both refused 409 `OWNER_REQUIRED`, leaving status and ownership unchanged. To release such a Ticket, move it to `OPEN` first. Reassignment to another eligible user stays allowed throughout, because it never leaves the Ticket without an owner. | C-93, C-104 |
 | BR-98 | Status transitions | `CLOSED` and `CANCELLED` are terminal, and `REOPENED` is reachable only from `RESOLVED`. | C-98 |
 | BR-99 | Validation; Administrator | A user's name is trimmed and is 1 to 100 characters. A user's email address is trimmed, lower-cased, of valid format, and at most 254 characters - the practical limit for an email address. | C-94 |
@@ -361,9 +361,12 @@ one rule, as do the seven Administrator rules and the password-change gate of BR
 | BR-106 | Administrator | The user list is returned in a fixed order - name ascending, then id - and offers no user-controlled sort. `LS 8.5` does not ask for sorting, and a fixed order keeps tests and screenshots stable. | C-107, BR-84 |
 | BR-107 | Queue query | At tablet width the queue keeps Ticket Number, Ticket Summary, IT Priority, Current Status, Ticket Owner and Last Updated as columns, and hides Created, Category and Requested Priority, which remain available on Ticket Detail. | C-108, FR-39 |
 
-**107 business rules.** BR-96 to BR-103 were added after decisions C-93 to C-104 closed the
-gaps the first draft listed, and BR-104 to BR-107 after C-105 to C-108 closed the four the
-`api-spec.md` and `ui-spec.md` drafts declared. They are appended rather than inserted so that
+| BR-108 | Status transitions; Public Comments; Internal Notes; IT Staff assignment | A Ticket whose Current Status is `CLOSED` or `CANCELLED` is **read-only for every role**. Posting a Public Comment or an Internal Note, uploading or soft-removing an Attachment, and changing Ticket Owner, IT Priority or Current Status are each refused **409** - a conflict with the state of the resource under BR-103. Reading the Ticket, its Attachments, its Public Comments and its Internal Notes, and downloading an Attachment, all stay available to whoever could already see them. A status change keeps its existing refusal code `INVALID_STATUS_TRANSITION` (BR-55); every other refused write answers `TICKET_CLOSED`. **`RESOLVED` is not terminal and is not affected** - a Resolved Ticket can still be Reopened (BR-98), so it stays open to comments. | C-109, C-98, C-100 |
+
+**108 business rules.** BR-96 to BR-103 were added after decisions C-93 to C-104 closed the
+gaps the first draft listed, BR-104 to BR-107 after C-105 to C-108 closed the four the
+`api-spec.md` and `ui-spec.md` drafts declared, and BR-108 after C-109 closed the one the peer
+review of PR #46 found. They are appended rather than inserted so that
 the earlier IDs, and the acceptance criteria tracing to them, stay stable; the Area column
 remains the grouping key.
 
@@ -425,17 +428,17 @@ no outstanding password change. Cells give the status code for a well-formed req
 | Create Ticket | 401 | 403 | 201 | 403 [1] | 403 [1] |
 | List own Tickets | 401 | 403 | 200 | 403 [1] | 403 [1] |
 | Read one Ticket, Requester view | 401 | 403 | own 200 / other 404 | 403 [1] | 403 [1] |
-| Upload or soft-remove an Attachment | 401 | 403 | own 200 / other 404 | 403 [2] | 403 [2] |
+| Upload or soft-remove an Attachment | 401 | 403 | own 200 / terminal 409 / other 404 | 403 [2] | 403 [2] |
 | Indicate "Problem Appears Resolved" | 401 | 403 | own 200 / other 404 / wrong status 409 | 403 | 403 |
 | List Attachment metadata | 401 | 403 | own 200 / other 404 | 200 | 200 |
 | Download or preview an Attachment | 401 | 403 | own 200, removed 410 / other 404 | 200, removed 410 | 200, removed 410 |
-| List or post Public Comments | 401 | 403 | own 200 / other 404 | 200 | 200 |
-| List or create Internal Notes | 401 | 403 | **403** | 200 | 200 |
+| List or post Public Comments | 401 | 403 | list own 200 / post on a terminal Ticket 409 / other 404 | list 200 / post on a terminal Ticket 409 | list 200 / post on a terminal Ticket 409 |
+| List or create Internal Notes | 401 | 403 | **403** | list 200 / create on a terminal Ticket 409 | list 200 / create on a terminal Ticket 409 |
 | IT Staff Ticket Queue | 401 | 403 | **403** | 200 | 200 |
 | Read one Ticket, IT Staff view | 401 | 403 | **403** | 200 / missing 404 | 200 / missing 404 |
-| Claim a Ticket | 401 | 403 | **403** | 200 / owned 409 | 200 / owned 409 |
-| Assign, reassign or unassign | 401 | 403 | **403** | 200 / ineligible 422 / unassign in a worked status 409 | 200 / ineligible 422 / unassign in a worked status 409 |
-| Set IT Priority | 401 | 403 | **403** | 200 | 200 |
+| Claim a Ticket | 401 | 403 | **403** | 200 / owned 409 / terminal 409 | 200 / owned 409 / terminal 409 |
+| Assign, reassign or unassign | 401 | 403 | **403** | 200 / ineligible 422 / unassign in a worked status 409 / terminal 409 | 200 / ineligible 422 / unassign in a worked status 409 / terminal 409 |
+| Set IT Priority | 401 | 403 | **403** | 200 / terminal 409 | 200 / terminal 409 |
 | List assignable users (C-105) | 401 | 403 | **403** | 200 | 200 |
 | Change Current Status | 401 | 403 | **403** | 200 / same 400 / not permitted 409 / no owner 409 | 200 / same 400 / not permitted 409 / no owner 409 |
 | List users, with search and role filter | 401 | 403 | **403** | **403** | 200 |
@@ -462,6 +465,11 @@ Requester-view routes are Requester-only (C-101).
 
 [2] `LS 8.4` gives IT Staff the *existing* Attachments; no clause gives them upload or
 removal, so they read and download and do not write (C-103).
+
+**Terminal Tickets.** Every `terminal 409` above is BR-108: a `CLOSED` or `CANCELLED` Ticket is
+read-only for every role (C-109). Reading and downloading are unaffected, which is why the list
+half of each comment and note row stays 200. A status change on a terminal Ticket keeps its own
+code, `INVALID_STATUS_TRANSITION`; every other refused write answers `TICKET_CLOSED`.
 
 [3] The two Administrator safety rules split. `LAST_ADMINISTRATOR` is 409 because the
 refusal depends on the state of the other `User` rows. `SELF_DEACTIVATION` is 422 because it
@@ -796,6 +804,8 @@ BR-103: `ALREADY_OWNED`, `OWNER_REQUIRED`, `INVALID_STATUS_TRANSITION`,
 Lab 2 meaning, including the five-active-attachment refusal (`L2 BR-39`), and carries three
 Lab 3 codes: `ASSIGNEE_NOT_ELIGIBLE`, `SELF_DEACTIVATION` and `CURRENT_PASSWORD_INCORRECT`
 (BR-105, C-106).
+409 also carries `TICKET_CLOSED`, the BR-108 write-lock on a terminal Ticket (C-109), which
+brings the 409 codes to seven.
 Three Lab 2 codes cease to exist with the caller resolver: `REQUESTER_REQUIRED`,
 `REQUESTER_NOT_FOUND` and `REQUESTER_INACTIVE` (C-64); `api-spec.md`'s error catalogue and
 every test asserting them is updated, not left to fail.
@@ -930,8 +940,9 @@ atomic, observable and mapped to at least one planned test in `tests.md`.
 | AC-115 | Given a Ticket with a Ticket Owner, when the owning Requester loads Ticket Detail, then the owner's name appears and the owner's email address appears nowhere in the rendered DOM or in any network response. | BR-100, C-95 |
 | AC-116 | Given an expired `Session` row, when a request presents its token, then the response is 401 and the row no longer exists in the table. | BR-101, C-96 |
 | AC-117 | Given an owned Ticket in In Progress, when it is moved to Open and then unassigned, then both succeed and the Ticket appears under the `unassigned` filter. | BR-97, BR-47, C-104 |
+| AC-118 | Given a Closed Ticket and a Cancelled Ticket, when a Public Comment, an Internal Note, an Attachment upload, an Attachment removal, an owner change or an IT Priority change is attempted on either, then each is refused 409 `TICKET_CLOSED` and nothing is stored; and when the Ticket, its Attachments, its Public Comments and its Internal Notes are read, and an active Attachment is downloaded, then each still succeeds. | BR-108, C-109 |
 
-**117 acceptance criteria.**
+**118 acceptance criteria.**
 
 ---
 
@@ -1081,8 +1092,10 @@ C-60 (login failures and the password policy), C-63 to C-66 (the check order, id
 403/404 split and Administrator ticket powers), C-67 to C-72 (the migration), C-73 to C-78
 (comments, notes and the ticket workflow), C-79 to C-82 (administration), C-83, C-89 and C-91
 (test isolation, test levels and the seed), C-93 to C-104, which closed the ten gaps the first
-draft of this document listed, and C-105 to C-108, which closed the four the `api-spec.md` and
-`ui-spec.md` drafts declared - C-108 by correcting section 6 of this document.
+draft of this document listed, C-105 to C-108, which closed the four the `api-spec.md` and
+`ui-spec.md` drafts declared - C-108 by correcting section 6 of this document - and C-109, which
+closed the contradiction between BR-68 and the terminal statuses that the peer review of PR #46
+found.
 
 ### Assumptions
 

@@ -440,6 +440,48 @@ silently overwritten.
 
 ---
 
+### 2.11 Peer review of PR #46 - the first defect a person found
+
+My reviewer, PAKATO, commented on the PR:
+
+> Comments on Terminal Tickets: the status transition matrix strictly defines CLOSED and
+> CANCELLED as terminal states, but BR-68 broadly allows the owning Requester, IT Staff,
+> and Administrator to post Public Comments on a Ticket without mentioning status
+> constraints. You should clarify whether users can still write comments on a ticket
+> after it is closed.
+
+I decided it as C-109, sent verbatim:
+
+> My decision, as C-109: a Closed or Cancelled Ticket is read-only for every role. Posting
+> a Public Comment or an Internal Note, uploading or removing an Attachment, and changing
+> owner, IT Priority or status all return 409 (a state conflict under C-100). Reading and
+> downloading stay allowed. Reason: C-98 makes both statuses terminal with no way back,
+> so anything written after closure reaches nobody who can act on it; the Requester
+> raises a new Ticket instead. Resolved stays open to comments because a Resolved Ticket
+> can still be Reopened.
+>
+> Apply it everywhere it lands [...] If a Closed/Cancelled refusal code already exists
+> (AC-81), reuse it rather than adding a second one, and tell me which name you kept.
+
+**Result.** C-109 recorded; BR-108 added and BR-68 and BR-96 narrowed; six cells of the
+section 5.2 matrix gained a terminal refusal; six `api-spec.md` endpoints gained a 409; three
+`ui-spec.md` screens now hide their write controls on a terminal Ticket; AC-118 and five tests
+added. On the code question: the status-change path **keeps `INVALID_STATUS_TRANSITION`**,
+which the matrix already generates and AC-81 already asserts, and exactly one new code
+**`TICKET_CLOSED`** covers the other five write operations.
+
+**What went wrong - and it is the most useful finding of the phase.** Four subagent audits
+across five documents did not find this. They could not: BR-68 and the section 5.1 matrix were
+each internally consistent and neither referred to the other, so there was no contradiction to
+detect - only an unasked question. It is the same shape as the C-108 defect, and both were
+found by a human reading for *meaning* rather than for agreement. The audits are good at
+"these two statements disagree" and blind to "nobody ever decided this".
+
+That is the argument for the mandatory peer review in `LS 11.1` being a real review and not a
+rubber stamp, and it is why this row is in the log rather than quietly fixed.
+
+---
+
 ## 3. Phase 1 running summary
 
 | Prompt | Produced | Commit |
@@ -452,6 +494,7 @@ silently overwritten.
 | 1.6 | `tests.md` - 278 planned tests, eight levels, 117 of 117 ACs traced | see section 4 |
 | 1.7 | Four scoped subagent audits; 13 defects found and fixed, none substantive | see section 4 |
 | Decisions | C-105..C-108, BR-104..BR-107, propagated through four documents | see section 4 |
+| PR #46 review | C-109, BR-108, AC-118 - the terminal-Ticket write lock, found by my reviewer | see section 4 |
 
 Four defects are worth carrying into the implementation phase. The first three are the same
 failure mode - the agent resolving silently what it was told to escalate - and the fourth is
@@ -474,9 +517,16 @@ what the audits exist to catch:
    could have caught it, because no test existed yet and both readings were self-consistent.
    C-108 fixed it at the source (2.10).
 
+5. **A question nobody had asked.** BR-68 let any permitted role comment on a Ticket; section
+   5.1 made `CLOSED` and `CANCELLED` terminal. Neither mentioned the other, both were
+   internally consistent, and **four audits across five documents missed it**. My reviewer
+   found it by reading for meaning. C-109 closes it (2.11).
+
 **What actually caught things.** Thirteen defects across four documents were found by
 subagent audits that had not written the document under review, and none by the session that
-wrote it. The single most productive instruction in the whole phase was the one that told
+wrote it. The fourteenth - the one that changed a rule rather than a citation - was found by a
+person, and the audits could not have found it: there was no disagreement to detect, only a
+question nobody had asked. The single most productive instruction in the whole phase was the one that told
 each document to *declare what it needed and could not find* rather than fill the gap - that
 is what turned four silent inventions into four decisions with reasons attached.
 
