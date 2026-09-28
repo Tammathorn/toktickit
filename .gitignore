@@ -25,3 +25,8 @@ docs/lab-02/spec/*.pdf
 
 # attachment uploads
 server/uploads/
+
+# Lab 3: course handout, Playwright storage state, built report PDFs
+docs/lab-03/spec/*.pdf
+/e2e/.auth/
+report_lab*.pdf
