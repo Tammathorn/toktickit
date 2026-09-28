@@ -339,6 +339,107 @@ agent will offer to *write down* a hole rather than fix it unless told which it 
 
 ---
 
+### 2.9 Prompts 1.5 to 1.7, run unattended
+
+Sent verbatim, opening:
+
+> Autopilot for the rest of Issue #37. Do not wait for me between steps. The exact prompts
+> are in docs/lab-03/handoff.md section 7.
+>
+> 0. Start docs/lab-03/ai-use.md as a running log of the prompts I gave you this session
+>    (1.1, 1.2 + decision rounds, 1.3, 1.4 + gap round), verbatim, one line each on the
+>    result and what went wrong [...]. Commit, push. Then open a DRAFT PR [...]
+> 1. Prompt 1.5: api-spec.md, then ui-spec.md.
+> 2. Prompt 1.6: tests.md.
+> 3. After each file: run a reviewer subagent with the 1.7 audit checklist, scoped to that
+>    file against specification.md and decisions.md. Fix pure consistency errors
+>    yourself. Then pre-commit inspection, commit that file on its own, push.
+> 4. Prompt 1.7: a full audit by a fresh subagent across all docs/lab-03 files. Fix what
+>    is purely consistency; commit, push.
+> 5. Append this prompt and a one-line result per step to ai-use.md.
+>
+> Stop only when:
+> - something needs a decision that decisions.md does not cover. Do NOT invent a rule.
+>   Collect every such item into one list with options and your recommendation, finish
+>   everything that does not depend on it, then stop and ask me once;
+> - or all steps are done. [...] Do not mark the PR ready.
+
+**Result, one line per step.**
+
+| Step | Result |
+|---|---|
+| 0 | `ai-use.md` opened (`9e5ab71`); draft PR **#46** opened against `lab3-staging` |
+| 1 | `api-spec.md`, 30 endpoints (`b730b07`); `ui-spec.md`, 25 sections (`f29cfc7`) |
+| 2 | `tests.md`, 278 planned tests across the eight `LS 10` levels, 117 of 117 ACs traced |
+| 3 | Three scoped audits run. `api-spec`: 4 defects, all miscitations or arithmetic. `ui-spec`: 6, one of them an invented rule. `tests`: 3 classes, all mechanical. All fixed |
+| 4 | Four items needed decisions and were escalated rather than invented - see 2.10 |
+| 5 | This section |
+
+**What went wrong - a correction to me, mid-run.** I wrote the first documents with shell
+heredocs, and two of them truncated: `ai-use.md` gained a joined line inside a quoted prompt
+and lost the end of a bullet. I caught it and ordered the agent onto the Write and Edit tools,
+one section per call, and a re-check of everything already written. Nothing was lost, but the
+lesson is that a long document written through a shell here-document has a silent failure
+mode, and a document is exactly the artifact where a silent truncation is least likely to be
+noticed.
+
+**What went wrong - the same failure as 2.6, caught earlier this time.** `ui-spec.md` claimed
+the Change Password screen was "shown to a user with an outstanding password change, **and to
+nobody else**; also reachable deliberately by a user who simply wants to change their
+password." The two halves of that sentence contradict each other, the second half had no
+basis in `specification.md`, no navigation entry and no FR, and it was written on the
+document's own authority. This is the reopenable-`CLOSED` mistake of 2.6, one document later.
+The subagent audit found it; no assertion would have. That is the argument for the audits.
+
+---
+
+### 2.10 The four decisions the drafts refused to make
+
+`api-spec.md` section 12 and `ui-spec.md` section 25 each declared what they needed and could
+not find, with options and a recommendation, and resolved none of it. I answered all four.
+
+Sent verbatim:
+
+> Decisions for the four open items - add them as the next C-rows with my reasons:
+> 1. Assignable users: add a staff endpoint, IT Staff and Administrator only, returning
+>    id, name and role of active IT Staff and Administrator users - no email. Reason: the
+>    owner picker needs the list, and the user-admin API is Administrator-only.
+> 2. Wrong current password on change-password: 422 CURRENT_PASSWORD_INCORRECT, shown at
+>    the current-password field. Never 401. Reason: the client treats 401 as an expired
+>    session and sends the user to Login.
+> 3. User list order: fixed, by name ascending (then id); no user-controlled sort.
+>    Reason: 8.5 does not require sorting, and a fixed order keeps tests and screenshots
+>    stable.
+> 4. Queue at tablet: keep Ticket No, Summary, IT Priority, Status, Owner, Last Updated;
+>    hide Created, Category and Requested Priority (still on the detail screen). Fix
+>    specification.md section 6 to match FR-39 - the conflict is fixed at its source.
+>    Then tighten RESP-04 to assert exactly these columns. Reason: at tablet width the
+>    columns that pick the next piece of work stay; the rest is one click away.
+>
+> Also: 275 planned tests is about 2.5x Lab 2. List any that duplicate another test's
+> assertion and propose merges - do not remove any without telling me.
+
+**Result.** C-105 to C-108 recorded with my reasons; BR-104 to BR-107 added; all four
+propagated through `specification.md`, `api-spec.md`, `ui-spec.md` and `tests.md`; three
+tests added (API-116, API-117, SEC-27) and two tightened (API-16, RESP-04). The duplication
+review is `tests.md` section 9: six merges proposed, seven IDs saved, nothing removed.
+
+**What went wrong - in the contract, not in this round.** Item 4 was not a silence in
+`decisions.md`; it was `specification.md` section 6 disagreeing with its own FR-39 about the
+queue's tablet columns, naming a Related System column that FR-39 never creates. The agent
+reported it rather than picking a side, which is what `CLAUDE.md` asks for, and C-108 fixed it
+at the source rather than papering over it in `ui-spec.md`. Two contract documents had
+disagreed since the specification was written and nothing had caught it until a document tried
+to build on them both.
+
+**One decision went against the recommendation.** `api-spec.md` recommended 400 for a wrong
+current password; I chose 422, because the client treats 401 as an expired session and the
+409/422 line C-100 already draws puts a refusal about a submitted value at 422. Both the
+recommendation and the decision are recorded, so the disagreement is on the record rather than
+silently overwritten.
+
+---
+
 ## 3. Phase 1 running summary
 
 | Prompt | Produced | Commit |
@@ -347,9 +448,14 @@ agent will offer to *write down* a hole rather than fix it unless told which it 
 | 1.2 + three decision rounds | `decisions.md` C-53..C-92 | `88ac142`, `c5e6eaf` |
 | 1.3 | `CLAUDE.md` rewritten for Lab 3 | `fbfa6e0` |
 | 1.4 + two gap rounds | `specification.md`, and C-93..C-104 closing all ten gaps | `c281d50`, `0c6d1cc` |
+| 1.5 | `api-spec.md` (30 endpoints), `ui-spec.md` (25 sections) | `b730b07`, `f29cfc7` |
+| 1.6 | `tests.md` - 278 planned tests, eight levels, 117 of 117 ACs traced | see section 4 |
+| 1.7 | Four scoped subagent audits; 13 defects found and fixed, none substantive | see section 4 |
+| Decisions | C-105..C-108, BR-104..BR-107, propagated through four documents | see section 4 |
 
-Two defects are worth carrying into the implementation phase, because both are the same
-failure mode - the agent resolving silently what it was told to escalate:
+Four defects are worth carrying into the implementation phase. The first three are the same
+failure mode - the agent resolving silently what it was told to escalate - and the fourth is
+what the audits exist to catch:
 
 1. **An invented rule inside the contract.** Section 5.1's reopenable `CLOSED` had no
    decision row, in a document whose prompt ended "list the gap at the end instead of
@@ -358,6 +464,21 @@ failure mode - the agent resolving silently what it was told to escalate:
 2. **A hole offered as documentation.** The unassign edge in C-93 was proposed as a
    documented limitation rather than a fix; C-104 closes it. "Tell me about the edge case"
    and "close the edge case" are different instructions, and the default is the first.
+3. **The same invention, one document later.** `ui-spec.md` gave the Change Password screen
+   a second way in that no requirement, navigation entry or decision row supported - and
+   contradicted itself inside the same sentence doing it (2.9). Removed against
+   `specification.md` section 6. It happened *after* defect 1 was recorded, which is the
+   point: recording a failure mode does not stop it recurring, an audit does.
+4. **Two contract documents had disagreed since Phase 1 and nothing had noticed.**
+   `specification.md` section 6 dropped a queue column its own FR-39 never creates. No test
+   could have caught it, because no test existed yet and both readings were self-consistent.
+   C-108 fixed it at the source (2.10).
+
+**What actually caught things.** Thirteen defects across four documents were found by
+subagent audits that had not written the document under review, and none by the session that
+wrote it. The single most productive instruction in the whole phase was the one that told
+each document to *declare what it needed and could not find* rather than fill the gap - that
+is what turned four silent inventions into four decisions with reasons attached.
 
 ## 4. My Reflection
 
