@@ -121,6 +121,13 @@ export type SeedTicket = {
 // A status that means work is in hand - IN_PROGRESS, WAITING_FOR_REQUESTER,
 // RESOLVED - always carries an owner, because C-93 requires somebody
 // accountable for a Ticket being worked on.
+//
+// NOTHING HERE MAY BELONG TO THE THIRD ACTIVE REQUESTER, nattapong.w. That
+// persona is deliberately left without a single Ticket, because it is how the
+// "No tickets yet" empty state is reached without deleting anything (BR-57,
+// AC-49). e2e/lab-02/my-tickets-screenshots.spec.ts asserts their total is 0,
+// and the inactive Requester prasit.b keeps one Ticket instead, which shows
+// that deactivation retains a user's data (L2 LC-01).
 export const SEED_TICKETS: readonly SeedTicket[] = [
   {
     requesterEmail: "anucha.p@example.ac.th",
@@ -154,7 +161,7 @@ export const SEED_TICKETS: readonly SeedTicket[] = [
     ],
   },
   {
-    requesterEmail: "nattapong.w@example.ac.th",
+    requesterEmail: "kanya.s@example.ac.th",
     summary: "VPN disconnects after roughly three minutes",
     description:
       "The VPN client connects and then drops after about three minutes, every time, which makes working on the grade system from home impossible.",
@@ -247,7 +254,7 @@ export const SEED_TICKETS: readonly SeedTicket[] = [
     ],
   },
   {
-    requesterEmail: "nattapong.w@example.ac.th",
+    requesterEmail: "siriporn.c@example.ac.th",
     summary: "Campus Wi-Fi drops when moving between buildings",
     description:
       "The connection drops completely when walking between buildings rather than roaming across access points, and it needs a manual reconnect each time.",
@@ -259,7 +266,7 @@ export const SEED_TICKETS: readonly SeedTicket[] = [
     daysAgo: 14,
     publicComments: [
       {
-        authorEmail: "nattapong.w@example.ac.th",
+        authorEmail: "siriporn.c@example.ac.th",
         body: "This started happening again this morning on the walk between Building 2 and Building 4.",
       },
     ],
@@ -310,7 +317,7 @@ export function assertUniqueTicketKeys(
 ): void {
   const seen = new Set<string>();
   for (const t of tickets) {
-    const key = `${t.requesterEmail} ${t.summary}`;
+    const key = `${t.requesterEmail}\u0000${t.summary}`;
     if (seen.has(key)) {
       throw new Error(
         `Graded seed: duplicate Ticket key (${t.requesterEmail}, "${t.summary}"). ` +

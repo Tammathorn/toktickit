@@ -419,6 +419,20 @@ describe("MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-9
     expect(await prisma.publicComment.count()).toBeGreaterThan(0);
     expect(await prisma.internalNote.count()).toBeGreaterThan(0);
   });
+
+  // Proposed addition, reported with the issue: tests.md plans no row for it.
+  // The Lab 2 "No tickets yet" empty state is reached by one active Requester
+  // having none (BR-57, AC-49), and
+  // e2e/lab-02/my-tickets-screenshots.spec.ts asserts that Requester's total is
+  // 0. This is asserted over the seed FIXTURE rather than over the database,
+  // because toktickit_test accumulates rows that tests create, while the
+  // fixture is what a fresh dev database gets.
+  it("plans no Ticket for at least one active Requester persona, which is how the empty state is reached", async () => {
+    const { REQUESTERS, SEED_TICKETS } = await import("../../src/seed/graded-seed.js");
+    const withTickets = new Set(SEED_TICKETS.map((t) => t.requesterEmail));
+    const withNone = REQUESTERS.filter((r) => r.isActive && !withTickets.has(r.email));
+    expect(withNone.map((r) => r.email)).toHaveLength(1);
+  });
 });
 
 describe("MIG-18 — the seed never overwrites a changed password (AC-101, C-72)", () => {
