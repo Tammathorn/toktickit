@@ -172,27 +172,56 @@ cd server
 npx prisma migrate deploy
 ```
 
-> `prisma migrate dev` (and the repository's `npm run prisma:migrate` script, kept from
-> Lab 1) can offer to **reset** the database on schema drift, which destroys the seeded
-> data. `migrate deploy` only applies pending migrations and can never reset
-> (decision C-37). Never run `prisma migrate reset`.
+> `prisma migrate dev` can offer to **reset** the database on schema drift, which destroys
+> the seeded data. `migrate deploy` only applies pending migrations and can never reset
+> (decision C-37). Never run `prisma migrate reset`. The `npm run prisma:migrate` script
+> ran `migrate dev` until Lab 3; decision C-86 repointed it at `migrate deploy`, so the
+> command that can offer a reset is no longer in `package.json`.
 
 ### 5. Seed the database
 
 Two seeds, both safe to re-run.
 
-**Graded seed** (labsheet 5.3, required): four Categories, seven Related Systems, four
-active and one inactive Development Requester. Every row is an `upsert`, so running it
-twice creates nothing new:
+**Graded seed** (labsheet 5.3, required): four Categories, seven Related Systems, the
+eleven user accounts in the table below, and nine Tickets spread across every status and
+priority with example Public Comments and Internal Notes. Users and reference data are
+`upsert`ed and Tickets are matched on `(Requester email, summary)`, so running it twice
+creates nothing new (decision C-91):
 
 ```bash
 cd server
 npm run prisma:seed
 ```
 
-**Demo seed** (optional, decision C-22): fourteen Tickets for the first active Requester,
-three for the second, none for the third, so My Tickets can show pagination, a switch
-between Requesters, the empty state and the no-results state. Idempotent on
+#### Seeded accounts — local development only
+
+These passwords exist so that each role can be signed into on a local machine. They are
+**not** secrets, they are **not** anyone's real password, and nothing outside a local
+database ever uses them. A password is written **only where the stored hash is NULL**
+(decision C-72), so a password changed through the application is never overwritten by a
+re-seed. Hashes are scrypt from `node:crypto`, stored as `scrypt$N$r$p$salt$hash`
+(decision C-53); no plaintext password is stored anywhere.
+
+| Role | Accounts | Password |
+|---|---|---|
+| Requester | `anucha.p@`, `kanya.s@`, `nattapong.w@`, `siriporn.c@` (active), `prasit.b@` (inactive) | `Requester#2026` |
+| IT Staff | `araya.m@`, `decha.i@`, `fonthip.c@` (active), `somkid.r@` (inactive) | `ItStaff#2026` |
+| Administrator | `panida.s@` | `Admin#2026` |
+| First login | `first.login@` | `FirstLogin#2026` |
+
+All addresses are at `example.ac.th`. The inactive accounts cannot sign in, which is what
+makes that refusal demonstrable. The first-login account keeps `mustChangePassword` set and
+is never updated by the seed, so the mandatory first-login password change can be shown
+again on every run.
+
+Any user who came through the Lab 3 migration and is not named above has no password at
+all: a NULL hash can never authenticate, and an Administrator sets an initial password for
+that account. That is the only account-recovery path this application has - there is no
+password-reset email anywhere in it.
+
+**Demo seed** (optional, decision C-91): extra volume only - fourteen Tickets for the first
+active Requester, three for the second, none for the third - so My Tickets and the Ticket
+Queue can show pagination, the empty state and the no-results state. Idempotent on
 `(requester, summary)`:
 
 ```bash
@@ -234,11 +263,18 @@ npm test --prefix client
 npm run test:e2e
 ```
 
-The server tests import the Express app directly (no server process) but run against
-the real PostgreSQL database, seeding what they need and removing it afterwards; the
-files run one at a time because they share the database and `server/uploads/`. The
-Playwright configuration deliberately has no `webServer`: start the two dev servers
+The server tests import the Express app directly (no server process) but run against a
+real PostgreSQL database - **`toktickit_test`, never the development database**. A Vitest
+global setup creates that database if it is missing, applies the migrations with
+`migrate deploy` and seeds it, then points `DATABASE_URL` at it before any test runs, so
+nothing a test does can reach the data used for screenshots (decision C-83). It needs no
+setup of its own beyond the running container. The files still run one at a time, because
+they share that database and `server/uploads/`.
+
+The Playwright configuration deliberately has no `webServer`: start the two dev servers
 yourself so a missing database fails visibly rather than looking like a test failure.
+Playwright runs against the development database and signs in as the fixed seeded
+accounts.
 
 Useful variants:
 
