@@ -1,0 +1,18 @@
+       t       | count 
+---------------+-------
+ Category      |     4
+ RelatedSystem |     7
+ RequesterUser |     5
+ Ticket        |   286
+ Attachment    |   368
+(5 rows)
+
+           email           | tickets 
+---------------------------+---------
+ anucha.p@example.ac.th    |      14
+ kanya.s@example.ac.th     |       3
+ nattapong.w@example.ac.th |       0
+ prasit.b@example.ac.th    |       0
+ siriporn.c@example.ac.th  |     269
+(5 rows)
+
