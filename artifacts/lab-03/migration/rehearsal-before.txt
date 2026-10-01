@@ -1,0 +1,45 @@
+TokTickIT Lab 3 - migration rehearsal (C-83), BEFORE
+Database: toktickit_rehearsal, restored from lab2-final.dump (the final Lab 2 database)
+Captured: 2026-10-01 08:21:53Z UTC
+
+--- applied migrations ---
+         migration_name          |          finished_at          
+---------------------------------+-------------------------------
+ 20260816153850_init             | 2026-08-16 15:38:50.887394+00
+ 20260908120000_lab02_data_model | 2026-09-08 10:43:01.571017+00
+(2 rows)
+
+--- row counts per table ---
+  table_name   | count 
+---------------+-------
+ Attachment    |   368
+ Category      |     4
+ RelatedSystem |     7
+ RequesterUser |     5
+ Ticket        |   286
+(5 rows)
+
+--- tickets per Requester email ---
+ id |           email           | isActive | tickets 
+----+---------------------------+----------+---------
+  1 | anucha.p@example.ac.th    | t        |      14
+  2 | kanya.s@example.ac.th     | t        |       3
+  3 | nattapong.w@example.ac.th | t        |       0
+  4 | siriporn.c@example.ac.th  | t        |     269
+  5 | prasit.b@example.ac.th    | f        |       0
+(5 rows)
+
+--- itPriority before the migration (L2 C-07: nullable and never set) ---
+ tickets | it_priority_non_null | it_priority_null 
+---------+----------------------+------------------
+     286 |                    0 |              286
+(1 row)
+
+--- a sample pre-migration Ticket, for MIG-22 ---
+ id |  ticketNumber   | requesterId | requestedPriority | itPriority | currentStatus 
+----+-----------------+-------------+-------------------+------------+---------------
+  1 | TKT-2026-000001 |           1 | HIGH              |            | NEW
+  2 | TKT-2026-000002 |           1 | HIGH              |            | NEW
+  3 | TKT-2026-000003 |           1 | HIGH              |            | NEW
+(3 rows)
+

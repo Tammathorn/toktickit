@@ -1,4 +1,4 @@
-import type { PrismaClient, RequestedPriority, Ticket } from "@prisma/client";
+import type { PrismaClient, RequestedPriority, Ticket, TicketStatus } from "@prisma/client";
 import { formatTicketNumber } from "./ticket-number.js";
 
 // C-49 — the Ticket Number's six digits are the row's own autoincrement id,
@@ -17,8 +17,14 @@ export type NewTicket = {
   summary: string;
   description: string;
   requestedPriority: RequestedPriority;
-  /** Demo and test data only; production rows take the database default. */
+  /** Demo, seed and test data only; production rows take the database default. */
   createdAt?: Date;
+  /** Seed data only. IT Priority otherwise copies Requested Priority (C-71). */
+  itPriority?: RequestedPriority;
+  /** Seed data only; a created Ticket is NEW (BR-02) and unassigned. */
+  currentStatus?: TicketStatus;
+  ownerId?: number;
+  requesterResolvedAt?: Date;
 };
 
 export async function createTicketWithNumber(
@@ -26,7 +32,11 @@ export async function createTicketWithNumber(
   input: NewTicket,
 ): Promise<Ticket> {
   return prisma.$transaction(async (tx) => {
-    const created = await tx.ticket.create({ data: input });
+    // C-71 — IT Priority starts as a copy of Requested Priority, for a new
+    // Ticket exactly as for the Tickets the migration backfilled.
+    const created = await tx.ticket.create({
+      data: { ...input, itPriority: input.itPriority ?? input.requestedPriority },
+    });
     return tx.ticket.update({
       where: { id: created.id },
       data: { ticketNumber: formatTicketNumber(created.id, created.createdAt) },

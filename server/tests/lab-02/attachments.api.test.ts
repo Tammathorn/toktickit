@@ -53,10 +53,10 @@ async function newTicket(requesterId: number) {
 
 beforeAll(async () => {
   await seedGraded(prisma);
-  const actives = await prisma.requesterUser.findMany({ where: { isActive: true }, orderBy: { id: "asc" }, take: 2 });
+  const actives = await prisma.user.findMany({ where: { role: "REQUESTER", isActive: true }, orderBy: { id: "asc" }, take: 2 });
   ownerId = actives[0].id;
   otherId = actives[1].id;
-  inactiveId = (await prisma.requesterUser.findFirstOrThrow({ where: { isActive: false } })).id;
+  inactiveId = (await prisma.user.findFirstOrThrow({ where: { role: "REQUESTER", isActive: false } })).id;
   ticketId = await newTicket(ownerId);
 });
 

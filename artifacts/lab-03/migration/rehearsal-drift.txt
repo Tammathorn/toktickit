@@ -1,0 +1,10 @@
+TokTickIT Lab 3 - migration rehearsal (C-83), DRIFT CHECK
+Command: npx prisma migrate diff --from-schema-datasource prisma/schema.prisma \
+             --to-schema-datamodel prisma/schema.prisma --exit-code
+Against: toktickit_rehearsal, after migrate deploy
+Run: 2026-10-01 08:23:11Z UTC
+
+No difference detected.
+
+
+exit code: 0   (0 = no difference, 2 = drift)
