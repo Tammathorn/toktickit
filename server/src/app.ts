@@ -66,8 +66,8 @@ app.get("/api/related-systems", async (_req: Request, res: Response) => {
 //   -> 500 INTERNAL_ERROR envelope on failure, which drives the failure state
 app.get("/api/requesters", async (_req: Request, res: Response) => {
   try {
-    const requesters = await getPrisma().requesterUser.findMany({
-      where: { isActive: true },
+    const requesters = await getPrisma().user.findMany({
+      where: { role: "REQUESTER", isActive: true },
       orderBy: { id: "asc" },
       select: { id: true, name: true, email: true },
     });
