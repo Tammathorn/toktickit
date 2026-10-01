@@ -1,0 +1,46 @@
+TokTickIT Lab 3 - migration rehearsal (C-83), SEED ON MIGRATED DATA
+The seed is rehearsed on the migrated Lab 2 data before the dev database is
+touched, because C-72's guarded write - a password only where passwordHash
+IS NULL - can only be exercised against rows that came through the migration.
+Run: 2026-10-01 08:23:33Z UTC
+
+--- first seed run ---
+
+
+Seeded 4 categories, 7 related systems, 4 active and 1 inactive Requesters, 3 active and 1 inactive IT Staff, 1 Administrator, 1 first-login account, 9 tickets, 7 public comments and 4 internal notes.
+--- second seed run: idempotent (C-91) ---
+
+
+Seeded 4 categories, 7 related systems, 4 active and 1 inactive Requesters, 3 active and 1 inactive IT Staff, 1 Administrator, 1 first-login account, 9 tickets, 7 public comments and 4 internal notes.
+--- users after seeding: the five migrated Requesters keep their ids and tickets ---
+ id |           email           |     role      | isActive | has_password | mustChangePassword | tickets 
+----+---------------------------+---------------+----------+--------------+--------------------+---------
+  1 | anucha.p@example.ac.th    | REQUESTER     | t        | t            | f                  |      16
+  2 | kanya.s@example.ac.th     | REQUESTER     | t        | t            | f                  |       5
+  3 | nattapong.w@example.ac.th | REQUESTER     | t        | t            | f                  |       2
+  4 | siriporn.c@example.ac.th  | REQUESTER     | t        | t            | f                  |     271
+  5 | prasit.b@example.ac.th    | REQUESTER     | f        | t            | f                  |       1
+ 48 | araya.m@example.ac.th     | IT_STAFF      | t        | t            | f                  |       0
+ 49 | decha.i@example.ac.th     | IT_STAFF      | t        | t            | f                  |       0
+ 50 | fonthip.c@example.ac.th   | IT_STAFF      | t        | t            | f                  |       0
+ 51 | somkid.r@example.ac.th    | IT_STAFF      | f        | t            | f                  |       0
+ 52 | panida.s@example.ac.th    | ADMINISTRATOR | t        | t            | f                  |       0
+ 53 | first.login@example.ac.th | REQUESTER     | t        | t            | t                  |       0
+(11 rows)
+
+--- row counts after two seed runs ---
+  table_name   | count 
+---------------+-------
+ Attachment    |   368
+ InternalNote  |     4
+ PublicComment |     7
+ Ticket        |   295
+ User          |    11
+(5 rows)
+
+--- no password hash is ever stored in plaintext form (C-53 format only) ---
+ users_with_password | in_scrypt_format 
+---------------------+------------------
+                  11 |               11
+(1 row)
+
