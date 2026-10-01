@@ -37,8 +37,8 @@ function post(body: unknown) {
 
 beforeAll(async () => {
   await seedGraded(prisma);
-  const active = await prisma.requesterUser.findFirstOrThrow({ where: { isActive: true } });
-  const inactive = await prisma.requesterUser.findFirstOrThrow({ where: { isActive: false } });
+  const active = await prisma.user.findFirstOrThrow({ where: { role: "REQUESTER", isActive: true } });
+  const inactive = await prisma.user.findFirstOrThrow({ where: { role: "REQUESTER", isActive: false } });
   requesterId = active.id;
   inactiveRequesterId = inactive.id;
   categoryId = (await prisma.category.findFirstOrThrow({ where: { isActive: true } })).id;
@@ -85,11 +85,15 @@ describe("POST /api/tickets", () => {
     expect(a.body.ticketNumber).not.toBe(b.body.ticketNumber);
   });
 
-  it("API-03 applies the defaults: currentStatus NEW, itPriority null (AC-16)", async () => {
-    const res = await post(validBody());
+  // C-71 inverts this assertion: itPriority is no longer null but starts as a
+  // copy of Requested Priority, for a new Ticket exactly as for the Tickets the
+  // Lab 3 migration backfilled (AC-45).
+  it("API-03 applies the defaults: currentStatus NEW, itPriority copied from Requested Priority (AC-16, AC-45)", async () => {
+    const body = validBody();
+    const res = await post(body);
     expect(res.status).toBe(201);
     expect(res.body.currentStatus).toBe("NEW");
-    expect(res.body.itPriority).toBeNull();
+    expect(res.body.itPriority).toBe(body.requestedPriority);
   });
 
   it("API-04 rejects a 4-character and a 121-character Ticket Summary with the BR-31 message (AC-18)", async () => {

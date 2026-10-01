@@ -33,14 +33,28 @@ describe("DB-01 — the graded seed matches labsheet 5.3 (C-22)", () => {
     expect(systems.length).toBeGreaterThanOrEqual(6);
   });
 
-  it("seeds at least four active Development Requesters", async () => {
-    const active = await prisma.requesterUser.count({ where: { isActive: true } });
+  // C-91 � the seed now holds all three roles, so each count names its role
+  // rather than counting every User row.
+  it("seeds at least four active Requesters", async () => {
+    const active = await prisma.user.count({ where: { role: "REQUESTER", isActive: true } });
     expect(active).toBeGreaterThanOrEqual(4);
   });
 
-  it("seeds at least one inactive Development Requester (BR-11, C-33)", async () => {
-    const inactive = await prisma.requesterUser.count({ where: { isActive: false } });
+  it("seeds at least one inactive Requester (BR-11, C-33)", async () => {
+    const inactive = await prisma.user.count({ where: { role: "REQUESTER", isActive: false } });
     expect(inactive).toBeGreaterThanOrEqual(1);
+  });
+
+  it("seeds three active and one inactive IT Staff, and one active Administrator (LS 5.3)", async () => {
+    expect(
+      await prisma.user.count({ where: { role: "IT_STAFF", isActive: true } }),
+    ).toBeGreaterThanOrEqual(3);
+    expect(
+      await prisma.user.count({ where: { role: "IT_STAFF", isActive: false } }),
+    ).toBeGreaterThanOrEqual(1);
+    expect(
+      await prisma.user.count({ where: { role: "ADMINISTRATOR", isActive: true } }),
+    ).toBeGreaterThanOrEqual(1);
   });
 });
 
@@ -49,14 +63,20 @@ describe("DB-02 — the graded seed is idempotent (LS 5.3)", () => {
     const before = {
       categories: await prisma.category.count(),
       systems: await prisma.relatedSystem.count(),
-      requesters: await prisma.requesterUser.count(),
+      users: await prisma.user.count(),
+      tickets: await prisma.ticket.count(),
+      publicComments: await prisma.publicComment.count(),
+      internalNotes: await prisma.internalNote.count(),
     };
 
     await seedGraded(prisma);
 
     expect(await prisma.category.count()).toBe(before.categories);
     expect(await prisma.relatedSystem.count()).toBe(before.systems);
-    expect(await prisma.requesterUser.count()).toBe(before.requesters);
+    expect(await prisma.user.count()).toBe(before.users);
+    expect(await prisma.ticket.count()).toBe(before.tickets);
+    expect(await prisma.publicComment.count()).toBe(before.publicComments);
+    expect(await prisma.internalNote.count()).toBe(before.internalNotes);
   });
 });
 
@@ -87,11 +107,16 @@ describe("DB-04 — enums carry their full Lab 3 range (C-21, C-23)", () => {
        JOIN pg_type t ON t.oid = e.enumtypid
        WHERE t.typname = 'TicketStatus' ORDER BY e.enumsortorder`,
     );
+    // C-70 � three values were added by their own migration, each at its
+    // contract position, so the declared order is the Lab 3 one.
     expect(values.map((v) => v.enumlabel)).toEqual([
       "NEW",
+      "OPEN",
       "IN_PROGRESS",
+      "WAITING_FOR_REQUESTER",
       "RESOLVED",
       "CLOSED",
+      "REOPENED",
       "CANCELLED",
     ]);
   });
@@ -119,6 +144,11 @@ describe("DB-05 — every index in specification.md section 7 exists", () => {
     expect(has(`"requesterId", "categoryId"`)).toBe(true);
     expect(has(`"requesterId", "relatedSystemId"`)).toBe(true);
     expect(has(`"ticketId", "isRemoved"`)).toBe(true);
+
+    // The queue has no requester scope, so it gets its own status-led indexes.
+    expect(has(`"currentStatus", "itPriority", "createdAt"`)).toBe(true);
+    expect(has(`"currentStatus", "ownerId"`)).toBe(true);
+    expect(has(`"currentStatus", "categoryId"`)).toBe(true);
   });
 
   it("makes ticketNumber unique, which is the index C-30's search relies on", async () => {
@@ -143,7 +173,7 @@ describe("DB-05 — every index in specification.md section 7 exists", () => {
 
 describe("DB-06 — Ticket Number is assigned inside the creation transaction (C-49)", () => {
   it("returns a Ticket whose number is non-null and matches the pattern", async () => {
-    const requester = await prisma.requesterUser.findFirstOrThrow({
+    const requester = await prisma.user.findFirstOrThrow({
       where: { isActive: true },
     });
     const category = await prisma.category.findFirstOrThrow();
@@ -168,8 +198,8 @@ describe("DB-06 — Ticket Number is assigned inside the creation transaction (C
     await prisma.ticket.delete({ where: { id: ticket.id } });
   });
 
-  it("applies the Lab 2 defaults: status NEW and IT Priority null (BR-02, BR-07)", async () => {
-    const requester = await prisma.requesterUser.findFirstOrThrow({
+  it("applies the defaults: status NEW and IT Priority copied from Requested Priority (BR-02, C-71)", async () => {
+    const requester = await prisma.user.findFirstOrThrow({
       where: { isActive: true },
     });
     const category = await prisma.category.findFirstOrThrow();
@@ -186,7 +216,8 @@ describe("DB-06 — Ticket Number is assigned inside the creation transaction (C
     });
 
     expect(ticket.currentStatus).toBe("NEW");
-    expect(ticket.itPriority).toBeNull();
+    expect(ticket.itPriority).toBe("MEDIUM");
+    expect(ticket.itPriority).toBe(ticket.requestedPriority);
 
     await prisma.ticket.delete({ where: { id: ticket.id } });
   });
@@ -222,7 +253,7 @@ describe("DB-07 — ownership and soft-removal columns exist as section 7 specif
 });
 
 describe("DB-08 — the five LS 5.1 relationships are foreign keys", () => {
-  it("declares Ticket -> RequesterUser, Category, RelatedSystem and Attachment -> Ticket", async () => {
+  it("declares Ticket -> User, Category, RelatedSystem and Attachment -> Ticket", async () => {
     const rows = await prisma.$queryRawUnsafe<
       { table_name: string; foreign_table_name: string }[]
     >(
@@ -234,7 +265,8 @@ describe("DB-08 — the five LS 5.1 relationships are foreign keys", () => {
          AND tc.table_name IN ('Ticket', 'Attachment')`,
     );
     const pairs = rows.map((r) => `${r.table_name}->${r.foreign_table_name}`);
-    expect(pairs).toContain("Ticket->RequesterUser");
+    // C-67 renamed the table; C-68 kept the column name requesterId.
+    expect(pairs).toContain("Ticket->User");
     expect(pairs).toContain("Ticket->Category");
     expect(pairs).toContain("Ticket->RelatedSystem");
     expect(pairs).toContain("Attachment->Ticket");
