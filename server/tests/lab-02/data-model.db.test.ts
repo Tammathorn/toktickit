@@ -33,7 +33,7 @@ describe("DB-01 — the graded seed matches labsheet 5.3 (C-22)", () => {
     expect(systems.length).toBeGreaterThanOrEqual(6);
   });
 
-  // C-91 � the seed now holds all three roles, so each count names its role
+  // C-91 — the seed now holds all three roles, so each count names its role
   // rather than counting every User row.
   it("seeds at least four active Requesters", async () => {
     const active = await prisma.user.count({ where: { role: "REQUESTER", isActive: true } });
@@ -107,7 +107,7 @@ describe("DB-04 — enums carry their full Lab 3 range (C-21, C-23)", () => {
        JOIN pg_type t ON t.oid = e.enumtypid
        WHERE t.typname = 'TicketStatus' ORDER BY e.enumsortorder`,
     );
-    // C-70 � three values were added by their own migration, each at its
+    // C-70 — three values were added by their own migration, each at its
     // contract position, so the declared order is the Lab 3 one.
     expect(values.map((v) => v.enumlabel)).toEqual([
       "NEW",

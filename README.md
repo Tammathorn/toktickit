@@ -193,7 +193,7 @@ cd server
 npm run prisma:seed
 ```
 
-#### Seeded accounts — local development only
+#### Seeded accounts â€” local development only
 
 These passwords exist so that each role can be signed into on a local machine. They are
 **not** secrets, they are **not** anyone's real password, and nothing outside a local

@@ -427,11 +427,19 @@ describe("MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-9
   // 0. This is asserted over the seed FIXTURE rather than over the database,
   // because toktickit_test accumulates rows that tests create, while the
   // fixture is what a fresh dev database gets.
-  it("plans no Ticket for at least one active Requester persona, which is how the empty state is reached", async () => {
+  it("plans no Ticket for the THIRD active Requester persona, which is how the empty state is reached", async () => {
     const { REQUESTERS, SEED_TICKETS } = await import("../../src/seed/graded-seed.js");
     const withTickets = new Set(SEED_TICKETS.map((t) => t.requesterEmail));
+
+    // The Lab 2 spec reaches that Requester by ordinal position in the active
+    // list, so the identity matters and not merely the count: leaving a
+    // different persona empty would not save it.
+    const third = REQUESTERS.filter((r) => r.isActive)[2];
+    expect(third).toBeDefined();
+    expect(withTickets.has(third.email)).toBe(false);
+
     const withNone = REQUESTERS.filter((r) => r.isActive && !withTickets.has(r.email));
-    expect(withNone.map((r) => r.email)).toHaveLength(1);
+    expect(withNone.map((r) => r.email)).toEqual([third.email]);
   });
 });
 
