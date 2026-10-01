@@ -1,0 +1,162 @@
+TokTickIT Lab 3 - the DEV database, before and after its migration
+Database: toktickit (the development database)
+Safety copy: C:\Downloads\lab3-pre-migrate.dump, taken 2026-10-01
+            and verified with pg_restore -l (58 TOC entries, 6 TABLE DATA entries, exit 0)
+
+The dev database was migrated only after the C-83 rehearsal passed on
+toktickit_rehearsal - see rehearsal-summary.md.
+
+=============== BEFORE ===============
+--- applied migrations ---
+         migration_name          
+---------------------------------
+ 20260816153850_init
+ 20260908120000_lab02_data_model
+(2 rows)
+
+--- row counts ---
+  table_name   | count 
+---------------+-------
+ Attachment    |   368
+ Category      |     4
+ RelatedSystem |     7
+ RequesterUser |     5
+ Ticket        |   286
+(5 rows)
+
+--- tickets per requesterId ---
+ requesterId |           email           | tickets 
+-------------+---------------------------+---------
+           1 | anucha.p@example.ac.th    |      14
+           2 | kanya.s@example.ac.th     |       3
+           3 | nattapong.w@example.ac.th |       0
+           4 | siriporn.c@example.ac.th  |     269
+           5 | prasit.b@example.ac.th    |       0
+(5 rows)
+
+--- itPriority ---
+ tickets | it_priority_null 
+---------+------------------
+     286 |              286
+(1 row)
+
+
+=============== MIGRATE ===============
+Command: npx prisma migrate deploy   (never migrate dev, never migrate reset)
+Run: 2026-10-01 08:38:17Z UTC
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261001080726_lab03_ticket_status_values`
+Applying migration `20261001080813_lab03_user_rename_and_roles`
+Applying migration `20261001080916_lab03_ticket_workflow_fields`
+Applying migration `20261001080958_lab03_sessions_comments_notes`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261001080726_lab03_ticket_status_values/
+    └─ migration.sql
+  └─ 20261001080813_lab03_user_rename_and_roles/
+    └─ migration.sql
+  └─ 20261001080916_lab03_ticket_workflow_fields/
+    └─ migration.sql
+  └─ 20261001080958_lab03_sessions_comments_notes/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
+
+--- drift check ---
+Command: npx prisma migrate diff --from-schema-datasource prisma/schema.prisma \
+             --to-schema-datamodel prisma/schema.prisma --exit-code
+No difference detected.
+
+exit code: 0   (0 = no difference)
+
+=============== AFTER ===============
+--- applied migrations ---
+                migration_name                
+----------------------------------------------
+ 20260816153850_init
+ 20260908120000_lab02_data_model
+ 20261001080726_lab03_ticket_status_values
+ 20261001080813_lab03_user_rename_and_roles
+ 20261001080916_lab03_ticket_workflow_fields
+ 20261001080958_lab03_sessions_comments_notes
+(6 rows)
+
+--- row counts (RequesterUser is now User) ---
+  table_name   | count 
+---------------+-------
+ Attachment    |   368
+ Category      |     4
+ InternalNote  |     0
+ PublicComment |     0
+ RelatedSystem |     7
+ Session       |     0
+ Ticket        |   286
+ User          |     5
+(8 rows)
+
+--- tickets per requesterId ---
+ requesterId |           email           |   role    | tickets 
+-------------+---------------------------+-----------+---------
+           1 | anucha.p@example.ac.th    | REQUESTER |      14
+           2 | kanya.s@example.ac.th     | REQUESTER |       3
+           3 | nattapong.w@example.ac.th | REQUESTER |       0
+           4 | siriporn.c@example.ac.th  | REQUESTER |     269
+           5 | prasit.b@example.ac.th    | REQUESTER |       0
+(5 rows)
+
+--- itPriority after the backfill ---
+ tickets | it_priority_null | copied_from_requested 
+---------+------------------+-----------------------
+     286 |                0 |                   286
+(1 row)
+
+
+=============== SEED, RUN TWICE ===============
+Run: 2026-10-01 08:39:26Z UTC
+--- first run ---
+Seeded 4 categories, 7 related systems, 4 active and 1 inactive Requesters, 3 active and 1 inactive IT Staff, 1 Administrator, 1 first-login account, 9 tickets, 7 public comments and 4 internal notes.
+       t       | count 
+---------------+-------
+ Attachment    |   368
+ InternalNote  |     4
+ PublicComment |     7
+ Ticket        |   295
+ User          |    11
+(5 rows)
+
+--- second run ---
+Seeded 4 categories, 7 related systems, 4 active and 1 inactive Requesters, 3 active and 1 inactive IT Staff, 1 Administrator, 1 first-login account, 9 tickets, 7 public comments and 4 internal notes.
+       t       | count 
+---------------+-------
+ Attachment    |   368
+ InternalNote  |     4
+ PublicComment |     7
+ Ticket        |   295
+ User          |    11
+(5 rows)
+
+--- did any stored passwordHash change between the two runs? ---
+No. Every stored hash is byte-identical after the second run, so the guarded write reached nothing (C-72). Compared as a one-way digest over all hashes; no hash is printed or stored anywhere.
+--- per-user state after seeding (no hash shown, only whether one exists) ---
+ id |           email           |     role      | isActive | has_password | mustChangePassword | tickets 
+----+---------------------------+---------------+----------+--------------+--------------------+---------
+  1 | anucha.p@example.ac.th    | REQUESTER     | t        | t            | f                  |      16
+  2 | kanya.s@example.ac.th     | REQUESTER     | t        | t            | f                  |       6
+  3 | nattapong.w@example.ac.th | REQUESTER     | t        | t            | f                  |       0
+  4 | siriporn.c@example.ac.th  | REQUESTER     | t        | t            | f                  |     272
+  5 | prasit.b@example.ac.th    | REQUESTER     | f        | t            | f                  |       1
+ 48 | araya.m@example.ac.th     | IT_STAFF      | t        | t            | f                  |       0
+ 49 | decha.i@example.ac.th     | IT_STAFF      | t        | t            | f                  |       0
+ 50 | fonthip.c@example.ac.th   | IT_STAFF      | t        | t            | f                  |       0
+ 51 | somkid.r@example.ac.th    | IT_STAFF      | f        | t            | f                  |       0
+ 52 | panida.s@example.ac.th    | ADMINISTRATOR | t        | t            | f                  |       0
+ 53 | first.login@example.ac.th | REQUESTER     | t        | t            | t                  |       0
+(11 rows)
+
