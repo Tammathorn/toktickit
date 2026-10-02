@@ -138,6 +138,7 @@ server/tests/lab-03/   auth  authorization  staff-queue  staff-ticket-detail
 e2e/lab-03/            authentication  staff-ticket-flow  user-administration  (.spec.ts)
 artifacts/lab-03/      screenshots/{authentication,staff-queue,staff-ticket-detail,
                        user-management}/   migration/
+                       evidence.md  evidence/issue-<N>/  screenshots/github/
 docs/lab-03/           specification.md  api-spec.md  ui-spec.md  tests.md
                        decisions.md  reviewer.md  ai-use.md  handoff.md
 ```
@@ -228,6 +229,34 @@ answers without a session. Name tests so the terminal output reads as evidence, 
 Every acceptance criterion maps to at least one planned test, and every planned test names
 its actual file path. Write the tests first, run them, and capture the failing output before
 implementing. Evidence is passing terminal output, recorded in `docs/lab-03/tests.md`.
+
+## Evidence
+
+The PDF (labsheet section 14, Parts 1-9) is built from captured evidence, and most of it can
+only be captured while the state exists. These rules are owed on every Issue.
+
+- **`artifacts/lab-03/evidence.md` is the index.** It maps every Part 1-9 requirement to its
+  evidence file, the Issue that produces it, and a status: `captured`, `pending` or
+  `manual`. Every Issue updates it.
+- **A PR is not ready while one of its rows is pending.** Before opening an Issue's PR,
+  capture every row that Issue owns.
+- **UI states** are written by the Playwright specs in `e2e/lab-03/` under the names
+  `ui-spec.md` section 23 fixes, in its four `LS 12` folders. A screenshot section 23 does
+  not list follows the same pattern, `<folder>/<screen>-<viewport>-<state>.png`, and is noted
+  in `evidence.md`. `evidence.md` maps every file to its Part and row. Wait for transitions
+  to settle before capturing (the L2 focus-ring lesson). Desktop for state evidence;
+  desktop, tablet and mobile for Part 9.
+- **Terminal evidence** - red and green runs - is saved as text under
+  `artifacts/lab-03/evidence/issue-<N>/`, ANSI stripped, headed with the command, the date
+  and the commit hash.
+- **GitHub evidence** - PR conversations, approvals, merged-PR times, the commit graph and
+  the project board (public) - is captured with headless Playwright into
+  `artifacts/lab-03/screenshots/github/` when it happens, named by date and state. The
+  board is captured every time a card moves to PR Review, Fixing or Done.
+- **Every image comes from the real running app or the real GitHub page.** Never edit an
+  image, and never stage a state that did not happen.
+- **The final Part 6 and Part 9 sets are regenerated in Issue #44** on a freshly migrated
+  and seeded database.
 
 ## Git rules - working agreement
 
