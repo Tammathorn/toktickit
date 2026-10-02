@@ -21,7 +21,14 @@ marked **(extra)** is not in section 23 and follows its pattern,
 
 Issues: #37 contract, #38 migration, #39 authentication, #40 authorization and Requester
 regression, #41 IT Staff Ticket Queue, #42 IT Staff ticket operations, #43 user management,
-#44 E2E and visual evidence, #45 release.
+#44 E2E and visual evidence, #45 release. In `evidence/issue-<N>/`, N is the Lab 3 Issue index
+1 to 9 used in the branch names (`feature/lab3-N-slug`), not the GitHub number: Issue #39 writes
+to `evidence/issue-3/`.
+
+**Rows that only exist after a PR is opened or merged** - an approval, a merge time, a board
+move to Done, a rendered document on `main` - are owned by the Issue named in the row and are
+captured when the event happens. They are listed so they are not forgotten; they cannot be
+captured before the PR they depend on.
 
 **How failure and busy states are produced.** As in Lab 2, a Playwright spec produces a
 failure state by aborting the request in the browser (`route.abort("connectionrefused")`), so
@@ -38,12 +45,12 @@ response the API would have sent, and every such capture says so in its row.
 | P1-01 | Commit history: feature branches merged into `lab3-staging`, then `main` | GitHub capture, commit graph | `screenshots/github/<date>-commit-graph.png` | #45 | pending |
 | P1-02 | Final GitHub Project board with every Issue in Done | GitHub capture, board | `screenshots/github/<date>-board-all-done.png` | #45 | pending |
 | P1-03 | Board mid-sprint with cards in PR Review | GitHub capture, board | `screenshots/github/2026-10-02-board-pr-review.png` | #37, #38 | captured |
-| P1-04 | Board mid-sprint with a card in Fixing | GitHub capture, board | `screenshots/github/<date>-board-fixing.png` | the first Issue that moves to Fixing | pending |
+| P1-04 | Board mid-sprint with a card in Fixing. Captured by whichever Issue first moves to Fixing | GitHub capture, board | `screenshots/github/<date>-board-fixing.png` | #37 to #45 | pending |
 | P1-05 | Board each time a card moves to PR Review, Fixing or Done | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
 | P1-06 | Review thread while open: PR #46, the reviewer's comment and the author's reply | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr46-review-open.png` | #37 | captured |
 | P1-07 | PR #47 open, before review | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr47-open.png` | #38 | captured |
-| P1-08 | Approval on every Issue PR | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | manual - the reviewer approves; the capture follows |
-| P1-09 | Rendered `reviewer.md`: reviewer identity, PR links both ways, comments, responses, approvals | Rendered document | `docs/lab-03/reviewer.md` | #37 onward, completed in #45 | pending - waits for PAKATO's approval |
+| P1-08 | Approval on every Issue PR. The reviewer approves; the capture follows the approval | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | pending |
+| P1-09 | Rendered `reviewer.md`: reviewer identity, PR links both ways, comments, responses, approvals. Written once PAKATO approves #46 | Rendered document | `docs/lab-03/reviewer.md` | #37 onward, completed in #45 | pending |
 | P1-10 | README and `.gitignore` | Repository files, rendered | `README.md`, `.gitignore` | #45 | pending |
 | P1-11 | Repository directory structure | Terminal output | `evidence/issue-9/directory-tree.txt` | #45 | pending |
 
@@ -51,8 +58,8 @@ response the API would have sent, and every such capture says so in its row.
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P2-01 | Rendered `specification.md`: numbered FR, BR, authorization matrix, AC, migration decisions, Definition of Done | Rendered document | `docs/lab-03/specification.md` | #37 | pending - written; rendered capture after merge |
-| P2-02 | The specification existed before the main implementation PRs completed: merged-PR time of #46 | GitHub capture, merged PR | `screenshots/github/<date>-pr46-merged.png` | #37 | pending - #46 not yet approved |
+| P2-01 | Rendered `specification.md`: numbered FR, BR, authorization matrix, AC, migration decisions, Definition of Done. Written in #37; the rendered capture is taken on `main` | Rendered document | `docs/lab-03/specification.md` | #37, rendered in #45 | pending |
+| P2-02 | The specification existed before the main implementation PRs completed: the merge time of #46 set beside the later merge times of the implementation PRs, and the commit graph | GitHub capture, merged PRs and graph | `screenshots/github/<date>-pr46-merged.png`, `screenshots/github/<date>-pr<N>-merged.png`, `screenshots/github/<date>-commit-graph.png` | #37, completed in #45 | pending |
 
 ## Part 3 - Test DD and Traceability (10)
 
@@ -60,11 +67,12 @@ response the API would have sent, and every such capture says so in its row.
 |---|---|---|---|---|---|
 | P3-01 | Rendered `tests.md`: planned tests, AC traceability, real file paths, Final status | Rendered document | `docs/lab-03/tests.md` | #37, Final column in #45 | pending |
 | P3-02 | Every suite passing on `main`: unit, API, UI, authorization, regression, E2E | Terminal output | `evidence/issue-9/main-server.txt`, `main-client.txt`, `main-e2e.txt` | #45 | pending |
-| P3-03 | Migration red run, written first | Terminal output | `migration/red-run-migration-tests.txt` | #38 | captured |
+| P3-03 | Migration red run, written first. Captured before the header rule existed, so it carries no command/date/commit header | Terminal output | `migration/red-run-migration-tests.txt` | #38 | captured |
 | P3-04 | Migration rehearsal before and after counts, zero-drift diff | Terminal output | `migration/rehearsal-before.txt`, `rehearsal-deploy.txt`, `rehearsal-after.txt`, `rehearsal-drift.txt`, `rehearsal-seed.txt`, `rehearsal-summary.md` | #38 | captured |
 | P3-05 | Dev database before and after the migration | Terminal output | `migration/dev-before-counts.txt`, `migration/dev-after-counts.txt` | #38 | captured |
 | P3-06 | Authentication red run, then green | Terminal output | `evidence/issue-3/red-*.txt`, `evidence/issue-3/green-*.txt` | #39 | pending |
 | P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt` | #40 to #44 | pending |
+| P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-counts-before-after.txt` | #40 | pending |
 
 ## Part 4 - AI Use with Reflection (5)
 
@@ -83,7 +91,7 @@ response the API would have sent, and every such capture says so in its row.
 | P5-05 | Safe failure: the `INTERNAL_ERROR` banner with `Retry`. Network failure produced by `route.abort` | Playwright capture | `screenshots/authentication/login-desktop-failure.png` | #39 | pending |
 | P5-06 | Mandatory first-password change: the gate, the stated rules, a validation failure, success | Playwright capture | `screenshots/authentication/change-password-desktop-initial.png`, `change-password-desktop-validation.png`, `change-password-desktop-success.png` | #39 | pending |
 | P5-07 | Authenticated user's name and Role badge in the shell, Requester | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #39 | pending |
-| P5-08 | Name and Role badge in the shell, IT Staff and Administrator | Playwright capture | `screenshots/authentication/shell-desktop-it-staff.png`, `shell-desktop-administrator.png` | #40 - each role's landing screen arrives with role navigation | pending |
+| P5-08 | Name and Role badge in the shell, IT Staff and Administrator. Owned by #40 because the shell for those roles has nothing to frame until role navigation and per-role landing arrive there (handoff Issue 4) | Playwright capture | `screenshots/authentication/shell-desktop-it-staff.png`, `shell-desktop-administrator.png` | #40 | pending |
 | P5-09 | Logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-signed-out.png` **(extra)** | #39 | pending |
 | P5-10 | Direct URL blocked after logout | Playwright capture | `screenshots/authentication/logout-desktop-blocked-after.png` | #39 | pending |
 | P5-11 | Back button after logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-back-button.png` **(extra)** | #39 | pending |
@@ -121,7 +129,7 @@ and seeded database (`CLAUDE.md`).
 | P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | pending |
 | P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | pending |
 | P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | pending |
-| P7-11 | Role restrictions in the browser: a Requester refused the queue | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #40 builds the forbidden state, #41 the queue | pending |
+| P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | pending |
 | P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
 | P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
 | P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | pending |
@@ -150,6 +158,6 @@ and seeded database (`CLAUDE.md`).
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P9-01 | Rendered `ui-spec.md` | Rendered document | `docs/lab-03/ui-spec.md` | #37 | pending - written; rendered capture after merge |
+| P9-01 | Rendered `ui-spec.md`. Written in #37; the rendered capture is taken on `main` | Rendered document | `docs/lab-03/ui-spec.md` | #37, rendered in #45 | pending |
 | P9-02 | Desktop, tablet and mobile screenshots of every major Lab 3 screen | Playwright capture | every `ui-spec.md` section 23 file at all three `<vp>` | #44, on a freshly migrated and seeded database | pending |
 | P9-03 | The completed visual checklist: design consistency, role navigation, badges, editable and read-only fields, validation placement, focus, clipping, overlap, horizontal overflow | Checklist, measured in the browser | `docs/lab-03/tests.md` section 5 (VIS-01), against `ui-spec.md` section 24 | #44 | manual |
