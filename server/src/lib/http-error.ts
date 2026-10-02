@@ -17,6 +17,13 @@ export type ErrorCode =
   | "UNSUPPORTED_FILE_TYPE"
   | "ATTACHMENT_LIMIT_REACHED"
   | "REMOVAL_REASON_REQUIRED"
+  // Lab 3 authentication (api-spec.md 1.3).
+  | "AUTH_REQUIRED"
+  | "INVALID_CREDENTIALS"
+  | "ACCOUNT_INACTIVE"
+  | "PASSWORD_CHANGE_REQUIRED"
+  | "ORIGIN_NOT_ALLOWED"
+  | "CURRENT_PASSWORD_INCORRECT"
   | "INTERNAL_ERROR";
 
 export function sendError(
