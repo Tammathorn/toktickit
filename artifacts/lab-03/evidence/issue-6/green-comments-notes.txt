@@ -1,0 +1,63 @@
+Command: (cd server && npx vitest run tests/lab-03/comments-notes.api.test.ts tests/lab-03/authorization.api.test.ts --reporter=verbose)
+Date:    2026-10-04 20:00:12 +0700
+Commit:  a073388c47f1a51a68749b55fe02c6d1c11c5714 (feature/lab3-6-staff-ticket-ops)
+Tree:    clean - implementation committed
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+ ✓ tests/lab-03/comments-notes.api.test.ts > authorship > API-76 the owning Requester posts a comment: 201, author is the signed-in user, createdAt server-set, first in the list (AC-48, BR-65, FR-28)
+ ✓ tests/lab-03/comments-notes.api.test.ts > authorship > API-77 a body carrying authorId, author and createdAt is stored with the session's user and the server's clock (BR-65, FR-52)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-79 1 and 2000 characters succeed; empty, whitespace-only and 2001 are refused with no row created - on comments and on notes (AC-49, AC-50, BR-64)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-80 a 2000-character body padded with spaces is accepted and stored trimmed (BR-64)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-81 a body containing markup is stored and returned verbatim, unescaped and unaltered (AC-51)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-82 a multi-line body round-trips with its newlines intact (AC-52, BR-66)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-83 three entries posted in order come back newest first - comments and notes (BR-67)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-84 the owning Requester, IT Staff and Administrator each list and post Public Comments (BR-68, BR-04)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-85 IT Staff and Administrator each list and create Internal Notes with a server-set author and creation time (AC-53, FR-55)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-86 a note and a comment with identical bodies: each endpoint returns only its own (BR-69, C-73)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-87 no PATCH, PUT or DELETE route exists on either collection or on any single comment or note - from the router inventory (BR-63, FR-51)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-88 a Requester listing or posting a comment on another Requester's Ticket -> 404, no row created (BR-42)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-89 comment and note rows carry id, body, author { id, name, role } and createdAt - and no author email (api-spec.md 10.7)
+ ✓ tests/lab-03/comments-notes.api.test.ts > Closed and Cancelled Tickets > API-118 posting a comment or a note -> 409 TICKET_CLOSED with no row; listing stays 200; a non-owning Requester still gets 404 (AC-118, BR-108, C-109)
+
+ Test Files  2 passed (2)
+      Tests  40 passed (40)
+   Start at  20:00:13
+   Duration  7.10s (transform 192ms, setup 0ms, collect 706ms, tests 3.54s, environment 0ms, prepare 147ms)
+

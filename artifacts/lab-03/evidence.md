@@ -71,7 +71,7 @@ response the API would have sent, and every such capture says so in its row.
 | P3-04 | Migration rehearsal before and after counts, zero-drift diff | Terminal output | `migration/rehearsal-before.txt`, `rehearsal-deploy.txt`, `rehearsal-after.txt`, `rehearsal-drift.txt`, `rehearsal-seed.txt`, `rehearsal-summary.md` | #38 | captured |
 | P3-05 | Dev database before and after the migration | Terminal output | `migration/dev-before-counts.txt`, `migration/dev-after-counts.txt` | #38 | captured |
 | P3-06 | Authentication red run, then green. The server and client tests were committed and run red before the code existed; the E2E spec was written after the screens, so its evidence is the green run only | Terminal output | `evidence/issue-3/red-server-auth.txt`, `evidence/issue-3/red-client-auth.txt`, `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
-| P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt` | #40 to #44 | pending |
+| P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt`. #42 API half: `evidence/issue-6/red-staff-ticket-ops.txt`, `green-staff-ticket-detail.txt`, `green-comments-notes.txt`, `green-server.txt`, `green-client.txt`; its client red and green follow with the screen | #40 to #44 | pending |
 | P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-inventory-before.txt`, `evidence/issue-4/lab2-inventory-after.txt` | #40 | captured |
 
 ## Part 4 - AI Use with Reflection (5)
@@ -134,7 +134,7 @@ and seeded database (`CLAUDE.md`).
 | P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
 | P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
 | P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | captured |
-| P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` | #42 | pending |
+| P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` - SEC-04..SEC-07 and the comments-notes suite; the red run before the routes existed is `evidence/issue-6/red-staff-ticket-ops.txt` | #42 | captured |
 
 ## Part 8 - Working Administrator User Management UI (5)
 
