@@ -201,9 +201,12 @@ export default function StaffTicketQueue() {
     navigate(`/queue${toSearch({ ...state, ...patch })}`, { replace: true });
   }
 
+  // Drops sort too, not just search and the filters: an invalid sort is what
+  // the invalid-query panel's Clear filters most needs to escape, and there
+  // is no address this always returns to otherwise (audit finding #1).
   function clearFilters() {
     setSearchText("");
-    navigate(`/queue${state.sort ? `?sort=${encodeURIComponent(state.sort)}` : ""}`, { replace: true });
+    navigate("/queue", { replace: true });
   }
 
   const active = filtersActive(state);
@@ -350,7 +353,7 @@ export default function StaffTicketQueue() {
           </div>
         )}
 
-        {ready && ready.data.length === 0 && !active && (
+        {ready && ready.data.length === 0 && !active && ready.meta.total === 0 && (
           <div className="card tk-card tk-empty text-center">
             <DocumentIcon />
             <h2 className="tk-section-title">No tickets in the queue</h2>
@@ -358,7 +361,11 @@ export default function StaffTicketQueue() {
           </div>
         )}
 
-        {ready && ready.data.length === 0 && active && (
+        {/* A page past the last one (e.g. the queue shrank under a stale
+            `page`) is a no-results condition too, with Clear filters as the
+            way back - never the true Empty state, which offers no action
+            (audit finding #2). */}
+        {ready && ready.data.length === 0 && (active || ready.meta.total > 0) && (
           <div className="card tk-card tk-empty text-center">
             <MagnifierIcon />
             <h2 className="tk-section-title">No matches</h2>

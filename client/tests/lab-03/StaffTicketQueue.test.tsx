@@ -1,5 +1,5 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, within, waitFor } from "@testing-library/react";
+import { render, screen, within, waitFor, cleanup } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
@@ -129,7 +129,7 @@ describe("IT Staff Ticket Queue", () => {
   });
 
   it("UI-20 shows the empty state with no filter active, and the distinct no-matches state with a filter active (FR-41, AC-69)", async () => {
-    const fetchQueue = vi.spyOn(api, "fetchQueue").mockResolvedValue(page([]));
+    vi.spyOn(api, "fetchQueue").mockResolvedValue(page([]));
     renderQueue();
 
     expect(await screen.findByRole("heading", { name: "No tickets in the queue" })).toBeInTheDocument();
@@ -137,17 +137,30 @@ describe("IT Staff Ticket Queue", () => {
     expect(screen.queryByRole("heading", { name: "No matches" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Clear filters" })).not.toBeInTheDocument();
 
-    fetchQueue.mockResolvedValue(page([]));
+    cleanup();
+    vi.spyOn(api, "fetchQueue").mockResolvedValue(page([]));
     renderQueue("/queue?search=nothing-here");
-    const heading = await screen.findAllByRole("heading", { name: "No matches" });
-    expect(heading[heading.length - 1]).toBeInTheDocument();
-    expect(screen.getAllByText("No tickets match your search or filters.").length).toBeGreaterThan(0);
-    expect(screen.getAllByRole("button", { name: "Clear filters" }).length).toBeGreaterThan(0);
+    const heading = await screen.findByRole("heading", { name: "No matches" });
+    const panel = heading.closest(".tk-empty") as HTMLElement;
+    expect(within(panel).getByText("No tickets match your search or filters.")).toBeInTheDocument();
+    // the panel's own action, in addition to the toolbar's (active, since a
+    // search is set)
+    expect(within(panel).getByRole("button", { name: "Clear filters" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "No tickets in the queue" })).not.toBeInTheDocument();
+  });
+
+  it("a page past the last one shows No matches with Clear filters, not the Empty state (audit #2)", async () => {
+    vi.spyOn(api, "fetchQueue").mockResolvedValue(page([], { page: 5, total: 13, totalPages: 2 }));
+    renderQueue("/queue?page=5");
+
+    expect(await screen.findByRole("heading", { name: "No matches" })).toBeInTheDocument();
+    expect(screen.queryByRole("heading", { name: "No tickets in the queue" })).not.toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Clear filters" })).toBeInTheDocument();
   });
 
   it("UI-21 shows a loading skeleton with aria-busy, then a safe failure panel with Retry that keeps the toolbar (FR-41)", async () => {
     let release!: (value: api.QueuePage) => void;
-    const fetchQueue = vi.spyOn(api, "fetchQueue").mockImplementation(() => new Promise((resolve) => (release = resolve)));
+    vi.spyOn(api, "fetchQueue").mockImplementation(() => new Promise((resolve) => (release = resolve)));
     renderQueue();
 
     const region = await screen.findByRole("region", { name: "Ticket queue" });
@@ -156,30 +169,45 @@ describe("IT Staff Ticket Queue", () => {
     expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
     expect(screen.getByRole("region", { name: "Ticket queue" })).not.toHaveAttribute("aria-busy", "true");
 
+    // A fresh mount for the failure+retry phase, so Retry's own fetch is what
+    // the second findByText below proves - not a leftover row from above.
+    cleanup();
     const failing = vi.spyOn(api, "fetchQueue").mockRejectedValueOnce(new Error('relation "Ticket" at /var/lib/postgresql'));
     failing.mockResolvedValueOnce(page(ROWS));
     const user = userEvent.setup();
-    renderQueue("/queue?reload=1");
+    renderQueue();
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent(/Something went wrong/);
     expect(document.body.textContent).not.toMatch(/postgresql|relation|SELECT/i);
     expect(screen.getByLabelText("Search")).toBeInTheDocument();
+    expect(screen.queryByText("TKT-2026-000041")).not.toBeInTheDocument();
     await user.click(within(alert).getByRole("button", { name: "Retry" }));
-    expect(await screen.findAllByText("TKT-2026-000041")).not.toHaveLength(0);
-    void fetchQueue;
+    expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
+    expect(failing).toHaveBeenCalledTimes(2);
   });
 
   it("UI-22 an INVALID_QUERY_PARAM fields message renders beside its own control, and Clear filters replaces Retry (FR-42, AC-68)", async () => {
-    vi.spyOn(api, "fetchQueue").mockRejectedValue(new api.ApiError(400, "INVALID_QUERY_PARAM", "Some search or filter values are not valid.", { sort: "sort must be field:direction..." }));
+    const fetchQueue = vi
+      .spyOn(api, "fetchQueue")
+      .mockRejectedValue(new api.ApiError(400, "INVALID_QUERY_PARAM", "Some search or filter values are not valid.", { sort: "sort must be field:direction..." }));
+    const user = userEvent.setup();
     renderQueue("/queue?sort=bogus");
 
     const alert = await screen.findByRole("alert");
     expect(alert).toHaveTextContent(/not valid/);
     expect(within(alert).queryByRole("button", { name: "Retry" })).not.toBeInTheDocument();
-    expect(within(alert).getByRole("button", { name: "Clear filters" })).toBeInTheDocument();
     const sortSelect = screen.getByLabelText("Sort");
     expect(sortSelect).toHaveAttribute("aria-invalid", "true");
     expect(sortSelect.closest("div")).toHaveTextContent("sort must be field:direction...");
+
+    // Clear filters must actually escape the invalid address, not just be
+    // offered (audit #1): the bad `sort` itself is what made the request
+    // fail, so Clear filters has to drop it too, not only search/filters.
+    fetchQueue.mockResolvedValue(page(ROWS));
+    await user.click(within(alert).getByRole("button", { name: "Clear filters" }));
+    expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
+    expect(window.location.search).toBe("");
+    expect(fetchQueue).toHaveBeenLastCalledWith(expect.objectContaining({ sort: "" }));
   });
 
   it("UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37)", async () => {

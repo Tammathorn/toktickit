@@ -36,13 +36,29 @@ function one(raw: Raw, name: string): string | undefined {
   return v === undefined ? undefined : String(v);
 }
 
+// Capped at 9 digits (under 1e9): comfortably above any real id, page or
+// page count, and short enough that neither `Number()` nor a Postgres int4
+// column ever sees a value it can't hold - an unbounded \d+ let a huge
+// numeral (owner, categoryId, page...) reach the database and fail as 500
+// instead of the 400 INVALID_QUERY_PARAM BR-73 promises.
 function positiveInt(value: string): number | null {
-  return /^\d+$/.test(value) && Number(value) > 0 ? Number(value) : null;
+  return /^\d{1,9}$/.test(value) && Number(value) > 0 ? Number(value) : null;
 }
 
 function parseSearch(raw: Raw): string | null {
   const searchRaw = one(raw, "search");
-  return searchRaw && searchRaw.trim() !== "" ? searchRaw.trim() : null;
+  // A NUL byte is invalid in a Postgres text value and would otherwise reach
+  // the database as a 500; stripping it is no different from trimming.
+  const cleaned = searchRaw?.replace(/\u0000/g, "").trim();
+  return cleaned ? cleaned : null;
+}
+
+// Postgres's LIKE/ILIKE treats a backslash as its escape character by
+// default, so a literal %, _ or \ in search text must be escaped before it
+// reaches `contains`/`startsWith`, or it acts as a wildcard instead of
+// matching itself (BR-23, BR-71: substring and prefix match, not a pattern).
+export function escapeLikeWildcards(value: string): string {
+  return value.replace(/\\/g, "\\\\").replace(/%/g, "\\%").replace(/_/g, "\\_");
 }
 
 function parseIdParam(raw: Raw, name: string, fields: Fields): number | null {
@@ -140,9 +156,10 @@ export function listWhere(requesterId: number, q: ListQuery): Prisma.TicketWhere
   if (q.relatedSystemId !== null) where.relatedSystemId = q.relatedSystemId;
   if (q.currentStatus !== null) where.currentStatus = q.currentStatus;
   if (q.search !== null) {
+    const like = escapeLikeWildcards(q.search);
     where.OR = [
-      { ticketNumber: { startsWith: q.search, mode: "insensitive" } },
-      { summary: { contains: q.search, mode: "insensitive" } },
+      { ticketNumber: { startsWith: like, mode: "insensitive" } },
+      { summary: { contains: like, mode: "insensitive" } },
     ];
   }
   return where;
@@ -244,9 +261,10 @@ export function queueWhere(callerId: number, q: QueueQuery): Prisma.TicketWhereI
     else where.ownerId = q.owner.id;
   }
   if (q.search !== null) {
+    const like = escapeLikeWildcards(q.search);
     where.OR = [
-      { ticketNumber: { startsWith: q.search, mode: "insensitive" } },
-      { summary: { contains: q.search, mode: "insensitive" } },
+      { ticketNumber: { startsWith: like, mode: "insensitive" } },
+      { summary: { contains: like, mode: "insensitive" } },
     ];
   }
   return where;

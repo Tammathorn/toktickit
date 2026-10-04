@@ -310,6 +310,40 @@ describe("GET /api/staff/tickets", () => {
     expect(Object.keys(res.body.error.fields).sort()).toEqual(["itPriority", "pageSize", "sort"]);
   });
 
+  it("an owner value that is neither me, unassigned nor a positive integer gives 400 naming owner (BR-71, audit #3)", async () => {
+    for (const bad of ["bogus", "0", "-1", "3.5", "2147483648"]) {
+      const res = await queue(staffX.agent, { owner: bad });
+      expect(res.status, bad).toBe(400);
+      expect(res.body.error.code).toBe("INVALID_QUERY_PARAM");
+      expect(res.body.error.fields.owner).toEqual(expect.any(String));
+    }
+  });
+
+  it("an out-of-range categoryId or page gives 400, not a database error (BR-73, audit #3)", async () => {
+    for (const [param, bad] of [["categoryId", "99999999999"], ["page", "99999999999999999999"]] as const) {
+      const res = await queue(staffX.agent, { [param]: bad });
+      expect(res.status, `${param}=${bad}`).toBe(400);
+      expect(res.body.error.fields[param]).toEqual(expect.any(String));
+    }
+  });
+
+  it("% and _ in search match literally, not as SQL wildcards (BR-23, BR-71, audit #4)", async () => {
+    // "%" appears literally nowhere here; as an unescaped LIKE pattern it
+    // matches every row, so it would return the whole queue instead of
+    // nothing.
+    const percent = await queue(staffX.agent, { search: "%" });
+    expect(percent.status).toBe(200);
+    expect(percent.body.data).toEqual([]);
+
+    // "_" appears literally only in the two QSTATUS summaries embedding
+    // IN_PROGRESS and WAITING_FOR_REQUESTER. As an unescaped LIKE pattern a
+    // bare "_" matches any one character and so would return every row, not
+    // just those two.
+    const underscore = await queue(staffX.agent, { search: "_", pageSize: 50 });
+    expect(underscore.status).toBe(200);
+    expect(underscore.body.data.map((r: { currentStatus: string }) => r.currentStatus).sort()).toEqual(["IN_PROGRESS", "WAITING_FOR_REQUESTER"]);
+  });
+
   it("API-44 all eight TicketStatus values are accepted as a filter (BR-71, C-70)", async () => {
     for (const status of ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"]) {
       const res = await queue(staffX.agent, { search: "QSTATUS", currentStatus: status });
