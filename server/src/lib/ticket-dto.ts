@@ -52,8 +52,9 @@ export function toEntryDto(e: EntryRow) {
 export const ticketInclude = {
   requester: { select: { id: true, name: true } },
   // BR-100, C-95: the Requester sees who is handling their Ticket, by name
-  // only - never the owner's email address.
-  owner: { select: { name: true } },
+  // and activation state only - never the owner's email address. isActive
+  // feeds the ui-spec.md 14.1 "(inactive)" qualifier (C-114).
+  owner: { select: { name: true, isActive: true } },
   category: { select: { id: true, name: true } },
   relatedSystem: { select: { id: true, name: true } },
   attachments: attachmentSelect,
@@ -76,7 +77,7 @@ export function toTicketDto(t: TicketWithRelations) {
     requestedPriority: t.requestedPriority,
     itPriority: t.itPriority,
     currentStatus: t.currentStatus,
-    owner: t.owner ? { name: t.owner.name } : null,
+    owner: t.owner ? { name: t.owner.name, isActive: t.owner.isActive } : null,
     requesterResolvedAt: t.requesterResolvedAt,
     createdAt: t.createdAt,
     updatedAt: t.updatedAt,

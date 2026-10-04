@@ -119,11 +119,21 @@ export default function TicketDetail({ id }: { id: number }) {
           <div className="col-12 col-md-6 col-lg-4"><dt>Category</dt><dd className="tk-readonly-value">{t.category.name}</dd></div>
           <div className="col-12 col-md-6 col-lg-4"><dt>Related System</dt><dd className="tk-readonly-value">{t.relatedSystem.name}</dd></div>
           <div className="col-12 col-md-6 col-lg-4"><dt>Requested Priority</dt><dd className="tk-readonly-value">{titleCase(t.requestedPriority)}</dd></div>
-          {/* ui-spec 14.1: name only - the owner's email appears nowhere on
-              this screen (BR-100, C-95, AC-115). api-spec.md 10.2 carries no
-              isActive flag for this DTO, so the "(inactive)" qualifier of
-              section 8.5 cannot be rendered here from this response. */}
-          <div className="col-12 col-md-6 col-lg-4"><dt>Ticket Owner</dt><dd className="tk-readonly-value">{t.owner ? t.owner.name : "Unassigned"}</dd></div>
+          {/* ui-spec 14.1: name and activation state only - the owner's email
+              appears nowhere on this screen (BR-100, C-95, AC-115, C-114). */}
+          <div className="col-12 col-md-6 col-lg-4">
+            <dt>Ticket Owner</dt>
+            <dd className="tk-readonly-value">
+              {t.owner ? (
+                <>
+                  {t.owner.name}
+                  {!t.owner.isActive && <span className="tk-owner-inactive"> (inactive)</span>}
+                </>
+              ) : (
+                "Unassigned"
+              )}
+            </dd>
+          </div>
           <div className="col-12 col-md-6 col-lg-4"><dt>Last Updated</dt><dd className="tk-readonly-value">{formatDisplayTimestamp(t.updatedAt)}</dd></div>
           <div className="col-12"><dt>Ticket Summary</dt><dd className="tk-readonly-value">{t.summary}</dd></div>
           <div className="col-12"><dt>Description</dt><dd className="tk-readonly-value tk-prewrap">{t.description}</dd></div>

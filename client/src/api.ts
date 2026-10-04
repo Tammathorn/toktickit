@@ -224,7 +224,7 @@ export interface Ticket {
   itPriority: RequestedPriority;
   currentStatus: TicketStatus;
   // api-spec.md 10.2 - name only, never an email address (BR-100, C-95, AC-115).
-  owner: { name: string } | null;
+  owner: { name: string; isActive: boolean } | null;
   // The C-76 flag - a timestamp, never a status (BR-59).
   requesterResolvedAt: string | null;
   createdAt: string;
