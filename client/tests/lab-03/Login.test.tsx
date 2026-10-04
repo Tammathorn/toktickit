@@ -50,7 +50,8 @@ function renderAt(pathname = "/tickets") {
 
 async function fillAndSubmit(email: string, password: string) {
   const user = userEvent.setup();
-  if (email) await user.type(await screen.findByLabelText(/Email Address/), email);
+  await screen.findByRole("button", { name: "Sign In" });
+  if (email) await user.type(screen.getByLabelText(/Email Address/), email);
   if (password) await user.type(screen.getByLabelText(/^Password/), password);
   await user.click(screen.getByRole("button", { name: "Sign In" }));
   return user;
@@ -214,7 +215,8 @@ describe("the authenticated shell", () => {
     signedIn();
     renderAt();
     const header = await screen.findByRole("banner");
-    expect(within(header).getByText(REQUESTER.name)).toBeInTheDocument();
+    // The selector's own line also names the Requester until #40 removes it.
+    expect(within(header).getByText(REQUESTER.name, { selector: ".tk-identity-name" })).toBeInTheDocument();
     const badge = within(header).getByText("Requester", { selector: ".tk-badge-role" });
     expect(badge).toHaveClass("tk-badge-square");
     expect(within(header).getByRole("button", { name: "Log Out" })).toBeInTheDocument();
