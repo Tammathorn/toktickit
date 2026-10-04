@@ -71,15 +71,20 @@ describe("GET /api/tickets/:id", () => {
     expect(JSON.stringify(res.body)).not.toMatch(/TKT-|summary|description/);
   });
 
-  it("API-28 carries no comment, note, actions-taken or status-transition key, not even as null (AC-53)", async () => {
+  // Inverted in Lab 3 (tests.md 4.2, C-64, C-65): the Requester DTO now carries
+  // publicComments, the owner's name and the resolution flag (api-spec.md
+  // 10.2), and still carries no Internal Note key of any kind.
+  it("API-28 carries publicComments, owner and requesterResolvedAt, and no note, actions-taken or status-transition key, not even as null (AC-53, AC-47)", async () => {
     const res = await owner.agent.get(`/api/tickets/${ticketId}`);
     expect(res.status).toBe(200);
     const keys = Object.keys(res.body);
     expect(keys.sort()).toEqual(
       ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description",
-        "requestedPriority", "itPriority", "currentStatus", "createdAt", "updatedAt", "attachments"].sort(),
+        "requestedPriority", "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt",
+        "attachments", "publicComments"].sort(),
     );
-    for (const forbidden of ["comments", "publicComments", "internalNotes", "notes", "actionsTaken", "transitions", "statusHistory", "storedFilename"]) {
+    expect(Array.isArray(res.body.publicComments)).toBe(true);
+    for (const forbidden of ["comments", "internalNotes", "notes", "actionsTaken", "transitions", "statusHistory", "storedFilename"]) {
       expect(JSON.stringify(res.body)).not.toContain(`"${forbidden}"`);
     }
   });
