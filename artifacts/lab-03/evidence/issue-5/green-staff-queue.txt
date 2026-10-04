@@ -1,0 +1,58 @@
+Command: (cd server && npx vitest run tests/lab-03/staff-queue.api.test.ts tests/lab-03/authorization.api.test.ts --reporter=verbose)
+Date:    2026-10-04 17:37:02 +0700
+Commit:  3c4cd8d4eef6646b0c6c2ef67e2ea89326b3f646 (feature/lab3-5-staff-queue)
+Tree:    clean except the staged #41 changes this evidence covers
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-29 the default view excludes Closed and Cancelled, and orders IT Priority high to low then oldest first (AC-61, BR-72, FR-38)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-30 supplying currentStatus=CLOSED returns Closed tickets, proving the exclusion is a default and not permanent (BR-72)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-31 search by Ticket Number: an exact number returns exactly that Ticket, a shared prefix returns the group (AC-62, BR-71, FR-34)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-32 search by Ticket Summary: a case-insensitive substring matches, and Description is never searched (AC-62, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-33 owner filter unassigned: every returned Ticket has owner null (AC-63, BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-34 owner filter me: scoped to the calling staff user, and a different caller sees a different set (AC-64, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-35 owner filter by a named user id: every returned Ticket is owned by that user (BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-36 two filters together: currentStatus and itPriority combine conjunctively (AC-65, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-37 category filter: only Tickets in that category are returned (BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-38 all five sort fields, both directions, give the asserted order (AC-66, BR-71, FR-36)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-39 itPriority:desc gives HIGH, MEDIUM, LOW - declaration order, not alphabetical (BR-71, api-spec 8.1)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-40 page sizes 10, 25 and 50 give 200; 11 gives 400 naming pageSize (AC-67, BR-72)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-41 paging boundaries: a partial last page, and one page beyond returns an empty array with 200, not an error (BR-72, L2 C-43)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-42 an unknown sort field gives 400 INVALID_QUERY_PARAM naming sort, before any query reaches the database (AC-68, BR-73, FR-42)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-43 three bad parameters at once give three field entries, not one generic message (BR-73)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-44 all eight TicketStatus values are accepted as a filter (BR-71, C-70)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-45 a Ticket carrying requesterResolvedAt returns it non-null in its queue row (AC-60, BR-62, FR-40)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-46 a Ticket owned by a deactivated user returns owner.isActive false and keeps that owner (AC-75, BR-30, FR-46)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-47 the queue is not Requester-scoped: Tickets from more than one Requester appear together (BR-74, api-spec 10.4)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-48 the queue row carries exactly the api-spec 10.4 keys, and no requester key (api-spec 10.4, FR-39)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+
+ Test Files  2 passed (2)
+      Tests  35 passed (35)
+   Start at  17:37:06
+   Duration  16.32s (transform 426ms, setup 0ms, collect 1.64s, tests 7.68s, environment 1ms, prepare 395ms)
+

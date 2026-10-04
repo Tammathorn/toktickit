@@ -13,12 +13,12 @@ import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
 
 // Lab 3 security and authorization - tests.md section 2.3, the rows Issue #40
 // owns: SEC-01, SEC-02, SEC-08..SEC-10, SEC-14, SEC-15, SEC-19..SEC-22,
-// SEC-24 and SEC-25.
+// SEC-24 and SEC-25. SEC-03 (the queue) arrives here with its route in #41.
 //
-// The rest arrive with the routes they test: SEC-03 (the queue) in #41;
-// SEC-04..SEC-07, SEC-13, SEC-16..SEC-18, SEC-26 and SEC-27 (notes, staff
-// operations, the resolution flag, comments, assignable users) in #42; SEC-11
-// and SEC-23 (whose success path is GET /api/users) in #43.
+// The rest arrive with the routes they test: SEC-04..SEC-07, SEC-13,
+// SEC-16..SEC-18, SEC-26 and SEC-27 (notes, staff operations, the resolution
+// flag, comments, assignable users) in #42; SEC-11 and SEC-23 (whose success
+// path is GET /api/users) in #43.
 //
 // Every user, Ticket and Attachment here is created by this file and removed in
 // afterAll; the seeded accounts are never signed in as.
@@ -258,6 +258,15 @@ describe("role restrictions", () => {
     }
     expect(await prisma.attachment.count({ where: { ticketId: ticketA.id } })).toBe(2);
     expect((await prisma.attachment.findUniqueOrThrow({ where: { id: activeAttachment } })).isRemoved).toBe(false);
+  });
+
+  it("SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)", async () => {
+    const res = await a.agent.get("/api/staff/tickets");
+    expect(res.status).toBe(403);
+    expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", message: expect.any(String) } });
+    expect(res.body.data).toBeUndefined();
+    expect(res.body.meta).toBeUndefined();
+    expect(JSON.stringify(res.body)).not.toContain(ticketA.ticketNumber);
   });
 });
 
