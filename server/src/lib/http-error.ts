@@ -20,6 +20,14 @@ export type ErrorCode =
   | "ORIGIN_NOT_ALLOWED"
   | "FORBIDDEN_ROLE"
   | "CURRENT_PASSWORD_INCORRECT"
+  // Lab 3 staff ticket operations, comments and notes (api-spec.md 1.3, #42).
+  | "SAME_STATUS"
+  | "ALREADY_OWNED"
+  | "OWNER_REQUIRED"
+  | "TICKET_CLOSED"
+  | "INVALID_STATUS_TRANSITION"
+  | "RESOLUTION_NOT_PERMITTED_IN_STATUS"
+  | "ASSIGNEE_NOT_ELIGIBLE"
   | "INTERNAL_ERROR";
 
 export function sendError(
