@@ -1,4 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+// C-56 - same-origin via the Vite proxy. The fallback is "", not a
+// cross-origin default, because an unset VITE_API_URL must still mean "call
+// same-origin /api paths", not "fall back to a different host".
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export interface Category {
   id: number;

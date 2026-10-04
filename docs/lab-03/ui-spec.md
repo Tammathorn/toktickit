@@ -382,6 +382,11 @@ presence - not deleted (BR-95, `phase1-analysis.md` 2c).
 
 Never `Admin`, never `ITStaff`, never `staff` in UI text (C-92 glossary).
 
+**On the green header** (section 9), the outlined treatment above is replaced: the Role badge
+gets a white ground with primary-green (`--tk-primary`) text, for every role. The outline
+colours are tuned for a white or pale surface and do not hold contrast against the
+`--tk-primary` header ground itself.
+
 ### 8.5 Two markers using the same system
 
 | Marker | Condition | Treatment |
@@ -490,7 +495,8 @@ cannot exist is worse than no link (`specification.md` section 3 Excluded).
 The password is cleared on every failure and retained on none. It is the one field where
 retaining the value would be a hazard on a shared screen.
 
-**On success** the client fetches the current user and routes to the Change Password screen if
+**On success** the client takes its identity from the login response itself - it does not call
+`GET /api/auth/me` again for it (C-112) - and routes to the Change Password screen if
 `mustChangePassword` is true, otherwise to the role's landing screen (FR-18, section 9.1).
 
 ---
