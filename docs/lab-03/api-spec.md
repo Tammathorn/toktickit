@@ -205,7 +205,10 @@ Requester who does not own a terminal Ticket still receives 404 rather than 409 
 must not reveal that the Ticket exists. Because it precedes field validation, a malformed body
 on a terminal Ticket is 409 `TICKET_CLOSED`, not 400 - the caller does not learn their body
 would have failed validation until the Ticket itself is writable. Reads and downloads are not
-subject to it.
+subject to it. **One exception**: on `DELETE /api/attachments/:id`, an Attachment that is already
+soft-removed answers 410 `ATTACHMENT_REMOVED` ahead of the terminal-state check even when its
+Ticket is `CLOSED` or `CANCELLED` - the resource being gone is reported before the Ticket being
+write-locked, the same ordering `L2 C-44`/`L2 C-52` already gave `disposition` (C-109).
 
 The Lab 2 ordering that resolved a client-supplied caller before the addressed resource
 (`L2 C-45`) has no Lab 3 counterpart: there is no client-supplied caller to resolve.
