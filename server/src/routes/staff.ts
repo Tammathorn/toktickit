@@ -82,9 +82,9 @@ staffRouter.get(
 // C-65). Staff are not ownership-scoped: any active staff user may act on any
 // Ticket (BR-96, C-93), so 404 on these routes means genuine absence.
 //
-// Within step 7 every write applies the same order: a malformed body is 400,
-// then a Closed or Cancelled Ticket is 409 TICKET_CLOSED (BR-108, C-109), then
-// the operation's own refusals (409 or 422, C-100). Each write is one
+// Within step 7 every write applies the same order: a Closed or Cancelled
+// Ticket is 409 TICKET_CLOSED first (BR-108, C-109), then a malformed body is
+// 400, then the operation's own refusals (409 or 422, C-100). Each write is one
 // conditional UPDATE whose WHERE clause restates the rule it relies on, so a
 // concurrent change cannot slip between the check and the write: two claims
 // cannot both win, and an unassign and a move into a worked status cannot
@@ -101,7 +101,7 @@ function readBody(req: Request): Record<string, unknown> {
 async function loadStaffTicket(req: Request, res: Response) {
   const id = parsePathId(req.params.id);
   if (id === null) {
-    sendError(res, 400, "VALIDATION_FAILED", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
+    sendError(res, 400, "INVALID_QUERY_PARAM", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
     return null;
   }
   const ticket = await getPrisma().ticket.findUnique({ where: { id }, select: { id: true, ownerId: true, currentStatus: true } });
@@ -184,14 +184,14 @@ staffRouter.patch("/api/staff/tickets/:id/owner", ...staffOnly, async (req: Requ
   try {
     const ticket = await loadStaffTicket(req, res);
     if (!ticket) return;
+    if (isTerminal(ticket.currentStatus)) {
+      sendTicketClosed(res);
+      return;
+    }
     const body = readBody(req);
     const ownerId = body.ownerId;
     if (!("ownerId" in body) || (ownerId !== null && !isPositiveInt(ownerId))) {
       sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { ownerId: MESSAGES.ownerId });
-      return;
-    }
-    if (isTerminal(ticket.currentStatus)) {
-      sendTicketClosed(res);
       return;
     }
 
@@ -242,13 +242,13 @@ staffRouter.patch("/api/staff/tickets/:id/it-priority", ...staffOnly, async (req
   try {
     const ticket = await loadStaffTicket(req, res);
     if (!ticket) return;
+    if (isTerminal(ticket.currentStatus)) {
+      sendTicketClosed(res);
+      return;
+    }
     const itPriority = readBody(req).itPriority;
     if (!PRIORITIES.includes(itPriority as RequestedPriority)) {
       sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { itPriority: MESSAGES.itPriority });
-      return;
-    }
-    if (isTerminal(ticket.currentStatus)) {
-      sendTicketClosed(res);
       return;
     }
     const { count } = await prisma.ticket.updateMany({

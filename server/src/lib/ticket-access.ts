@@ -34,7 +34,7 @@ export function sendTicketClosed(res: Response): void {
 export async function loadVisibleTicket(req: Request, res: Response): Promise<VisibleTicket | null> {
   const id = parsePathId(req.params.id);
   if (id === null) {
-    sendError(res, 400, "VALIDATION_FAILED", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
+    sendError(res, 400, "INVALID_QUERY_PARAM", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
     return null;
   }
   const ticket = await getPrisma().ticket.findUnique({

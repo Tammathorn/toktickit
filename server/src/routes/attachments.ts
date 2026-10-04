@@ -109,10 +109,12 @@ attachmentsRouter.get(
 // api-spec.md 5.4. The owning Requester only; staff are refused 403 by the
 // role step (C-103). Nothing is deleted: the row is marked removed with the
 // timestamp and the trimmed reason, and the file stays on disk (L2 BR-46,
-// L2 BR-47). The body is validated last (BR-86): a missing key is malformed
-// (400); an empty-after-trim reason violates L2 BR-47 (422). A Closed or
-// Cancelled Ticket refuses the removal 409 TICKET_CLOSED, after ownership so a
-// non-owner still gets 404, and nothing is modified (BR-108, C-109).
+// L2 BR-47). A Closed or Cancelled Ticket refuses the removal 409
+// TICKET_CLOSED, after ownership so a non-owner still gets 404, and ahead of
+// the body: a missing key is still 409, not 400 (BR-108, C-109). Once past
+// that, the body is validated: a missing key is malformed (400); an
+// empty-after-trim reason violates L2 BR-47 (422). Nothing is modified unless
+// the removal itself proceeds.
 // ---------------------------------------------------------------------------
 attachmentsRouter.delete("/api/attachments/:id", ...requesterOnly, async (req: Request, res: Response) => {
   const body: Record<string, unknown> = req.body && typeof req.body === "object" ? req.body : {};
@@ -124,12 +126,12 @@ attachmentsRouter.delete("/api/attachments/:id", ...requesterOnly, async (req: R
       sendError(res, 410, "ATTACHMENT_REMOVED", "That attachment was already removed.");
       return;
     }
-    if (body.removalReason === undefined || typeof body.removalReason !== "string") {
-      sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { removalReason: MESSAGES.removalReason });
-      return;
-    }
     if (isTerminal(row.ticket.currentStatus)) {
       sendTicketClosed(res);
+      return;
+    }
+    if (body.removalReason === undefined || typeof body.removalReason !== "string") {
+      sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { removalReason: MESSAGES.removalReason });
       return;
     }
     const reason = trimmed(body.removalReason);

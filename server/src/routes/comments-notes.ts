@@ -25,8 +25,9 @@ import { isTerminal } from "../lib/status-transitions.js";
 // clock; any author or timestamp in the body is ignored (BR-65). The text is
 // trimmed and must then be 1 to 2000 characters (BR-64). It is stored exactly
 // as typed - escaping on render is the control, so nothing is sanitised here
-// (BR-66). Field validation is 400; a Closed or Cancelled Ticket then refuses
-// the write 409 TICKET_CLOSED, after ownership so a non-owner still gets 404
+// (BR-66). A Closed or Cancelled Ticket refuses the write 409 TICKET_CLOSED
+// first, after ownership so a non-owner still gets 404, and ahead of field
+// validation - a malformed body on a terminal Ticket is still 409, not 400
 // (BR-108, C-109).
 
 export const commentsNotesRouter = Router();
@@ -58,13 +59,13 @@ commentsNotesRouter.post("/api/tickets/:id/public-comments", ...anyRole, async (
   try {
     const ticket = await loadVisibleTicket(req, res);
     if (!ticket) return;
+    if (isTerminal(ticket.currentStatus)) {
+      sendTicketClosed(res);
+      return;
+    }
     const body = validEntryBody(req);
     if (body === null) {
       sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { body: MESSAGES.commentBody });
-      return;
-    }
-    if (isTerminal(ticket.currentStatus)) {
-      sendTicketClosed(res);
       return;
     }
     const row = await getPrisma().publicComment.create({
@@ -95,13 +96,13 @@ commentsNotesRouter.post("/api/tickets/:id/internal-notes", ...staffOnly, async 
   try {
     const ticket = await loadVisibleTicket(req, res);
     if (!ticket) return;
+    if (isTerminal(ticket.currentStatus)) {
+      sendTicketClosed(res);
+      return;
+    }
     const body = validEntryBody(req);
     if (body === null) {
       sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { body: MESSAGES.noteBody });
-      return;
-    }
-    if (isTerminal(ticket.currentStatus)) {
-      sendTicketClosed(res);
       return;
     }
     const row = await getPrisma().internalNote.create({
