@@ -347,3 +347,71 @@ export async function removeAttachment(id: number, removalReason: string): Promi
   if (!res.ok) throw await toApiError(res);
   return res.json();
 }
+
+// ---------------------------------------------------------------------------
+// The Ticket Queue (api-spec.md 8.1). IT Staff and Administrator only; not
+// scoped to any Requester (BR-74), so the row carries no requester key.
+// ---------------------------------------------------------------------------
+
+export interface QueueOwner {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
+// api-spec.md 10.4 - exactly the nine FR-39 columns plus the two markers.
+export interface QueueRow {
+  id: number;
+  ticketNumber: string;
+  summary: string;
+  category: Category;
+  requestedPriority: RequestedPriority;
+  itPriority: RequestedPriority;
+  currentStatus: TicketStatus;
+  owner: QueueOwner | null;
+  requesterResolvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface QueuePage {
+  data: QueueRow[];
+  meta: TicketListMeta;
+}
+
+// The C-78 query, as strings straight from the address bar. Empty values are
+// not sent, so the BR-72 server defaults apply.
+export interface QueueListQuery {
+  search?: string;
+  currentStatus?: string;
+  itPriority?: string;
+  /** "me", "unassigned", or a user id as a string. */
+  owner?: string;
+  categoryId?: string;
+  sort?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export function fetchQueue(query: QueueListQuery): Promise<QueuePage> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== "") params.set(key, String(value));
+  }
+  return getJson(`/api/staff/tickets?${params.toString()}`);
+}
+
+// GET /api/staff/assignable-users (api-spec.md 8.7, C-105) - active IT Staff
+// and Administrator users, for the Ticket Owner filter's named-user options.
+// Not yet implemented server-side (that lands with #42's staff routes), so a
+// failure here is swallowed and the filter falls back to its three static
+// options rather than showing an error for a toolbar control.
+export interface AssignableUser {
+  id: number;
+  name: string;
+  role: UserRole;
+}
+
+export async function fetchAssignableUsers(): Promise<AssignableUser[]> {
+  return getJson("/api/staff/assignable-users");
+}

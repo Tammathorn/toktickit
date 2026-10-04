@@ -6,7 +6,7 @@ import type { UserRole } from "../api.js";
 // (BR-36, FR-10). The guard is feedback; the server's 403 is the control
 // (BR-40).
 
-export type Destination = "myTickets" | "createTicket" | "ticketDetail" | "queue" | "users";
+export type Destination = "myTickets" | "createTicket" | "ticketDetail" | "queue" | "staffTicketDetail" | "users";
 
 export const LANDING: Record<UserRole, string> = {
   REQUESTER: "/tickets",
@@ -25,6 +25,7 @@ const ALLOWED: Record<Destination, readonly UserRole[]> = {
   createTicket: ["REQUESTER"],
   ticketDetail: ["REQUESTER"],
   queue: ["IT_STAFF", "ADMINISTRATOR"],
+  staffTicketDetail: ["IT_STAFF", "ADMINISTRATOR"],
   users: ["ADMINISTRATOR"],
 };
 
