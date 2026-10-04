@@ -61,6 +61,17 @@ function renderList(path = "/tickets", requesterId = 1) {
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
+  // Lab 3 (#39): <App /> now asks who is signed in before any screen renders.
+  // Adapted to sign in and nothing else (CLAUDE.md); #40 replaces this line
+  // with the AuthContext test wrapper tests.md section 4.2 plans.
+  vi.spyOn(api, "fetchCurrentUser").mockResolvedValue({
+    id: 1,
+    name: "Anucha Prasert",
+    email: "anucha.p@example.ac.th",
+    role: "REQUESTER",
+    isActive: true,
+    mustChangePassword: false,
+  });
   mockBase();
 });
 afterEach(() => vi.restoreAllMocks());
