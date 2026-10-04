@@ -613,6 +613,21 @@ describe("Closed and Cancelled Tickets refuse writes", () => {
     expect((await setOwner(staffX.agent, open.id, {})).status).toBe(400);
     expect((await setPriority(staffX.agent, open.id, "URGENT")).status).toBe(400);
   });
+
+  it("API-122 an already-removed Attachment on a Closed or Cancelled Ticket stays 410 ATTACHMENT_REMOVED, not 409 TICKET_CLOSED: the resource being gone precedes the ticket being write-locked (C-109, L2 C-52)", async () => {
+    for (const status of TERMINAL) {
+      const t = await ticket({ currentStatus: "OPEN" });
+      const up = await reqA.agent.post(`/api/tickets/${t.id}/attachments`).attach("file", PNG, "removed.png");
+      expect(up.status).toBe(201);
+      const removed = await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({ removalReason: "no longer needed" });
+      expect(removed.status).toBe(200);
+      await setTicket(t.id, { currentStatus: status });
+
+      const res = await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({});
+      expect(res.status, status).toBe(410);
+      expect(res.body.error.code, status).toBe("ATTACHMENT_REMOVED");
+    }
+  });
 });
 
 // ---------------------------------------------------------------------------
