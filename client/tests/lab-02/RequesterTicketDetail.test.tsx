@@ -82,7 +82,7 @@ describe("Requester Ticket Detail", () => {
   });
 
   it("ui-spec 14.1 renders a Ticket Owner row, Unassigned when there is none (BR-100)", async () => {
-    vi.spyOn(api, "fetchTicket").mockResolvedValue({ ...TICKET, owner: { name: "Araya Methee" } });
+    vi.spyOn(api, "fetchTicket").mockResolvedValue({ ...TICKET, owner: { name: "Araya Methee", isActive: true } });
     await renderDetail();
     const info = screen.getByRole("region", { name: "Ticket information" });
     expect(within(info).getByText("Ticket Owner")).toBeInTheDocument();
@@ -94,6 +94,14 @@ describe("Requester Ticket Detail", () => {
     vi.spyOn(api, "fetchTicket").mockResolvedValue({ ...TICKET, owner: null });
     await renderDetail();
     expect(within(screen.getByRole("region", { name: "Ticket information" })).getByText("Unassigned")).toBeInTheDocument();
+  });
+
+  it("ui-spec 14.1 / C-114 marks a deactivated owner (inactive), without saying why", async () => {
+    vi.spyOn(api, "fetchTicket").mockResolvedValue({ ...TICKET, owner: { name: "Siriporn Chai", isActive: false } });
+    await renderDetail();
+    const info = screen.getByRole("region", { name: "Ticket information" });
+    expect(within(info).getByText("Siriporn Chai")).toBeInTheDocument();
+    expect(within(info).getByText("(inactive)")).toBeInTheDocument();
   });
 
   it("ui-spec 14.2 lists Public Comments newest first, with an empty state and a composer with a live counter (BR-67, FR-53)", async () => {

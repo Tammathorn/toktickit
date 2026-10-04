@@ -454,7 +454,7 @@ describe("POST /api/tickets/:id/requester-resolved", () => {
       expect(res.body.requesterResolvedAt).toBe(stored.requesterResolvedAt!.toISOString());
       // The Requester DTO, never the staff one (api-spec.md 10.2).
       expect(res.body).not.toHaveProperty("internalNotes");
-      expect(res.body.owner).toEqual({ name: staffX.name });
+      expect(res.body.owner).toEqual({ name: staffX.name, isActive: true });
       // No automatic Public Comment (BR-61).
       expect(await prisma.publicComment.count({ where: { ticketId: t.id } })).toBe(0);
     }
