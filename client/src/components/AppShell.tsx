@@ -1,9 +1,14 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Link, useRouter } from "../router.js";
 import { useRequester } from "../requester/RequesterContext.js";
+import { useAuth, useCurrentUser } from "../auth/AuthContext.js";
+import { RoleBadge } from "./Badge.js";
 
-// Application shell — ui-spec.md section 9. Rendered only once a valid
-// Development Requester is selected (BR-15, FR-10); App decides that.
+// Application shell — ui-spec.md section 9. Rendered only for a signed-in user
+// with no outstanding password change, and - until #40 removes the selector -
+// once a valid Development Requester is selected (BR-15, FR-10); App decides
+// that. Lab 3 (#39) adds the signed-in user's name, Role badge and Log Out
+// (FR-09); the Development Requester block beside them goes in #40.
 //
 // Desktop and tablet: one primary-green header bar with the wordmark, the two
 // nav items, the selected Requester's name and Change Requester (FR-07, FR-08).
@@ -20,6 +25,9 @@ const FOCUSABLE = 'a[href], button:not([disabled])';
 export default function AppShell({ children }: { children: ReactNode }) {
   const { path } = useRouter();
   const { selected, clearSelection } = useRequester();
+  const user = useCurrentUser();
+  const { signOut } = useAuth();
+  const [signingOut, setSigningOut] = useState(false);
   const [open, setOpen] = useState(false);
   const panelRef = useRef<HTMLDivElement>(null);
   const togglerRef = useRef<HTMLButtonElement>(null);
@@ -33,6 +41,17 @@ export default function AppShell({ children }: { children: ReactNode }) {
       panelRef.current?.querySelector<HTMLElement>(FOCUSABLE)?.focus();
     }
   }, [open]);
+
+  // A failed logout leaves the person signed in, with the button back, rather
+  // than pretending the session ended (BR-23).
+  async function handleSignOut() {
+    setSigningOut(true);
+    try {
+      await signOut();
+    } catch {
+      setSigningOut(false);
+    }
+  }
 
   function closePanel() {
     setOpen(false);
@@ -107,6 +126,19 @@ export default function AppShell({ children }: { children: ReactNode }) {
                   );
                 })}
               </ul>
+
+              <div className="tk-identity tk-identity-shell">
+                <span className="tk-identity-name">{user.name}</span>
+                <RoleBadge value={user.role} />
+                <button
+                  type="button"
+                  className="btn tk-btn-tertiary tk-btn-on-primary"
+                  disabled={signingOut}
+                  onClick={handleSignOut}
+                >
+                  Log Out
+                </button>
+              </div>
 
               <div className="tk-requester">
                 <span className="tk-requester-name">

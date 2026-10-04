@@ -43,16 +43,96 @@ export class ApiError extends Error {
   }
 }
 
+// Lab 3, BR-34 - any 401 AUTH_REQUIRED means the session is gone, whichever
+// screen's request met it. AuthContext subscribes here and swaps the screen for
+// Login. Only AUTH_REQUIRED counts: a 401 INVALID_CREDENTIALS from login is a
+// wrong password, not a lost session.
+type SessionLostListener = () => void;
+const sessionLostListeners = new Set<SessionLostListener>();
+
+export function onSessionLost(listener: SessionLostListener): () => void {
+  sessionLostListeners.add(listener);
+  return () => sessionLostListeners.delete(listener);
+}
+
+function reportIfSessionLost(error: ApiError): ApiError {
+  if (error.status === 401 && error.code === "AUTH_REQUIRED") sessionLostListeners.forEach((listener) => listener());
+  return error;
+}
+
 async function toApiError(res: Response): Promise<ApiError> {
   try {
     const body = await res.json();
     if (body?.error?.code) {
-      return new ApiError(res.status, body.error.code, body.error.message, body.error.fields);
+      return reportIfSessionLost(new ApiError(res.status, body.error.code, body.error.message, body.error.fields));
     }
   } catch {
     // non-JSON body: fall through to the generic error
   }
   return new ApiError(res.status, "INTERNAL_ERROR", "Request failed");
+}
+
+// A fetch that never rejects with a bare TypeError: a network failure becomes
+// the same INTERNAL_ERROR a 500 does, so a screen has one failure state to show.
+async function send(path: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(`${API_URL}${path}`, init);
+  } catch {
+    throw new ApiError(0, "INTERNAL_ERROR", "Network error");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Lab 3 authentication (api-spec.md 2.4, 3.1-3.3). The session lives in the
+// HttpOnly tt_session cookie, which script cannot read; the client learns who
+// it is only from these responses and keeps that in memory (FR-11, BR-25).
+// ---------------------------------------------------------------------------
+
+export type UserRole = "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR";
+
+// api-spec.md 10.1 - exactly the six keys the server returns.
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  mustChangePassword: boolean;
+}
+
+const JSON_HEADERS = { "Content-Type": "application/json" };
+
+export async function login(email: string, password: string): Promise<AuthUser> {
+  const res = await send("/api/auth/login", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ email, password }) });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+// null when there is no valid session: at start-up that is the normal
+// signed-out case, not a lost session, so it raises no session-ended notice.
+export async function fetchCurrentUser(): Promise<AuthUser | null> {
+  const res = await send("/api/auth/me");
+  if (res.status === 401) return null;
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+// 204, or 401 when the session had already ended - either way it is over.
+export async function logout(): Promise<void> {
+  const res = await send("/api/auth/logout", { method: "POST" });
+  if (!res.ok && res.status !== 401) throw await toApiError(res);
+}
+
+export interface PasswordChange {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export async function changePassword(input: PasswordChange): Promise<AuthUser> {
+  const res = await send("/api/auth/change-password", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify(input) });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
 }
 
 async function getJson<T>(path: string): Promise<T> {
@@ -184,7 +264,7 @@ export function uploadAttachment(
         return;
       }
       const error = (body as { error?: { code?: string; message?: string; fields?: Record<string, string> } } | null)?.error;
-      reject(new ApiError(xhr.status, error?.code ?? "INTERNAL_ERROR", error?.message ?? "Request failed", error?.fields));
+      reject(reportIfSessionLost(new ApiError(xhr.status, error?.code ?? "INTERNAL_ERROR", error?.message ?? "Request failed", error?.fields)));
     };
     xhr.send(form);
   });
