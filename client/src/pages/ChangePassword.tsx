@@ -80,7 +80,11 @@ export default function ChangePassword() {
         // A field refusal from the server renders at its field (BR-87, C-106).
         // A wrong current password clears only that field; the session is
         // fine, so the person stays here (C-106).
-        setErrors((apiError.fields ?? {}) as Partial<Record<Field, string>>);
+        const fields = (apiError.fields ?? {}) as Partial<Record<Field, string>>;
+        if (apiError.code === "CURRENT_PASSWORD_INCORRECT" && !fields.currentPassword) {
+          fields.currentPassword = AUTH_MESSAGES.currentIncorrect;
+        }
+        setErrors(fields);
         if (apiError.code === "CURRENT_PASSWORD_INCORRECT") {
           setValues((v) => ({ ...v, currentPassword: "" }));
           setFocusTarget("currentPassword");
@@ -127,14 +131,14 @@ export default function ChangePassword() {
           aria-describedby={describedBy(field, helpId)}
           onChange={(e) => setValues((v) => ({ ...v, [field]: e.target.value }))}
         />
-        {field === "newPassword" && (
-          <div id="cp-newPassword-rule" className="tk-muted mt-1">
-            {AUTH_MESSAGES.policy}
-          </div>
-        )}
         {errors[field] && (
           <div id={`cp-${field}-error`} className="tk-invalid-feedback">
             {errors[field]}
+          </div>
+        )}
+        {field === "newPassword" && (
+          <div id="cp-newPassword-rule" className="tk-muted mt-1">
+            {AUTH_MESSAGES.policy}
           </div>
         )}
       </div>
@@ -154,7 +158,7 @@ export default function ChangePassword() {
           <p>You must choose a new password before you can continue.</p>
 
           {changed && (
-            <div className="tk-panel tk-panel-pale tk-panel-success" aria-live="polite">
+            <div className="tk-panel tk-panel-pale tk-panel-success" role="status" aria-live="polite">
               <p>
                 <svg className="tk-success-icon" viewBox="0 0 16 16" width="16" height="16" aria-hidden="true" focusable="false">
                   <path d="M13.5 4.5 6.5 11.5 2.5 7.5" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />

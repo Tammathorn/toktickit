@@ -134,7 +134,7 @@ describe("Login", () => {
     expect(password).toHaveValue("");
     expect(password).toHaveFocus();
     expect(email).not.toHaveAttribute("aria-invalid", "true");
-    expect(email.getAttribute("aria-describedby") ?? "").not.toContain(banner.closest("[id]")?.id ?? "none");
+    expect(email).not.toHaveAttribute("aria-describedby");
     // Above the fields: the banner precedes the email control in document order.
     expect(banner.compareDocumentPosition(email) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy();
   });

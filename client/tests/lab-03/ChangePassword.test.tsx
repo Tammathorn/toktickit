@@ -114,6 +114,8 @@ describe("Change Password", () => {
       expect(message, candidate).toHaveTextContent(MSG.policy);
       expect(next()).toHaveAttribute("aria-invalid", "true");
       expect(next().parentElement).toContainElement(message);
+      // Directly below its own control - before the standing rule text.
+      expect(next().nextElementSibling).toBe(message);
       expect(next()).toHaveFocus();
       cleanup();
     }

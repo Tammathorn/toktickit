@@ -86,7 +86,7 @@ export default function Login({ sessionEnded = false }: { sessionEnded?: boolean
           {shown && (
             <div
               className={`tk-panel ${shown.className}`}
-              role="alert"
+              role={banner === "failure" ? "alert" : "status"}
               aria-live={banner === "failure" ? "assertive" : "polite"}
             >
               <p>{shown.text}</p>
