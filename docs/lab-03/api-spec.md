@@ -125,7 +125,7 @@ Every code the API can emit. A code absent from this table is a defect.
 | `code` | Status | Raised when |
 |---|---|---|
 | `VALIDATION_FAILED` | 400 | A body field fails a rule; `fields` names each one |
-| `INVALID_QUERY_PARAM` | 400 | A query parameter is unparseable or out of set; `fields` names each one (BR-73) |
+| `INVALID_QUERY_PARAM` | 400 | A query parameter is unparseable or out of set (BR-73), **or a path parameter is not a positive integer** (C-113); `fields` names each one |
 | `SAME_STATUS` | 400 | A status change targets the status the Ticket already holds (BR-56, C-77) |
 | `AUTH_REQUIRED` | 401 | No valid session. One body for every cause (section 1.1) |
 | `INVALID_CREDENTIALS` | 401 | Login with an unknown email, a wrong password, or a NULL `passwordHash`. One body for all three (BR-07, BR-17) |
@@ -173,11 +173,13 @@ per route.
 2. **Password-change gate** - `mustChangePassword` set, and the route is not current-user,
    change-password or logout -> 403 `PASSWORD_CHANGE_REQUIRED` (BR-19, C-99).
 3. **Role** - the caller's role may never perform this operation -> 403 `FORBIDDEN_ROLE`.
-4. **Parse parameters** - a path or query parameter is malformed -> 400.
+4. **Parse parameters** - a path or query parameter is malformed -> 400 `INVALID_QUERY_PARAM`
+   (C-113).
 5. **Load the resource** - absent -> 404.
 6. **Ownership** - the resource exists but is not this caller's -> 404 (C-65).
-7. **Body validation** - a field rule fails -> 400; a business refusal -> 409 or 422 per
-   C-100.
+7. **Body validation** - checked in this order: the terminal-state lock first (a `CLOSED` or
+   `CANCELLED` Ticket -> 409 `TICKET_CLOSED`, C-109), then a field rule (-> 400), then the
+   operation's own business refusal (-> 409 or 422 per C-100).
 
 The `Origin` check of section 1.6 runs ahead of step 1 on state-changing methods, because a
 cross-origin write must be refused before it can touch a session at all.
@@ -196,11 +198,14 @@ Four orderings carry consequences and are deliberate:
 - **Step 7 is last.** An unauthenticated or unauthorized caller never learns whether their
   body would have been accepted (BR-86).
 
-**The terminal-state check runs at step 7**, with the other business refusals, and applies to
-every write on a Ticket: a `CLOSED` or `CANCELLED` Ticket is read-only for every role (BR-108,
-C-109). It follows ownership, so a Requester who does not own a terminal Ticket still receives
-404 rather than 409 - the write-lock must not reveal that the Ticket exists. Reads and downloads
-are not subject to it.
+**The terminal-state check is the first check within step 7**, ahead of field validation and the
+operation's own business refusal, and applies to every write on a Ticket: a `CLOSED` or
+`CANCELLED` Ticket is read-only for every role (BR-108, C-109). It follows ownership, so a
+Requester who does not own a terminal Ticket still receives 404 rather than 409 - the write-lock
+must not reveal that the Ticket exists. Because it precedes field validation, a malformed body
+on a terminal Ticket is 409 `TICKET_CLOSED`, not 400 - the caller does not learn their body
+would have failed validation until the Ticket itself is writable. Reads and downloads are not
+subject to it.
 
 The Lab 2 ordering that resolved a client-supplied caller before the addressed resource
 (`L2 C-45`) has no Lab 3 counterpart: there is no client-supplied caller to resolve.
