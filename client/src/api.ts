@@ -47,16 +47,28 @@ export class ApiError extends Error {
 // screen's request met it. AuthContext subscribes here and swaps the screen for
 // Login. Only AUTH_REQUIRED counts: a 401 INVALID_CREDENTIALS from login is a
 // wrong password, not a lost session.
-type SessionLostListener = () => void;
-const sessionLostListeners = new Set<SessionLostListener>();
+//
+// A 403 PASSWORD_CHANGE_REQUIRED from any request means a change is owed - an
+// Administrator set a new initial password behind this session, say. It has no
+// banner (ui-spec 6.2): AuthContext re-reads the user and the gate shows
+// Change Password instead.
+type Listener = () => void;
+const sessionLostListeners = new Set<Listener>();
+const passwordChangeListeners = new Set<Listener>();
 
-export function onSessionLost(listener: SessionLostListener): () => void {
+export function onSessionLost(listener: Listener): () => void {
   sessionLostListeners.add(listener);
   return () => sessionLostListeners.delete(listener);
 }
 
+export function onPasswordChangeRequired(listener: Listener): () => void {
+  passwordChangeListeners.add(listener);
+  return () => passwordChangeListeners.delete(listener);
+}
+
 function reportIfSessionLost(error: ApiError): ApiError {
   if (error.status === 401 && error.code === "AUTH_REQUIRED") sessionLostListeners.forEach((listener) => listener());
+  if (error.status === 403 && error.code === "PASSWORD_CHANGE_REQUIRED") passwordChangeListeners.forEach((listener) => listener());
   return error;
 }
 

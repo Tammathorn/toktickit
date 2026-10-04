@@ -13,6 +13,7 @@ import { Link, useRouter } from "../router.js";
 import { formatDisplayTimestamp } from "../format.js";
 import { messageForCode } from "../validation.js";
 import { PriorityBadge, StatusBadge } from "../components/Badge.js";
+import Forbidden from "../components/Forbidden.js";
 import { useMediaQuery, MD_AND_UP } from "../useMediaQuery.js";
 
 // My Tickets - ui-spec.md section 12, LS 8.4.
@@ -97,6 +98,7 @@ type LoadState =
   | { kind: "loading" }
   | { kind: "ready"; page: TicketListPage }
   | { kind: "invalid-query" }
+  | { kind: "forbidden" }
   | { kind: "error" };
 
 export default function MyTickets() {
@@ -147,6 +149,8 @@ export default function MyTickets() {
       (err) => {
         if (cancelled) return;
         if (err instanceof ApiError && err.code === "INVALID_QUERY_PARAM") setLoad({ kind: "invalid-query" });
+        // ui-spec 20.1: a 403 is the Forbidden state, decided by the status.
+        else if (err instanceof ApiError && err.code === "FORBIDDEN_ROLE") setLoad({ kind: "forbidden" });
         else setLoad({ kind: "error" });
       },
     );
@@ -178,6 +182,8 @@ export default function MyTickets() {
   const ready = load.kind === "ready" ? load.page : null;
   const first = ready && ready.meta.total > 0 ? (ready.meta.page - 1) * ready.meta.pageSize + 1 : 0;
   const last = ready ? Math.min(ready.meta.page * ready.meta.pageSize, ready.meta.total) : 0;
+
+  if (load.kind === "forbidden") return <Forbidden />;
 
   return (
     <section aria-labelledby="my-tickets-title">

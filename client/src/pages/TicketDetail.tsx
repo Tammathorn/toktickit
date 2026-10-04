@@ -5,6 +5,7 @@ import { formatDisplayTimestamp } from "../format.js";
 import { messageForCode } from "../validation.js";
 import { PriorityBadge, StatusBadge, titleCase } from "../components/Badge.js";
 import AttachmentSection from "../components/AttachmentSection.js";
+import Forbidden from "../components/Forbidden.js";
 
 // Requester Ticket Detail - ui-spec.md section 13. Two clearly separated
 // cards: Card 1 is the read-only Ticket information (BR-61, AC-53) and Card 2
@@ -15,6 +16,7 @@ type LoadState =
   | { kind: "loading" }
   | { kind: "ready"; ticket: Ticket }
   | { kind: "refused"; message: string }
+  | { kind: "forbidden" }
   | { kind: "error" };
 
 export default function TicketDetail({ id }: { id: number }) {
@@ -30,10 +32,14 @@ export default function TicketDetail({ id }: { id: number }) {
       },
       (err) => {
         if (cancelled) return;
-        // 403 TICKET_FORBIDDEN and 404 TICKET_NOT_FOUND are refusals with their
-        // own 6.1 message (BR-21, C-13); anything else is the safe failure.
-        if (err instanceof ApiError && (err.status === 403 || err.status === 404)) {
+        // ui-spec 20.1: the status decides. 404 is Not found - a missing
+        // Ticket and another Requester's are the same answer (C-65); 403
+        // FORBIDDEN_ROLE is the Forbidden state; anything else is the safe
+        // failure. PASSWORD_CHANGE_REQUIRED is handled by AuthContext.
+        if (err instanceof ApiError && err.status === 404) {
           setLoad({ kind: "refused", message: messageForCode(err.code) });
+        } else if (err instanceof ApiError && err.code === "FORBIDDEN_ROLE") {
+          setLoad({ kind: "forbidden" });
         } else {
           setLoad({ kind: "error" });
         }
@@ -55,6 +61,8 @@ export default function TicketDetail({ id }: { id: number }) {
       </section>
     );
   }
+
+  if (load.kind === "forbidden") return <Forbidden />;
 
   if (load.kind === "refused" || load.kind === "error") {
     return (
