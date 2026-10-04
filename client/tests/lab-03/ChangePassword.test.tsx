@@ -5,7 +5,6 @@ import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
 
 // tests.md section 2.9 UI-09..UI-15 and section 2.10 STYLE-09, STYLE-10
 // (Issue #39). Reached through <App /> as a signed-in user whose
@@ -64,7 +63,6 @@ function messageFor(input: HTMLElement): HTMLElement | null {
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue([{ id: GATED.id, name: GATED.name, email: GATED.email }]);
   vi.spyOn(api, "fetchCategories").mockResolvedValue([]);
   vi.spyOn(api, "fetchRelatedSystems").mockResolvedValue([]);
   vi.spyOn(api, "fetchTickets").mockResolvedValue({
@@ -123,7 +121,6 @@ describe("Change Password", () => {
   });
 
   it("UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18)", async () => {
-    window.localStorage.setItem(STORAGE_KEY, String(GATED.id));
     const change = vi.spyOn(api, "changePassword").mockResolvedValue({ ...GATED, mustChangePassword: false });
     renderGated();
     await submit({ current: CURRENT, next: NEXT, confirm: NEXT });
