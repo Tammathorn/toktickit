@@ -140,7 +140,7 @@ test file, and section 2.8 says so explicitly rather than counting them as autom
 
 | Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
 |---|---|---|---|---|---|---|
-| UNIT-01 | Unit | BR-11, C-53 | scrypt hash format | `hashPassword()` returns `scrypt$N$r$p$salt$hash`, five `$`-separated parts, salt 16 bytes as 32 hex characters | `server/tests/lab-03/auth.api.test.ts` | |
+| UNIT-01 | Unit | BR-11, C-53 | scrypt hash format | `hashPassword()` returns `scrypt$N$r$p$salt$hash`, six `$`-separated parts, salt 16 bytes as 32 hex characters | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-02 | Unit | BR-11 | Per-user salt | The same plaintext hashed twice yields two different stored strings, and both verify | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-03 | Unit | BR-11 | Verification is correct and constant-time | `verifyPassword()` is true for the right password, false for a wrong one, and uses `timingSafeEqual` rather than `===` | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-04 | Unit | BR-17, C-72 | NULL hash never authenticates | `verifyPassword(null, anything)` is false and throws nothing | `server/tests/lab-03/auth.api.test.ts` | |
