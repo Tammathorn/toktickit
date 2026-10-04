@@ -37,9 +37,12 @@ const CREATED = {
   requestedPriority: "MEDIUM" as const,
   itPriority: "MEDIUM" as const,
   currentStatus: "NEW" as const,
+  owner: null,
+  requesterResolvedAt: null,
   createdAt: "2026-09-05T04:12:33.000Z",
   updatedAt: "2026-09-05T04:12:33.041Z",
   attachments: [],
+  publicComments: [],
 };
 
 function mockReferenceData() {

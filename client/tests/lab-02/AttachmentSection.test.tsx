@@ -36,9 +36,12 @@ function ticket(attachments: api.AttachmentMeta[]): api.Ticket {
     requestedPriority: "MEDIUM",
     itPriority: "MEDIUM",
     currentStatus: "NEW",
+    owner: null,
+    requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T05:02:44.000Z",
     attachments,
+    publicComments: [],
   };
 }
 
@@ -197,8 +200,11 @@ describe("Attachment section", () => {
     expect(within(row).getByRole("button", { name: "Download battery-report.pdf" })).toHaveClass("tk-btn-tertiary");
     expect(within(row).getByRole("button", { name: "Remove battery-report.pdf" })).toHaveClass("btn-danger");
     expect(screen.getByRole("link", { name: "Back to My Tickets" })).toHaveClass("btn-secondary");
-    // no primary action on the detail: it is read-only apart from the attachment lifecycle
-    expect(document.querySelectorAll("main .btn-primary")).toHaveLength(0);
+    // the attachment lifecycle itself stays read-only apart from Remove - no
+    // primary action inside this card. ui-spec 14.2 (Lab 3, #42) now gives
+    // the screen one primary action overall, Post Comment, so the Lab 2
+    // "no primary button on the detail" assertion is narrowed to this card.
+    expect(screen.getByRole("region", { name: /^Attachments/ }).querySelectorAll(".btn-primary")).toHaveLength(0);
   });
 
   it("downloads an active attachment through the API and reports it (AC-30)", async () => {

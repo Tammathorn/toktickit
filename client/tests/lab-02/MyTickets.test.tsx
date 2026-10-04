@@ -31,6 +31,7 @@ function row(id: number, summary: string, extra: Partial<api.TicketListRow> = {}
     relatedSystem: SYSTEMS[0],
     requestedPriority: "MEDIUM",
     currentStatus: "NEW",
+    requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T04:12:33.041Z",
     ...extra,
@@ -172,6 +173,8 @@ describe("My Tickets", () => {
       ...A_ROWS[1],
         requester: { id: 1, name: "Anucha Prasert" },
       description: "The VPN session drops on the hour, every hour.",
+      owner: null,
+      publicComments: [],
       attachments: [],
     });
     const user = userEvent.setup();
