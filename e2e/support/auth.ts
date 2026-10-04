@@ -1,19 +1,47 @@
 import fs from "node:fs";
 import path from "node:path";
-import { expect, type Page } from "@playwright/test";
+import { expect, request as playwrightRequest, type APIRequestContext, type Page } from "@playwright/test";
+import { API_URL } from "../../playwright.config";
 import { FIRST_LOGIN_ACCOUNT, SEED_PASSWORDS } from "../../server/src/seed/graded-seed";
 import { hashPassword } from "../../server/src/lib/password";
 import { getPrisma } from "../../server/src/prisma";
 
-// Sign-in helpers for the Playwright specs (Lab 3, #39). The passwords are the
-// seed's own constants, imported rather than copied, so a spec can never drift
-// from what the seed wrote (README, "Seeded accounts - local development only").
+// Sign-in helpers for the Playwright specs (Lab 3, #39, #40). The passwords are
+// the seed's own constants, imported rather than copied, so a spec can never
+// drift from what the seed wrote (README, "Seeded accounts - local development
+// only"). E2E reuses these fixed accounts (C-83).
 
 export type Account = { email: string; password: string };
 
-export const REQUESTER: Account = { email: "anucha.p@example.ac.th", password: SEED_PASSWORDS.requester };
-export const INACTIVE_REQUESTER: Account = { email: "prasit.b@example.ac.th", password: SEED_PASSWORDS.requester };
+const requester = (email: string): Account => ({ email, password: SEED_PASSWORDS.requester });
+
+// The demo seed's three Requesters, read and never written by the specs:
+// A holds 14 Tickets, B 3, C none (Part 7's fixture, tests.md section 6).
+export const REQUESTER_A = requester("anucha.p@example.ac.th");
+export const REQUESTER_B = requester("kanya.s@example.ac.th");
+export const REQUESTER_C = requester("nattapong.w@example.ac.th");
+
+// The dedicated E2E Requester: every Ticket and Attachment a spec creates is
+// created as this account, which the demo seed never touches, so A, B and C's
+// counts never drift. It is the fourth persona - Lab 2 reached it as "the last
+// active Requester", which since the Lab 3 seed would be the first-login
+// account. That account is never used for data (#40).
+export const E2E_REQUESTER = requester("siriporn.c@example.ac.th");
+
+export const REQUESTER = REQUESTER_A;
+export const INACTIVE_REQUESTER = requester("prasit.b@example.ac.th");
+export const IT_STAFF: Account = { email: "araya.m@example.ac.th", password: SEED_PASSWORDS.itStaff };
+export const ADMINISTRATOR: Account = { email: "panida.s@example.ac.th", password: SEED_PASSWORDS.administrator };
 export const FIRST_LOGIN: Account = { email: FIRST_LOGIN_ACCOUNT.email, password: FIRST_LOGIN_ACCOUNT.password };
+
+// One storageState per role, written by e2e/auth.setup.ts before the viewport
+// projects run (tests.md section 1.2). e2e/.auth/ is gitignored.
+export const AUTH_DIR = path.resolve(__dirname, "../.auth");
+export const STATE = {
+  requester: path.join(AUTH_DIR, "requester.json"),
+  itStaff: path.join(AUTH_DIR, "it-staff.json"),
+  administrator: path.join(AUTH_DIR, "administrator.json"),
+};
 
 // Signs the page's browser context in through the API - the same request the
 // Login screen sends - so the tt_session cookie lands in the context's jar and
@@ -21,6 +49,16 @@ export const FIRST_LOGIN: Account = { email: FIRST_LOGIN_ACCOUNT.email, password
 export async function signIn(page: Page, account: Account = REQUESTER): Promise<void> {
   const res = await page.request.post("/api/auth/login", { data: account });
   expect(res.status(), `sign in as ${account.email}`).toBe(200);
+}
+
+// A request context of its own, signed in as `account`, straight against the
+// API: what a direct API call by that user returns (the "direct request"
+// evidence the Lab 2 and Lab 3 specs assert). Dispose it when done.
+export async function apiAs(account: Account): Promise<APIRequestContext> {
+  const context = await playwrightRequest.newContext({ baseURL: API_URL });
+  const res = await context.post("/api/auth/login", { data: account });
+  expect(res.status(), `API sign-in as ${account.email}`).toBe(200);
+  return context;
 }
 
 // ---------------------------------------------------------------------------

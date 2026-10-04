@@ -29,16 +29,22 @@ export default defineConfig({
     trace: "on-first-retry",
   },
   projects: [
+    // Lab 3 (#40): signs in once per role and writes e2e/.auth/<role>.json
+    // (tests.md section 1.2). Every viewport project depends on it.
+    { name: "setup", testMatch: /auth\.setup\.ts$/ },
     {
       name: "desktop",
+      dependencies: ["setup"],
       use: { ...devices["Desktop Chrome"], viewport: { width: 1280, height: 800 } },
     },
     {
       name: "tablet",
+      dependencies: ["setup"],
       use: { ...devices["Desktop Chrome"], viewport: { width: 834, height: 1112 } },
     },
     {
       name: "mobile",
+      dependencies: ["setup"],
       use: {
         ...devices["Desktop Chrome"],
         viewport: { width: 390, height: 844 },
