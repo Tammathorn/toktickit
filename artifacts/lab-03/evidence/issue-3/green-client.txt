@@ -1,0 +1,47 @@
+Command: (cd client && npx vitest run)
+Date:    2026-10-04 16:19:30 +0700
+Commit:  f1ce0031e16a8ba1a32ad3e1d5a60d2b5703f582 (feature/lab3-3-authentication)
+Tree:    clean
+----------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (3 tests) 320ms
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (5 tests) 629ms
+   ✓ Requester Ticket Detail > UI-24 renders the Ticket information read-only with no comment, note, action or status control (AC-53) 340ms
+ ✓ tests/lab-02/RequesterSelection.test.tsx (10 tests) 943ms
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 2004ms
+   ✓ My Tickets > UI-21 shows a loading state until the list request settles (AC-52) 318ms
+   ✓ My Tickets > UI-10 clears A's rows and fetches B's on a Requester switch (AC-11, BR-14) 406ms
+   ✓ My Tickets > debounces the search box into the request and resets to page 1 438ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 2684ms
+   ✓ Attachment section > UI-26 adds a permitted file to the active group without leaving the screen (AC-32) 458ms
+   ✓ Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1540ms
+ ✓ tests/lab-03/Login.test.tsx (13 tests) 4517ms
+   ✓ Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 843ms
+   ✓ Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 791ms
+   ✓ Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 647ms
+   ✓ Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 794ms
+   ✓ Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 790ms
+ ✓ tests/lab-03/ChangePassword.test.tsx (9 tests) 11175ms
+   ✓ Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 940ms
+   ✓ Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3480ms
+   ✓ Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2441ms
+   ✓ Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1185ms
+   ✓ Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 408ms
+   ✓ Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2362ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 12072ms
+   ✓ Create Ticket > UI-11 populates Category and Related System from the API and nothing else (AC-13) 366ms
+   ✓ Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 843ms
+   ✓ Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2423ms
+   ✓ Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 2049ms
+   ✓ Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2051ms
+   ✓ Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 2079ms
+   ✓ Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1919ms
+
+ Test Files  8 passed (8)
+      Tests  70 passed (70)
+   Start at  16:19:34
+   Duration  16.06s (transform 1.01s, setup 2.32s, collect 7.46s, tests 34.34s, environment 13.73s, prepare 2.92s)
+
+Exit code: 0

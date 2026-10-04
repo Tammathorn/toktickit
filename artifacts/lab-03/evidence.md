@@ -70,7 +70,7 @@ response the API would have sent, and every such capture says so in its row.
 | P3-03 | Migration red run, written first. Captured before the header rule existed, so it carries no command/date/commit header | Terminal output | `migration/red-run-migration-tests.txt` | #38 | captured |
 | P3-04 | Migration rehearsal before and after counts, zero-drift diff | Terminal output | `migration/rehearsal-before.txt`, `rehearsal-deploy.txt`, `rehearsal-after.txt`, `rehearsal-drift.txt`, `rehearsal-seed.txt`, `rehearsal-summary.md` | #38 | captured |
 | P3-05 | Dev database before and after the migration | Terminal output | `migration/dev-before-counts.txt`, `migration/dev-after-counts.txt` | #38 | captured |
-| P3-06 | Authentication red run, then green | Terminal output | `evidence/issue-3/red-*.txt`, `evidence/issue-3/green-*.txt` | #39 | pending |
+| P3-06 | Authentication red run, then green. The server and client tests were committed and run red before the code existed; the E2E spec was written after the screens, so its evidence is the green run only | Terminal output | `evidence/issue-3/red-server-auth.txt`, `evidence/issue-3/red-client-auth.txt`, `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
 | P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt` | #40 to #44 | pending |
 | P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-counts-before-after.txt` | #40 | pending |
 
@@ -84,19 +84,20 @@ response the API would have sent, and every such capture says so in its row.
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P5-01 | Valid login: the Login screen, then the authenticated application | Playwright capture | `screenshots/authentication/login-desktop-initial.png`, `screenshots/authentication/shell-desktop-requester.png` | #39 | pending |
-| P5-02 | Invalid login: field validation, and the generic invalid-credentials message | Playwright capture | `screenshots/authentication/login-desktop-validation.png`, `screenshots/authentication/login-desktop-invalid-credentials.png` | #39 | pending |
-| P5-03 | Inactive account: the distinct inactive-account message | Playwright capture | `screenshots/authentication/login-desktop-inactive-account.png` | #39 | pending |
-| P5-04 | Busy state: `Signing in…`, button and fields disabled. The real request is held open for the capture | Playwright capture | `screenshots/authentication/login-desktop-submitting.png` | #39 | pending |
-| P5-05 | Safe failure: the `INTERNAL_ERROR` banner with `Retry`. Network failure produced by `route.abort` | Playwright capture | `screenshots/authentication/login-desktop-failure.png` | #39 | pending |
-| P5-06 | Mandatory first-password change: the gate, the stated rules, a validation failure, success | Playwright capture | `screenshots/authentication/change-password-desktop-initial.png`, `change-password-desktop-validation.png`, `change-password-desktop-success.png` | #39 | pending |
-| P5-07 | Authenticated user's name and Role badge in the shell, Requester | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #39 | pending |
+| P5-01 | Valid login: the Login screen, then the authenticated application | Playwright capture | `screenshots/authentication/login-desktop-initial.png`, `screenshots/authentication/shell-desktop-requester.png` | #39 | captured |
+| P5-02 | Invalid login: field validation, and the generic invalid-credentials message | Playwright capture | `screenshots/authentication/login-desktop-validation.png`, `screenshots/authentication/login-desktop-invalid-credentials.png` | #39 | captured |
+| P5-03 | Inactive account: the distinct inactive-account message | Playwright capture | `screenshots/authentication/login-desktop-inactive-account.png` | #39 | captured |
+| P5-04 | Busy state: `Signing in…`, button and fields disabled. The real request is held open for the capture, then let through | Playwright capture | `screenshots/authentication/login-desktop-submitting.png` | #39 | captured |
+| P5-05 | Safe failure: the `INTERNAL_ERROR` banner with `Retry`. Network failure produced by `route.abort("connectionrefused")` | Playwright capture | `screenshots/authentication/login-desktop-failure.png` | #39 | captured |
+| P5-06 | Mandatory first-password change: the gate, the stated rules, a validation failure, success. The first-login account is reset by the temporary fixture in `e2e/support/auth.ts` before and after (tests.md 2.12) | Playwright capture | `screenshots/authentication/change-password-desktop-initial.png`, `change-password-desktop-validation.png`, `change-password-desktop-success.png` | #39 | captured |
+| P5-07 | Authenticated user's name and Role badge in the shell, Requester. This capture still shows the Lab 2 "Development Requester" line beside the identity, because #40 removes the selector; P5-14 re-captures it | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #39 | captured |
 | P5-08 | Name and Role badge in the shell, IT Staff and Administrator. Owned by #40 because the shell for those roles has nothing to frame until role navigation and per-role landing arrive there (handoff Issue 4) | Playwright capture | `screenshots/authentication/shell-desktop-it-staff.png`, `shell-desktop-administrator.png` | #40 | pending |
-| P5-09 | Logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-signed-out.png` **(extra)** | #39 | pending |
-| P5-10 | Direct URL blocked after logout | Playwright capture | `screenshots/authentication/logout-desktop-blocked-after.png` | #39 | pending |
-| P5-11 | Back button after logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-back-button.png` **(extra)** | #39 | pending |
-| P5-12 | API 401 with the same cookie after logout; the `Set-Cookie` flags; `/api/auth/me` 200 with the cookie | Terminal output | `evidence/issue-3/session-cookie-proof.txt` | #39 | pending |
-| P5-13 | The authentication API and UI tests passing | Terminal output | `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | pending |
+| P5-09 | Logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-signed-out.png` **(extra)** | #39 | captured |
+| P5-10 | Direct URL blocked after logout. A screenshot cannot show the address bar: E2E-04 asserts the address was `/tickets` when Login rendered | Playwright capture | `screenshots/authentication/logout-desktop-blocked-after.png` | #39 | captured |
+| P5-11 | Back button after logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-back-button.png` **(extra)** | #39 | captured |
+| P5-12 | API 401 with the same cookie after logout; the `Set-Cookie` flags; `/api/auth/me` 200 with the cookie. Tokens redacted | Terminal output | `evidence/issue-3/session-cookie-proof.txt` | #39 | captured |
+| P5-13 | The authentication API and UI tests passing | Terminal output | `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
+| P5-14 | The Requester shell re-captured once the selector is gone: name, Role badge and Log Out only | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #40 | pending |
 
 ## Part 6 - Working IT Staff Ticket Queue UI (5)
 
