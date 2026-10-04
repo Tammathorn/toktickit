@@ -16,21 +16,10 @@ export const app = express();
 // C-56 - the client reaches this API same-origin through the Vite proxy, so the
 // Lab 2 wildcard cors() is pinned to CLIENT_ORIGIN: a wildcard origin cannot
 // carry credentials, and nothing else should be calling from a browser.
-app.use(cors({ origin: clientOrigin() }));
+app.use(cors({ origin: (_origin, allow) => allow(null, clientOrigin()) }));
 // C-58 - a cross-origin write is refused before its body is even parsed.
 app.use(originCheck);
 app.use(express.json());
-// A body express.json cannot parse is a 400 in the api-spec 1.1 envelope.
-// Express's default handler would answer with an HTML page quoting the parser's
-// message, and that message quotes the body - on /api/auth/login, the password
-// (BR-88, BR-89).
-app.use((error: { type?: unknown; status?: unknown }, _req: Request, res: Response, next: NextFunction) => {
-  if (typeof error?.type === "string" && typeof error.status === "number" && error.status < 500) {
-    sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.");
-    return;
-  }
-  next(error);
-});
 
 // ---------------------------------------------------------------------------
 // Issue 2 — API health check
@@ -103,11 +92,21 @@ app.use(authRouter);
 app.use(ticketsRouter);
 app.use(attachmentsRouter);
 
-// Anything a route passes on unhandled: the safe 500 envelope, never Express's
-// HTML page with a stack trace (BR-89). Nothing about the error is logged,
-// because its message can quote request data (BR-88).
-app.use((_error: unknown, _req: Request, res: Response, _next: NextFunction) => {
-  if (!res.headersSent) sendInternalError(res);
+// The one error handler, last. Express's own would answer with an HTML page
+// quoting the error - for a body express.json cannot parse, a page quoting the
+// body, which on /api/auth/login is the password (BR-88, BR-89). Instead:
+// a client error Express or the body parser raised (a malformed body, an
+// undecodable path) is the 400 envelope, and anything else is the safe 500.
+// Nothing about the error is logged, because its message can quote request
+// data.
+app.use((error: { status?: unknown }, _req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+  const status = typeof error?.status === "number" ? error.status : 500;
+  if (status >= 400 && status < 500) sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.");
+  else sendInternalError(res);
 });
 
 export default app;

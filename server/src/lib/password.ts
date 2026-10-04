@@ -58,16 +58,17 @@ function decoyHash() {
 // NULL hash cost the same and cannot be told apart by timing (C-53, AC-07).
 export function verifyPassword(stored: string | null, password: string): boolean {
   const parsed = stored === null ? null : parseStored(stored);
-  try {
-    if (parsed) {
+  if (parsed) {
+    try {
       const derived = scryptSync(password, parsed.salt, parsed.hash.length, { N: parsed.N, r: parsed.r, p: parsed.p });
       return timingSafeEqual(derived, parsed.hash);
+    } catch {
+      // Cost parameters scrypt refuses (N not a power of two, say): this value
+      // can verify nothing, and it falls through to the decoy so it still costs
+      // what a real check costs.
     }
-    const target = decoyHash();
-    timingSafeEqual(scryptSync(password, target.salt, KEY_BYTES, { N, r: R, p: P }), target.hash);
-    return false;
-  } catch {
-    // Cost parameters scrypt refuses: the stored value cannot verify anything.
-    return false;
   }
+  const target = decoyHash();
+  timingSafeEqual(scryptSync(password, target.salt, KEY_BYTES, { N, r: R, p: P }), target.hash);
+  return false;
 }

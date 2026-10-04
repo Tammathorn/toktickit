@@ -159,6 +159,7 @@ describe("password and session primitives", () => {
     expect(pw.verifyPassword(null, "")).toBe(false);
     expect(pw.verifyPassword("not-a-hash", PASSWORD)).toBe(false);
     expect(pw.verifyPassword("scrypt$1$2$3$zz$zz", PASSWORD)).toBe(false);
+    expect(pw.verifyPassword("scrypt$3$8$1$aa$bb", PASSWORD)).toBe(false); // parses, but scrypt refuses N=3
   });
 
   it("UNIT-05 the policy accepts 8 and 128 characters and refuses 7 and 129 (BR-12)", () => {
@@ -277,6 +278,7 @@ describe("POST /api/auth/login", () => {
       const res = await request(app).post("/api/auth/login").send({ email: nullHash.email, password });
       expect(res.status).toBe(401);
       expect(res.text).toBe(wrong.text);
+      expect(sessionCookie(res)).toBeUndefined();
     }
   });
 
@@ -314,6 +316,12 @@ describe("POST /api/auth/login", () => {
     expect(res.body.error.code).toBe("VALIDATION_FAILED");
     expect(res.body.error.fields).toEqual({ email: MSG.email, password: MSG.password });
     expect(sessionCookie(res)).toBeUndefined();
+  });
+
+  it("an undecodable path -> the 400 envelope, not Express's page and not 500 (api-spec 1.2)", async () => {
+    const res = await request(app).get("/api/tickets/%E0?requesterId=1");
+    expect(res.status).toBe(400);
+    expect(res.body.error.code).toBe("VALIDATION_FAILED");
   });
 
   it("a malformed JSON body -> 400, and the text sent is echoed nowhere (BR-88, BR-89)", async () => {
@@ -356,13 +364,26 @@ describe("GET /api/auth/me", () => {
     expect(res.body.error.code).toBe("AUTH_REQUIRED");
   });
 
-  it("an unknown token -> 401 with a body byte-identical to no cookie at all (api-spec 1.1)", async () => {
+  it("every 401 cause - unknown, malformed, expired, logged out, deactivated - gives a body byte-identical to no cookie (api-spec 1.1)", async () => {
     const none = await request(app).get("/api/auth/me");
-    const unknown = await me(randomBytes(32).toString("hex"));
-    const garbage = await me("not-a-token");
-    expect(unknown.status).toBe(401);
-    expect(unknown.text).toBe(none.text);
-    expect(garbage.text).toBe(none.text);
+    expect(none.status).toBe(401);
+
+    const expiredUser = await makeUser();
+    const expired = await insertSession(expiredUser.id, new Date(Date.now() - EIGHT_HOURS - MINUTE));
+
+    const loggedOutUser = await makeUser();
+    const loggedOut = (await login(loggedOutUser.email)).token;
+    await request(app).post("/api/auth/logout").set("Cookie", asCookie(loggedOut));
+
+    const deactivatedUser = await makeUser();
+    const deactivated = (await login(deactivatedUser.email)).token;
+    await prisma.user.update({ where: { id: deactivatedUser.id }, data: { isActive: false } });
+
+    for (const token of [randomBytes(32).toString("hex"), "not-a-token", expired, loggedOut, deactivated]) {
+      const res = await me(token);
+      expect(res.status).toBe(401);
+      expect(res.text).toBe(none.text);
+    }
   });
 });
 
@@ -579,6 +600,12 @@ describe("the Origin check on state-changing requests", () => {
     const signIn = await request(app).post("/api/auth/login").set("Origin", "http://evil.example").send({ email: user.email, password: PASSWORD });
     expect(signIn.status).toBe(403);
     expect(sessionCookie(signIn)).toBeUndefined();
+  });
+
+  it("a foreign Origin is refused before the session is looked at: no cookie still gives 403, not 401 (api-spec 1.4)", async () => {
+    const res = await request(app).post("/api/auth/logout").set("Origin", "http://evil.example");
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe("ORIGIN_NOT_ALLOWED");
   });
 
   it("API-28 the same POST with no Origin header -> accepted (AC-20, BR-27)", async () => {
