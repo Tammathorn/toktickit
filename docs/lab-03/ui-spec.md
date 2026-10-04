@@ -712,7 +712,7 @@ control exists that the API cannot serve.
 | Control | Parameter | Presentation |
 |---|---|---|
 | Search | `search` | Text input, label `Search`, placeholder `Ticket Number or Ticket Summary`, debounced 300 ms, resets `page` to 1 |
-| Current Status filter | `currentStatus` | Select. Default option `Open tickets` - **not** `All statuses`, because the default excludes Closed and Cancelled (BR-72). The list then offers all eight statuses individually, plus `All statuses` |
+| Current Status filter | `currentStatus` | Select. Default option `Open tickets` - **not** `All statuses`, because the default excludes Closed and Cancelled (BR-72). The list then offers all eight statuses individually. There is no `All statuses` option: `api-spec.md` 8.1 gives `currentStatus` one value from the enum or omitted, and omitted always means the BR-72 default, so no query returns every status unfiltered (C-111) |
 | IT Priority filter | `itPriority` | Select, `All IT priorities` default |
 | Ticket Owner filter | `owner` | Select: `Any owner`, `Assigned to me`, `Unassigned`, then each active IT Staff and Administrator user by name, from `GET /api/staff/assignable-users` (C-105) |
 | Category filter | `categoryId` | Select, `All categories` default |

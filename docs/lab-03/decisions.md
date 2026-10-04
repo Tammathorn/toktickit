@@ -157,6 +157,12 @@ terminal status.
 |---|---|---|---|---|---|
 | C-110 | Stacked pull requests while review is batched | The reviewer's schedule: PAKATO reviews once, after #41 | **Up to five unapproved PRs may stack**, each targeting the feature branch directly below it (#46 into `lab3-staging`; #47 into `feature/lab3-1-contract`; #48 into `feature/lab3-2-data-migration`; and so on). **Nothing merges into `lab3-staging` until the reviewer has reviewed.** A change review asks for in a lower PR is made on **that** branch, then merged **upward** into each stacked branch in order with `git merge` - never a rebase, so no pushed branch is rewritten - and all three suites are run at every level. Each stacked PR states its stack in its body. Once the PRs below it merge, a PR is retargeted to `lab3-staging`. | Peer review stays mandatory on every PR (`LS 11.1`), but one reviewer reviewing once cannot keep pace with nine sequential Issues. Stacking keeps each PR's diff to its own Issue. Merging upward rather than rebasing keeps every pushed branch and every captured commit hash valid. Five is the cap: deep enough to reach #41, shallow enough that a fix low in the stack is merged through a short chain | Narrows `CLAUDE.md`'s "every `gh pr create` carries `--base lab3-staging`" and C-88's "every feature branch opens a PR into `lab3-staging`" for the stacked PRs only; the base becomes `lab3-staging` again once the PRs below merge |
 
+### Raised during implementation
+
+| ID | Topic | Raised by | Decision | Reason | Supersedes |
+|---|---|---|---|---|---|
+| C-111 | The queue's Current Status filter | Implementation of #41 | **No `All statuses` option.** The Current Status select offers exactly nine options: the default `Open tickets` (the parameter omitted, BR-72's exclusion applies) and each of the eight statuses individually. `ui-spec.md` 15.1 is corrected to match - its `All statuses` option is removed from the table and from the option count. | `api-spec.md` 8.1 gives `currentStatus` exactly one value from the eight-member enum, or omitted, which always means the BR-72 default; there is no query that returns every status unfiltered, so an `All statuses` option could not be served without inventing new API behavior. No new behavior is needed: Closed and Cancelled stay reachable by selecting them individually, and a *queue* exists to show unfinished work, not a full Ticket archive. | Narrows `ui-spec.md` 15.1's Current Status filter row |
+
 ---
 
 ## Carried from Lab 2
