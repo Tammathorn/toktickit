@@ -154,12 +154,16 @@ describe("GET /api/staff/tickets/:id", () => {
     expect(inactive.body.owner).toEqual({ id: inactiveStaff.id, name: inactiveStaff.name, role: "IT_STAFF", isActive: false });
   });
 
-  it("a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400, to a staff caller (api-spec.md 8.2)", async () => {
+  it("a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400 INVALID_QUERY_PARAM, to a staff caller (api-spec.md 8.2, C-113)", async () => {
     const missing = await detail(staffX.agent, 999999);
     expect(missing.status).toBe(404);
     expect(missing.body.error.code).toBe("TICKET_NOT_FOUND");
-    expect((await detail(staffX.agent, "abc")).status).toBe(400);
-    expect((await detail(staffX.agent, "0")).status).toBe(400);
+    for (const bad of ["abc", "0"]) {
+      const res = await detail(staffX.agent, bad);
+      expect(res.status, bad).toBe(400);
+      expect(res.body.error.code).toBe("INVALID_QUERY_PARAM");
+      expect(Object.keys(res.body.error.fields)).toEqual(["id"]);
+    }
   });
 });
 
@@ -560,6 +564,88 @@ describe("Closed and Cancelled Tickets refuse writes", () => {
       // A non-owning Requester still gets 404, not 409 - the lock reveals nothing.
       expect((await reqB.agent.delete(`/api/attachments/${up.body.id}`).send({ removalReason: "x" })).status).toBe(404);
       expect((await reqB.agent.post(`/api/tickets/${t.id}/attachments`).attach("file", PNG, "x.png")).status).toBe(404);
+    }
+  });
+
+  it("API-121 refusal order ownership -> TICKET_CLOSED -> body 400 -> the operation's own 409/422: a malformed body on a Closed or Cancelled Ticket -> 409 TICKET_CLOSED, nothing changed (C-109, api-spec.md 1.4)", async () => {
+    for (const status of TERMINAL) {
+      const t = await ticket({ currentStatus: "OPEN" });
+      const up = await reqA.agent.post(`/api/tickets/${t.id}/attachments`).attach("file", PNG, "order.png");
+      expect(up.status).toBe(201);
+      await setTicket(t.id, { ownerId: staffX.id, currentStatus: status, itPriority: "LOW" });
+      const before = await row(t.id);
+      const attachmentBefore = await prisma.attachment.findUniqueOrThrow({ where: { id: up.body.id } });
+
+      // TICKET_CLOSED precedes body validation (400) ...
+      for (const [name, res] of [
+        ["owner, empty body", await setOwner(staffX.agent, t.id, {})],
+        ["owner, ownerId abc", await setOwner(staffX.agent, t.id, { ownerId: "abc" })],
+        ["it-priority, out of set", await setPriority(staffX.agent, t.id, "URGENT")],
+        ["it-priority, absent", await staffX.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({})],
+        ["removal, no reason key", await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({})],
+        ["removal, reason not a string", await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({ removalReason: 42 })],
+        ["upload, no file part", await reqA.agent.post(`/api/tickets/${t.id}/attachments`).field("note", "no file")],
+        // ... and the operation's own refusals (422).
+        ["owner, a Requester as assignee", await setOwner(staffX.agent, t.id, { ownerId: reqA.id })],
+        ["removal, whitespace reason", await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({ removalReason: "   " })],
+      ] as const) {
+        expect(res.status, `${status} ${name}`).toBe(409);
+        expect(res.body.error.code, `${status} ${name}`).toBe("TICKET_CLOSED");
+      }
+
+      // Ownership precedes TICKET_CLOSED: a non-owning Requester gets 404 for a malformed body too.
+      const outsider = await reqB.agent.delete(`/api/attachments/${up.body.id}`).send({});
+      expect(outsider.status).toBe(404);
+      expect(outsider.body.error.code).toBe("ATTACHMENT_NOT_FOUND");
+
+      // The status route has no TICKET_CLOSED step (C-109): a malformed target is 400,
+      // and a well-formed one is the operation's own 409 INVALID_STATUS_TRANSITION.
+      const badStatus = await setStatus(staffX.agent, t.id, "DONE");
+      expect(badStatus.status).toBe(400);
+      expect(badStatus.body.error.code).toBe("VALIDATION_FAILED");
+
+      expect(await row(t.id)).toEqual(before);
+      expect(await prisma.attachment.findUniqueOrThrow({ where: { id: up.body.id } })).toEqual(attachmentBefore);
+    }
+
+    // On an open Ticket the same malformed bodies are still 400.
+    const open = await ticket({ ownerId: staffX.id, currentStatus: "OPEN" });
+    expect((await setOwner(staffX.agent, open.id, {})).status).toBe(400);
+    expect((await setPriority(staffX.agent, open.id, "URGENT")).status).toBe(400);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// A malformed path :id - C-113
+// ---------------------------------------------------------------------------
+describe("a malformed path id", () => {
+  it("API-123 every #42 route and every route addressed by a Ticket or Attachment id answers abc, 0, -1 and 1.5 with 400 INVALID_QUERY_PARAM naming id (C-113)", async () => {
+    const staffCalls: [string, (id: string) => Promise<{ status: number; body: { error?: { code: string; fields?: object } } }>][] = [
+      ["GET staff detail", (id) => staffX.agent.get(`/api/staff/tickets/${id}`)],
+      ["POST claim", (id) => staffX.agent.post(`/api/staff/tickets/${id}/claim`)],
+      ["PATCH owner", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/owner`).send({ ownerId: staffY.id })],
+      ["PATCH it-priority", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority: "HIGH" })],
+      ["PATCH status", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus: "OPEN" })],
+      ["GET public-comments (staff)", (id) => staffX.agent.get(`/api/tickets/${id}/public-comments`)],
+      ["POST public-comments (staff)", (id) => staffX.agent.post(`/api/tickets/${id}/public-comments`).send({ body: "x" })],
+      ["GET internal-notes", (id) => staffX.agent.get(`/api/tickets/${id}/internal-notes`)],
+      ["POST internal-notes", (id) => staffX.agent.post(`/api/tickets/${id}/internal-notes`).send({ body: "x" })],
+      ["GET attachments (staff)", (id) => staffX.agent.get(`/api/tickets/${id}/attachments`)],
+      ["GET download (staff)", (id) => staffX.agent.get(`/api/attachments/${id}/download`)],
+      ["GET ticket (Requester)", (id) => reqA.agent.get(`/api/tickets/${id}`)],
+      ["POST requester-resolved", (id) => reqA.agent.post(`/api/tickets/${id}/requester-resolved`)],
+      ["POST public-comments (Requester)", (id) => reqA.agent.post(`/api/tickets/${id}/public-comments`).send({ body: "x" })],
+      ["GET attachments (Requester)", (id) => reqA.agent.get(`/api/tickets/${id}/attachments`)],
+      ["POST attachments", (id) => reqA.agent.post(`/api/tickets/${id}/attachments`).attach("file", PNG, "x.png")],
+      ["DELETE attachment", (id) => reqA.agent.delete(`/api/attachments/${id}`).send({ removalReason: "x" })],
+    ];
+    for (const [name, call] of staffCalls) {
+      for (const bad of ["abc", "0", "-1", "1.5"]) {
+        const res = await call(bad);
+        expect(res.status, `${name} ${bad}`).toBe(400);
+        expect(res.body.error?.code, `${name} ${bad}`).toBe("INVALID_QUERY_PARAM");
+        expect(Object.keys(res.body.error?.fields ?? {}), `${name} ${bad}`).toEqual(["id"]);
+      }
     }
   });
 });
