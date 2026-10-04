@@ -266,12 +266,14 @@ You run git and gh yourself. Two hard limits that never relax:
   staging to confirm what is actually staged.
 - Every `gh pr create` carries `--base lab3-staging`. GitHub defaults to main, and labsheet
   11.1 forbids developing directly on main or lab3-staging. **The one exception is C-110**:
-  while review is batched, up to five unapproved PRs may stack, each with `--base` set to the
-  feature branch directly below it and its stack stated in its body. Nothing merges into
+  while review is batched, unapproved PRs may stack through #45, each with `--base` set to the
+  feature branch directly below it and its stack stated in its body. PAKATO reviews all nine
+  feature PRs at the end of the batch, not one partway through. Nothing merges into
   `lab3-staging` until the reviewer has reviewed. A change asked for in a lower PR is made on
   that branch, then merged upward into each stacked branch in order with `git merge` (never a
   rebase), with all three suites run at each level. A stacked PR is retargeted to
-  `lab3-staging` once the PRs below it merge.
+  `lab3-staging` once the PRs below it merge. **The release PR, `lab3-staging` into `main`, is
+  never stacked** - it opens only after every feature PR has merged into `lab3-staging`.
 
 Never force-push, never rebase a pushed branch, never merge into main except through the
 single release PR. Commit messages carry no Co-Authored-By or Claude-Session trailer.
