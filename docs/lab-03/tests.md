@@ -531,6 +531,16 @@ so rather than claiming full automation.
 | E2E-25 | E2E | AC-89, AC-91 | Edit and reset | A user's four fields are edited and saved; a new initial password is set and that user's session stops working | `e2e/lab-03/user-administration.spec.ts` | |
 | E2E-26 | E2E | AC-118, BR-108, C-109 | A closed Ticket in the browser | The owning Requester opens a Closed Ticket: existing comments are readable, no composer and no upload control render, and the closed-ticket line shows. A direct `POST` to the comments endpoint returns 409 `TICKET_CLOSED` | `e2e/lab-03/staff-ticket-flow.spec.ts` | |
 
+**Temporary fixture for E2E-03 (Issue #39), replaced in Issue #43.** The forced first-password
+change consumes the seeded first-login account, and the Administrator set-initial-password action
+that would reset it (handoff Issue 8) does not exist until #43. Until then
+`resetFirstLoginAccount()` in `e2e/support/auth.ts` puts that one account back into the state the
+seed creates it in, before and after the test: it finds the account by its email, fails loudly if
+it does not exist, takes the password from the seed's own `FIRST_LOGIN_ACCOUNT` constant rather
+than a copy, and updates no other row. A directory lock serialises it across the three viewport
+projects, which would otherwise share the one account. #43 swaps the fixture for the Administrator
+action.
+
 **E2E-20 runs on the desktop project only**, and creates its user with an `@e2e.test` address, so
 three viewport runs do not create three users and drift the demo data (C-83). Every other row runs
 on all three projects.
