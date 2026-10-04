@@ -2,7 +2,7 @@ import { Router, type Request, type Response } from "express";
 import multer from "multer";
 import { getPrisma } from "../prisma.js";
 import { sendError, sendInternalError } from "../lib/http-error.js";
-import { resolveRequester, requireRequesterQuery } from "../lib/requester.js";
+import { anyRole, authOf, requesterOnly } from "../middleware/auth.js";
 import { validateTicketShape, validateTicketReferences, type ValidTicketInput } from "../lib/validation.js";
 import { createTicketWithNumber } from "../lib/ticket-repository.js";
 import { loadTicketDto } from "../lib/ticket-dto.js";
@@ -14,15 +14,24 @@ export const ticketsRouter = Router();
 
 const MAX_ACTIVE_ATTACHMENTS = 5;
 
+// Lab 3 (#40): every route here sits behind the shared chain - session,
+// password-change gate, role - before anything else runs (api-spec.md 1.4,
+// C-63). The caller is the signed-in user and nobody else: a requesterId in a
+// query or a body is ignored (C-64, BR-31). Another Requester's Ticket answers
+// 404, the same body as a missing one (C-65), so the answer never says the
+// Ticket exists.
+
+function sendTicketNotFound(res: Response): void {
+  sendError(res, 404, "TICKET_NOT_FOUND", "That ticket does not exist.");
+}
+
 // ---------------------------------------------------------------------------
-// POST /api/tickets — api-spec.md 3.1. The one endpoint that carries
-// requesterId in the body (C-12). Check order per 1.4:
-//   1. body shape and BR-34 reference rules      -> 400 VALIDATION_FAILED
-//      requesterId absent or unparseable          -> 400 REQUESTER_REQUIRED
-//   2. resolve the Requester                       -> 404 / 403
-//   7. create inside one transaction, number assigned from the row's own id (C-49)
+// POST /api/tickets — api-spec.md 4.1. Requester only (C-101). The Ticket is
+// bound to the signed-in user; a requesterId in the body is not rejected, it is
+// simply not obeyed (AC-41). Body validation is step 7; then one transaction
+// assigns the number from the row's own id (C-49).
 // ---------------------------------------------------------------------------
-ticketsRouter.post("/api/tickets", async (req: Request, res: Response) => {
+ticketsRouter.post("/api/tickets", ...requesterOnly, async (req: Request, res: Response) => {
   const prisma = getPrisma();
   const body: Record<string, unknown> = req.body && typeof req.body === "object" ? req.body : {};
 
@@ -34,14 +43,8 @@ ticketsRouter.post("/api/tickets", async (req: Request, res: Response) => {
       return;
     }
 
-    const caller = await resolveRequester(prisma, body.requesterId);
-    if (!caller.ok) {
-      sendError(res, caller.status, caller.code, caller.message);
-      return;
-    }
-
     const input = values as ValidTicketInput;
-    const created = await createTicketWithNumber(prisma, { requesterId: caller.id, ...input });
+    const created = await createTicketWithNumber(prisma, { requesterId: authOf(res).user.id, ...input });
     res.status(201).json(await loadTicketDto(prisma, created.id));
   } catch {
     sendInternalError(res);
@@ -49,13 +52,15 @@ ticketsRouter.post("/api/tickets", async (req: Request, res: Response) => {
 });
 
 // ---------------------------------------------------------------------------
-// GET /api/tickets — api-spec.md 3.2. Query parameters are validated first
-// (400 INVALID_QUERY_PARAM naming each offending parameter), then the caller
-// is resolved, then the query runs scoped to that Requester before any
-// search, filter or sort applies (BR-22). C-27 envelope; C-43 page rules.
+// GET /api/tickets — api-spec.md 4.2. Requester only. Query parameters are
+// validated (400 INVALID_QUERY_PARAM naming each offending one; a requesterId
+// parameter is accepted and discarded), then the query runs scoped to the
+// signed-in user before any search, filter or sort applies (BR-43). C-27
+// envelope; C-43 page rules.
 // ---------------------------------------------------------------------------
 ticketsRouter.get(
   "/api/tickets",
+  ...requesterOnly,
   (req: Request, res: Response, next) => {
     const parsed = parseListQuery(req.query as Record<string, unknown>);
     if (!parsed.ok) {
@@ -65,13 +70,11 @@ ticketsRouter.get(
     res.locals.listQuery = parsed.query;
     next();
   },
-  requireRequesterQuery,
   async (_req: Request, res: Response) => {
     const prisma = getPrisma();
     const q = res.locals.listQuery as ListQuery;
-    const requesterId: number = res.locals.requesterId;
     try {
-      const where = listWhere(requesterId, q);
+      const where = listWhere(authOf(res).user.id, q);
       const [total, rows] = await Promise.all([
         prisma.ticket.count({ where }),
         prisma.ticket.findMany({
@@ -110,11 +113,10 @@ ticketsRouter.get(
 );
 
 // ---------------------------------------------------------------------------
-// GET /api/tickets/:id — api-spec.md 3.3. Caller resolved before the Ticket is
-// looked up (C-45); 404 if absent, 403 TICKET_FORBIDDEN if another Requester
-// owns it (BR-21, C-13). The body of a 403 carries no Ticket field.
+// GET /api/tickets/:id — api-spec.md 4.3. Requester only. 404 for a missing
+// Ticket and for another Requester's, one identical body (C-65, AC-38).
 // ---------------------------------------------------------------------------
-ticketsRouter.get("/api/tickets/:id", requireRequesterQuery, async (req: Request, res: Response) => {
+ticketsRouter.get("/api/tickets/:id", ...requesterOnly, async (req: Request, res: Response) => {
   const prisma = getPrisma();
   const id = /^\d+$/.test(req.params.id) && Number(req.params.id) > 0 ? Number(req.params.id) : null;
   if (id === null) {
@@ -123,12 +125,8 @@ ticketsRouter.get("/api/tickets/:id", requireRequesterQuery, async (req: Request
   }
   try {
     const ticket = await prisma.ticket.findUnique({ where: { id }, select: { id: true, requesterId: true } });
-    if (!ticket) {
-      sendError(res, 404, "TICKET_NOT_FOUND", "That ticket does not exist.");
-      return;
-    }
-    if (ticket.requesterId !== res.locals.requesterId) {
-      sendError(res, 403, "TICKET_FORBIDDEN", "You do not have access to that item.");
+    if (!ticket || ticket.requesterId !== authOf(res).user.id) {
+      sendTicketNotFound(res);
       return;
     }
     res.status(200).json(await loadTicketDto(prisma, id));
@@ -138,41 +136,34 @@ ticketsRouter.get("/api/tickets/:id", requireRequesterQuery, async (req: Request
 });
 
 // ---------------------------------------------------------------------------
-// POST /api/tickets/:id/attachments — api-spec.md 4.1. requesterId in the
-// query (C-42). The caller and the Ticket are checked BEFORE the multipart body
-// is parsed, so a refused caller never gets a file onto disk; the only
-// post-write refusal is the five-slot rule, and that unlinks first (BR-41).
+// Steps 4 to 6 for the attachment routes: parse the id, load the Ticket, and
+// apply ownership - which binds a Requester only. IT Staff and Administrator
+// read any Ticket's Attachments (C-103); their writes were already refused by
+// the role step. Sends the refusal itself and returns null so the caller stops.
 // ---------------------------------------------------------------------------
-async function loadOwnedTicket(
-  req: Request,
-  res: Response,
-  forbiddenCode: "ATTACHMENT_FORBIDDEN" | "TICKET_FORBIDDEN" = "ATTACHMENT_FORBIDDEN",
-): Promise<number | null> {
+async function loadVisibleTicket(req: Request, res: Response): Promise<number | null> {
   const id = /^\d+$/.test(req.params.id) ? Number(req.params.id) : null;
   if (id === null || id <= 0) {
     sendError(res, 400, "VALIDATION_FAILED", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
     return null;
   }
   const ticket = await getPrisma().ticket.findUnique({ where: { id }, select: { id: true, requesterId: true } });
-  if (!ticket) {
-    sendError(res, 404, "TICKET_NOT_FOUND", "That ticket does not exist.");
-    return null;
-  }
-  if (ticket.requesterId !== res.locals.requesterId) {
-    sendError(res, 403, forbiddenCode, "You do not have access to that item.");
+  const { user } = authOf(res);
+  if (!ticket || (user.role === "REQUESTER" && ticket.requesterId !== user.id)) {
+    sendTicketNotFound(res);
     return null;
   }
   return ticket.id;
 }
 
 // ---------------------------------------------------------------------------
-// GET /api/tickets/:id/attachments — api-spec.md 4.2. Every Attachment on the
-// owned Ticket, active and removed alike, ascending id; the removed ones keep
-// their metadata and reason (BR-50).
+// GET /api/tickets/:id/attachments — api-spec.md 5.1. Every role: the owning
+// Requester, and any IT Staff or Administrator (C-103). Active and removed
+// alike, ascending id; the removed ones keep their metadata and reason (BR-50).
 // ---------------------------------------------------------------------------
-ticketsRouter.get("/api/tickets/:id/attachments", requireRequesterQuery, async (req: Request, res: Response) => {
+ticketsRouter.get("/api/tickets/:id/attachments", ...anyRole, async (req: Request, res: Response) => {
   try {
-    const ticketId = await loadOwnedTicket(req, res, "TICKET_FORBIDDEN");
+    const ticketId = await loadVisibleTicket(req, res);
     if (ticketId === null) return;
     const rows = await getPrisma().attachment.findMany({ where: { ticketId }, orderBy: { id: "asc" } });
     res.status(200).json(rows.map(toAttachmentDto));
@@ -181,12 +172,19 @@ ticketsRouter.get("/api/tickets/:id/attachments", requireRequesterQuery, async (
   }
 });
 
+// ---------------------------------------------------------------------------
+// POST /api/tickets/:id/attachments — api-spec.md 5.2. The owning Requester
+// only; staff are refused 403 by the role step (C-103). The caller and the
+// Ticket are checked BEFORE the multipart body is parsed, so a refused caller
+// never gets a file onto disk; the only post-write refusal is the five-slot
+// rule, and that unlinks first (BR-41).
+// ---------------------------------------------------------------------------
 ticketsRouter.post(
   "/api/tickets/:id/attachments",
-  requireRequesterQuery,
+  ...requesterOnly,
   async (req: Request, res: Response, next) => {
     try {
-      const ticketId = await loadOwnedTicket(req, res);
+      const ticketId = await loadVisibleTicket(req, res);
       if (ticketId === null) return;
       res.locals.ticketId = ticketId;
       next();

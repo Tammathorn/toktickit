@@ -279,7 +279,9 @@ describe("a client-supplied requesterId is ignored", () => {
         if (entry.isDirectory()) walk(full);
         else if (/\.ts$/.test(entry.name)) {
           const text = fs.readFileSync(full, "utf8");
-          if (/(query|body)(\?)?\.requesterId|\[["']requesterId["']\]|\/api\/requesters/.test(text)) offenders.push(path.relative(SERVER_DIR, full));
+          // A read of the identifier, or the removed route registered as a
+          // string - not a comment that records its removal.
+          if (/(query|body)(\?)?\.requesterId|\[["']requesterId["']\]|["'`]\/api\/requesters["'`]/.test(text)) offenders.push(path.relative(SERVER_DIR, full));
         }
       }
     };

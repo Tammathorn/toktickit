@@ -30,7 +30,8 @@ export function toTicketDto(t: TicketWithRelations) {
   return {
     id: t.id,
     ticketNumber: t.ticketNumber,
-    requesterId: t.requesterId,
+    // No requesterId key (api-spec.md 10.2, C-64): the signed-in client knows
+    // who it is. The column keeps its name (C-68); the contract does not.
     requester: t.requester,
     category: t.category,
     relatedSystem: t.relatedSystem,

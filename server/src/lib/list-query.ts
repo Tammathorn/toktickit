@@ -8,7 +8,17 @@ import type { Prisma, TicketStatus } from "@prisma/client";
 export const SORT_FIELDS = ["createdAt", "ticketNumber", "summary", "currentStatus"] as const;
 export const SORT_DIRECTIONS = ["asc", "desc"] as const;
 export const PAGE_SIZES = [10, 25, 50] as const;
-export const STATUSES: readonly TicketStatus[] = ["NEW", "IN_PROGRESS", "RESOLVED", "CLOSED", "CANCELLED"];
+// C-70, FR-32 - all eight statuses, in the TicketStatus declaration order.
+export const STATUSES: readonly TicketStatus[] = [
+  "NEW",
+  "OPEN",
+  "IN_PROGRESS",
+  "WAITING_FOR_REQUESTER",
+  "RESOLVED",
+  "CLOSED",
+  "REOPENED",
+  "CANCELLED",
+];
 export const DEFAULT_SORT = "createdAt:desc";
 
 export type SortField = (typeof SORT_FIELDS)[number];
