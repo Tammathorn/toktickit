@@ -1,0 +1,196 @@
+Lab 1 and Lab 2 test inventory BEFORE Issue #40, one line per test.
+Commit:  98f4d4d7ac9219b677447a2964652cd4a16bdb0c (feature/lab3-4-authz-regression)
+Date:    2026-10-04 16:32:18 +0700
+
+== server (cd server && npx vitest list tests/lab-01 tests/lab-02)
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+tests/lab-01/categories.test.ts > GET /api/categories > returns the four seeded categories in id order
+tests/lab-01/health.test.ts > GET /api/health > returns 200 with status ok and the service name
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > stores a permitted file: 201, row written, file on disk under a generated name (AC-32, BR-53)
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-30 refuses an unsupported type with 415; no row and no file written (AC-24, BR-42)
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-31 refuses 5 MB + 1 byte with 413 and accepts exactly 5 MB (AC-25, BR-43)
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-32 accepts the fifth active attachment and refuses the sixth with 422 (AC-26, BR-44)
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-43 leaves the Ticket in place after a rejected upload (AC-28, BR-40)
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > refuses another Requester with 403, an unknown Ticket with 404, and bad callers per C-45
+tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > refuses a request with no file part with 400
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-35 downloads an active attachment: 200, Content-Disposition attachment, identical bytes (AC-30)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-36 previews an active attachment inline with identical bytes (AC-31, BR-49)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-37 refuses a whitespace-only reason with 422 and a missing key with 400 (AC-35, BR-47)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-38 soft removal keeps the row, sets isRemoved, removedAt and the trimmed reason, keeps the file (AC-34, BR-46)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-39 answers the owner's download or preview of a removed attachment with 410 (AC-36, BR-51)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-40 answers a non-owner's download of a removed attachment with 403, never 410 (AC-37, C-20)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-41 refuses another Requester's attachment on download and on removal with 403 (AC-39, BR-52)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-42 answers an unknown attachment id with 404 on download and on removal (AC-64)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-33 frees a slot on removal: five active, remove one, the next upload succeeds (AC-27, BR-44, C-18)
+tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-34 compensates a failed row insert: no row and no file left in UPLOAD_DIR (AC-29, BR-41)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-01 creates a Ticket: 201, one row saved, body carries the Ticket Number (AC-01)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-02 gives two creations different numbers, both matching the pattern (AC-15)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-03 applies the defaults: currentStatus NEW, itPriority copied from Requested Priority (AC-16, AC-45)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-04 rejects a 4-character and a 121-character Ticket Summary with the BR-31 message (AC-18)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-05 accepts a 5-character and a 120-character Ticket Summary (AC-19)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-06 enforces the Description boundaries: 19 and 5001 fail, 20 and 5000 pass (BR-32)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-07 stores a padded Ticket Summary trimmed (AC-20, BR-30)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-08 validates independently of the client: missing Category and bad priority give one fields entry each (AC-67)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-09 emits exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > rejects system-generated fields if supplied (api-spec 3.1)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-12 refuses an inactive Requester with 403 REQUESTER_INACTIVE, and an unknown one with 404 (AC-63, AC-65)
+tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-14 reports an unexpected failure safely as 500 INTERNAL_ERROR (AC-66, BR-38)
+tests/lab-02/create-ticket.api.test.ts > Reference data > API-10 filters inactive rows and keeps {id, name} in id order (AC-14, BR-56)
+tests/lab-02/create-ticket.api.test.ts > Reference data > API-11 lists active Requesters only, as {id, name, email} in id order (AC-04, BR-11)
+tests/lab-02/create-ticket.api.test.ts > Reference data > API-44 keeps the Lab 1 contract intact (C-05)
+tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds exactly the four required Categories, all active
+tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least six Related Systems
+tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least four active Requesters
+tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least one inactive Requester (BR-11, C-33)
+tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds three active and one inactive IT Staff, and one active Administrator (LS 5.3)
+tests/lab-02/data-model.db.test.ts > DB-02 — the graded seed is idempotent (LS 5.3) > creates no duplicate rows when run a second time
+tests/lab-02/data-model.db.test.ts > DB-03 — the Lab 1 contract survives the additive migration (C-05, C-37) > keeps the four Lab 1 Categories in id order with their original ids
+tests/lab-02/data-model.db.test.ts > DB-03 — the Lab 1 contract survives the additive migration (C-05, C-37) > defaults the new isActive column to true, so no backfill was needed
+tests/lab-02/data-model.db.test.ts > DB-04 — enums carry their full Lab 3 range (C-21, C-23) > accepts every TicketStatus value the enum declares
+tests/lab-02/data-model.db.test.ts > DB-04 — enums carry their full Lab 3 range (C-21, C-23) > declares exactly three Requested Priority values
+tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > creates the four Ticket indexes and the Attachment index
+tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > makes ticketNumber unique, which is the index C-30's search relies on
+tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > leaves summary and description unindexed, per C-30
+tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > returns a Ticket whose number is non-null and matches the pattern
+tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > applies the defaults: status NEW and IT Priority copied from Requested Priority (BR-02, C-71)
+tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > leaves no Ticket without a number visible outside the transaction (BR-01)
+tests/lab-02/data-model.db.test.ts > DB-07 — ownership and soft-removal columns exist as section 7 specifies > makes ticketNumber nullable in the schema (C-49)
+tests/lab-02/data-model.db.test.ts > DB-07 — ownership and soft-removal columns exist as section 7 specifies > gives Attachment its soft-removal trio, with removedAt and removalReason nullable
+tests/lab-02/data-model.db.test.ts > DB-08 — the five LS 5.1 relationships are foreign keys > declares Ticket -> User, Category, RelatedSystem and Attachment -> Ticket
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-15 scopes the list to the owner: no other Requester's Ticket appears (AC-03, BR-22)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > returns the C-27 envelope and list-row shape, description omitted
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-16 searches Ticket Summary case-insensitively by substring (AC-41, BR-23)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-17 searches Ticket Number by exact and by prefix, never Description (AC-42, BR-23)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-18 filters by Category (AC-43, BR-24)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-19 filters by Related System and by currentStatus (BR-24)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-20 returns page 2 as the correct slice with correct metadata (AC-44, BR-27)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-21 answers a page beyond the last with data: [] and correct meta, status 200 (AC-45, BR-29)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-22 accepts page sizes 10, 25, 50 and refuses 11, page=abc and page=0 (BR-27, C-43)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-23 orders correctly on each of the four permitted sort fields, both directions (AC-46, BR-25)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-24 refuses a sort outside BR-25 with 400 naming sort (AC-47, BR-28)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-25 defaults to createdAt desc with id desc as the tiebreak (AC-48, BR-26)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > refuses malformed filter values and a bad caller per the check order
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets/:id - ownership refusals used by the Part 7 rejection capture > returns 403 TICKET_FORBIDDEN with no Ticket field for another Requester's Ticket (AC-03, BR-21)
+tests/lab-02/my-tickets.api.test.ts > GET /api/tickets/:id - ownership refusals used by the Part 7 rejection capture > returns 200 with the full Ticket to its owner, and 404 for an unknown id
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-13 refuses an unknown Requester before the Ticket is looked up (AC-65, C-45)
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-26 answers a missing Ticket with 404 TICKET_NOT_FOUND (AC-40)
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-27 refuses another Requester's Ticket with 403 and no Ticket field (AC-03, BR-21)
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-28 carries no comment, note, actions-taken or status-transition key, not even as null (AC-53)
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > API-29 returns active and removed attachments, distinguished by isRemoved, reason on the removed one (AC-38)
+tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > refuses another Requester with 403 TICKET_FORBIDDEN and an unknown Ticket with 404
+tests/lab-02/ticket-number.unit.test.ts > UNIT-01 — Ticket Number format (AC-15, BR-04) > builds TKT-YYYY-NNNNNN from a known id and createdAt
+tests/lab-02/ticket-number.unit.test.ts > UNIT-01 — Ticket Number format (AC-15, BR-04) > matches the C-11 regex asserted by the unit test
+tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > pads id 1 to six digits
+tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > leaves id 999999 unpadded
+tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > does not truncate the year segment when the id exceeds six digits
+tests/lab-02/ticket-number.unit.test.ts > UNIT-03 — the year comes from createdAt, not from now (BR-04, BR-10) > uses the ticket's own creation year
+tests/lab-02/ticket-number.unit.test.ts > UNIT-03 — the year comes from createdAt, not from now (BR-04, BR-10) > uses the UTC year of createdAt, per the example tests.md UNIT-03 fixes
+tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > renders DD MMM YYYY HH:mm in Asia/Bangkok, +7 from the stored UTC value
+tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > pads the day and uses a 24-hour clock
+tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > rolls the date over when +7 crosses midnight
+tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > removes leading and trailing whitespace before length is measured
+tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > collapses a whitespace-only value to the empty string
+tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > leaves interior whitespace alone
+
+== client (cd client && npx vitest list tests/lab-01 tests/lab-02)
+tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > renders the TokTickIT heading
+tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows Online and the seeded categories on success
+tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows an Offline error message when the API is unavailable
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-26 adds a permitted file to the active group without leaving the screen (AC-32)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-29 keeps a removed attachment's metadata and reason visible with no Preview and no Download (AC-34)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-30 shows the unavailable state on a 410 for a row believed active, with Refresh (C-46)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-31 renders the 6.1 message naming the file for 415 and 413, with Retry and Discard (AC-24, AC-25)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > STYLE-03 (hierarchy) renders Preview and Download as tertiary and Remove as destructive (ui-spec 7)
+tests/lab-02/AttachmentSection.test.tsx > Attachment section > downloads an active attachment through the API and reports it (AC-30)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-11 populates Category and Related System from the API and nothing else (AC-13)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-16 / STYLE-04 renders Requester and Ticket Date read-only, not disabled (AC-61)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-01 / STYLE-02 places each message under its control and marks every required label
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-04 (shading) gives read-only and editable controls different surfaces in the theme (ui-spec 4)
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-10 defines the Zen Green tokens on :root
+tests/lab-02/CreateTicket.test.tsx > Create Ticket > marks a file the client can already tell is invalid, before any request (AC-24, ui-spec 14.1)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-21 shows a loading state until the list request settles (AC-52)
+tests/lab-02/MyTickets.test.tsx > My Tickets > renders the owner's rows with the pagination summary and calls the API with the stored requester
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-10 clears A's rows and fetches B's on a Requester switch (AC-11, BR-14)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-18 shows the empty state with a Create Ticket action when nothing is owned and no filter is active (AC-49)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-19 shows the distinct no-results state with Clear filters when a filter excludes everything (AC-50)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-20 shows a safe failure panel with Retry and keeps the toolbar (AC-51)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-22 opens the Ticket's detail route from the row (AC-62)
+tests/lab-02/MyTickets.test.tsx > My Tickets > UI-23 shows Clear filters only once a search or filter is active, and it returns to the default list (FR-35)
+tests/lab-02/MyTickets.test.tsx > My Tickets > debounces the search box into the request and resets to page 1
+tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-06 renders priority badges as pills and status badges square, each with title-case text (AC-58)
+tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-08 marks the active navigation item with the active class and aria-current
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-01 lists every active Requester as an option and no inactive one
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-02 shows the loading state with the select and Continue disabled
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-03 shows the empty state with no select and Continue disabled
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-04 shows the failure panel with Retry, stores nothing, and Retry refetches
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-05 states that this is not a login screen
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > selecting a Requester and pressing Continue stores the id and shows the shell
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-06 restores a stored selection on mount and the shell shows the name
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-07 clears a stored id absent from the active list and explains why
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-08 renders the Selection screen when My Tickets is opened with no selection
+tests/lab-02/RequesterSelection.test.tsx > Development Requester Selection > UI-09 offers Change Requester in the shell and it returns to the Selection screen
+tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-24 renders the Ticket information read-only with no comment, note, action or status control (AC-53)
+tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-25 renders Ticket Date and Last Updated as DD MMM YYYY HH:mm in Asia/Bangkok (AC-60)
+tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-07 renders the Current Status badge and no IT Priority badge (BR-07)
+tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-09 gives every interactive control a non-empty accessible name (AC-56)
+tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > offers Back to My Tickets and a headed Attachments card with the active count
+
+== playwright (npx playwright test e2e/lab-02 --list --project=desktop; each spec runs x3 viewports)
+Listing tests:
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:73:7 › Create Ticket › initial: reference data loaded, Medium preset, Submit enabled
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:81:7 › Create Ticket › validation: catalogue messages under each field, no request sent
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:101:7 › Create Ticket › submitting: busy button, fields locked
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:118:7 › Create Ticket › success: the generated Ticket Number and the next actions
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:131:7 › Create Ticket › api-failure: safe banner, every entered value preserved
+  [desktop] › lab-02\create-ticket-screenshots.spec.ts:161:7 › Create Ticket › invalid-attachment: the client marks a refused file before any request
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:66:7 › My Tickets › populated: Requester A's first page, newest first
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:79:7 › My Tickets › switched: after changing A to B, A's Tickets are gone and B's are listed
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:99:7 › My Tickets › search: the search box narrows the list and Clear filters appears
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:114:7 › My Tickets › filters: Category and Current Status filters active
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:132:7 › My Tickets › sorted: Ticket Number ascending
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:153:7 › My Tickets › page-2: the second page of Requester A's list
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:169:7 › My Tickets › loading: skeleton while the list request is in flight
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:182:7 › My Tickets › empty: Requester C owns nothing
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:194:7 › My Tickets › no-results: a search that excludes every Ticket
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:205:7 › My Tickets › failure: safe panel with Retry, toolbar kept
+  [desktop] › lab-02\my-tickets-screenshots.spec.ts:218:7 › My Tickets › forbidden: Requester B opening one of A's Tickets is refused with 403
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:72:7 › The Requester flow › E2E-01 selects a Requester, creates a Ticket with an attachment, finds it in My Tickets and opens its detail (AC-01, AC-08, AC-09)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:120:7 › The Requester flow › E2E-03 adds, downloads and soft-removes an attachment; metadata and reason remain (AC-32, AC-30, AC-34)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:149:7 › The Requester flow › E2E-04 the removed attachment offers no download, and a direct request returns 410 (AC-36)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:167:7 › The Requester flow › E2E-05 another Requester is refused: direct navigation to the Ticket and a direct attachment request both give 403 (AC-03, AC-39)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:191:5 › E2E-02 switching from Requester A to B makes A's Tickets disappear and lists B's (AC-11, AC-03)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:211:5 › E2E-06 a Requester with no Tickets sees `No tickets yet`; a filter that excludes everything shows `No matches` (AC-49, AC-50)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:229:7 › Responsive › RESP-01 no horizontal page scroll on any of the four screens (AC-55)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:253:7 › Responsive › RESP-02 / RESP-03 My Tickets is cards at 390 px and a six-column table at 1280 px
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:275:7 › Responsive › RESP-04 at 390 px the toggler opens a panel with both nav items and Change Requester (ui-spec 9)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:302:7 › Responsive › RESP-05 every screenshot ui-spec.md 15 names exists at this viewport (AC-54)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:314:7 › Responsive › RESP-06 tabbing each screen reaches every control, each named and with a visible focus ring (AC-56)
+  [desktop] › lab-02\requester-ticket-flow.spec.ts:376:7 › Responsive › the Zen Green tokens are what the built CSS paints (ui-spec 2, VIS-01 rows 1-6)
+  [desktop] › lab-02\selection-screenshots.spec.ts:40:7 › Development Requester Selection › populated: active Requesters listed, not a login screen
+  [desktop] › lab-02\selection-screenshots.spec.ts:50:7 › Development Requester Selection › dropdown: only active Requesters are offered
+  [desktop] › lab-02\selection-screenshots.spec.ts:70:7 › Development Requester Selection › loading: spinner with select and Continue disabled
+  [desktop] › lab-02\selection-screenshots.spec.ts:82:7 › Development Requester Selection › empty: no select, explanatory message, Continue disabled
+  [desktop] › lab-02\selection-screenshots.spec.ts:95:7 › Development Requester Selection › failure: safe message with Retry, nothing stored
+  [desktop] › lab-02\selection-screenshots.spec.ts:108:7 › Development Requester Selection › selected: the shell shows the Requester name and Change Requester
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:79:7 › Requester Ticket Detail › active: the owned detail with two active attachments
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:94:7 › Requester Ticket Detail › add-attachment: a file added from the detail appears in the active group
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:109:7 › Requester Ticket Detail › download: an active attachment is served with Content-Disposition attachment
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:127:7 › Requester Ticket Detail › removal-dialog: names the file, requires a reason, Remove gated on it
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:147:7 › Requester Ticket Detail › removed: metadata and reason stay visible after reload; no Download, no Preview
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:171:7 › Requester Ticket Detail › blocked-download: a removed file answers 410 and the row turns unavailable (C-46)
+  [desktop] › lab-02\ticket-detail-screenshots.spec.ts:195:7 › Requester Ticket Detail › unauthorized: another Requester opening the Ticket is refused with 403
+Total: 42 tests in 5 files
