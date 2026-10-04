@@ -265,7 +265,13 @@ You run git and gh yourself. Two hard limits that never relax:
 - Never `git add .` or `git add -A`. Always stage explicit paths, and run `git status` after
   staging to confirm what is actually staged.
 - Every `gh pr create` carries `--base lab3-staging`. GitHub defaults to main, and labsheet
-  11.1 forbids developing directly on main or lab3-staging.
+  11.1 forbids developing directly on main or lab3-staging. **The one exception is C-110**:
+  while review is batched, up to five unapproved PRs may stack, each with `--base` set to the
+  feature branch directly below it and its stack stated in its body. Nothing merges into
+  `lab3-staging` until the reviewer has reviewed. A change asked for in a lower PR is made on
+  that branch, then merged upward into each stacked branch in order with `git merge` (never a
+  rebase), with all three suites run at each level. A stacked PR is retargeted to
+  `lab3-staging` once the PRs below it merge.
 
 Never force-push, never rebase a pushed branch, never merge into main except through the
 single release PR. Commit messages carry no Co-Authored-By or Claude-Session trailer.
