@@ -102,12 +102,14 @@ describe("My Tickets", () => {
   it("UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14)", async () => {
     const fetchTickets = vi.spyOn(api, "fetchTickets").mockResolvedValueOnce(page(A_ROWS)).mockResolvedValue(page(B_ROWS));
     vi.spyOn(api, "logout").mockResolvedValue();
-    vi.spyOn(api, "login").mockResolvedValue(REQUESTER_B);
+    const login = vi.spyOn(api, "login").mockResolvedValue(REQUESTER_B);
     const user = userEvent.setup();
     renderList();
     expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
 
     await user.click(screen.getByRole("button", { name: "Log Out" }));
+    // A's rows are gone the moment A signs out, before anyone else signs in.
+    expect(screen.queryByText("TKT-2026-000041")).not.toBeInTheDocument();
     await user.type(await screen.findByLabelText(/Email Address/), REQUESTER_B.email);
     await user.type(screen.getByLabelText(/^Password/), "Requester#2026");
     await user.click(screen.getByRole("button", { name: "Sign In" }));
@@ -116,6 +118,8 @@ describe("My Tickets", () => {
     expect(screen.queryByText("TKT-2026-000041")).not.toBeInTheDocument();
     expect(screen.queryByText("TKT-2026-000042")).not.toBeInTheDocument();
     expect(fetchTickets).toHaveBeenCalledTimes(2);
+    expect(login).toHaveBeenCalledWith(REQUESTER_B.email, "Requester#2026");
+    expect(within(screen.getByRole("banner")).getByText(REQUESTER_B.name)).toBeInTheDocument();
   });
 
   it("UI-18 shows the empty state with a Create Ticket action when nothing is owned and no filter is active (AC-49)", async () => {

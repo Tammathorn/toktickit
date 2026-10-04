@@ -5,7 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { ADMINISTRATOR, IT_STAFF, REQUESTER_A, signInAs } from "../support/auth.js";
+import { ADMINISTRATOR, IT_STAFF, REQUESTER_A, signInAs, signedOut } from "../support/auth.js";
 
 // tests.md section 2.9 UI-01..UI-08 and UI-51, section 2.10 STYLE-01 and
 // STYLE-12 (Issue #39); UI-49 and UI-50, per-role landing and the Forbidden
@@ -30,10 +30,6 @@ const MESSAGES = {
   failure: "Something went wrong on our side. Your work has not been lost - please try again.",
   ended: "Your session has ended. Please sign in again.",
 };
-
-function signedOut() {
-  vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
-}
 
 function renderAt(pathname = "/tickets") {
   window.history.pushState({}, "", pathname);
@@ -259,6 +255,8 @@ describe("the authenticated shell", () => {
 
   it("a destination the role may not use renders the Forbidden state inside the shell and fetches nothing for it (FR-24, BR-40)", async () => {
     const fetchTickets = vi.mocked(api.fetchTickets);
+    const fetchTicket = vi.spyOn(api, "fetchTicket");
+    const fetchCategories = vi.mocked(api.fetchCategories);
     for (const [user, pathname] of [
       [REQUESTER, "/queue"],
       [REQUESTER, "/users"],
@@ -268,16 +266,54 @@ describe("the authenticated shell", () => {
       [ADMINISTRATOR, "/tickets/42"],
     ] as const) {
       signInAs(user);
-      fetchTickets.mockClear();
+      for (const spy of [fetchTickets, fetchTicket, fetchCategories]) spy.mockClear();
       renderAt(pathname);
       expect(await screen.findByRole("heading", { name: "You do not have access to that page." }), `${user.role} ${pathname}`).toBeInTheDocument();
       expect(screen.getByText("Your role does not allow this. Choose a destination from the menu above.")).toBeInTheDocument();
       expect(screen.getByRole("banner")).toBeInTheDocument();
       const back = screen.getByRole("link", { name: /Go to / });
       expect(back).toHaveClass("btn-primary");
-      expect(fetchTickets).not.toHaveBeenCalled();
+      // Nothing is fetched for the refused screen: not its list, not its
+      // detail, not its form's reference data (AC-97).
+      for (const spy of [fetchTickets, fetchTicket, fetchCategories]) expect(spy, `${user.role} ${pathname}`).not.toHaveBeenCalled();
       cleanup();
     }
+  });
+
+  it("a 403 FORBIDDEN_ROLE from a screen's own request renders the Forbidden state, not a failure (ui-spec 20.1, FR-24)", async () => {
+    signedIn();
+    vi.mocked(api.fetchTickets).mockRejectedValue(new api.ApiError(403, "FORBIDDEN_ROLE", "x"));
+    renderAt("/tickets");
+    expect(await screen.findByRole("heading", { name: "You do not have access to that page." })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Retry" })).not.toBeInTheDocument();
+    cleanup();
+
+    signedIn();
+    vi.spyOn(api, "fetchTicket").mockRejectedValue(new api.ApiError(403, "FORBIDDEN_ROLE", "x"));
+    renderAt("/tickets/42");
+    expect(await screen.findByRole("heading", { name: "You do not have access to that page." })).toBeInTheDocument();
+    expect(screen.queryByText(MESSAGES.failure)).not.toBeInTheDocument();
+  });
+
+  it("a 403 PASSWORD_CHANGE_REQUIRED from any request shows Change Password, not a banner (ui-spec 6.2, BR-19)", async () => {
+    vi.restoreAllMocks();
+    let gated = false;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        const json = (status: number, body: unknown) =>
+          new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+        if (url.endsWith("/api/auth/me")) return json(200, { ...REQUESTER, mustChangePassword: gated });
+        if (url.includes("/api/categories") || url.includes("/api/related-systems")) return json(200, []);
+        // An Administrator set a new initial password behind this session's back.
+        gated = true;
+        return json(403, { error: { code: "PASSWORD_CHANGE_REQUIRED", message: "x" } });
+      }),
+    );
+    renderAt("/tickets");
+    expect(await screen.findByRole("heading", { level: 1, name: "Change Password" })).toBeInTheDocument();
+    expect(screen.queryByRole("banner")).not.toBeInTheDocument();
   });
 
   it("Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23)", async () => {
