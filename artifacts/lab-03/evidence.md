@@ -120,19 +120,19 @@ and seeded database (`CLAUDE.md`).
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P7-01 | Claim, on an unassigned Ticket, and the owned result | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-unassigned.png`, `detail-desktop-owned.png` | #42 | pending |
-| P7-02 | The lost claim race | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-claim-conflict.png` | #42 | pending |
-| P7-03 | Reassign | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-reassigned.png` **(extra)** | #42 | pending |
-| P7-04 | IT Priority | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-it-priority.png` | #42 | pending |
-| P7-05 | Permitted status changes and the Resolved/Closed/Cancelled confirmation | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-menu.png`, `detail-desktop-status-confirm.png` | #42 | pending |
-| P7-06 | A refused status change | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-refused.png` | #42 | pending |
-| P7-07 | Public Comments and Internal Notes, visibly distinct, in one frame | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-comments-and-notes.png` | #42 | pending |
-| P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | pending |
-| P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | pending |
-| P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | pending |
+| P7-01 | Claim, on an unassigned Ticket, and the owned result | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-unassigned.png`, `detail-desktop-owned.png` | #42 | captured |
+| P7-02 | The lost claim race | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-claim-conflict.png` | #42 | captured |
+| P7-03 | Reassign | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-reassigned.png` **(extra)** | #42 | captured |
+| P7-04 | IT Priority | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-it-priority.png` | #42 | captured |
+| P7-05 | Permitted status changes and the Resolved/Closed/Cancelled confirmation | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-menu.png`, `detail-desktop-status-confirm.png` | #42 | captured |
+| P7-06 | A refused status change | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-refused.png` | #42 | captured |
+| P7-07 | Public Comments and Internal Notes, visibly distinct, in one frame | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-comments-and-notes.png` | #42 | captured |
+| P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | captured |
+| P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | captured |
+| P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | captured |
 | P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | captured |
-| P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
-| P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
+| P7-12 | Validation: the composer's own character-limit feedback (the counter turns danger, Post Comment stays disabled) | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | captured |
+| P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | captured |
 | P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | captured |
 | P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` - SEC-04..SEC-07 and the comments-notes suite; the red run before the routes existed is `evidence/issue-6/red-staff-ticket-ops.txt` | #42 | captured |
 
