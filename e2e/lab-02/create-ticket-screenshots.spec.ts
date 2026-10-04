@@ -1,6 +1,12 @@
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
 import { API_URL } from "../../playwright.config";
+import { signIn } from "../support/auth";
+
+// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
+// seeded Requester before anything else and is otherwise unchanged
+// (CLAUDE.md); #40 replaces this with a storageState per role.
+test.beforeEach(async ({ page }) => signIn(page));
 
 // Create Ticket - screenshot evidence for LS 14 Part 6: the six states
 // ui-spec.md section 11 fixes, at the three C-10 viewports, written to

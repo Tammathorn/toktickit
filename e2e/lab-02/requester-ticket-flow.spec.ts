@@ -2,6 +2,12 @@ import { test, expect, type Page, type APIRequestContext } from "@playwright/tes
 import fs from "node:fs";
 import path from "node:path";
 import { API_URL } from "../../playwright.config";
+import { signIn } from "../support/auth";
+
+// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
+// seeded Requester before anything else and is otherwise unchanged
+// (CLAUDE.md); #40 replaces this with a storageState per role.
+test.beforeEach(async ({ page }) => signIn(page));
 
 // The end-to-end Requester flow (E2E-01..E2E-06) and the responsive rows
 // (RESP-01..RESP-06) from docs/lab-02/tests.md, run at the three C-10 viewport
