@@ -46,7 +46,7 @@ response the API would have sent, and every such capture says so in its row.
 | P1-02 | Final GitHub Project board with every Issue in Done | GitHub capture, board | `screenshots/github/<date>-board-all-done.png` | #45 | pending |
 | P1-03 | Board mid-sprint with cards in PR Review | GitHub capture, board | `screenshots/github/2026-10-02-board-pr-review.png` | #37, #38 | captured |
 | P1-04 | Board mid-sprint with a card in Fixing. Captured by whichever Issue first moves to Fixing | GitHub capture, board | `screenshots/github/<date>-board-fixing.png` | #37 to #45 | pending |
-| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
+| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png`; #40 to PR Review, `screenshots/github/2026-10-04-board-40-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
 | P1-06 | Review thread while open: PR #46, the reviewer's comment and the author's reply | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr46-review-open.png` | #37 | captured |
 | P1-07 | PR #47 open, before review | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr47-open.png` | #38 | captured |
 | P1-08 | Approval on every Issue PR. The reviewer approves; the capture follows the approval | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | pending |
@@ -72,7 +72,7 @@ response the API would have sent, and every such capture says so in its row.
 | P3-05 | Dev database before and after the migration | Terminal output | `migration/dev-before-counts.txt`, `migration/dev-after-counts.txt` | #38 | captured |
 | P3-06 | Authentication red run, then green. The server and client tests were committed and run red before the code existed; the E2E spec was written after the screens, so its evidence is the green run only | Terminal output | `evidence/issue-3/red-server-auth.txt`, `evidence/issue-3/red-client-auth.txt`, `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
 | P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt` | #40 to #44 | pending |
-| P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-counts-before-after.txt` | #40 | pending |
+| P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-inventory-before.txt`, `evidence/issue-4/lab2-inventory-after.txt` | #40 | captured |
 
 ## Part 4 - AI Use with Reflection (5)
 
@@ -91,13 +91,13 @@ response the API would have sent, and every such capture says so in its row.
 | P5-05 | Safe failure: the `INTERNAL_ERROR` banner with `Retry`. Network failure produced by `route.abort("connectionrefused")` | Playwright capture | `screenshots/authentication/login-desktop-failure.png` | #39 | captured |
 | P5-06 | Mandatory first-password change: the gate, the stated rules, a validation failure, success. The first-login account is reset by the temporary fixture in `e2e/support/auth.ts` before and after (tests.md 2.12) | Playwright capture | `screenshots/authentication/change-password-desktop-initial.png`, `change-password-desktop-validation.png`, `change-password-desktop-success.png` | #39 | captured |
 | P5-07 | Authenticated user's name and Role badge in the shell, Requester. This capture still shows the Lab 2 "Development Requester" line beside the identity, because #40 removes the selector; P5-14 re-captures it | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #39 | captured |
-| P5-08 | Name and Role badge in the shell, IT Staff and Administrator. Owned by #40 because the shell for those roles has nothing to frame until role navigation and per-role landing arrive there (handoff Issue 4) | Playwright capture | `screenshots/authentication/shell-desktop-it-staff.png`, `shell-desktop-administrator.png` | #40 | pending |
+| P5-08 | Name and Role badge in the shell, IT Staff and Administrator. Owned by #40 because the shell for those roles has nothing to frame until role navigation and per-role landing arrive there (handoff Issue 4) | Playwright capture | `screenshots/authentication/shell-desktop-it-staff.png`, `shell-desktop-administrator.png` | #40 | captured |
 | P5-09 | Logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-signed-out.png` **(extra)** | #39 | captured |
 | P5-10 | Direct URL blocked after logout. A screenshot cannot show the address bar: E2E-04 asserts the address was `/tickets` when Login rendered | Playwright capture | `screenshots/authentication/logout-desktop-blocked-after.png` | #39 | captured |
 | P5-11 | Back button after logout returns to Login | Playwright capture | `screenshots/authentication/logout-desktop-back-button.png` **(extra)** | #39 | captured |
 | P5-12 | API 401 with the same cookie after logout; the `Set-Cookie` flags; `/api/auth/me` 200 with the cookie. Tokens redacted | Terminal output | `evidence/issue-3/session-cookie-proof.txt` | #39 | captured |
 | P5-13 | The authentication API and UI tests passing | Terminal output | `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
-| P5-14 | The Requester shell re-captured once the selector is gone: name, Role badge and Log Out only | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #40 | pending |
+| P5-14 | The Requester shell re-captured once the selector is gone: name, Role badge and Log Out only | Playwright capture | `screenshots/authentication/shell-desktop-requester.png` | #40 | captured |
 
 ## Part 6 - Working IT Staff Ticket Queue UI (5)
 
@@ -133,7 +133,7 @@ and seeded database (`CLAUDE.md`).
 | P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | pending |
 | P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
 | P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
-| P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | pending |
+| P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | captured |
 | P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` | #42 | pending |
 
 ## Part 8 - Working Administrator User Management UI (5)

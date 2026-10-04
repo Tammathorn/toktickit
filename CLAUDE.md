@@ -317,3 +317,12 @@ not be able to explain.
 
 Verify by reading the file or running the command. Do not infer from what looks plausible,
 and do not report work as done without evidence.
+
+## Token budget
+
+- Read only the sections a task cites - grep by ID, never whole documents.
+- Run only the test files touched during development; run all three suites once before
+  the PR, and show summaries only.
+- One subagent audit per Issue, at the end.
+- Check screenshots by size; open one sample per folder.
+- Final reports: at most 15 lines.
