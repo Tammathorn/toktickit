@@ -10,7 +10,6 @@ import {
   type TicketListRow,
 } from "../api.js";
 import { Link, useRouter } from "../router.js";
-import { useRequester } from "../requester/RequesterContext.js";
 import { formatDisplayTimestamp } from "../format.js";
 import { messageForCode } from "../validation.js";
 import { PriorityBadge, StatusBadge } from "../components/Badge.js";
@@ -21,10 +20,10 @@ import { useMediaQuery, MD_AND_UP } from "../useMediaQuery.js";
 // Every toolbar control maps to one api-spec.md 3.2 query parameter, and the
 // whole query lives in the address bar: reloading, sharing or hand-editing the
 // URL reproduces the same list, and a bad hand-edited value reaches the
-// INVALID_QUERY_PARAM panel (6.1). Ownership is the server's job (BR-20): the
-// client only supplies the stored requesterId, and a Requester switch remounts
-// this screen (App keys the shell by Requester id), which discards A's rows
-// and fetches B's (BR-14).
+// INVALID_QUERY_PARAM panel (6.1). Ownership is the server's job (BR-43): the
+// client sends no identity at all - the session cookie is the identity (C-64).
+// A change of user unmounts this screen through Login, which discards A's rows
+// before B's are fetched (BR-14).
 
 const SORT_OPTIONS: Array<[string, string]> = [
   ["createdAt:desc", "Newest first"],
@@ -36,11 +35,15 @@ const SORT_OPTIONS: Array<[string, string]> = [
   ["currentStatus:asc", "Current Status, A to Z"],
   ["currentStatus:desc", "Current Status, Z to A"],
 ];
+// FR-32, C-70: all eight statuses.
 const STATUS_OPTIONS: Array<[string, string]> = [
   ["NEW", "New"],
+  ["OPEN", "Open"],
   ["IN_PROGRESS", "In Progress"],
+  ["WAITING_FOR_REQUESTER", "Waiting for Requester"],
   ["RESOLVED", "Resolved"],
   ["CLOSED", "Closed"],
+  ["REOPENED", "Reopened"],
   ["CANCELLED", "Cancelled"],
 ];
 const PAGE_SIZES = [10, 25, 50];
@@ -97,8 +100,6 @@ type LoadState =
   | { kind: "error" };
 
 export default function MyTickets() {
-  const { selected } = useRequester();
-  const requesterId = selected!.id;
   const { search: locationSearch, navigate } = useRouter();
 
   const state = useMemo(() => readState(locationSearch), [locationSearch]);
@@ -131,7 +132,7 @@ export default function MyTickets() {
   useEffect(() => {
     let cancelled = false;
     setLoad({ kind: "loading" });
-    fetchTickets(requesterId, {
+    fetchTickets({
       search: state.search,
       categoryId: state.categoryId,
       relatedSystemId: state.relatedSystemId,
@@ -152,7 +153,7 @@ export default function MyTickets() {
     return () => {
       cancelled = true;
     };
-  }, [requesterId, state, reloadToken]);
+  }, [state, reloadToken]);
 
   // Search is debounced 300 ms into the address (ui-spec 12.1) and resets page.
   useEffect(() => {
@@ -291,6 +292,7 @@ export default function MyTickets() {
                     <th scope="col" className="tk-col-summary">Ticket Summary</th>
                     <th scope="col" className="d-none d-lg-table-cell">Category</th>
                     <th scope="col" className="d-none d-lg-table-cell">Requested Priority</th>
+                    <th scope="col" className="d-none d-lg-table-cell">IT Priority</th>
                     <th scope="col">Current Status</th>
                     <th scope="col">Last Updated</th>
                   </tr>
@@ -314,7 +316,10 @@ export default function MyTickets() {
                     <p className="tk-ticket-card-summary">{t.summary}</p>
                     <div className="d-flex justify-content-between align-items-center gap-2">
                       <span>{t.category.name}</span>
-                      <PriorityBadge value={t.requestedPriority} />
+                      <span className="d-flex gap-1">
+                        <PriorityBadge value={t.requestedPriority} />
+                        <PriorityBadge value={t.itPriority} it />
+                      </span>
                     </div>
                     <div className="tk-muted">Last Updated {formatDisplayTimestamp(t.updatedAt)}</div>
                   </Link>
@@ -367,6 +372,8 @@ function TicketRow({ ticket: t, onOpen }: { ticket: TicketListRow; onOpen: () =>
       <td className="tk-col-summary">{t.summary}</td>
       <td className="d-none d-lg-table-cell">{t.category.name}</td>
       <td className="d-none d-lg-table-cell"><PriorityBadge value={t.requestedPriority} /></td>
+      {/* FR-31, C-71: IT Priority is never null, so its badge always renders. */}
+      <td className="d-none d-lg-table-cell"><PriorityBadge value={t.itPriority} it /></td>
       <td><StatusBadge value={t.currentStatus} /></td>
       <td className="tk-nowrap">{formatDisplayTimestamp(t.updatedAt)}</td>
     </tr>

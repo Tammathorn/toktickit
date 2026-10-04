@@ -145,17 +145,6 @@ h1, h2, h3 { line-height: 1.25; }
   cursor: not-allowed;
 }
 
-/* ---- Selection screen (section 10) ----------------------------------- */
-
-.tk-selection {
-  min-height: 100vh;
-  display: flex;
-  align-items: flex-start;
-  justify-content: center;
-  padding: 3rem 1rem;
-}
-.tk-selection-card { width: 100%; max-width: 32rem; }
-
 /* ---- Shell (section 9) ------------------------------------------------ */
 
 .tk-header { background-color: var(--tk-primary); color: var(--tk-surface); }
@@ -169,14 +158,10 @@ h1, h2, h3 { line-height: 1.25; }
 }
 .tk-nav-link:hover, .tk-nav-link:focus { color: var(--tk-pale); }
 .tk-nav-link-active { font-weight: 600; border-bottom-color: var(--tk-pale); }
-.tk-requester { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; }
-.tk-requester-name { color: var(--tk-surface); white-space: nowrap; }
-/* Tablet band: the header is tight, so the label above the name goes */
+/* Tablet band: the header is tight */
 @media (min-width: 768px) and (max-width: 991.98px) {
-  .tk-requester-label { display: none; }
   .tk-nav-link { padding-left: 0.5rem; padding-right: 0.5rem; }
 }
-.tk-requester-label { color: var(--tk-pale); font-size: 0.875rem; }
 .tk-btn-on-primary {
   --bs-btn-color: var(--tk-surface);
   --bs-btn-hover-color: var(--tk-surface);
@@ -186,7 +171,6 @@ h1, h2, h3 { line-height: 1.25; }
 
 @media (max-width: 767.98px) {
   .tk-header .navbar-nav .nav-link,
-  .tk-header .tk-requester-name,
   .tk-header .tk-btn-on-primary {
     display: flex;
     align-items: center;
@@ -196,7 +180,6 @@ h1, h2, h3 { line-height: 1.25; }
     padding-right: 0;
     gap: 0.25rem;
   }
-  .tk-header .tk-requester { flex-direction: column; align-items: stretch; gap: 0; }
   .tk-header .tk-btn-on-primary { justify-content: flex-start; }
   .tk-nav-link-active { border-bottom-width: 3px; }
 }
@@ -528,3 +511,8 @@ textarea.form-control { height: auto; resize: vertical; }
   .tk-header .tk-identity-shell .tk-badge-role { align-self: flex-start; }
   .tk-header .tk-identity-shell .tk-identity-name { display: flex; align-items: center; min-height: 44px; }
 }
+
+/* ---- Lab 3: Forbidden state (ui-spec section 20.1) -------------------- */
+
+.tk-forbidden { display: flex; justify-content: center; padding: 2rem 0; }
+.tk-forbidden-card { width: 100%; max-width: 34rem; text-align: center; }

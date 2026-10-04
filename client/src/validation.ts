@@ -98,13 +98,9 @@ export function messageForCode(code: string, filename?: string): string {
       return fileTooLargeMessage(filename ?? "That file");
     case "ATTACHMENT_LIMIT_REACHED":
       return "This ticket already has five active attachments. Remove one before adding another.";
-    case "TICKET_FORBIDDEN":
-    case "ATTACHMENT_FORBIDDEN":
-      return "You do not have access to that item.";
-    case "REQUESTER_INACTIVE":
-      return "That Development Requester is no longer active. Choose another.";
-    case "REQUESTER_NOT_FOUND":
-      return "That Development Requester no longer exists. Choose another.";
+    // Lab 3 (#40): TICKET_FORBIDDEN, ATTACHMENT_FORBIDDEN and the two
+    // selector-era codes are deleted with their messages (ui-spec 6.2, C-64,
+    // C-65). A non-owner now receives the 404 below.
     case "TICKET_NOT_FOUND":
     case "ATTACHMENT_NOT_FOUND":
       return "That item does not exist.";

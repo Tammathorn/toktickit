@@ -141,21 +141,6 @@ async function getJson<T>(path: string): Promise<T> {
   return res.json();
 }
 
-// A Development Requester as api-spec.md 2.3 returns it. No credential field
-// exists on this shape (BR-65): it is a testing identity, not a login.
-export interface Requester {
-  id: number;
-  name: string;
-  email: string;
-}
-
-// GET /api/requesters — active Requesters only, ascending id (BR-11).
-export async function fetchRequesters(): Promise<Requester[]> {
-  const res = await fetch(`${API_URL}/api/requesters`);
-  if (!res.ok) throw await toApiError(res);
-  return res.json();
-}
-
 // ---------------------------------------------------------------------------
 // Reference data (api-spec.md 2.1, 2.2) - active rows only, {id, name}.
 // ---------------------------------------------------------------------------
@@ -178,7 +163,16 @@ export function fetchRelatedSystems(): Promise<RelatedSystem[]> {
 // ---------------------------------------------------------------------------
 
 export type RequestedPriority = "LOW" | "MEDIUM" | "HIGH";
-export type TicketStatus = "NEW" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "CANCELLED";
+// C-70 - all eight statuses, in the TicketStatus declaration order.
+export type TicketStatus =
+  | "NEW"
+  | "OPEN"
+  | "IN_PROGRESS"
+  | "WAITING_FOR_REQUESTER"
+  | "RESOLVED"
+  | "CLOSED"
+  | "REOPENED"
+  | "CANCELLED";
 
 export interface AttachmentMeta {
   id: number;
@@ -192,25 +186,26 @@ export interface AttachmentMeta {
   removalReason: string | null;
 }
 
+// api-spec.md 10.2. No requesterId key: the session is the identity (C-64).
 export interface Ticket {
   id: number;
   ticketNumber: string;
-  requesterId: number;
   requester: { id: number; name: string };
   category: Category;
   relatedSystem: RelatedSystem;
   summary: string;
   description: string;
   requestedPriority: RequestedPriority;
-  itPriority: RequestedPriority | null;
+  // Never null since C-71: set from Requested Priority on create and backfilled.
+  itPriority: RequestedPriority;
   currentStatus: TicketStatus;
   createdAt: string;
   updatedAt: string;
   attachments: AttachmentMeta[];
 }
 
+// No identity field at all: the Ticket belongs to the signed-in user (C-64).
 export interface NewTicketInput {
-  requesterId: number;
   categoryId: number;
   relatedSystemId: number;
   summary: string;
@@ -218,9 +213,8 @@ export interface NewTicketInput {
   requestedPriority: RequestedPriority;
 }
 
-// POST /api/tickets - the one endpoint carrying requesterId in the body (C-12).
-// The Ticket Number in the 201 body is assigned inside the creation transaction
-// (C-49); no second request is needed.
+// POST /api/tickets - api-spec.md 4.1. The Ticket Number in the 201 body is
+// assigned inside the creation transaction (C-49); no second request is needed.
 export async function createTicket(input: NewTicketInput): Promise<Ticket> {
   const res = await fetch(`${API_URL}/api/tickets`, {
     method: "POST",
@@ -237,7 +231,6 @@ export async function createTicket(input: NewTicketInput): Promise<Ticket> {
 // determinate progress bar (ui-spec 14.2) and fetch exposes no upload progress.
 export function uploadAttachment(
   ticketId: number,
-  requesterId: number,
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<AttachmentMeta> {
@@ -245,7 +238,7 @@ export function uploadAttachment(
   form.append("file", file, file.name);
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+    xhr.open("POST", `${API_URL}/api/tickets/${ticketId}/attachments`);
     xhr.responseType = "text";
     xhr.upload.onprogress = (event) => {
       if (onProgress && event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
@@ -274,7 +267,7 @@ export function uploadAttachment(
 // My Tickets (api-spec.md 3.2) and one owned Ticket (3.3).
 // ---------------------------------------------------------------------------
 
-export type TicketListRow = Omit<Ticket, "requesterId" | "requester" | "description" | "attachments">;
+export type TicketListRow = Omit<Ticket, "requester" | "description" | "attachments">;
 
 export interface TicketListMeta {
   page: number;
@@ -301,16 +294,17 @@ export interface TicketListQuery {
   pageSize?: number;
 }
 
-export function fetchTickets(requesterId: number, query: TicketListQuery): Promise<TicketListPage> {
-  const params = new URLSearchParams({ requesterId: String(requesterId) });
+// GET /api/tickets - scoped by the server to the signed-in Requester (BR-43).
+export function fetchTickets(query: TicketListQuery): Promise<TicketListPage> {
+  const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {
     if (value !== undefined && value !== "") params.set(key, String(value));
   }
   return getJson(`/api/tickets?${params.toString()}`);
 }
 
-export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
-  return getJson(`/api/tickets/${id}?requesterId=${requesterId}`);
+export function fetchTicket(id: number): Promise<Ticket> {
+  return getJson(`/api/tickets/${id}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -318,26 +312,22 @@ export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
 // ---------------------------------------------------------------------------
 
 // GET /api/tickets/:id/attachments - active and removed alike, ascending id.
-export function fetchAttachments(ticketId: number, requesterId: number): Promise<AttachmentMeta[]> {
-  return getJson(`/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+export function fetchAttachments(ticketId: number): Promise<AttachmentMeta[]> {
+  return getJson(`/api/tickets/${ticketId}/attachments`);
 }
 
 // GET /api/attachments/:id/download - the one ownership-checked route for both
 // download and preview (BR-49, BR-54). The bytes come back as a Blob; a 410
 // or 500 surfaces as an ApiError so the row can show the unavailable state (C-46).
-export async function downloadAttachment(
-  id: number,
-  requesterId: number,
-  disposition: "attachment" | "inline",
-): Promise<Blob> {
-  const res = await fetch(`${API_URL}/api/attachments/${id}/download?requesterId=${requesterId}&disposition=${disposition}`);
+export async function downloadAttachment(id: number, disposition: "attachment" | "inline"): Promise<Blob> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}/download?disposition=${disposition}`);
   if (!res.ok) throw await toApiError(res);
   return res.blob();
 }
 
 // DELETE /api/attachments/:id - soft removal with a required reason (BR-46, BR-47).
-export async function removeAttachment(id: number, requesterId: number, removalReason: string): Promise<AttachmentMeta> {
-  const res = await fetch(`${API_URL}/api/attachments/${id}?requesterId=${requesterId}`, {
+export async function removeAttachment(id: number, removalReason: string): Promise<AttachmentMeta> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ removalReason }),

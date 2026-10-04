@@ -187,7 +187,7 @@ describe("My Tickets", () => {
 
     await user.selectOptions(screen.getByLabelText("Category"), "2");
     expect(await screen.findByRole("button", { name: "Clear filters" })).toBeInTheDocument();
-    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(1, expect.objectContaining({ categoryId: "2" })));
+    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(expect.objectContaining({ categoryId: "2" })));
     expect(window.location.search).toContain("categoryId=2");
 
     await user.click(screen.getByRole("button", { name: "Clear filters" }));
@@ -202,7 +202,7 @@ describe("My Tickets", () => {
     await screen.findByText("TKT-2026-000041");
 
     await user.type(screen.getByLabelText("Search"), "laptop");
-    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(1, expect.objectContaining({ search: "laptop", page: 1 })));
+    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(expect.objectContaining({ search: "laptop", page: 1 })));
   });
 
   it("STYLE-06 renders priority badges as pills and status badges square, each with title-case text (AC-58)", async () => {

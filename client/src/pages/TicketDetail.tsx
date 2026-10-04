@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { ApiError, fetchTicket, type Ticket } from "../api.js";
 import { Link } from "../router.js";
-import { useRequester } from "../requester/RequesterContext.js";
 import { formatDisplayTimestamp } from "../format.js";
 import { messageForCode } from "../validation.js";
 import { PriorityBadge, StatusBadge, titleCase } from "../components/Badge.js";
@@ -19,15 +18,13 @@ type LoadState =
   | { kind: "error" };
 
 export default function TicketDetail({ id }: { id: number }) {
-  const { selected } = useRequester();
-  const requesterId = selected!.id;
   const [load, setLoad] = useState<LoadState>({ kind: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
 
   useEffect(() => {
     let cancelled = false;
     setLoad({ kind: "loading" });
-    fetchTicket(id, requesterId).then(
+    fetchTicket(id).then(
       (ticket) => {
         if (!cancelled) setLoad({ kind: "ready", ticket });
       },
@@ -45,7 +42,7 @@ export default function TicketDetail({ id }: { id: number }) {
     return () => {
       cancelled = true;
     };
-  }, [id, requesterId, reloadToken]);
+  }, [id, reloadToken]);
 
   if (load.kind === "loading") {
     return (
@@ -82,7 +79,8 @@ export default function TicketDetail({ id }: { id: number }) {
         <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
           <h1 id="ticket-detail-title" className="tk-title mb-0">{t.ticketNumber}</h1>
           <StatusBadge value={t.currentStatus} />
-          {t.itPriority && <PriorityBadge value={t.itPriority} it />}
+          {/* FR-31, C-71: never null now, so the badge always renders. */}
+          <PriorityBadge value={t.itPriority} it />
         </div>
 
         <dl className="row tk-detail-list">
@@ -97,7 +95,7 @@ export default function TicketDetail({ id }: { id: number }) {
         </dl>
       </div>
 
-      <AttachmentSection key={t.id} ticketId={t.id} requesterId={requesterId} initial={t.attachments} />
+      <AttachmentSection key={t.id} ticketId={t.id} initial={t.attachments} />
 
       <Link to="/tickets" className="btn btn-secondary">Back to My Tickets</Link>
     </section>

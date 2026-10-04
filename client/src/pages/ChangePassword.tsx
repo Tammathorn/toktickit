@@ -5,6 +5,7 @@ import { AUTH_MESSAGES, validatePasswordChange } from "../auth/password-policy.j
 import { RoleBadge } from "../components/Badge.js";
 import RequiredMarker from "../components/RequiredMarker.js";
 import { useRouter } from "../router.js";
+import { LANDING } from "../auth/roles.js";
 import { INTERNAL_ERROR_MESSAGE } from "../validation.js";
 
 // Change Password - ui-spec.md section 11. Shown to a signed-in user whose
@@ -46,13 +47,13 @@ export default function ChangePassword() {
     setFocusTarget(null);
   }, [focusTarget, saving]); // refs are stable for the life of the screen
 
-  // Success: the panel, then on into the application (FR-18, AC-28). The
-  // landing screen per role arrives in #40; until then the application's root.
+  // Success: the panel, then on into the role's landing screen (FR-18, AC-28,
+  // ui-spec 9.1).
   useEffect(() => {
     if (!changed) return;
     const timer = window.setTimeout(() => {
       passwordChanged(changed);
-      navigate("/");
+      navigate(LANDING[changed.role]);
     }, CONTINUE_AFTER_MS);
     return () => window.clearTimeout(timer);
   }, [changed, passwordChanged, navigate]);

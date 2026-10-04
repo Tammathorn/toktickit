@@ -77,7 +77,7 @@ describe("Attachment section", () => {
     expect(within(activeGroup()).getByText("new-photo.png")).toBeInTheDocument();
     expect(upload).toHaveBeenCalledTimes(1);
     expect(upload.mock.calls[0][0]).toBe(42);
-    expect(upload.mock.calls[0][1]).toBe(1);
+    expect(upload.mock.calls[0][1]).toBeInstanceOf(File);
     expect(screen.getByText("2 of 5 active")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/tickets/42");
   });
