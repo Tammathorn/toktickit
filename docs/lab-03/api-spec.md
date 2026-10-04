@@ -1576,7 +1576,7 @@ Returned by 4.1, 4.3 and 4.4.
 | `requestedPriority` | enum | Never editable after creation (BR-51) |
 | `itPriority` | enum | **Never null** (BR-49). The badge always renders (FR-31) |
 | `currentStatus` | enum | One of eight (BR-52) |
-| `owner` | `{ name }` \| null | **Name only, never the email address** (BR-100, C-95, AC-115) |
+| `owner` | `{ name, isActive }` \| null | **Name and activation state only, never the email address** (BR-100, C-95, AC-115). `isActive` lets the client render the `(inactive)` qualifier `ui-spec.md` 14.1 asks for (C-114) |
 | `requesterResolvedAt` | ISO string \| null | The C-76 flag, never a status (BR-59) |
 | `createdAt`, `updatedAt` | ISO string | |
 | `attachments` | array | Section 10.6. Active and removed both present |

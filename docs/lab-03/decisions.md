@@ -175,6 +175,12 @@ terminal status.
 |---|---|---|---|---|---|
 | C-113 | A malformed path `:id` | Implementation of #42 | **A non-positive-integer path parameter answers 400 `INVALID_QUERY_PARAM`**, with `fields` naming the parameter (`id`), on every route addressed by a Ticket, Attachment or other resource id - staff or Requester, new or carried from Lab 2. `VALIDATION_FAILED` stays for a body field; a path parameter is not a body field. | `api-spec.md` 1.3 named no code for a bad path parameter, and the existing `GET /api/tickets/:id` already answered `INVALID_QUERY_PARAM` for one (`L2 C-43`); the #42 routes had drifted to `VALIDATION_FAILED` instead. One code for every malformed id, matching the Lab 2 precedent, rather than two codes for the same shape of error. | Narrows `api-spec.md` 1.3's `VALIDATION_FAILED` and `INVALID_QUERY_PARAM` rows for the #42 staff and Ticket/Attachment-id routes |
 
+### Raised during implementation
+
+| ID | Topic | Raised by | Decision | Reason | Supersedes |
+|---|---|---|---|---|---|
+| C-114 | The owner's activation state on the Requester Ticket DTO | Implementation of #42 | **`api-spec.md` 10.2's `owner` key gains `isActive`: `{ name, isActive }` \| null.** `ui-spec.md` 14.1 already asks the Requester Ticket Detail screen to show a deactivated owner as `Siriporn Chai (inactive)`, the same marker C-33 already gives the IT Staff screen, but the DTO carried `{ name }` only - there was no flag to render it from. | `api-spec.md` 10.2 and `ui-spec.md` 14.1 disagreed with each other and neither named the other, the same shape of gap as C-108 and C-109: both readings were self-consistent, so no test would have caught it until the screen was actually built against both documents at once (found in #42). Adding `isActive` costs nothing BR-100 protects - the email address stays absent - and matches the precedent C-33 already set for the IT Staff screen. | Narrows `api-spec.md` 10.2's `owner` row shape |
+
 ---
 
 ## Carried from Lab 2
