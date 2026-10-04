@@ -39,9 +39,13 @@ let pendingKey = 0;
 export default function AttachmentSection({
   ticketId,
   initial,
+  locked = false,
 }: {
   ticketId: number;
   initial: AttachmentMeta[];
+  /** ui-spec.md 14.4, C-109 - a Closed or Cancelled Ticket: no upload control
+   * and no Remove action render. Preview and Download stay available. */
+  locked?: boolean;
 }) {
   const [rows, setRows] = useState<Row[]>(() => initial.map(fromMeta));
   const [refreshing, setRefreshing] = useState(false);
@@ -159,24 +163,26 @@ export default function AttachmentSection({
         <span className="tk-muted" aria-live="polite">{`${activeCount} of ${MAX_ACTIVE} active`}</span>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="add-attachment" className="form-label tk-label">Add attachment</label>
-        <input
-          id="add-attachment"
-          type="file"
-          className="form-control"
-          multiple
-          accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
-          disabled={slotsFull}
-          aria-describedby="add-attachment-help"
-          onChange={handleFiles}
-        />
-        <div id="add-attachment-help" className="tk-muted">
-          {slotsFull
-            ? "This ticket already has five active attachments. Remove one before adding another."
-            : "JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket."}
+      {!locked && (
+        <div className="mb-3">
+          <label htmlFor="add-attachment" className="form-label tk-label">Add attachment</label>
+          <input
+            id="add-attachment"
+            type="file"
+            className="form-control"
+            multiple
+            accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+            disabled={slotsFull}
+            aria-describedby="add-attachment-help"
+            onChange={handleFiles}
+          />
+          <div id="add-attachment-help" className="tk-muted">
+            {slotsFull
+              ? "This ticket already has five active attachments. Remove one before adding another."
+              : "JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket."}
+          </div>
         </div>
-      </div>
+      )}
 
       <h3 className="tk-label" id="active-attachments-title">Active</h3>
       {active.length === 0 ? (
@@ -205,9 +211,11 @@ export default function AttachmentSection({
                     <button type="button" className="btn btn-sm tk-btn-tertiary" aria-label={`Download ${row.meta.originalFilename}`} onClick={() => open(row, "attachment")}>
                       Download
                     </button>
-                    <button type="button" className="btn btn-sm btn-danger" aria-label={`Remove ${row.meta.originalFilename}`} onClick={() => setDialogFor(row)}>
-                      Remove
-                    </button>
+                    {!locked && (
+                      <button type="button" className="btn btn-sm btn-danger" aria-label={`Remove ${row.meta.originalFilename}`} onClick={() => setDialogFor(row)}>
+                        Remove
+                      </button>
+                    )}
                   </div>
                   {preview?.key === row.key && (
                     <figure className="tk-attachment-preview">

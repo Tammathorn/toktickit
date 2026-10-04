@@ -197,6 +197,17 @@ export default function StaffTicketQueue() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [searchText]);
 
+  // ui-spec 16: "Back to the Ticket Queue" on Staff Ticket Detail preserves
+  // the queue's filters and page. The address itself carries them (toSearch),
+  // so the detail screen only needs the most recent one.
+  useEffect(() => {
+    try {
+      sessionStorage.setItem("tk-queue-search", locationSearch);
+    } catch {
+      // sessionStorage unavailable - the back link falls back to a bare /queue
+    }
+  }, [locationSearch]);
+
   function apply(patch: Partial<QueueState>) {
     navigate(`/queue${toSearch({ ...state, ...patch })}`, { replace: true });
   }

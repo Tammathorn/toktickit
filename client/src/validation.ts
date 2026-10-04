@@ -17,7 +17,15 @@ export const MESSAGES = {
   removalReason: "A removal reason is required.",
   // api-spec.md 3.1: a system-generated field supplied in the body.
   systemGenerated: (name: string) => `${name} is system generated and cannot be supplied.`,
+  // ui-spec.md 6.1, Lab 3 - IT Staff Ticket Detail and the two composers.
+  commentBody: "A comment cannot be empty and must be 2000 characters or fewer.",
+  noteBody: "A note cannot be empty and must be 2000 characters or fewer.",
+  itPriority: "IT Priority must be Low, Medium or High.",
+  currentStatus: "That is not a valid status.",
+  ownerId: "Choose an active IT Staff or Administrator user.",
 } as const;
+
+export const ENTRY_BODY_MAX = 2000;
 
 export const SUMMARY_MIN = 5;
 export const SUMMARY_MAX = 120;

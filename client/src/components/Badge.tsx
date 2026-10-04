@@ -24,7 +24,7 @@ export function PriorityBadge({ value, it = false }: { value: RequestedPriority;
 // ui-spec.md 8.2 - all eight values, each its own treatment (BR-52, C-70).
 // Display text is the exact label the table names, not a generic title-case
 // of the enum: "Waiting for Requester" keeps "for" lowercase.
-const STATUS_LABELS: Record<TicketStatus, string> = {
+export const STATUS_LABELS: Record<TicketStatus, string> = {
   NEW: "New",
   OPEN: "Open",
   IN_PROGRESS: "In Progress",
