@@ -1,13 +1,15 @@
 import fs from "node:fs";
 import path from "node:path";
 import { Router, type Request, type Response } from "express";
-import type { Attachment } from "@prisma/client";
+import type { Attachment, TicketStatus } from "@prisma/client";
 import { getPrisma } from "../prisma.js";
 import { sendError, sendInternalError } from "../lib/http-error.js";
 import { anyRole, authOf, requesterOnly } from "../middleware/auth.js";
 import { trimmed } from "../lib/text.js";
 import { MESSAGES } from "../lib/validation.js";
 import { UPLOAD_DIR } from "../lib/uploads.js";
+import { sendTicketClosed } from "../lib/ticket-access.js";
+import { isTerminal } from "../lib/status-transitions.js";
 
 // Attachment download / preview (api-spec.md 4.3) and soft removal (4.4).
 //
@@ -40,7 +42,9 @@ function parseId(raw: string): number | null {
 
 // Steps 4 to 6: the id, the row, then the owner. Sends the refusal itself and
 // returns null so the caller just stops.
-async function loadVisibleAttachment(req: Request, res: Response): Promise<Attachment | null> {
+type VisibleAttachment = Attachment & { ticket: { requesterId: number; currentStatus: TicketStatus } };
+
+async function loadVisibleAttachment(req: Request, res: Response): Promise<VisibleAttachment | null> {
   const id = parseId(req.params.id);
   if (id === null) {
     sendError(res, 400, "INVALID_QUERY_PARAM", "Attachment id must be a positive integer.", { id: "Attachment id must be a positive integer." });
@@ -48,7 +52,7 @@ async function loadVisibleAttachment(req: Request, res: Response): Promise<Attac
   }
   const row = await getPrisma().attachment.findUnique({
     where: { id },
-    include: { ticket: { select: { requesterId: true } } },
+    include: { ticket: { select: { requesterId: true, currentStatus: true } } },
   });
   const { user } = authOf(res);
   if (!row || (user.role === "REQUESTER" && row.ticket.requesterId !== user.id)) {
@@ -106,7 +110,9 @@ attachmentsRouter.get(
 // role step (C-103). Nothing is deleted: the row is marked removed with the
 // timestamp and the trimmed reason, and the file stays on disk (L2 BR-46,
 // L2 BR-47). The body is validated last (BR-86): a missing key is malformed
-// (400); an empty-after-trim reason violates L2 BR-47 (422).
+// (400); an empty-after-trim reason violates L2 BR-47 (422). A Closed or
+// Cancelled Ticket refuses the removal 409 TICKET_CLOSED, after ownership so a
+// non-owner still gets 404, and nothing is modified (BR-108, C-109).
 // ---------------------------------------------------------------------------
 attachmentsRouter.delete("/api/attachments/:id", ...requesterOnly, async (req: Request, res: Response) => {
   const body: Record<string, unknown> = req.body && typeof req.body === "object" ? req.body : {};
@@ -120,6 +126,10 @@ attachmentsRouter.delete("/api/attachments/:id", ...requesterOnly, async (req: R
     }
     if (body.removalReason === undefined || typeof body.removalReason !== "string") {
       sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.", { removalReason: MESSAGES.removalReason });
+      return;
+    }
+    if (isTerminal(row.ticket.currentStatus)) {
+      sendTicketClosed(res);
       return;
     }
     const reason = trimmed(body.removalReason);
