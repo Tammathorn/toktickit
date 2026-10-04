@@ -118,6 +118,7 @@ describe("GET /api/tickets/:id/attachments", () => {
     expect(forbidden.status).toBe(404);
     expect(forbidden.body.error.code).toBe("TICKET_NOT_FOUND");
     const missing = await owner.agent.get("/api/tickets/999999/attachments");
+    expect(forbidden.text).toBe(missing.text);
     expect(missing.status).toBe(404);
     expect(missing.body.error.code).toBe("TICKET_NOT_FOUND");
   });

@@ -20,6 +20,20 @@ app.use(cors({ origin: (_origin, allow) => allow(null, clientOrigin()) }));
 // C-58 - a cross-origin write is refused before its body is even parsed.
 app.use(originCheck);
 app.use(express.json());
+// A body express.json cannot parse is treated as no body at all, and the
+// request carries on through the chain. The session, gate and role checks then
+// answer first, exactly as for any other request, and the route's own body
+// validation - the last step of api-spec.md 1.4 - reports what is missing. An
+// anonymous caller is told 401, never whether their body would have parsed
+// (BR-86). The parser's message, which quotes the body, is dropped (BR-88).
+app.use((error: { type?: unknown }, req: Request, _res: Response, next: NextFunction) => {
+  if (error?.type === "entity.parse.failed") {
+    req.body = {};
+    next();
+    return;
+  }
+  next(error);
+});
 
 // ---------------------------------------------------------------------------
 // Issue 2 — API health check

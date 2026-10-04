@@ -425,14 +425,20 @@ describe("API-14 the gate on the real protected routes", () => {
   it("API-14 a gated user gets 403 PASSWORD_CHANGE_REQUIRED, never 401, from GET /api/tickets (AC-21, AC-02, C-99)", async () => {
     const gated = await makeUser({ mustChangePassword: true });
     const { token } = await login(gated.email);
-    for (const route of ["/api/tickets", "/api/tickets/1", "/api/tickets/1/attachments"]) {
-      const res = await request(app).get(route).set("Cookie", asCookie(token));
+    const calls: Array<[string, () => request.Test]> = [
+      ["GET /api/tickets", () => request(app).get("/api/tickets")],
+      ["GET /api/tickets/1", () => request(app).get("/api/tickets/1")],
+      ["GET /api/tickets/1/attachments", () => request(app).get("/api/tickets/1/attachments")],
+      ["POST /api/tickets", () => request(app).post("/api/tickets").send({})],
+      ["POST /api/tickets/1/attachments", () => request(app).post("/api/tickets/1/attachments")],
+      ["GET /api/attachments/1/download", () => request(app).get("/api/attachments/1/download")],
+      ["DELETE /api/attachments/1", () => request(app).delete("/api/attachments/1").send({ removalReason: "x" })],
+    ];
+    for (const [route, call] of calls) {
+      const res = await call().set("Cookie", asCookie(token));
       expect(res.status, route).toBe(403);
-      expect(res.body.error.code).toBe("PASSWORD_CHANGE_REQUIRED");
+      expect(res.body.error.code, route).toBe("PASSWORD_CHANGE_REQUIRED");
     }
-    const create = await request(app).post("/api/tickets").set("Cookie", asCookie(token)).send({});
-    expect(create.status).toBe(403);
-    expect(create.body.error.code).toBe("PASSWORD_CHANGE_REQUIRED");
   });
 });
 

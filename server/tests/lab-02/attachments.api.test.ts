@@ -178,6 +178,7 @@ describe("POST /api/tickets/:id/attachments", () => {
       .set("Cookie", `tt_session=${"0".repeat(64)}`)
       .attach("file", PNG, "a.png");
     expect(unknownCaller.status).toBe(401);
+    expect(unknownCaller.body.error.code).toBe("AUTH_REQUIRED");
 
     const noCaller = await request(app).post(`/api/tickets/${ticketId}/attachments`).attach("file", PNG, "a.png");
     expect(noCaller.status).toBe(401);

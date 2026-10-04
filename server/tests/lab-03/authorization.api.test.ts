@@ -109,29 +109,41 @@ type Route = { method: string; path: string };
 type Layer = {
   route?: { path: string; methods: Record<string, boolean> };
   name?: string;
-  handle?: { stack?: Layer[] };
+  regexp?: { fast_slash?: boolean };
+  handle?: { stack?: Layer[]; _router?: { stack: Layer[] } };
 };
 
 // Every route registered on the app, found by walking Express's own router
-// rather than from a list somebody has to remember to update.
-function routesOf(express: Express): Route[] {
-  const found: Route[] = [];
+// rather than from a list somebody has to remember to update. It descends into
+// routers and mounted sub-apps. A router, sub-app or handler mounted under a
+// path prefix is reported as `unwalked` rather than skipped, so the day one is
+// added this test fails until the walker is taught the prefix - it can never
+// pass by not seeing a route.
+function routesOf(express: Express): { routes: Route[]; unwalked: string[] } {
+  const routes: Route[] = [];
+  const unwalked: string[] = [];
   const walk = (stack: Layer[]) => {
     for (const layer of stack) {
       if (layer.route) {
-        for (const method of Object.keys(layer.route.methods)) found.push({ method: method.toUpperCase(), path: layer.route.path });
-      } else if (layer.name === "router" && layer.handle?.stack) {
-        walk(layer.handle.stack);
+        for (const method of Object.keys(layer.route.methods)) {
+          // router.all() registers "_all": probe it as a GET.
+          routes.push({ method: method === "_all" ? "GET" : method.toUpperCase(), path: layer.route.path });
+        }
+        continue;
       }
+      const nested = layer.handle?.stack ?? layer.handle?._router?.stack;
+      if (!layer.regexp?.fast_slash) unwalked.push(`${layer.name ?? "handler"} mounted under a path prefix`);
+      else if (nested) walk(nested);
     }
   };
   walk((express as unknown as { _router: { stack: Layer[] } })._router.stack);
-  return found;
+  return { routes, unwalked };
 }
 
 describe("the route inventory", () => {
   it("SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)", async () => {
-    const routes = routesOf(app);
+    const { routes, unwalked } = routesOf(app);
+    expect(unwalked, "mounts the walker cannot probe").toEqual([]);
     // A sanity floor, so a walk that finds nothing cannot pass vacuously.
     expect(routes.length).toBeGreaterThanOrEqual(14);
     const unprotected: string[] = [];
@@ -143,6 +155,12 @@ describe("the route inventory", () => {
       if (res.status !== 401 || res.body?.error?.code !== "AUTH_REQUIRED") unprotected.push(`${key} -> ${res.status}`);
     }
     expect(unprotected, "routes that answered without a session").toEqual([]);
+  });
+
+  it("an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)", async () => {
+    const res = await request(app).post("/api/tickets").set("Content-Type", "application/json").send('{"summary": "broken');
+    expect(res.status).toBe(401);
+    expect(res.body.error.code).toBe("AUTH_REQUIRED");
   });
 
   it("SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)", async () => {
@@ -281,7 +299,10 @@ describe("a client-supplied requesterId is ignored", () => {
           const text = fs.readFileSync(full, "utf8");
           // A read of the identifier, or the removed route registered as a
           // string - not a comment that records its removal.
-          if (/(query|body)(\?)?\.requesterId|\[["']requesterId["']\]|["'`]\/api\/requesters["'`]/.test(text)) offenders.push(path.relative(SERVER_DIR, full));
+          const reads =
+            /(query|body)(\?)?\.requesterId|\[["']requesterId["']\]/.test(text) ||
+            /\{[^}]*\brequesterId\b[^}]*\}\s*=\s*req\.(query|body)/.test(text);
+          if (reads || /["'`]\/api\/requesters["'`]/.test(text)) offenders.push(path.relative(SERVER_DIR, full));
         }
       }
     };
@@ -314,14 +335,14 @@ describe("failures and dependencies", () => {
         if (banned.test(`"${dep}"`)) offenders.push(`${manifest}: ${dep}`);
       }
     }
+    // Whole-text, so a multi-line import is caught by its `from` clause.
+    const importsBanned = /(from|require\()\s*["'](passport[\w-]*|jsonwebtoken|bcrypt|bcryptjs|argon2|express-session)["']/;
     const walk = (dir: string) => {
       for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
         const full = path.join(dir, entry.name);
         if (entry.isDirectory()) walk(full);
-        else if (/\.(ts|tsx)$/.test(entry.name) && /(import|require)[^\n]*/.test(fs.readFileSync(full, "utf8"))) {
-          for (const line of fs.readFileSync(full, "utf8").split("\n")) {
-            if (/^\s*(import|.*require\()/.test(line) && banned.test(line)) offenders.push(path.relative(REPO_DIR, full));
-          }
+        else if (/\.(ts|tsx)$/.test(entry.name) && importsBanned.test(fs.readFileSync(full, "utf8"))) {
+          offenders.push(path.relative(REPO_DIR, full));
         }
       }
     };
