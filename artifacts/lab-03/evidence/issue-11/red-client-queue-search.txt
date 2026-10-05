@@ -1,0 +1,14 @@
+Command: cd client && npx vitest run tests/lab-03/StaffTicketQueue.test.tsx
+Date: 2026-10-05 14:25 UTC
+Commit: 235dcdce3987edd9b85f82e308a4a70d58838a80 (feature/lab3-11-queue-search-fix, new test added, fix not yet applied)
+RED - summary and failure excerpt only:
+
+   × IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56) 1578ms
+     → expected last "fetchQueue" call to have been called with [ ObjectContaining{…} ]
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue
+AssertionError: expected last "fetchQueue" call to have been called with [ ObjectContaining{…} ]
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 12 passed (13)

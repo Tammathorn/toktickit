@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   ApiError,
   fetchAssignableUsers,
@@ -126,6 +126,10 @@ export default function StaffTicketQueue() {
   const currentUser = useCurrentUser();
 
   const state = useMemo(() => readState(locationSearch), [locationSearch]);
+  // The debounced search callback outlives the render that scheduled it, so it
+  // reads the current state through this ref, never the one it was created with.
+  const stateRef = useRef(state);
+  stateRef.current = state;
   const [load, setLoad] = useState<LoadState>({ kind: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -209,7 +213,7 @@ export default function StaffTicketQueue() {
   }, [locationSearch]);
 
   function apply(patch: Partial<QueueState>) {
-    navigate(`/queue${toSearch({ ...state, ...patch })}`, { replace: true });
+    navigate(`/queue${toSearch({ ...stateRef.current, ...patch })}`, { replace: true });
   }
 
   // Drops sort too, not just search and the filters: an invalid sort is what
