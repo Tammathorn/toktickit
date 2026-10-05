@@ -1,0 +1,76 @@
+{
+  "screen": "create-ticket",
+  "viewport": "mobile",
+  "url": "/tickets/new",
+  "focusableVisible": 13,
+  "reached": 13,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Toggle navigation",
+      "ring": "box-shadow rgba(255, 255, 255, 0.55) 0px 0px 0px 4px"
+    },
+    {
+      "element": "input#ticket-number",
+      "name": "Ticket Number",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#ticket-date",
+      "name": "Ticket Date",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#ticket-requester",
+      "name": "Requester",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#categoryId",
+      "name": "Category * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#relatedSystemId",
+      "name": "Related System * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#requestedPriority",
+      "name": "Requested Priority * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#summary",
+      "name": "Ticket Summary * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "textarea#description",
+      "name": "Description * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#attachments",
+      "name": "Attachments",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Submit Ticket",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Cancel",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

@@ -230,7 +230,13 @@ describe("My Tickets", () => {
     // badge renders on every row, carrying the backfilled value as a pill.
     const itHigh = within(table).getAllByText("IT High")[0];
     expect(itHigh).toHaveClass("tk-badge", "tk-badge-pill", "tk-priority-high");
-    expect(within(table).getAllByText(/^IT (Low|Medium|High)$/)).toHaveLength(A_ROWS.length);
+    // Rewritten again for C-116 (tests.md 4.2): each row carries the badge
+    // twice in the DOM - its own lg column, and a copy in the Current Status
+    // cell for the md table - and CSS shows exactly one at any width.
+    expect(within(table).getAllByText(/^IT (Low|Medium|High)$/)).toHaveLength(A_ROWS.length * 2);
+    const itIn = (selector: string) => Array.from(table.querySelectorAll(selector)).filter((b) => /^IT /.test(b.textContent ?? "")).length;
+    expect(itIn("td.d-lg-table-cell .tk-badge"), "the lg column").toBe(A_ROWS.length);
+    expect(itIn("td .d-lg-none .tk-badge"), "the md copy").toBe(A_ROWS.length);
   });
 
   it("STYLE-08 marks the active navigation item with the active class and aria-current", async () => {

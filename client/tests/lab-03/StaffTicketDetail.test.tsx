@@ -122,22 +122,25 @@ describe("IT Staff Ticket Detail", () => {
     }
   });
 
-  it("UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders (BR-58, C-98)", async () => {
+  it("UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders once, below the lists (BR-58, C-98, C-117)", async () => {
     vi.spyOn(api, "fetchStaffTicket").mockResolvedValue(ticket({ currentStatus: "CLOSED", owner: { id: 6, name: "Araya Methee", role: "IT_STAFF", isActive: true } }));
     await renderDetail();
     expect(screen.queryByLabelText("Current Status")).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Claim" })).not.toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Unassign" })).not.toBeInTheDocument();
     expect(screen.queryByLabelText("IT Priority")).not.toBeInTheDocument();
-    // once in the Operations card (16.2) and once below the comment/note
-    // lists (16.4) - two distinct sections, each stating its own lock.
-    expect(screen.getAllByText("This ticket is closed - create a new ticket if the problem returns.")).toHaveLength(2);
+    // C-117 rewrites this assertion (it said 2: the Operations card and below
+    // the lists). The line now renders once, below the comment/note lists
+    // (16.4); the Operations card shows owner and IT Priority read-only only.
+    const closed = screen.getAllByText("This ticket is closed - create a new ticket if the problem returns.");
+    expect(closed).toHaveLength(1);
+    expect(within(screen.getByRole("region", { name: "Ticket Operations" })).queryByText(/This ticket is closed/)).not.toBeInTheDocument();
 
     cleanup();
     vi.spyOn(api, "fetchStaffTicket").mockResolvedValue(ticket({ currentStatus: "CANCELLED" }));
     await renderDetail();
     expect(screen.queryByLabelText("Current Status")).not.toBeInTheDocument();
-    expect(screen.getAllByText("This ticket is cancelled - create a new ticket if the problem returns.")).toHaveLength(2);
+    expect(screen.getAllByText("This ticket is cancelled - create a new ticket if the problem returns.")).toHaveLength(1);
   });
 
   it("UI-31 Resolved, Closed and Cancelled each open a confirmation and send no request until confirmed; Cancel sends nothing (AC-80, BR-57)", async () => {

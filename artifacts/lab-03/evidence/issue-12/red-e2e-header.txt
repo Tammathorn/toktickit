@@ -1,0 +1,44 @@
+Command: npx playwright test e2e/lab-03/visual-evidence.spec.ts --project=tablet -g RESP-12
+Date: 2026-10-05 18:21 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; RESP-12 extended to Log Out after the first evidence run showed it wrapping at 834 px)
+
+
+Running 4 tests using 3 workers
+
+(node:49148) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:45980) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:20084) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (174ms)
+  ✓  3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (200ms)
+  ✓  2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (203ms)
+(node:50972) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [tablet] › e2e\lab-03\visual-evidence.spec.ts:172:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) (475ms)
+
+
+  1) [tablet] › e2e\lab-03\visual-evidence.spec.ts:172:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) 
+
+    Error: Log Out on a single line
+
+    expect(received).toBeLessThan(expected)
+
+    Expected: < 36
+    Received:   45
+
+      195 |         return r.getBoundingClientRect().height;
+      196 |       });
+    > 197 |       expect(textHeight, "Log Out on a single line").toBeLessThan(lineHeight * 1.5);
+          |                                                      ^
+      198 |       const overflow = await page.locator(".tk-header .container").evaluate((c) => c.scrollWidth - c.clientWidth);
+      199 |       expect(overflow, "nothing overflows the header").toBeLessThanOrEqual(0);
+      200 |     });
+        at C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:197:54
+
+    Error Context: test-results\lab-03-visual-evidence-Vis-aee8f-on-one-line-ui-spec-17-1-9--tablet\error-context.md
+
+  1 failed
+    [tablet] › e2e\lab-03\visual-evidence.spec.ts:172:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) 
+  3 passed (1.9s)

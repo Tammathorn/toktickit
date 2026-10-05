@@ -148,6 +148,19 @@ h1, h2, h3 { line-height: 1.25; }
   opacity: 1;
   cursor: not-allowed;
 }
+/* C-118: a disabled button keeps its level's shape, so a disabled primary and a
+   disabled secondary (Post Comment beside Add Note, section 19) are still told
+   apart - filled versus outlined, in colour and in greyscale. */
+.btn-primary:disabled, .btn-primary.disabled, .btn-danger:disabled, .btn-danger.disabled {
+  --bs-btn-disabled-bg: var(--tk-text-muted);
+  --bs-btn-disabled-border-color: var(--tk-text-muted);
+  --bs-btn-disabled-color: var(--tk-surface);
+}
+.btn-secondary:disabled, .btn-secondary.disabled {
+  --bs-btn-disabled-bg: var(--tk-surface);
+  --bs-btn-disabled-border-color: var(--tk-border);
+  --bs-btn-disabled-color: var(--tk-text-muted);
+}
 
 /* ---- Shell (section 9) ------------------------------------------------ */
 
@@ -378,6 +391,24 @@ textarea.form-control { height: auto; resize: vertical; }
 .tk-row { cursor: pointer; }
 .tk-row:hover, .tk-row:focus-within { background-color: var(--tk-pale); }
 .tk-row-link { color: var(--tk-secondary); font-weight: 600; text-decoration: none; }
+
+/* Issue #12 - the Queue's nine lg columns fit their card, so Current Status,
+   Ticket Owner and Last Updated are never cut off by the card's
+   overflow: hidden (ui-spec 15.2, 21). Ticket Summary, the widest column,
+   wraps instead of forcing the table wide; headers and the two dates may
+   break onto a second line; the cell padding tightens. */
+.tk-queue-table thead th, .tk-queue-table tbody td { padding: 0.75rem 0.5rem; }
+.tk-queue-table thead th { white-space: normal; }
+.tk-queue-table .tk-col-summary { width: auto; min-width: 11rem; }
+@media (min-width: 992px) { .tk-queue-table td.tk-col-summary { white-space: normal; } }
+.tk-queue-table td.tk-nowrap { white-space: normal; min-width: 6.5rem; }
+
+/* Issue #12 - User Management's five columns fit the md card, so Edit stays
+   visible (ui-spec 17.1): a long email address may break, padding tightens. */
+.tk-users-table td:nth-child(2) { overflow-wrap: anywhere; }
+@media (max-width: 991.98px) {
+  .tk-users-table thead th, .tk-users-table tbody td { padding: 0.75rem 0.5rem; }
+}
 .tk-row-link:hover { text-decoration: underline; }
 
 .tk-card-list { display: flex; flex-direction: column; gap: 0.75rem; }
@@ -541,6 +572,13 @@ textarea.form-control { height: auto; resize: vertical; }
   .tk-header .tk-identity-shell .tk-identity-name,
   .tk-header .tk-identity-shell .tk-badge-role { align-self: flex-start; }
   .tk-header .tk-identity-shell .tk-identity-name { display: flex; align-items: center; min-height: 44px; }
+}
+/* Issue #12: from md up the identity is one line - name, role badge, Log Out -
+   so the longest role, Administrator, no longer wraps the header at 834 px. */
+@media (min-width: 768px) {
+  .tk-header .tk-identity-shell { flex-wrap: nowrap; }
+  .tk-header .tk-identity-shell .tk-badge-role,
+  .tk-header .tk-identity-shell .tk-btn-on-primary { white-space: nowrap; }
 }
 
 /* ---- Lab 3: Forbidden state (ui-spec section 20.1) -------------------- */

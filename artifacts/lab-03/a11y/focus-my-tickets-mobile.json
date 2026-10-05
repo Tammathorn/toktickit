@@ -1,0 +1,106 @@
+{
+  "screen": "my-tickets",
+  "viewport": "mobile",
+  "url": "/tickets",
+  "focusableVisible": 19,
+  "reached": 19,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Toggle navigation",
+      "ring": "box-shadow rgba(255, 255, 255, 0.55) 0px 0px 0px 4px"
+    },
+    {
+      "element": "input#list-search",
+      "name": "Search",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-category",
+      "name": "Category",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-system",
+      "name": "Related System",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-status",
+      "name": "Current Status",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-sort",
+      "name": "Sort",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000143",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000142",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000141",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000140",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000139",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000138",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000137",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000136",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000135",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000134",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-page-size",
+      "name": "Per page",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Next",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

@@ -1,0 +1,40 @@
+{
+  "role": "requester",
+  "viewport": "mobile",
+  "pages": [
+    {
+      "route": "/tickets",
+      "links": [
+        {
+          "label": "My Tickets",
+          "ariaCurrent": "page",
+          "fontWeight": "600",
+          "borderBottom": "3px solid rgb(234, 246, 239)"
+        },
+        {
+          "label": "Create Ticket",
+          "ariaCurrent": null,
+          "fontWeight": "400",
+          "borderBottom": "3px solid rgba(0, 0, 0, 0)"
+        }
+      ]
+    },
+    {
+      "route": "/tickets/new",
+      "links": [
+        {
+          "label": "My Tickets",
+          "ariaCurrent": null,
+          "fontWeight": "400",
+          "borderBottom": "3px solid rgba(0, 0, 0, 0)"
+        },
+        {
+          "label": "Create Ticket",
+          "ariaCurrent": "page",
+          "fontWeight": "600",
+          "borderBottom": "3px solid rgb(234, 246, 239)"
+        }
+      ]
+    }
+  ]
+}

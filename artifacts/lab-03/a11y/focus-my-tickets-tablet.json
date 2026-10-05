@@ -1,0 +1,116 @@
+{
+  "screen": "my-tickets",
+  "viewport": "tablet",
+  "url": "/tickets",
+  "focusableVisible": 21,
+  "reached": 21,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "My Tickets",
+      "ring": "box-shadow rgba(13, 110, 253, 0.25) 0px 0px 0px 4px"
+    },
+    {
+      "element": "a",
+      "name": "Create Ticket",
+      "ring": "box-shadow rgba(13, 110, 253, 0.25) 0px 0px 0px 4px"
+    },
+    {
+      "element": "button",
+      "name": "Log Out",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#list-search",
+      "name": "Search",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-category",
+      "name": "Category",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-system",
+      "name": "Related System",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-status",
+      "name": "Current Status",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-sort",
+      "name": "Sort",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000106",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000105",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000104",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000103",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000102",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000101",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000100",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000099",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000098",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Open TKT-2026-000097",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#list-page-size",
+      "name": "Per page",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Next",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}
