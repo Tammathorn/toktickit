@@ -608,4 +608,29 @@ textarea.form-control { height: auto; resize: vertical; }
 .tk-internal-standing-label { color: var(--tk-warning); font-weight: 600; }
 
 .tk-char-counter { margin-top: 0.25rem; font-size: 0.8125rem; color: var(--tk-text-muted); }
+
+/* ---- Lab 3: User Management (ui-spec section 17) ---------------------- */
+
+/* Status is never colour alone (CLAUDE.md): Inactive carries a dot glyph
+   beside the muted text, Active is text alone in the secondary green. */
+.tk-status-active { color: var(--tk-secondary); font-weight: 600; }
+.tk-status-inactive { color: var(--tk-text-muted); }
+.tk-status-dot {
+  display: inline-block;
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background-color: var(--tk-text-muted);
+  margin-right: 0.25rem;
+}
+.tk-link-button {
+  border: none;
+  background: none;
+  padding: 0;
+  color: var(--tk-secondary);
+  font-weight: 600;
+  text-decoration: none;
+}
+.tk-link-button:hover { text-decoration: underline; }
+.tk-user-card { gap: 0.25rem; }
 .tk-char-counter-danger { color: var(--tk-danger); }

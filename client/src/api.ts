@@ -538,3 +538,69 @@ export function postInternalNote(ticketId: number, body: string): Promise<Entry>
 export function postRequesterResolved(ticketId: number): Promise<Ticket> {
   return postJson(`/api/tickets/${ticketId}/requester-resolved`);
 }
+
+// ---------------------------------------------------------------------------
+// Administrator user management - api-spec.md section 9, ui-spec.md section
+// 17 (#43). Administrator only; every call below is refused 403 FORBIDDEN_ROLE
+// to any other role, before any user data is fetched (AC-96, AC-97).
+// ---------------------------------------------------------------------------
+
+// api-spec.md 9.1 row shape - the six AuthUser keys plus createdAt/updatedAt.
+// Never a passwordHash, never anything derived from one (BR-88, FR-70).
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  mustChangePassword: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserListQuery {
+  search?: string;
+  role?: string;
+}
+
+// GET /api/users - a bare array, no pagination envelope (BR-84). Name
+// ascending then id, fixed by the server (C-107); `sort` is never sent.
+export function fetchUsers(query: UserListQuery): Promise<AdminUser[]> {
+  const params = new URLSearchParams();
+  if (query.search) params.set("search", query.search);
+  if (query.role) params.set("role", query.role);
+  const qs = params.toString();
+  return getJson(`/api/users${qs ? `?${qs}` : ""}`);
+}
+
+export interface NewUserInput {
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  initialPassword: string;
+}
+
+// POST /api/users - api-spec.md 9.2. mustChangePassword is always true on the
+// response; there is no way to opt out (BR-16).
+export function createUser(input: NewUserInput): Promise<AdminUser> {
+  return postJson("/api/users", input);
+}
+
+export interface EditUserInput {
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+// PATCH /api/users/:id - api-spec.md 9.3. Exactly four fields, no password.
+export function updateUser(id: number, input: EditUserInput): Promise<AdminUser> {
+  return patchJson(`/api/users/${id}`, input);
+}
+
+// POST /api/users/:id/initial-password - api-spec.md 9.4. The only
+// account-recovery path in the lab (BR-78); ends every session of that user.
+export function setInitialPassword(id: number, initialPassword: string): Promise<AdminUser> {
+  return postJson(`/api/users/${id}/initial-password`, { initialPassword });
+}

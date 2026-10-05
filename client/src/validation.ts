@@ -23,6 +23,12 @@ export const MESSAGES = {
   itPriority: "IT Priority must be Low, Medium or High.",
   currentStatus: "That is not a valid status.",
   ownerId: "Choose an active IT Staff or Administrator user.",
+  // ui-spec.md 6.1, Lab 3 Administrator user management (#43). BR-99, BR-75, FR-59.
+  nameBounds: "Name is required and must be between 1 and 100 characters.",
+  emailBounds: "Email Address is required and must be a valid address of at most 254 characters.",
+  roleRequired: "Role is required.",
+  roleInvalid: "Role must be Requester, IT Staff or Administrator.",
+  statusRequired: "Status is required.",
 } as const;
 
 export const ENTRY_BODY_MAX = 2000;
@@ -111,11 +117,19 @@ export function messageForCode(code: string, filename?: string): string {
     // C-65). A non-owner now receives the 404 below.
     case "TICKET_NOT_FOUND":
     case "ATTACHMENT_NOT_FOUND":
+    case "USER_NOT_FOUND":
       return "That item does not exist.";
     case "ATTACHMENT_REMOVED":
       return "That attachment was removed and can no longer be downloaded.";
     case "INVALID_QUERY_PARAM":
       return "Some search or filter values in the address are not valid. Clear filters to return to the default list.";
+    // Lab 3 Administrator user management (ui-spec.md 6.2, #43).
+    case "EMAIL_TAKEN":
+      return "That email address is already in use.";
+    case "LAST_ADMINISTRATOR":
+      return "There must always be at least one active Administrator.";
+    case "SELF_DEACTIVATION":
+      return "You cannot deactivate your own account.";
     default:
       return INTERNAL_ERROR_MESSAGE;
   }
