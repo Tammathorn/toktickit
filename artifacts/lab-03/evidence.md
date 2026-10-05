@@ -54,6 +54,7 @@ response the API would have sent, and every such capture says so in its row.
 | P1-10 | README and `.gitignore` | Repository files, rendered | `README.md`, `.gitignore` | #45 | captured |
 | P1-11 | Repository directory structure | Terminal output | `evidence/issue-9/directory-tree.txt` | #45 | captured |
 | P1-12 | The second release PR, #59 (`lab3-staging` into `main`, the E2E-07 fix), approved by the reviewer and merged with a merge commit (`347e25e`), the same method as #55. Headless Playwright, full page at 1280 px, taken after the merge: the "Merged" badge, the reviewer's approval, the commit line `merged commit 347e25e into main`, and "Checks 0" (the repository has no CI workflow, see P3-02) | GitHub capture, merged PR | `screenshots/github/2026-10-05-pr59-merged.png` | #56, #59 | captured |
+| P1-13 | Issue #12's two PRs: #60 (`feature/lab3-12-ui-evidence` into `lab3-staging`, merge commit `12437b7`) and the release #61 (`lab3-staging` into `main`, merge commit `afac6dc`), both merged with a merge commit and both **self-merged after the review period; not peer-reviewed** - each page reads "No reviews" under Reviewers and "Checks 0" (no CI). Headless Playwright, full page at 1280 px, taken after the merges | GitHub capture, merged PR | `screenshots/github/2026-10-05-pr60-merged.png`, `screenshots/github/2026-10-05-pr61-merged.png` | Issue #12 | captured |
 
 ## Part 2 - Spec DD (5)
 
