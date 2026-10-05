@@ -25,8 +25,8 @@ let ticketId: number;
 
 beforeAll(async () => {
   await seedGraded(prisma);
-  owner = await prisma.requesterUser.create({ data: { name: `${TAG} Owner`, email: `detail-owner-${Date.now()}@example.test` } });
-  other = await prisma.requesterUser.create({ data: { name: `${TAG} Other`, email: `detail-other-${Date.now()}@example.test` } });
+  owner = await prisma.user.create({ data: { name: `${TAG} Owner`, email: `detail-owner-${Date.now()}@example.test` } });
+  other = await prisma.user.create({ data: { name: `${TAG} Other`, email: `detail-other-${Date.now()}@example.test` } });
   const category = await prisma.category.findFirstOrThrow({ where: { isActive: true } });
   const system = await prisma.relatedSystem.findFirstOrThrow({ where: { isActive: true } });
   const ticket = await createTicketWithNumber(prisma, {
@@ -48,7 +48,7 @@ afterAll(async () => {
   }
   await prisma.attachment.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
   await prisma.ticket.deleteMany({ where: { requesterId: { in: [owner.id, other.id] } } });
-  await prisma.requesterUser.deleteMany({ where: { id: { in: [owner.id, other.id] } } });
+  await prisma.user.deleteMany({ where: { id: { in: [owner.id, other.id] } } });
 });
 
 describe("GET /api/tickets/:id", () => {

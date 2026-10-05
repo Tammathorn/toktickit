@@ -187,8 +187,8 @@ const B_TICKETS: DemoTicket[] = [
 export async function seedDemo(
   prisma: PrismaClient,
 ): Promise<{ created: number; skipped: number }> {
-  const requesters = await prisma.requesterUser.findMany({
-    where: { isActive: true },
+  const requesters = await prisma.user.findMany({
+    where: { role: "REQUESTER", isActive: true },
     orderBy: { id: "asc" },
   });
   if (requesters.length < 3) {

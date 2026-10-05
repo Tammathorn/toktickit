@@ -1,0 +1,708 @@
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+2 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+(node:16340) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+(node:43328) [DEP0190] DeprecationWarning: Passing args to a child process with shell option true can lead to security vulnerabilities, as the arguments are not escaped, only concatenated.
+(Use `node --trace-deprecation ...` to show where the warning was created)
+ ❯ tests/lab-03/migration.db.test.ts (36 tests | 32 failed) 3919ms
+   × MIG-01 — the TicketStatus enum carries eight values (C-70, BR-52) > holds NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER, RESOLVED, CLOSED, REOPENED, CANCELLED in declaration order 61ms
+     → expected [ 'NEW', 'IN_PROGRESS', …(3) ] to deeply equal [ 'NEW', 'OPEN', 'IN_PROGRESS', …(5) ]
+   × MIG-02 — the UserRole enum exists (C-69) > holds REQUESTER, IT_STAFF, ADMINISTRATOR 5ms
+     → expected [] to deeply equal [ 'REQUESTER', 'IT_STAFF', …(1) ]
+   × MIG-03 — the table is named User (C-67) > has a User table and no RequesterUser table 8ms
+     → expected false to be true // Object.is equality
+   × MIG-04 — the rename was not a drop (C-67) > renames the table with ALTER TABLE "RequesterUser" RENAME TO "User" 3ms
+     → expected +0 to be 1 // Object.is equality
+   × MIG-05 — the foreign key column keeps its name (C-68) > keeps Ticket.requesterId, pointing at User 31ms
+     → expected [ { from: 'Ticket', …(2) }, …(3) ] to deeply equal ArrayContaining{…}
+   × MIG-06 — User carries the new columns (specification 7) > adds role NOT NULL default REQUESTER, nullable passwordHash, mustChangePassword NOT NULL default true, and updatedAt 6ms
+     → expected undefined to be 'NO' // Object.is equality
+   × MIG-06 — User carries the new columns (specification 7) > keeps the Lab 2 columns, so the rename preserved the shape 4ms
+     → id: expected undefined to be defined
+   × MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > makes Ticket.itPriority NOT NULL 6ms
+     → expected 'YES' to be 'NO' // Object.is equality
+   × MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > gives a newly created Ticket an itPriority equal to its requestedPriority 1ms
+     → Cannot read properties of undefined (reading 'findFirstOrThrow')
+   × MIG-08 — Ticket carries the new workflow columns (specification 7) > adds a nullable ownerId foreign key to User and a nullable requesterResolvedAt 5ms
+     → expected undefined to be 'YES' // Object.is equality
+   × MIG-09 — the three new tables exist (specification 7, C-73) > creates Session with its columns and its User foreign key 5ms
+     → id: expected undefined to be defined
+   × MIG-09 — the three new tables exist (specification 7, C-73) > creates PublicComment and InternalNote as two separate tables with Ticket and User foreign keys 2ms
+     → PublicComment.id: expected undefined to be defined
+   × MIG-11 — the three queue indexes exist (specification 7) > indexes [currentStatus, itPriority, createdAt], [currentStatus, ownerId] and [currentStatus, categoryId] 7ms
+     → expected false to be true // Object.is equality
+   × MIG-12 — the session and list indexes exist (specification 7) > makes Session.tokenHash unique and indexes Session by userId 3ms
+     → expected false to be true // Object.is equality
+   × MIG-12 — the session and list indexes exist (specification 7) > indexes PublicComment and InternalNote by [ticketId, createdAt] 3ms
+     → PublicComment: expected false to be true // Object.is equality
+   ✓ MIG-14 — the migrated database has zero drift from schema.prisma (DoD) > reports no difference between the schema and the database it is deployed to 3610ms
+   × MIG-15 — the graded seed is idempotent (AC-99, C-91) > leaves the User, Category, RelatedSystem, Ticket, PublicComment and InternalNote counts unchanged on a second run 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least four active and one inactive Requester 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds three active and one inactive IT Staff 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least one active Administrator 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds the dedicated first-login account, flagged and able to authenticate 1ms
+     → Cannot read properties of undefined (reading 'findUnique')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > clears mustChangePassword for the named personas, so only the first-login account is flagged 1ms
+     → Cannot read properties of undefined (reading 'findMany')
+   × MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > never seeds a user without a password hash, so no seeded account is unreachable 0ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > spreads Tickets across more than one Requester 8ms
+     → expected 0 to be greater than 1
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all eight statuses 5ms
+     → expected [] to deeply equal [ 'CANCELLED', 'CLOSED', …(6) ]
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all three Requested Priorities 5ms
+     → expected +0 to be 3 // Object.is equality
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries both owned and unassigned Tickets 18ms
+     → 
+Invalid `prisma.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-03\migration.db.test.ts:407:32
+
+  404 });
+  405 
+  406 it("carries both owned and unassigned Tickets", async () => {
+→ 407   expect(await prisma.ticket.count({
+          select: {
+            _count: {
+              select: {
+                _all: true
+              }
+            }
+          },
+          where: {
+            ownerId: {
+            ~~~~~~~
+              not: null
+            },
+        ?   AND?: TicketWhereInput | TicketWhereInput[],
+        ?   OR?: TicketWhereInput[],
+        ?   NOT?: TicketWhereInput | TicketWhereInput[],
+        ?   id?: IntFilter | Int,
+        ?   ticketNumber?: StringNullableFilter | String | Null,
+        ?   requesterId?: IntFilter | Int,
+        ?   categoryId?: IntFilter | Int,
+        ?   relatedSystemId?: IntFilter | Int,
+        ?   summary?: StringFilter | String,
+        ?   description?: StringFilter | String,
+        ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   itPriority?: EnumRequestedPriorityNullableFilter | RequestedPriority | Null,
+        ?   currentStatus?: EnumTicketStatusFilter | TicketStatus,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   requester?: RequesterUserRelationFilter | RequesterUserWhereInput,
+        ?   category?: CategoryRelationFilter | CategoryWhereInput,
+        ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+        ?   attachments?: AttachmentListRelationFilter
+          }
+        })
+
+Unknown argument `ownerId`. Available options are marked with ?.
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > gives every Ticket a non-null IT Priority 6ms
+     → expected 0 to be greater than 0
+   × MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries example Public Comments and Internal Notes 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × MIG-18 — the seed never overwrites a changed password (AC-101, C-72) > keeps a hash that was changed after seeding when the seed runs again 2ms
+     → Cannot read properties of undefined (reading 'findFirstOrThrow')
+   × MIG-19 — the first-login account stays flagged (C-72) > keeps mustChangePassword true after a re-seed 90ms
+     → Cannot read properties of undefined (reading 'findUniqueOrThrow')
+   × MIG-20 — the (Requester email, summary) natural key is safe (C-91) > raises rather than proceeding if two seeded Tickets would share a Requester email and summary 6ms
+     → expected [Function] to throw error matching /duplicate/i but got 'assertUniqueTicketKeys is not a funct…'
+   × MIG-20 — the (Requester email, summary) natural key is safe (C-91) > accepts the shipped seed fixture, which carries no duplicate key 1ms
+     → expected [Function] to not throw an error but 'TypeError: assertUniqueTicketKeys is …' was thrown
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 32 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-01 — the TicketStatus enum carries eight values (C-70, BR-52) > holds NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER, RESOLVED, CLOSED, REOPENED, CANCELLED in declaration order
+AssertionError: expected [ 'NEW', 'IN_PROGRESS', …(3) ] to deeply equal [ 'NEW', 'OPEN', 'IN_PROGRESS', …(5) ]
+
+- Expected
++ Received
+
+  Array [
+    "NEW",
+-   "OPEN",
+    "IN_PROGRESS",
+-   "WAITING_FOR_REQUESTER",
+    "RESOLVED",
+    "CLOSED",
+-   "REOPENED",
+    "CANCELLED",
+  ]
+
+ ❯ tests/lab-03/migration.db.test.ts:93:46
+     91| describe("MIG-01 — the TicketStatus enum carries eight values (C-70, B…
+     92|   it("holds NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER, RESOLVED, C…
+     93|     expect(await enumLabels("TicketStatus")).toEqual([
+       |                                              ^
+     94|       "NEW",
+     95|       "OPEN",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-02 — the UserRole enum exists (C-69) > holds REQUESTER, IT_STAFF, ADMINISTRATOR
+AssertionError: expected [] to deeply equal [ 'REQUESTER', 'IT_STAFF', …(1) ]
+
+- Expected
++ Received
+
+- Array [
+-   "REQUESTER",
+-   "IT_STAFF",
+-   "ADMINISTRATOR",
+- ]
++ Array []
+
+ ❯ tests/lab-03/migration.db.test.ts:108:42
+    106| describe("MIG-02 — the UserRole enum exists (C-69)", () => {
+    107|   it("holds REQUESTER, IT_STAFF, ADMINISTRATOR", async () => {
+    108|     expect(await enumLabels("UserRole")).toEqual(["REQUESTER", "IT_STA…
+       |                                          ^
+    109|   });
+    110| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-03 — the table is named User (C-67) > has a User table and no RequesterUser table
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/migration.db.test.ts:114:39
+    112| describe("MIG-03 — the table is named User (C-67)", () => {
+    113|   it("has a User table and no RequesterUser table", async () => {
+    114|     expect(await tableExists("User")).toBe(true);
+       |                                       ^
+    115|     expect(await tableExists("RequesterUser")).toBe(false);
+    116|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-04 — the rename was not a drop (C-67) > renames the table with ALTER TABLE "RequesterUser" RENAME TO "User"
+AssertionError: expected +0 to be 1 // Object.is equality
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/lab-03/migration.db.test.ts:131:28
+    129|       /ALTER\s+TABLE\s+"RequesterUser"\s+RENAME\s+TO\s+"User"/i.test(f…
+    130|     );
+    131|     expect(renames.length).toBe(1);
+       |                            ^
+    132|   });
+    133| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-05 — the foreign key column keeps its name (C-68) > keeps Ticket.requesterId, pointing at User
+AssertionError: expected [ { from: 'Ticket', …(2) }, …(3) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ Array [
+    Object {
+      "column": "requesterId",
+      "from": "Ticket",
+-     "to": "User",
++     "to": "RequesterUser",
++   },
++   Object {
++     "column": "categoryId",
++     "from": "Ticket",
++     "to": "Category",
++   },
++   Object {
++     "column": "relatedSystemId",
++     "from": "Ticket",
++     "to": "RelatedSystem",
++   },
++   Object {
++     "column": "ticketId",
++     "from": "Attachment",
++     "to": "Ticket",
+    },
+  ]
+
+ ❯ tests/lab-03/migration.db.test.ts:139:18
+    137|     expect(Object.keys(await columns("Ticket"))).toContain("requesterI…
+    138|     const keys = await foreignKeys();
+    139|     expect(keys).toEqual(
+       |                  ^
+    140|       expect.arrayContaining([{ from: "Ticket", column: "requesterId",…
+    141|     );
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-06 — User carries the new columns (specification 7) > adds role NOT NULL default REQUESTER, nullable passwordHash, mustChangePassword NOT NULL default true, and updatedAt
+AssertionError: expected undefined to be 'NO' // Object.is equality
+
+- Expected: 
+"NO"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-03/migration.db.test.ts:149:36
+    147|     const cols = await columns("User");
+    148| 
+    149|     expect(cols.role?.is_nullable).toBe("NO");
+       |                                    ^
+    150|     expect(cols.role?.column_default).toContain("REQUESTER");
+    151|     expect(cols.passwordHash?.is_nullable).toBe("YES");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-06 — User carries the new columns (specification 7) > keeps the Lab 2 columns, so the rename preserved the shape
+AssertionError: id: expected undefined to be defined
+ ❯ tests/lab-03/migration.db.test.ts:160:32
+    158|     const cols = await columns("User");
+    159|     for (const name of ["id", "name", "email", "isActive", "createdAt"…
+    160|       expect(cols[name], name).toBeDefined();
+       |                                ^
+    161|     }
+    162|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > makes Ticket.itPriority NOT NULL
+AssertionError: expected 'YES' to be 'NO' // Object.is equality
+
+Expected: "NO"
+Received: "YES"
+
+ ❯ tests/lab-03/migration.db.test.ts:168:42
+    166|   it("makes Ticket.itPriority NOT NULL", async () => {
+    167|     const cols = await columns("Ticket");
+    168|     expect(cols.itPriority?.is_nullable).toBe("NO");
+       |                                          ^
+    169|   });
+    170| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > gives a newly created Ticket an itPriority equal to its requestedPriority
+TypeError: Cannot read properties of undefined (reading 'findFirstOrThrow')
+ ❯ tests/lab-03/migration.db.test.ts:172:41
+    170| 
+    171|   it("gives a newly created Ticket an itPriority equal to its requeste…
+    172|     const requester = await prisma.user.findFirstOrThrow({
+       |                                         ^
+    173|       where: { role: "REQUESTER", isActive: true },
+    174|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-08 — Ticket carries the new workflow columns (specification 7) > adds a nullable ownerId foreign key to User and a nullable requesterResolvedAt
+AssertionError: expected undefined to be 'YES' // Object.is equality
+
+- Expected: 
+"YES"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-03/migration.db.test.ts:198:39
+    196|   it("adds a nullable ownerId foreign key to User and a nullable reque…
+    197|     const cols = await columns("Ticket");
+    198|     expect(cols.ownerId?.is_nullable).toBe("YES");
+       |                                       ^
+    199|     expect(cols.requesterResolvedAt?.is_nullable).toBe("YES");
+    200| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-09 — the three new tables exist (specification 7, C-73) > creates Session with its columns and its User foreign key
+AssertionError: id: expected undefined to be defined
+ ❯ tests/lab-03/migration.db.test.ts:212:32
+    210|     const cols = await columns("Session");
+    211|     for (const name of ["id", "tokenHash", "userId", "createdAt", "exp…
+    212|       expect(cols[name], name).toBeDefined();
+       |                                ^
+    213|     }
+    214|     const keys = await foreignKeys();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-09 — the three new tables exist (specification 7, C-73) > creates PublicComment and InternalNote as two separate tables with Ticket and User foreign keys
+AssertionError: PublicComment.id: expected undefined to be defined
+ ❯ tests/lab-03/migration.db.test.ts:224:48
+    222|       const cols = await columns(table);
+    223|       for (const name of ["id", "ticketId", "authorId", "body", "creat…
+    224|         expect(cols[name], `${table}.${name}`).toBeDefined();
+       |                                                ^
+    225|       }
+    226|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-11 — the three queue indexes exist (specification 7) > indexes [currentStatus, itPriority, createdAt], [currentStatus, ownerId] and [currentStatus, categoryId]
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/migration.db.test.ts:254:63
+    252|     const has = (cols: string) => defs.some((d) => d.includes(cols));
+    253| 
+    254|     expect(has(`"currentStatus", "itPriority", "createdAt"`)).toBe(tru…
+       |                                                               ^
+    255|     expect(has(`"currentStatus", "ownerId"`)).toBe(true);
+    256|     expect(has(`"currentStatus", "categoryId"`)).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-12 — the session and list indexes exist (specification 7) > makes Session.tokenHash unique and indexes Session by userId
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/migration.db.test.ts:263:78
+    261|   it("makes Session.tokenHash unique and indexes Session by userId", a…
+    262|     const defs = await indexDefinitions("Session");
+    263|     expect(defs.some((d) => /UNIQUE/i.test(d) && d.includes(`"tokenHas…
+       |                                                                              ^
+    264|     expect(defs.some((d) => d.includes(`("userId")`))).toBe(true);
+    265|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-12 — the session and list indexes exist (specification 7) > indexes PublicComment and InternalNote by [ticketId, createdAt]
+AssertionError: PublicComment: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/migration.db.test.ts:270:78
+    268|     for (const table of ["PublicComment", "InternalNote"]) {
+    269|       const defs = await indexDefinitions(table);
+    270|       expect(defs.some((d) => d.includes(`"ticketId", "createdAt"`)), …
+       |                                                                              ^
+    271|     }
+    272|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-15 — the graded seed is idempotent (AC-99, C-91) > leaves the User, Category, RelatedSystem, Ticket, PublicComment and InternalNote counts unchanged on a second run
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ counts tests/lab-03/migration.db.test.ts:319:32
+    317|   it("leaves the User, Category, RelatedSystem, Ticket, PublicComment …
+    318|     const counts = async () => ({
+    319|       users: await prisma.user.count(),
+       |                                ^
+    320|       categories: await prisma.category.count(),
+    321|       relatedSystems: await prisma.relatedSystem.count(),
+ ❯ tests/lab-03/migration.db.test.ts:327:26
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least four active and one inactive Requester
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-03/migration.db.test.ts:336:25
+    334|   it("seeds at least four active and one inactive Requester", async ()…
+    335|     expect(
+    336|       await prisma.user.count({ where: { role: "REQUESTER", isActive: …
+       |                         ^
+    337|     ).toBeGreaterThanOrEqual(4);
+    338|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds three active and one inactive IT Staff
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-03/migration.db.test.ts:345:25
+    343|   it("seeds three active and one inactive IT Staff", async () => {
+    344|     expect(
+    345|       await prisma.user.count({ where: { role: "IT_STAFF", isActive: t…
+       |                         ^
+    346|     ).toBeGreaterThanOrEqual(3);
+    347|     expect(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least one active Administrator
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-03/migration.db.test.ts:354:25
+    352|   it("seeds at least one active Administrator", async () => {
+    353|     expect(
+    354|       await prisma.user.count({ where: { role: "ADMINISTRATOR", isActi…
+       |                         ^
+    355|     ).toBeGreaterThanOrEqual(1);
+    356|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds the dedicated first-login account, flagged and able to authenticate
+TypeError: Cannot read properties of undefined (reading 'findUnique')
+ ❯ tests/lab-03/migration.db.test.ts:359:39
+    357| 
+    358|   it("seeds the dedicated first-login account, flagged and able to aut…
+    359|     const account = await prisma.user.findUnique({ where: { email: FIR…
+       |                                       ^
+    360|     expect(account).not.toBeNull();
+    361|     expect(account?.mustChangePassword).toBe(true);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > clears mustChangePassword for the named personas, so only the first-login account is flagged
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ tests/lab-03/migration.db.test.ts:367:39
+    365| 
+    366|   it("clears mustChangePassword for the named personas, so only the fi…
+    367|     const flagged = await prisma.user.findMany({
+       |                                       ^
+    368|       where: { mustChangePassword: true },
+    369|       select: { email: true },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > never seeds a user without a password hash, so no seeded account is unreachable
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-03/migration.db.test.ts:375:30
+    373| 
+    374|   it("never seeds a user without a password hash, so no seeded account…
+    375|     expect(await prisma.user.count({ where: { passwordHash: null } }))…
+       |                              ^
+    376|   });
+    377| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > spreads Tickets across more than one Requester
+AssertionError: expected 0 to be greater than 1
+ ❯ tests/lab-03/migration.db.test.ts:382:28
+    380|   it("spreads Tickets across more than one Requester", async () => {
+    381|     const grouped = await prisma.ticket.groupBy({ by: ["requesterId"],…
+    382|     expect(grouped.length).toBeGreaterThan(1);
+       |                            ^
+    383|   });
+    384| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all eight statuses
+AssertionError: expected [] to deeply equal [ 'CANCELLED', 'CLOSED', …(6) ]
+
+- Expected
++ Received
+
+- Array [
+-   "CANCELLED",
+-   "CLOSED",
+-   "IN_PROGRESS",
+-   "NEW",
+-   "OPEN",
+-   "REOPENED",
+-   "RESOLVED",
+-   "WAITING_FOR_REQUESTER",
+- ]
++ Array []
+
+ ❯ tests/lab-03/migration.db.test.ts:387:56
+    385|   it("covers all eight statuses", async () => {
+    386|     const grouped = await prisma.ticket.groupBy({ by: ["currentStatus"…
+    387|     expect(grouped.map((g) => g.currentStatus).sort()).toEqual(
+       |                                                        ^
+    388|       [
+    389|         "CANCELLED",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all three Requested Priorities
+AssertionError: expected +0 to be 3 // Object.is equality
+
+- Expected
++ Received
+
+- 3
++ 0
+
+ ❯ tests/lab-03/migration.db.test.ts:403:28
+    401|   it("covers all three Requested Priorities", async () => {
+    402|     const grouped = await prisma.ticket.groupBy({ by: ["requestedPrior…
+    403|     expect(grouped.length).toBe(3);
+       |                            ^
+    404|   });
+    405| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries both owned and unassigned Tickets
+PrismaClientValidationError: 
+Invalid `prisma.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-03\migration.db.test.ts:407:32
+
+  404 });
+  405 
+  406 it("carries both owned and unassigned Tickets", async () => {
+→ 407   expect(await prisma.ticket.count({
+          select: {
+            _count: {
+              select: {
+                _all: true
+              }
+            }
+          },
+          where: {
+            ownerId: {
+            ~~~~~~~
+              not: null
+            },
+        ?   AND?: TicketWhereInput | TicketWhereInput[],
+        ?   OR?: TicketWhereInput[],
+        ?   NOT?: TicketWhereInput | TicketWhereInput[],
+        ?   id?: IntFilter | Int,
+        ?   ticketNumber?: StringNullableFilter | String | Null,
+        ?   requesterId?: IntFilter | Int,
+        ?   categoryId?: IntFilter | Int,
+        ?   relatedSystemId?: IntFilter | Int,
+        ?   summary?: StringFilter | String,
+        ?   description?: StringFilter | String,
+        ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   itPriority?: EnumRequestedPriorityNullableFilter | RequestedPriority | Null,
+        ?   currentStatus?: EnumTicketStatusFilter | TicketStatus,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   requester?: RequesterUserRelationFilter | RequesterUserWhereInput,
+        ?   category?: CategoryRelationFilter | CategoryWhereInput,
+        ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+        ?   attachments?: AttachmentListRelationFilter
+          }
+        })
+
+Unknown argument `ownerId`. Available options are marked with ?.
+ ❯ wn node_modules/@prisma/client/runtime/library.js:29:1363
+ ❯ $n.handleRequestError node_modules/@prisma/client/runtime/library.js:121:6958
+ ❯ $n.handleAndLogRequestError node_modules/@prisma/client/runtime/library.js:121:6623
+ ❯ $n.request node_modules/@prisma/client/runtime/library.js:121:6307
+ ❯ l node_modules/@prisma/client/runtime/library.js:130:9633
+ ❯ tests/lab-03/migration.db.test.ts:407:12
+    405| 
+    406|   it("carries both owned and unassigned Tickets", async () => {
+    407|     expect(await prisma.ticket.count({ where: { ownerId: { not: null }…
+       |            ^
+    408|     expect(await prisma.ticket.count({ where: { ownerId: null } })).to…
+    409|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > gives every Ticket a non-null IT Priority
+AssertionError: expected 0 to be greater than 0
+ ❯ tests/lab-03/migration.db.test.ts:413:28
+    411|   it("gives every Ticket a non-null IT Priority", async () => {
+    412|     const tickets = await prisma.ticket.findMany({ select: { itPriorit…
+    413|     expect(tickets.length).toBeGreaterThan(0);
+       |                            ^
+    414|     expect(tickets.every((t) => t.itPriority !== null)).toBe(true);
+    415|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries example Public Comments and Internal Notes
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-03/migration.db.test.ts:418:39
+    416| 
+    417|   it("carries example Public Comments and Internal Notes", async () =>…
+    418|     expect(await prisma.publicComment.count()).toBeGreaterThan(0);
+       |                                       ^
+    419|     expect(await prisma.internalNote.count()).toBeGreaterThan(0);
+    420|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-18 — the seed never overwrites a changed password (AC-101, C-72) > keeps a hash that was changed after seeding when the seed runs again
+TypeError: Cannot read properties of undefined (reading 'findFirstOrThrow')
+ ❯ tests/lab-03/migration.db.test.ts:425:39
+    423| describe("MIG-18 — the seed never overwrites a changed password (AC-10…
+    424|   it("keeps a hash that was changed after seeding when the seed runs a…
+    425|     const persona = await prisma.user.findFirstOrThrow({
+       |                                       ^
+    426|       where: { role: "REQUESTER", isActive: true, email: { not: FIRST_…
+    427|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-19 — the first-login account stays flagged (C-72) > keeps mustChangePassword true after a re-seed
+TypeError: Cannot read properties of undefined (reading 'findUniqueOrThrow')
+ ❯ tests/lab-03/migration.db.test.ts:449:39
+    447|   it("keeps mustChangePassword true after a re-seed", async () => {
+    448|     await seedGraded(prisma);
+    449|     const account = await prisma.user.findUniqueOrThrow({
+       |                                       ^
+    450|       where: { email: FIRST_LOGIN_EMAIL },
+    451|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-20 — the (Requester email, summary) natural key is safe (C-91) > raises rather than proceeding if two seeded Tickets would share a Requester email and summary
+AssertionError: expected [Function] to throw error matching /duplicate/i but got 'assertUniqueTicketKeys is not a funct…'
+
+- Expected: 
+/duplicate/i
+
++ Received: 
+"assertUniqueTicketKeys is not a function"
+
+ ❯ tests/lab-03/migration.db.test.ts:465:7
+    463|         { requesterEmail: "a@example.ac.th", summary: "Duplicated summ…
+    464|       ]),
+    465|     ).toThrowError(/duplicate/i);
+       |       ^
+    466|   });
+    467| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/32]⎯
+
+ FAIL  tests/lab-03/migration.db.test.ts > MIG-20 — the (Requester email, summary) natural key is safe (C-91) > accepts the shipped seed fixture, which carries no duplicate key
+AssertionError: expected [Function] to not throw an error but 'TypeError: assertUniqueTicketKeys is …' was thrown
+
+- Expected: 
+undefined
+
++ Received: 
+"TypeError: assertUniqueTicketKeys is not a function"
+
+ ❯ tests/lab-03/migration.db.test.ts:472:60
+    470|       "../../src/seed/graded-seed.js"
+    471|     );
+    472|     expect(() => assertUniqueTicketKeys(SEED_TICKETS)).not.toThrow();
+       |                                                            ^
+    473|   });
+    474| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/32]⎯
+
+ Test Files  1 failed (1)
+      Tests  32 failed | 4 passed (36)
+   Start at  15:04:20
+   Duration  8.80s (transform 187ms, setup 0ms, collect 234ms, tests 3.92s, environment 0ms, prepare 191ms)
+

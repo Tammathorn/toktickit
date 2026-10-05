@@ -27,7 +27,7 @@ export async function resolveRequester(prisma: PrismaClient, raw: unknown): Prom
   if (id === null) {
     return { ok: false, status: 400, code: "REQUESTER_REQUIRED", message: "requesterId is required." };
   }
-  const row = await prisma.requesterUser.findUnique({ where: { id }, select: { isActive: true } });
+  const row = await prisma.user.findUnique({ where: { id }, select: { isActive: true } });
   if (!row) {
     return { ok: false, status: 404, code: "REQUESTER_NOT_FOUND", message: "That Development Requester no longer exists." };
   }

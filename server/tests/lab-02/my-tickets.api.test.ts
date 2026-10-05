@@ -34,10 +34,10 @@ function list(query: Record<string, string | number | undefined>) {
 
 beforeAll(async () => {
   await seedGraded(prisma);
-  owner = await prisma.requesterUser.create({
+  owner = await prisma.user.create({
     data: { name: `${TAG} Owner`, email: `list-owner-${Date.now()}@example.test` },
   });
-  other = await prisma.requesterUser.create({
+  other = await prisma.user.create({
     data: { name: `${TAG} Other`, email: `list-other-${Date.now()}@example.test` },
   });
   categories = await prisma.category.findMany({ where: { isActive: true }, orderBy: { id: "asc" } });
@@ -69,7 +69,7 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await prisma.ticket.deleteMany({ where: { requesterId: { in: [owner.id, other.id] } } });
-  await prisma.requesterUser.deleteMany({ where: { id: { in: [owner.id, other.id] } } });
+  await prisma.user.deleteMany({ where: { id: { in: [owner.id, other.id] } } });
 });
 
 describe("GET /api/tickets", () => {

@@ -1,0 +1,28 @@
+TokTickIT Lab 3 - migration rehearsal (C-83), APPLY
+Command: npx prisma migrate deploy   against toktickit_rehearsal
+Run: 2026-10-01 08:22:27Z UTC
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_rehearsal", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+Applying migration `20261001080726_lab03_ticket_status_values`
+Applying migration `20261001080813_lab03_user_rename_and_roles`
+Applying migration `20261001080916_lab03_ticket_workflow_fields`
+Applying migration `20261001080958_lab03_sessions_comments_notes`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261001080726_lab03_ticket_status_values/
+    └─ migration.sql
+  └─ 20261001080813_lab03_user_rename_and_roles/
+    └─ migration.sql
+  └─ 20261001080916_lab03_ticket_workflow_fields/
+    └─ migration.sql
+  └─ 20261001080958_lab03_sessions_comments_notes/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
