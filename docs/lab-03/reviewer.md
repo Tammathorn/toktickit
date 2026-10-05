@@ -26,7 +26,7 @@ written from memory. Timestamps are UTC as GitHub records them.
 | [#51](https://github.com/Tammathorn/toktickit/pull/51) | `feature/lab3-6-staff-ticket-ops` -> `feature/lab3-5-staff-queue` | #42 | None | Awaiting the batched review | Not merged - open |
 | [#52](https://github.com/Tammathorn/toktickit/pull/52) | `feature/lab3-7-user-admin` -> `feature/lab3-6-staff-ticket-ops` | #43 | None | Awaiting the batched review | Not merged - open |
 | [#53](https://github.com/Tammathorn/toktickit/pull/53) | `feature/lab3-8-e2e-visual` -> `feature/lab3-7-user-admin` | #44 | None | Awaiting the batched review | Not merged - open |
-| This Issue's PR | `feature/lab3-9-release-docs` -> `feature/lab3-8-e2e-visual` | #45 | Not yet opened at the time of writing | - | Not merged - open |
+| [#54](https://github.com/Tammathorn/toktickit/pull/54) | `feature/lab3-9-release-docs` -> `feature/lab3-8-e2e-visual` | #45 | None | Awaiting the batched review | Not merged - open |
 | Release | `lab3-staging` -> `main` | - | Not yet opened - C-110: opens only after every feature PR has merged | - | - |
 
 Per decision **C-110**, the reviewer's own schedule batches all nine feature PRs to the end
@@ -161,17 +161,20 @@ documents); I am not recording it as approved, because it was not.
   genuine conflict, only an unapplied technique (`ai-use.md` section 4.4).
 - **Comments given / received:** none. **Approval status:** awaiting the batched review.
 
-### This Issue's PR - Issue #45: Release documentation
+### PR #54 - Issue #45: Release documentation
 
+- **Link:** <https://github.com/Tammathorn/toktickit/pull/54>
+- **Branch:** `feature/lab3-9-release-docs` -> `feature/lab3-8-e2e-visual`
 - **Contents:** this record; `tests.md` section 2's `Final` column; the Lab 3 `README.md`
   section; `ai-use.md` finalized; `artifacts/lab-03/report-lab03.md`.
-- Opened after this file is written - its number and link are not yet known.
+- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+  With this PR open, all nine feature PRs now exist and PAKATO's batched review can begin.
 
 ### Release PR - `lab3-staging` -> `main`
 
 - **Status:** not opened. Decision C-110: it opens only after every one of the nine feature
-  PRs above has merged into `lab3-staging`, which has not happened - none of #46-53 (nor
-  this Issue's PR) has merged as of this writing.
+  PRs above has merged into `lab3-staging`, which has not happened - none of #46-54 has
+  merged as of this writing.
 
 ---
 
