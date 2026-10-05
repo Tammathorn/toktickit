@@ -1,0 +1,38 @@
+Command: (npx playwright test e2e/lab-03/user-administration.spec.ts)
+Date:    2026-10-05 10:12:07 +0700
+Commit:  68449bb4d9271f21fa32d27eef9387695d745d4b (feature/lab3-7-user-admin)
+Tree:    clean - three viewports, against the running dev server/client
+----------------------------------------------------------------------
+
+Running 27 tests using 11 workers
+
+  ✓   1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (463ms)
+  ✓   2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (525ms)
+  ✓   3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (491ms)
+  -   9 [tablet] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83)
+  -   8 [desktop] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table
+  -  14 [tablet] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table
+  ✓   6 [desktop] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (2.1s)
+  ✓   7 [desktop] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92) (2.5s)
+  ✓  15 [tablet] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (2.3s)
+  ✓  10 [desktop] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (3.0s)
+  ✓  12 [tablet] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82) (3.1s)
+  ✓   4 [desktop] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82) (3.5s)
+  ✓  11 [desktop] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94) (3.4s)
+  ✓  16 [tablet] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94) (2.3s)
+  ✓   5 [desktop] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83) (3.9s)
+  ✓  13 [desktop] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91) (4.0s)
+  ✓  18 [tablet] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (827ms)
+  ✓  17 [tablet] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92) (1.3s)
+  -  20 [mobile] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82)
+  -  22 [mobile] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83)
+  -  24 [mobile] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94)
+  ✓  21 [mobile] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table (1.3s)
+  -  25 [mobile] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92)
+  ✓  26 [mobile] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (807ms)
+  -  27 [mobile] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91)
+  ✓  23 [mobile] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (1.9s)
+  ✓  19 [tablet] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91) (2.8s)
+
+  8 skipped
+  19 passed (11.0s)
