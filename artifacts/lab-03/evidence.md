@@ -140,20 +140,20 @@ and seeded database (`CLAUDE.md`).
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P8-01 | User list: Name, Email, Role, Status, Edit | Playwright capture | `screenshots/user-management/users-desktop-populated.png` | #43 | pending |
-| P8-02 | Search by name or email | Playwright capture | `screenshots/user-management/users-desktop-search.png` | #43 | pending |
-| P8-03 | Optional role filter | Playwright capture | `screenshots/user-management/users-desktop-role-filter.png` | #43 | pending |
-| P8-04 | Create a user with one permitted role and an initial password | Playwright capture | `screenshots/user-management/users-desktop-create.png` | #43 | pending |
-| P8-05 | Duplicate-email validation | Playwright capture | `screenshots/user-management/users-desktop-duplicate-email.png` | #43 | pending |
-| P8-06 | Invalid-input validation | Playwright capture | `screenshots/user-management/users-desktop-invalid-input.png` **(extra)** | #43 | pending |
-| P8-07 | Edit name, email, role and activation state | Playwright capture | `screenshots/user-management/users-desktop-edit.png` | #43 | pending |
-| P8-08 | Set a new initial password, then the required change at next login | Playwright capture | `screenshots/user-management/users-desktop-initial-password.png`, `screenshots/user-management/change-password-desktop-after-reset.png` **(extra)** | #43 | pending |
-| P8-09 | Self-deactivation prevented | Playwright capture | `screenshots/user-management/users-desktop-self-deactivation.png` | #43 | pending |
-| P8-10 | Removing the last active Administrator prevented | Playwright capture | `screenshots/user-management/users-desktop-last-administrator.png` | #43 | pending |
-| P8-11 | Non-Administrator forbidden, in the UI | Playwright capture | `screenshots/user-management/users-desktop-forbidden.png` | #43 | pending |
-| P8-12 | Non-Administrator forbidden, at the API | Terminal output | `evidence/issue-7/green-users-admin.txt` | #43 | pending |
-| P8-13 | Responsive Zen Green presentation, mobile layout | Playwright capture | `screenshots/user-management/users-mobile-populated.png` | #43, final #44 | pending |
-| P8-14 | Safe failure feedback | Playwright capture | `screenshots/user-management/users-desktop-failure.png` **(extra)** | #43 | pending |
+| P8-01 | User list: Name, Email, Role, Status, Edit | Playwright capture | `screenshots/user-management/users-desktop-list.png` | #43 | captured |
+| P8-02 | Search by name or email | Playwright capture | `screenshots/user-management/users-desktop-search.png` | #43 | captured |
+| P8-03 | Optional role filter | Playwright capture | `screenshots/user-management/users-desktop-role-filter.png` | #43 | captured |
+| P8-04 | Create a user with one permitted role and an initial password | Playwright capture | `screenshots/user-management/users-desktop-create-filled.png`, `users-desktop-create-success.png` | #43 | captured |
+| P8-05 | Duplicate-email validation | Playwright capture | `screenshots/user-management/users-desktop-duplicate-email.png` | #43 | captured |
+| P8-06 | Invalid-input validation | Playwright capture | `screenshots/user-management/users-desktop-invalid-input.png` **(extra)** | #43 | pending - optional extra, not yet captured |
+| P8-07 | Edit name, email, role and activation state | Playwright capture | `screenshots/user-management/users-desktop-edit-success.png` | #43 | captured |
+| P8-08 | Set a new initial password, then the required change at next login | Playwright capture | `screenshots/user-management/users-desktop-password-reset-success.png` | #43 | captured |
+| P8-09 | Self-deactivation prevented | Playwright capture | `screenshots/user-management/users-desktop-self-deactivation-disabled.png` | #43 | captured |
+| P8-10 | Removing the last active Administrator prevented | Playwright capture | `screenshots/user-management/users-desktop-last-administrator.png` | #43 | captured |
+| P8-11 | Non-Administrator forbidden, in the UI | Playwright capture | `screenshots/user-management/users-desktop-forbidden.png` | #43 | captured |
+| P8-12 | Non-Administrator forbidden, at the API | Terminal output | `evidence/issue-7/green-users-admin.txt` | #43 | captured |
+| P8-13 | Responsive Zen Green presentation, mobile layout | Playwright capture | `screenshots/user-management/users-mobile-cards.png` | #43, final #44 | captured |
+| P8-14 | Safe failure feedback | Playwright capture | `screenshots/user-management/users-desktop-failure.png` **(extra)** | #43 | pending - optional extra, not yet captured |
 
 ## Part 9 - Zen Green UI and Responsive Evidence (5)
 
