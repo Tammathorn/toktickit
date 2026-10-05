@@ -50,9 +50,9 @@ response the API would have sent, and every such capture says so in its row.
 | P1-06 | Review thread while open: PR #46, the reviewer's comment and the author's reply | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr46-review-open.png` | #37 | captured |
 | P1-07 | PR #47 open, before review | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr47-open.png` | #38 | captured |
 | P1-08 | Approval on every Issue PR. The reviewer approves; the capture follows the approval | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | pending |
-| P1-09 | Rendered `reviewer.md`: reviewer identity, PR links both ways, comments, responses, approvals. Written once PAKATO approves #46 | Rendered document | `docs/lab-03/reviewer.md` | #37 onward, completed in #45 | pending |
-| P1-10 | README and `.gitignore` | Repository files, rendered | `README.md`, `.gitignore` | #45 | pending |
-| P1-11 | Repository directory structure | Terminal output | `evidence/issue-9/directory-tree.txt` | #45 | pending |
+| P1-09 | Rendered `reviewer.md`: reviewer identity, PR links both ways, comments, responses, approvals | Rendered document | `docs/lab-03/reviewer.md` | #37 onward, completed in #45 | captured - the document, the identities, PR #46's comment/reply and all nine PR links exist; the approvals column is honestly empty because PAKATO's batched review (C-110) has not happened yet, not because it was skipped in the writing |
+| P1-10 | README and `.gitignore` | Repository files, rendered | `README.md`, `.gitignore` | #45 | captured |
+| P1-11 | Repository directory structure | Terminal output | `evidence/issue-9/directory-tree.txt` | #45 | captured |
 
 ## Part 2 - Spec DD (5)
 
@@ -65,7 +65,7 @@ response the API would have sent, and every such capture says so in its row.
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P3-01 | Rendered `tests.md`: planned tests, AC traceability, real file paths, Final status | Rendered document | `docs/lab-03/tests.md` | #37, Final column in #45 | pending |
+| P3-01 | Rendered `tests.md`: planned tests, AC traceability, real file paths, Final status | Rendered document | `docs/lab-03/tests.md` | #37, Final column in #45 | captured - every section 2 row's `Final` column filled, citing the real run and commit that produced it (`issue-9/server-green.txt`, `client-green.txt`, commit `43b737c`; e2e rows cite `issue-8/e2e-suite-final-green.txt`, commit `dc1d105`). Section 7's suite-totals table stays blank - its own text ties it to the release branch, a later milestone |
 | P3-02 | Every suite passing on `main`: unit, API, UI, authorization, regression, E2E | Terminal output | `evidence/issue-9/main-server.txt`, `main-client.txt`, `main-e2e.txt` | #45 | pending |
 | P3-03 | Migration red run, written first. Captured before the header rule existed, so it carries no command/date/commit header | Terminal output | `migration/red-run-migration-tests.txt` | #38 | captured |
 | P3-04 | Migration rehearsal before and after counts, zero-drift diff | Terminal output | `migration/rehearsal-before.txt`, `rehearsal-deploy.txt`, `rehearsal-after.txt`, `rehearsal-drift.txt`, `rehearsal-seed.txt`, `rehearsal-summary.md` | #38 | captured |
@@ -78,7 +78,7 @@ response the API would have sent, and every such capture says so in its row.
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P4-01 | Rendered `ai-use.md`: the LLM named, 6-10 key prompts, "My Reflection" on the specification agent and the coding agent | Rendered document | `docs/lab-03/ai-use.md` | every Issue adds prompts; #45 completes | pending |
+| P4-01 | Rendered `ai-use.md`: the LLM named, 6-10 key prompts, "My Reflection" on the specification agent and the coding agent | Rendered document | `docs/lab-03/ai-use.md` | every Issue adds prompts; #45 completes | captured, except "My Reflection" - the LLM and interface are named (section 1), seven prompts are marked key prompt across Phase 1 and the new Phase 2/3 section (section 2, 4), and "My Reflection" (section 5) is left as a heading only, with nothing under it, for the author to write |
 
 ## Part 5 - Working Login and Password Change UI (5)
 
