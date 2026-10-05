@@ -396,15 +396,35 @@ test.describe("IT Staff Ticket Detail flow", () => {
     await expect(page.getByRole("heading", { level: 1, name: ticket.ticketNumber })).toBeVisible();
   });
 
-  test("E2E-08 empty and no-results in the browser (AC-69, FR-41)", async ({ page }) => {
+  test("E2E-08 no-results in the browser (AC-69, FR-41)", async ({ page }) => {
     await page.goto("/queue?search=zzz-no-ticket-matches-this-zzz");
     await expect(page.getByRole("heading", { name: "No matches" })).toBeVisible();
     await expect(page.getByText("No tickets match your search or filters.")).toBeVisible();
     await capture(page, SHOTS_QUEUE, "queue-<vp>-no-results", false);
-    // The genuinely-empty queue (no filter, zero rows) is not reproduced here:
-    // the shared dev database always carries seed Tickets, and emptying it
-    // would corrupt other Issues' fixtures. UI-20 (StaffTicketQueue.test.tsx,
-    // #41) already covers that state's component contract directly.
+  });
+
+  test("queue-<vp>-empty: the true Empty state, no filter active (AC-69, FR-41, L2 C-28)", async ({ page }) => {
+    // The true Empty state needs no filter active and zero rows - a shape
+    // the shared dev and evidence databases never hold (both always carry
+    // seed Tickets), so it is captured the same way queue-<vp>-loading and
+    // queue-<vp>-failure already are: a mocked response, not a real empty
+    // database. This never touches any Ticket row, so it cannot corrupt
+    // another Issue's fixtures. UI-20 (StaffTicketQueue.test.tsx, #41)
+    // covers the same component contract directly.
+    await page.route("**/api/staff/tickets*", (route) =>
+      route.fulfill({
+        status: 200,
+        contentType: "application/json",
+        body: JSON.stringify({ data: [], meta: { page: 1, pageSize: 10, total: 0, totalPages: 0, sort: "createdAt:desc" } }),
+      }),
+    );
+    await page.goto("/queue");
+    await expect(page.getByRole("heading", { name: "No tickets in the queue" })).toBeVisible();
+    await expect(page.getByText("There are no open tickets right now.")).toBeVisible();
+    // The true Empty state offers no action (audit finding #2) - unlike
+    // No matches, it has no Clear filters button to undo.
+    await expect(page.getByRole("button", { name: "Clear filters" })).not.toBeVisible();
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-empty", false);
   });
 
   test("queue-<vp>-loading and queue-<vp>-failure: the busy state and a safe failure on the Queue (FR-68, BR-89)", async ({ page }) => {
