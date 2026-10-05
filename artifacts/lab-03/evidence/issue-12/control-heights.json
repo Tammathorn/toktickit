@@ -1,0 +1,183 @@
+{
+  "command": "node control-heights probe (headless Chromium, the running app on toktickit_evidence): rendered height of every visible input, select, non-small non-tertiary button and textarea inside <main>",
+  "date": "2026-10-05 18:35 UTC",
+  "commit": "a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence, fixes in the working tree)",
+  "row": "ui-spec 24 Fields and forms row 3 - one height per band; composers and Description taller",
+  "result": "one height per band: 40 px at desktop and tablet, 44 px at mobile (the 44 px touch-target band); textareas 134 px",
+  "measurements": [
+    {
+      "viewport": "desktop",
+      "screen": "create-ticket",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": [
+        134
+      ]
+    },
+    {
+      "viewport": "desktop",
+      "screen": "queue",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "desktop",
+      "screen": "users",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "desktop",
+      "screen": "my-tickets",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "tablet",
+      "screen": "create-ticket",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": [
+        134
+      ]
+    },
+    {
+      "viewport": "tablet",
+      "screen": "queue",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "tablet",
+      "screen": "users",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "tablet",
+      "screen": "my-tickets",
+      "inputs": [
+        40
+      ],
+      "selects": [
+        40
+      ],
+      "buttons": [
+        40
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "mobile",
+      "screen": "create-ticket",
+      "inputs": [
+        44
+      ],
+      "selects": [
+        44
+      ],
+      "buttons": [
+        44
+      ],
+      "textareas": [
+        134
+      ]
+    },
+    {
+      "viewport": "mobile",
+      "screen": "queue",
+      "inputs": [
+        44
+      ],
+      "selects": [
+        44
+      ],
+      "buttons": [
+        44
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "mobile",
+      "screen": "users",
+      "inputs": [
+        44
+      ],
+      "selects": [
+        44
+      ],
+      "buttons": [
+        44
+      ],
+      "textareas": []
+    },
+    {
+      "viewport": "mobile",
+      "screen": "my-tickets",
+      "inputs": [
+        44
+      ],
+      "selects": [
+        44
+      ],
+      "buttons": [
+        44
+      ],
+      "textareas": []
+    }
+  ]
+}

@@ -1,0 +1,68 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx tests/lab-03/StaffTicketDetail.test.tsx
+Date: 2026-10-05 17:54 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence, tests written, fixes not yet made)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (2 tests | 2 failed) 87ms
+   × Visual-checklist defects (Issue #12) > UI-54 My Tickets: the Current Status cell also carries the IT Priority badge for the md table, hidden from lg where IT Priority has its own column (C-116, FR-31) 85ms
+     → an md-only IT Priority wrapper in the Current Status cell: expected null not to be null
+   × Visual-checklist defects (Issue #12) > STYLE-13 a disabled primary and a disabled secondary button stay visibly different levels: filled versus outlined (C-118, ui-spec 7, 19) 1ms
+     → .btn-primary:disabled, .btn-primary.disabled, .btn-danger:disabled, .btn-danger.disabled rule exists: expected -1 to be greater than -1
+ ❯ tests/lab-03/StaffTicketDetail.test.tsx (19 tests | 1 failed) 1773ms
+   × IT Staff Ticket Detail > UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders once, below the lists (BR-58, C-98, C-117) 23ms
+     → expected [ <p class="tk-muted mb-0"></p>, …(1) ] to have a length of 1 but got 2
+   ✓ IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 420ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders once, below the lists (BR-58, C-98, C-117)
+AssertionError: expected [ <p class="tk-muted mb-0"></p>, …(1) ] to have a length of 1 but got 2
+
+- Expected
++ Received
+
+- 1
++ 2
+
+ ❯ tests/lab-03/StaffTicketDetail.test.tsx:136:20
+    134|     // (16.4); the Operations card shows owner and IT Priority read-on…
+    135|     const closed = screen.getAllByText("This ticket is closed - create…
+    136|     expect(closed).toHaveLength(1);
+       |                    ^
+    137|     expect(within(screen.getByRole("region", { name: "Ticket Operation…
+    138| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-54 My Tickets: the Current Status cell also carries the IT Priority badge for the md table, hidden from lg where IT Priority has its own column (C-116, FR-31)
+AssertionError: an md-only IT Priority wrapper in the Current Status cell: expected null not to be null
+ ❯ tests/lab-03/UiDefects.test.tsx:52:85
+     50|     const cell = within(table).getAllByRole("row")[1].querySelectorAll…
+     51|     const inCell = cell.querySelector(".d-lg-none");
+     52|     expect(inCell, "an md-only IT Priority wrapper in the Current Stat…
+       |                                                                                     ^
+     53|     expect(inCell!.textContent).toMatch(/IT.*High/);
+     54|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > STYLE-13 a disabled primary and a disabled secondary button stay visibly different levels: filled versus outlined (C-118, ui-spec 7, 19)
+AssertionError: .btn-primary:disabled, .btn-primary.disabled, .btn-danger:disabled, .btn-danger.disabled rule exists: expected -1 to be greater than -1
+ ❯ rule tests/lab-03/UiDefects.test.tsx:60:44
+     58|     const rule = (selector: string) => {
+     59|       const i = css.indexOf(selector + " {");
+     60|       expect(i, `${selector} rule exists`).toBeGreaterThan(-1);
+       |                                            ^
+     61|       return css.slice(i, css.indexOf("}", i));
+     62|     };
+ ❯ tests/lab-03/UiDefects.test.tsx:63:21
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+ Test Files  2 failed (2)
+      Tests  3 failed | 18 passed (21)
+   Start at  00:54:30
+   Duration  3.11s (transform 250ms, setup 192ms, collect 802ms, tests 1.86s, environment 944ms, prepare 271ms)
+

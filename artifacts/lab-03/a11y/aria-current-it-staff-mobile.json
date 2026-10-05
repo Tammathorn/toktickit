@@ -1,0 +1,17 @@
+{
+  "role": "it-staff",
+  "viewport": "mobile",
+  "pages": [
+    {
+      "route": "/queue",
+      "links": [
+        {
+          "label": "Ticket Queue",
+          "ariaCurrent": "page",
+          "fontWeight": "600",
+          "borderBottom": "3px solid rgb(234, 246, 239)"
+        }
+      ]
+    }
+  ]
+}

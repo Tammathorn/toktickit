@@ -1,0 +1,21 @@
+{
+  "screen": "IT Staff Ticket Detail",
+  "viewport": "desktop",
+  "decision": "C-118",
+  "buttons": [
+    {
+      "label": "Post Comment",
+      "disabled": true,
+      "background": "rgb(90, 107, 98)",
+      "color": "rgb(255, 255, 255)",
+      "border": "rgb(90, 107, 98)"
+    },
+    {
+      "label": "Add Note",
+      "disabled": true,
+      "background": "rgb(255, 255, 255)",
+      "color": "rgb(90, 107, 98)",
+      "border": "rgb(216, 224, 219)"
+    }
+  ]
+}

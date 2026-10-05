@@ -1,0 +1,40 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx -t UI-60
+Date: 2026-10-05 18:23 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; found while judging requester-detail-<vp>-conflict.png: the view was not refreshed)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (8 tests | 1 failed | 7 skipped) 187ms
+   × Visual-checklist defects (Issue #12) > UI-60 a refused resolution report is the ui-spec 20.1 Conflict state: the message stays inline in the information card and the view is refreshed (C-76, 14.3) 186ms
+     → expect(element).toHaveClass("tk-conflict")
+
+Expected the element to have class:
+  tk-conflict
+Received:
+  tk-invalid-feedback
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-60 a refused resolution report is the ui-spec 20.1 Conflict state: the message stays inline in the information card and the view is refreshed (C-76, 14.3)
+Error: expect(element).toHaveClass("tk-conflict")
+
+Expected the element to have class:
+  tk-conflict
+Received:
+  tk-invalid-feedback
+ ❯ tests/lab-03/UiDefects.test.tsx:211:22
+    209|     const info = screen.getByRole("region", { name: "Ticket informatio…
+    210|     const conflict = await within(info).findByText("You can only repor…
+    211|     expect(conflict).toHaveClass("tk-conflict");
+       |                      ^
+    212|     // refreshed: the header now shows the status the server holds
+    213|     expect(await within(info).findByText("Resolved")).toHaveClass("tk-…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 7 skipped (8)
+   Start at  01:23:21
+   Duration  24.69s (transform 269ms, setup 2.98s, collect 3.60s, tests 187ms, environment 16.64s, prepare 836ms)
+

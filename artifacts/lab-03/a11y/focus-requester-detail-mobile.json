@@ -1,0 +1,36 @@
+{
+  "screen": "requester-detail",
+  "viewport": "mobile",
+  "url": "/tickets/141",
+  "focusableVisible": 5,
+  "reached": 5,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Toggle navigation",
+      "ring": "box-shadow rgba(255, 255, 255, 0.55) 0px 0px 0px 4px"
+    },
+    {
+      "element": "textarea#comment-body",
+      "name": "Add a comment",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#add-attachment",
+      "name": "Add attachment",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Back to My Tickets",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

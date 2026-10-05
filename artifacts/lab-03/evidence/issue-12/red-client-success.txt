@@ -1,0 +1,4116 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx
+Date: 2026-10-05 18:05 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; C-119 success panels written as tests, not yet implemented)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (6 tests | 2 failed) 2831ms
+   × Visual-checklist defects (Issue #12) > UI-57 IT Staff Ticket Detail confirms each write with the ui-spec 20.1 success panel - pale, check icon, sentence, polite (C-119) 1098ms
+     → Unable to find an element with the text: Ticket claimed.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="staff-detail-title"
+      >
+        <div
+          class="row g-3 mb-3"
+        >
+          <div
+            class="col-12 col-lg-7"
+          >
+            <div
+              aria-label="Ticket information"
+              class="card tk-card h-100"
+              role="region"
+            >
+              <div
+                class="d-flex flex-wrap align-items-center gap-2 mb-3"
+              >
+                <h1
+                  class="tk-title mb-0"
+                  id="staff-detail-title"
+                >
+                  TKT-2026-000077
+                </h1>
+                <span
+                  class="tk-badge tk-badge-square tk-status-new"
+                >
+                  New
+                </span>
+                <span
+                  class="tk-badge tk-badge-pill tk-priority-medium"
+                >
+                  IT Medium
+                </span>
+              </div>
+              <dl
+                class="row tk-detail-list"
+              >
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requester
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Anucha Prasert
+                     (
+                    anucha.p@example.ac.th
+                    )
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Ticket Date
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 11:12
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Category
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Hardware
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Related System
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Printer
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requested Priority
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Medium
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Last Updated
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 12:02
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Ticket Summary
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Laptop battery drains quickly
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Description
+                  </dt>
+                  <dd
+                    class="tk-readonly-value tk-prewrap"
+                  >
+                    Line one.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <div
+            class="col-12 col-lg-5"
+          >
+            <div
+              aria-label="Ticket Operations"
+              class="card tk-card tk-ops-card h-100"
+              role="region"
+            >
+              <h2
+                class="tk-section-title"
+              >
+                Ticket Operations
+              </h2>
+              <div
+                aria-label="Ticket Owner"
+                class="tk-ops-group"
+                role="group"
+              >
+                <p
+                  class="tk-label mb-1"
+                >
+                  Ticket Owner
+                </p>
+                <p
+                  class="mb-2"
+                >
+                  Araya Methee
+                   
+                  <span
+                    class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                  >
+                    IT Staff
+                  </span>
+                </p>
+                <div
+                  class="d-flex flex-wrap gap-2 align-items-end"
+                >
+                  <div>
+                    <label
+                      class="form-label tk-label"
+                      for="owner-select"
+                    >
+                      Reassign to…
+                    </label>
+                    <div
+                      class="d-flex gap-2"
+                    >
+                      <select
+                        class="form-select"
+                        id="owner-select"
+                      >
+                        <option
+                          value=""
+                        >
+                          Choose a user
+                        </option>
+                      </select>
+                      <button
+                        class="btn btn-secondary"
+                        disabled=""
+                        type="button"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    class="btn tk-btn-tertiary"
+                    type="button"
+                  >
+                    Unassign
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="IT Priority controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="it-priority-select"
+                >
+                  IT Priority
+                </label>
+                <div
+                  class="d-flex gap-2 align-items-center"
+                >
+                  <select
+                    class="form-select"
+                    id="it-priority-select"
+                  >
+                    <option
+                      value="LOW"
+                    >
+                      Low
+                    </option>
+                    <option
+                      value="MEDIUM"
+                    >
+                      Medium
+                    </option>
+                    <option
+                      value="HIGH"
+                    >
+                      High
+                    </option>
+                  </select>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="Current Status controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="status-select"
+                >
+                  Current Status
+                </label>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <select
+                    class="form-select"
+                    id="status-select"
+                  >
+                    <option
+                      disabled=""
+                      value="NEW"
+                    >
+                      New
+                    </option>
+                    <option
+                      value="OPEN"
+                    >
+                      Open
+                    </option>
+                    <option
+                      value="IN_PROGRESS"
+                    >
+                      In Progress
+                    </option>
+                    <option
+                      value="CANCELLED"
+                    >
+                      Cancelled
+                    </option>
+                  </select>
+                  <button
+                    class="btn btn-secondary"
+                    disabled=""
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <h3
+            class="tk-label"
+            id="staff-active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="staff-removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No comments yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="internal-notes-title"
+          class="tk-internal-panel mt-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-internal-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <rect
+                height="9"
+                rx="1.5"
+                width="14"
+                x="5"
+                y="11"
+              />
+              <path
+                d="M8 11V7a4 4 0 0 1 8 0v4"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="internal-notes-title"
+            >
+              Internal Notes
+            </h2>
+          </div>
+          <p
+            class="tk-internal-standing-label mb-3"
+          >
+            Not visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No internal notes yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="note-body"
+            >
+              Add an internal note
+            </label>
+            <textarea
+              aria-describedby="note-body-counter"
+              class="form-control"
+              id="note-body"
+              placeholder="Not visible to the Requester…"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="note-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-secondary mt-2"
+              disabled=""
+              type="button"
+            >
+              Add Note
+            </button>
+          </div>
+        </section>
+        <a
+          class="btn btn-secondary mt-3"
+          href="/queue"
+        >
+          Back to the Ticket Queue
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="staff-detail-title"
+      >
+        <div
+          class="row g-3 mb-3"
+        >
+          <div
+            class="col-12 col-lg-7"
+          >
+            <div
+              aria-label="Ticket information"
+              class="card tk-card h-100"
+              role="region"
+            >
+              <div
+                class="d-flex flex-wrap align-items-center gap-2 mb-3"
+              >
+                <h1
+                  class="tk-title mb-0"
+                  id="staff-detail-title"
+                >
+                  TKT-2026-000077
+                </h1>
+                <span
+                  class="tk-badge tk-badge-square tk-status-new"
+                >
+                  New
+                </span>
+                <span
+                  class="tk-badge tk-badge-pill tk-priority-medium"
+                >
+                  IT Medium
+                </span>
+              </div>
+              <dl
+                class="row tk-detail-list"
+              >
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requester
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Anucha Prasert
+                     (
+                    anucha.p@example.ac.th
+                    )
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Ticket Date
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 11:12
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Category
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Hardware
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Related System
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Printer
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requested Priority
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Medium
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Last Updated
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 12:02
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Ticket Summary
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Laptop battery drains quickly
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Description
+                  </dt>
+                  <dd
+                    class="tk-readonly-value tk-prewrap"
+                  >
+                    Line one.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <div
+            class="col-12 col-lg-5"
+          >
+            <div
+              aria-label="Ticket Operations"
+              class="card tk-card tk-ops-card h-100"
+              role="region"
+            >
+              <h2
+                class="tk-section-title"
+              >
+                Ticket Operations
+              </h2>
+              <div
+                aria-label="Ticket Owner"
+                class="tk-ops-group"
+                role="group"
+              >
+                <p
+                  class="tk-label mb-1"
+                >
+                  Ticket Owner
+                </p>
+                <p
+                  class="mb-2"
+                >
+                  Araya Methee
+                   
+                  <span
+                    class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                  >
+                    IT Staff
+                  </span>
+                </p>
+                <div
+                  class="d-flex flex-wrap gap-2 align-items-end"
+                >
+                  <div>
+                    <label
+                      class="form-label tk-label"
+                      for="owner-select"
+                    >
+                      Reassign to…
+                    </label>
+                    <div
+                      class="d-flex gap-2"
+                    >
+                      <select
+                        class="form-select"
+                        id="owner-select"
+                      >
+                        <option
+                          value=""
+                        >
+                          Choose a user
+                        </option>
+                      </select>
+                      <button
+                        class="btn btn-secondary"
+                        disabled=""
+                        type="button"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    class="btn tk-btn-tertiary"
+                    type="button"
+                  >
+                    Unassign
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="IT Priority controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="it-priority-select"
+                >
+                  IT Priority
+                </label>
+                <div
+                  class="d-flex gap-2 align-items-center"
+                >
+                  <select
+                    class="form-select"
+                    id="it-priority-select"
+                  >
+                    <option
+                      value="LOW"
+                    >
+                      Low
+                    </option>
+                    <option
+                      value="MEDIUM"
+                    >
+                      Medium
+                    </option>
+                    <option
+                      value="HIGH"
+                    >
+                      High
+                    </option>
+                  </select>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="Current Status controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="status-select"
+                >
+                  Current Status
+                </label>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <select
+                    class="form-select"
+                    id="status-select"
+                  >
+                    <option
+                      disabled=""
+                      value="NEW"
+                    >
+                      New
+                    </option>
+                    <option
+                      value="OPEN"
+                    >
+                      Open
+                    </option>
+                    <option
+                      value="IN_PROGRESS"
+                    >
+                      In Progress
+                    </option>
+                    <option
+                      value="CANCELLED"
+                    >
+                      Cancelled
+                    </option>
+                  </select>
+                  <button
+                    class="btn btn-secondary"
+                    disabled=""
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <h3
+            class="tk-label"
+            id="staff-active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="staff-removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No comments yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="internal-notes-title"
+          class="tk-internal-panel mt-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-internal-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <rect
+                height="9"
+                rx="1.5"
+                width="14"
+                x="5"
+                y="11"
+              />
+              <path
+                d="M8 11V7a4 4 0 0 1 8 0v4"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="internal-notes-title"
+            >
+              Internal Notes
+            </h2>
+          </div>
+          <p
+            class="tk-internal-standing-label mb-3"
+          >
+            Not visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No internal notes yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="note-body"
+            >
+              Add an internal note
+            </label>
+            <textarea
+              aria-describedby="note-body-counter"
+              class="form-control"
+              id="note-body"
+              placeholder="Not visible to the Requester…"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="note-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-secondary mt-2"
+              disabled=""
+              type="button"
+            >
+              Add Note
+            </button>
+          </div>
+        </section>
+        <a
+          class="btn btn-secondary mt-3"
+          href="/queue"
+        >
+          Back to the Ticket Queue
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+   × Visual-checklist defects (Issue #12) > UI-58 Requester Ticket Detail confirms a posted comment with the success panel (C-119) 1624ms
+     → Unable to find an element with the text: Comment posted.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="ticket-detail-title"
+      >
+        <div
+          aria-label="Ticket information"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-center gap-2 mb-3"
+          >
+            <h1
+              class="tk-title mb-0"
+              id="ticket-detail-title"
+            >
+              TKT-2026-000077
+            </h1>
+            <span
+              class="tk-badge tk-badge-square tk-status-open"
+            >
+              Open
+            </span>
+            <span
+              class="tk-badge tk-badge-pill tk-priority-medium"
+            >
+              IT Medium
+            </span>
+          </div>
+          <dl
+            class="row tk-detail-list"
+          >
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Date
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 11:12
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Anucha Prasert
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Category
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Hardware
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Related System
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Printer
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requested Priority
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Medium
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Owner
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Unassigned
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Last Updated
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 12:02
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Ticket Summary
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Laptop battery drains quickly
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Description
+              </dt>
+              <dd
+                class="tk-readonly-value tk-prewrap"
+              >
+                Line one.
+              </dd>
+            </div>
+          </dl>
+          <button
+            class="btn tk-btn-tertiary p-0"
+            type="button"
+          >
+            Problem Appears Resolved
+          </button>
+          <p
+            class="tk-muted mb-0"
+          >
+            Tell IT Staff the problem looks fixed. They will confirm and resolve the ticket.
+          </p>
+        </div>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <ul
+            aria-label="Public comments"
+            class="list-unstyled tk-entry-list"
+          >
+            <li
+              class="tk-entry tk-entry-comment"
+            >
+              <div
+                class="tk-entry-meta"
+              >
+                <span
+                  class="fw-semibold"
+                >
+                  Araya Methee
+                </span>
+                 
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                 
+                <span
+                  class="tk-muted"
+                >
+                  05 Sep 2026 13:00
+                </span>
+              </div>
+              <p
+                class="tk-prewrap mb-0"
+              >
+                Still happening after a restart.
+              </p>
+            </li>
+          </ul>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              aria-live="polite"
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <div
+            class="mb-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="add-attachment"
+            >
+              Add attachment
+            </label>
+            <input
+              accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+              aria-describedby="add-attachment-help"
+              class="form-control"
+              id="add-attachment"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="tk-muted"
+              id="add-attachment-help"
+            >
+              JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket.
+            </div>
+          </div>
+          <h3
+            class="tk-label"
+            id="active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <a
+          class="btn btn-secondary"
+          href="/tickets"
+        >
+          Back to My Tickets
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="ticket-detail-title"
+      >
+        <div
+          aria-label="Ticket information"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-center gap-2 mb-3"
+          >
+            <h1
+              class="tk-title mb-0"
+              id="ticket-detail-title"
+            >
+              TKT-2026-000077
+            </h1>
+            <span
+              class="tk-badge tk-badge-square tk-status-open"
+            >
+              Open
+            </span>
+            <span
+              class="tk-badge tk-badge-pill tk-priority-medium"
+            >
+              IT Medium
+            </span>
+          </div>
+          <dl
+            class="row tk-detail-list"
+          >
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Date
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 11:12
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Anucha Prasert
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Category
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Hardware
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Related System
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Printer
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requested Priority
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Medium
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Owner
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Unassigned
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Last Updated
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 12:02
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Ticket Summary
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Laptop battery drains quickly
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Description
+              </dt>
+              <dd
+                class="tk-readonly-value tk-prewrap"
+              >
+                Line one.
+              </dd>
+            </div>
+          </dl>
+          <button
+            class="btn tk-btn-tertiary p-0"
+            type="button"
+          >
+            Problem Appears Resolved
+          </button>
+          <p
+            class="tk-muted mb-0"
+          >
+            Tell IT Staff the problem looks fixed. They will confirm and resolve the ticket.
+          </p>
+        </div>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <ul
+            aria-label="Public comments"
+            class="list-unstyled tk-entry-list"
+          >
+            <li
+              class="tk-entry tk-entry-comment"
+            >
+              <div
+                class="tk-entry-meta"
+              >
+                <span
+                  class="fw-semibold"
+                >
+                  Araya Methee
+                </span>
+                 
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                 
+                <span
+                  class="tk-muted"
+                >
+                  05 Sep 2026 13:00
+                </span>
+              </div>
+              <p
+                class="tk-prewrap mb-0"
+              >
+                Still happening after a restart.
+              </p>
+            </li>
+          </ul>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              aria-live="polite"
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <div
+            class="mb-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="add-attachment"
+            >
+              Add attachment
+            </label>
+            <input
+              accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+              aria-describedby="add-attachment-help"
+              class="form-control"
+              id="add-attachment"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="tk-muted"
+              id="add-attachment-help"
+            >
+              JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket.
+            </div>
+          </div>
+          <h3
+            class="tk-label"
+            id="active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <a
+          class="btn btn-secondary"
+          href="/tickets"
+        >
+          Back to My Tickets
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-57 IT Staff Ticket Detail confirms each write with the ui-spec 20.1 success panel - pale, check icon, sentence, polite (C-119)
+TestingLibraryElementError: Unable to find an element with the text: Ticket claimed.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="staff-detail-title"
+      >
+        <div
+          class="row g-3 mb-3"
+        >
+          <div
+            class="col-12 col-lg-7"
+          >
+            <div
+              aria-label="Ticket information"
+              class="card tk-card h-100"
+              role="region"
+            >
+              <div
+                class="d-flex flex-wrap align-items-center gap-2 mb-3"
+              >
+                <h1
+                  class="tk-title mb-0"
+                  id="staff-detail-title"
+                >
+                  TKT-2026-000077
+                </h1>
+                <span
+                  class="tk-badge tk-badge-square tk-status-new"
+                >
+                  New
+                </span>
+                <span
+                  class="tk-badge tk-badge-pill tk-priority-medium"
+                >
+                  IT Medium
+                </span>
+              </div>
+              <dl
+                class="row tk-detail-list"
+              >
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requester
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Anucha Prasert
+                     (
+                    anucha.p@example.ac.th
+                    )
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Ticket Date
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 11:12
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Category
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Hardware
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Related System
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Printer
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requested Priority
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Medium
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Last Updated
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 12:02
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Ticket Summary
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Laptop battery drains quickly
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Description
+                  </dt>
+                  <dd
+                    class="tk-readonly-value tk-prewrap"
+                  >
+                    Line one.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <div
+            class="col-12 col-lg-5"
+          >
+            <div
+              aria-label="Ticket Operations"
+              class="card tk-card tk-ops-card h-100"
+              role="region"
+            >
+              <h2
+                class="tk-section-title"
+              >
+                Ticket Operations
+              </h2>
+              <div
+                aria-label="Ticket Owner"
+                class="tk-ops-group"
+                role="group"
+              >
+                <p
+                  class="tk-label mb-1"
+                >
+                  Ticket Owner
+                </p>
+                <p
+                  class="mb-2"
+                >
+                  Araya Methee
+                   
+                  <span
+                    class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                  >
+                    IT Staff
+                  </span>
+                </p>
+                <div
+                  class="d-flex flex-wrap gap-2 align-items-end"
+                >
+                  <div>
+                    <label
+                      class="form-label tk-label"
+                      for="owner-select"
+                    >
+                      Reassign to…
+                    </label>
+                    <div
+                      class="d-flex gap-2"
+                    >
+                      <select
+                        class="form-select"
+                        id="owner-select"
+                      >
+                        <option
+                          value=""
+                        >
+                          Choose a user
+                        </option>
+                      </select>
+                      <button
+                        class="btn btn-secondary"
+                        disabled=""
+                        type="button"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    class="btn tk-btn-tertiary"
+                    type="button"
+                  >
+                    Unassign
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="IT Priority controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="it-priority-select"
+                >
+                  IT Priority
+                </label>
+                <div
+                  class="d-flex gap-2 align-items-center"
+                >
+                  <select
+                    class="form-select"
+                    id="it-priority-select"
+                  >
+                    <option
+                      value="LOW"
+                    >
+                      Low
+                    </option>
+                    <option
+                      value="MEDIUM"
+                    >
+                      Medium
+                    </option>
+                    <option
+                      value="HIGH"
+                    >
+                      High
+                    </option>
+                  </select>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="Current Status controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="status-select"
+                >
+                  Current Status
+                </label>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <select
+                    class="form-select"
+                    id="status-select"
+                  >
+                    <option
+                      disabled=""
+                      value="NEW"
+                    >
+                      New
+                    </option>
+                    <option
+                      value="OPEN"
+                    >
+                      Open
+                    </option>
+                    <option
+                      value="IN_PROGRESS"
+                    >
+                      In Progress
+                    </option>
+                    <option
+                      value="CANCELLED"
+                    >
+                      Cancelled
+                    </option>
+                  </select>
+                  <button
+                    class="btn btn-secondary"
+                    disabled=""
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <h3
+            class="tk-label"
+            id="staff-active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="staff-removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No comments yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="internal-notes-title"
+          class="tk-internal-panel mt-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-internal-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <rect
+                height="9"
+                rx="1.5"
+                width="14"
+                x="5"
+                y="11"
+              />
+              <path
+                d="M8 11V7a4 4 0 0 1 8 0v4"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="internal-notes-title"
+            >
+              Internal Notes
+            </h2>
+          </div>
+          <p
+            class="tk-internal-standing-label mb-3"
+          >
+            Not visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No internal notes yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="note-body"
+            >
+              Add an internal note
+            </label>
+            <textarea
+              aria-describedby="note-body-counter"
+              class="form-control"
+              id="note-body"
+              placeholder="Not visible to the Requester…"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="note-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-secondary mt-2"
+              disabled=""
+              type="button"
+            >
+              Add Note
+            </button>
+          </div>
+        </section>
+        <a
+          class="btn btn-secondary mt-3"
+          href="/queue"
+        >
+          Back to the Ticket Queue
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="staff-detail-title"
+      >
+        <div
+          class="row g-3 mb-3"
+        >
+          <div
+            class="col-12 col-lg-7"
+          >
+            <div
+              aria-label="Ticket information"
+              class="card tk-card h-100"
+              role="region"
+            >
+              <div
+                class="d-flex flex-wrap align-items-center gap-2 mb-3"
+              >
+                <h1
+                  class="tk-title mb-0"
+                  id="staff-detail-title"
+                >
+                  TKT-2026-000077
+                </h1>
+                <span
+                  class="tk-badge tk-badge-square tk-status-new"
+                >
+                  New
+                </span>
+                <span
+                  class="tk-badge tk-badge-pill tk-priority-medium"
+                >
+                  IT Medium
+                </span>
+              </div>
+              <dl
+                class="row tk-detail-list"
+              >
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requester
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Anucha Prasert
+                     (
+                    anucha.p@example.ac.th
+                    )
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Ticket Date
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 11:12
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Category
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Hardware
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Related System
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Printer
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Requested Priority
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Medium
+                  </dd>
+                </div>
+                <div
+                  class="col-12 col-md-6 col-lg-4"
+                >
+                  <dt>
+                    Last Updated
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    05 Sep 2026 12:02
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Ticket Summary
+                  </dt>
+                  <dd
+                    class="tk-readonly-value"
+                  >
+                    Laptop battery drains quickly
+                  </dd>
+                </div>
+                <div
+                  class="col-12"
+                >
+                  <dt>
+                    Description
+                  </dt>
+                  <dd
+                    class="tk-readonly-value tk-prewrap"
+                  >
+                    Line one.
+                  </dd>
+                </div>
+              </dl>
+            </div>
+          </div>
+          <div
+            class="col-12 col-lg-5"
+          >
+            <div
+              aria-label="Ticket Operations"
+              class="card tk-card tk-ops-card h-100"
+              role="region"
+            >
+              <h2
+                class="tk-section-title"
+              >
+                Ticket Operations
+              </h2>
+              <div
+                aria-label="Ticket Owner"
+                class="tk-ops-group"
+                role="group"
+              >
+                <p
+                  class="tk-label mb-1"
+                >
+                  Ticket Owner
+                </p>
+                <p
+                  class="mb-2"
+                >
+                  Araya Methee
+                   
+                  <span
+                    class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                  >
+                    IT Staff
+                  </span>
+                </p>
+                <div
+                  class="d-flex flex-wrap gap-2 align-items-end"
+                >
+                  <div>
+                    <label
+                      class="form-label tk-label"
+                      for="owner-select"
+                    >
+                      Reassign to…
+                    </label>
+                    <div
+                      class="d-flex gap-2"
+                    >
+                      <select
+                        class="form-select"
+                        id="owner-select"
+                      >
+                        <option
+                          value=""
+                        >
+                          Choose a user
+                        </option>
+                      </select>
+                      <button
+                        class="btn btn-secondary"
+                        disabled=""
+                        type="button"
+                      >
+                        Save Changes
+                      </button>
+                    </div>
+                  </div>
+                  <button
+                    class="btn tk-btn-tertiary"
+                    type="button"
+                  >
+                    Unassign
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="IT Priority controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="it-priority-select"
+                >
+                  IT Priority
+                </label>
+                <div
+                  class="d-flex gap-2 align-items-center"
+                >
+                  <select
+                    class="form-select"
+                    id="it-priority-select"
+                  >
+                    <option
+                      value="LOW"
+                    >
+                      Low
+                    </option>
+                    <option
+                      value="MEDIUM"
+                    >
+                      Medium
+                    </option>
+                    <option
+                      value="HIGH"
+                    >
+                      High
+                    </option>
+                  </select>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                  <button
+                    class="btn btn-secondary"
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+              <div
+                aria-label="Current Status controls"
+                class="tk-ops-group"
+                role="group"
+              >
+                <label
+                  class="form-label tk-label"
+                  for="status-select"
+                >
+                  Current Status
+                </label>
+                <div
+                  class="d-flex gap-2"
+                >
+                  <select
+                    class="form-select"
+                    id="status-select"
+                  >
+                    <option
+                      disabled=""
+                      value="NEW"
+                    >
+                      New
+                    </option>
+                    <option
+                      value="OPEN"
+                    >
+                      Open
+                    </option>
+                    <option
+                      value="IN_PROGRESS"
+                    >
+                      In Progress
+                    </option>
+                    <option
+                      value="CANCELLED"
+                    >
+                      Cancelled
+                    </option>
+                  </select>
+                  <button
+                    class="btn btn-secondary"
+                    disabled=""
+                    type="button"
+                  >
+                    Save Changes
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <h3
+            class="tk-label"
+            id="staff-active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="staff-removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No comments yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="internal-notes-title"
+          class="tk-internal-panel mt-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-internal-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <rect
+                height="9"
+                rx="1.5"
+                width="14"
+                x="5"
+                y="11"
+              />
+              <path
+                d="M8 11V7a4 4 0 0 1 8 0v4"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="internal-notes-title"
+            >
+              Internal Notes
+            </h2>
+          </div>
+          <p
+            class="tk-internal-standing-label mb-3"
+          >
+            Not visible to the Requester.
+          </p>
+          <p
+            class="tk-muted"
+          >
+            No internal notes yet.
+          </p>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="note-body"
+            >
+              Add an internal note
+            </label>
+            <textarea
+              aria-describedby="note-body-counter"
+              class="form-control"
+              id="note-body"
+              placeholder="Not visible to the Requester…"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="note-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-secondary mt-2"
+              disabled=""
+              type="button"
+            >
+              Add Note
+            </button>
+          </div>
+        </section>
+        <a
+          class="btn btn-secondary mt-3"
+          href="/queue"
+        >
+          Back to the Ticket Queue
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/lab-03/UiDefects.test.tsx:145:32
+    143| 
+    144|     await user.click(screen.getByRole("button", { name: "Claim" }));
+    145|     expectSuccess(await screen.findByText("Ticket claimed."));
+       |                                ^
+    146| 
+    147|     await user.type(screen.getByLabelText("Add a comment"), "We are lo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-58 Requester Ticket Detail confirms a posted comment with the success panel (C-119)
+TestingLibraryElementError: Unable to find an element with the text: Comment posted.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="ticket-detail-title"
+      >
+        <div
+          aria-label="Ticket information"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-center gap-2 mb-3"
+          >
+            <h1
+              class="tk-title mb-0"
+              id="ticket-detail-title"
+            >
+              TKT-2026-000077
+            </h1>
+            <span
+              class="tk-badge tk-badge-square tk-status-open"
+            >
+              Open
+            </span>
+            <span
+              class="tk-badge tk-badge-pill tk-priority-medium"
+            >
+              IT Medium
+            </span>
+          </div>
+          <dl
+            class="row tk-detail-list"
+          >
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Date
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 11:12
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Anucha Prasert
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Category
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Hardware
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Related System
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Printer
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requested Priority
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Medium
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Owner
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Unassigned
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Last Updated
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 12:02
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Ticket Summary
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Laptop battery drains quickly
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Description
+              </dt>
+              <dd
+                class="tk-readonly-value tk-prewrap"
+              >
+                Line one.
+              </dd>
+            </div>
+          </dl>
+          <button
+            class="btn tk-btn-tertiary p-0"
+            type="button"
+          >
+            Problem Appears Resolved
+          </button>
+          <p
+            class="tk-muted mb-0"
+          >
+            Tell IT Staff the problem looks fixed. They will confirm and resolve the ticket.
+          </p>
+        </div>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <ul
+            aria-label="Public comments"
+            class="list-unstyled tk-entry-list"
+          >
+            <li
+              class="tk-entry tk-entry-comment"
+            >
+              <div
+                class="tk-entry-meta"
+              >
+                <span
+                  class="fw-semibold"
+                >
+                  Araya Methee
+                </span>
+                 
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                 
+                <span
+                  class="tk-muted"
+                >
+                  05 Sep 2026 13:00
+                </span>
+              </div>
+              <p
+                class="tk-prewrap mb-0"
+              >
+                Still happening after a restart.
+              </p>
+            </li>
+          </ul>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              aria-live="polite"
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <div
+            class="mb-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="add-attachment"
+            >
+              Add attachment
+            </label>
+            <input
+              accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+              aria-describedby="add-attachment-help"
+              class="form-control"
+              id="add-attachment"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="tk-muted"
+              id="add-attachment-help"
+            >
+              JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket.
+            </div>
+          </div>
+          <h3
+            class="tk-label"
+            id="active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <a
+          class="btn btn-secondary"
+          href="/tickets"
+        >
+          Back to My Tickets
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="ticket-detail-title"
+      >
+        <div
+          aria-label="Ticket information"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-center gap-2 mb-3"
+          >
+            <h1
+              class="tk-title mb-0"
+              id="ticket-detail-title"
+            >
+              TKT-2026-000077
+            </h1>
+            <span
+              class="tk-badge tk-badge-square tk-status-open"
+            >
+              Open
+            </span>
+            <span
+              class="tk-badge tk-badge-pill tk-priority-medium"
+            >
+              IT Medium
+            </span>
+          </div>
+          <dl
+            class="row tk-detail-list"
+          >
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Date
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 11:12
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requester
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Anucha Prasert
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Category
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Hardware
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Related System
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Printer
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Requested Priority
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Medium
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Ticket Owner
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Unassigned
+              </dd>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-4"
+            >
+              <dt>
+                Last Updated
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                05 Sep 2026 12:02
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Ticket Summary
+              </dt>
+              <dd
+                class="tk-readonly-value"
+              >
+                Laptop battery drains quickly
+              </dd>
+            </div>
+            <div
+              class="col-12"
+            >
+              <dt>
+                Description
+              </dt>
+              <dd
+                class="tk-readonly-value tk-prewrap"
+              >
+                Line one.
+              </dd>
+            </div>
+          </dl>
+          <button
+            class="btn tk-btn-tertiary p-0"
+            type="button"
+          >
+            Problem Appears Resolved
+          </button>
+          <p
+            class="tk-muted mb-0"
+          >
+            Tell IT Staff the problem looks fixed. They will confirm and resolve the ticket.
+          </p>
+        </div>
+        <section
+          aria-labelledby="public-comments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex align-items-center gap-2 mb-1"
+          >
+            <svg
+              aria-hidden="true"
+              class="tk-comment-icon"
+              fill="none"
+              height="18"
+              stroke="currentColor"
+              stroke-width="1.5"
+              viewBox="0 0 24 24"
+              width="18"
+            >
+              <path
+                d="M4 5h16v11H9l-4 4V5Z"
+              />
+            </svg>
+            <h2
+              class="tk-section-title mb-0"
+              id="public-comments-title"
+            >
+              Public Comments
+            </h2>
+          </div>
+          <p
+            class="tk-muted mb-3"
+          >
+            Visible to the Requester.
+          </p>
+          <ul
+            aria-label="Public comments"
+            class="list-unstyled tk-entry-list"
+          >
+            <li
+              class="tk-entry tk-entry-comment"
+            >
+              <div
+                class="tk-entry-meta"
+              >
+                <span
+                  class="fw-semibold"
+                >
+                  Araya Methee
+                </span>
+                 
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                 
+                <span
+                  class="tk-muted"
+                >
+                  05 Sep 2026 13:00
+                </span>
+              </div>
+              <p
+                class="tk-prewrap mb-0"
+              >
+                Still happening after a restart.
+              </p>
+            </li>
+          </ul>
+          <div
+            class="mt-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="comment-body"
+            >
+              Add a comment
+            </label>
+            <textarea
+              aria-describedby="comment-body-counter"
+              class="form-control"
+              id="comment-body"
+              rows="3"
+            />
+            <div
+              aria-live="polite"
+              class="tk-char-counter"
+              id="comment-body-counter"
+            >
+              0
+               / 
+              2000
+            </div>
+            <button
+              class="btn btn-primary mt-2"
+              disabled=""
+              type="button"
+            >
+              Post Comment
+            </button>
+          </div>
+        </section>
+        <section
+          aria-labelledby="attachments-title"
+          class="card tk-card mb-3"
+          role="region"
+        >
+          <div
+            class="d-flex flex-wrap align-items-baseline justify-content-between gap-2 mb-3"
+          >
+            <h2
+              class="tk-section-title mb-0"
+              id="attachments-title"
+            >
+              Attachments
+            </h2>
+            <span
+              aria-live="polite"
+              class="tk-muted"
+            >
+              0 of 5 active
+            </span>
+          </div>
+          <div
+            class="mb-3"
+          >
+            <label
+              class="form-label tk-label"
+              for="add-attachment"
+            >
+              Add attachment
+            </label>
+            <input
+              accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+              aria-describedby="add-attachment-help"
+              class="form-control"
+              id="add-attachment"
+              multiple=""
+              type="file"
+            />
+            <div
+              class="tk-muted"
+              id="add-attachment-help"
+            >
+              JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket.
+            </div>
+          </div>
+          <h3
+            class="tk-label"
+            id="active-attachments-title"
+          >
+            Active
+          </h3>
+          <p
+            class="tk-muted mb-3"
+          >
+            No active attachments.
+          </p>
+          <h3
+            class="tk-label"
+            id="removed-attachments-title"
+          >
+            Removed
+          </h3>
+          <p
+            class="tk-muted mb-0"
+          >
+            No removed attachments.
+          </p>
+        </section>
+        <a
+          class="btn btn-secondary"
+          href="/tickets"
+        >
+          Back to My Tickets
+        </a>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/lab-03/UiDefects.test.tsx:165:32
+    163|     await user.type(screen.getByLabelText("Add a comment"), "Still hap…
+    164|     await user.click(screen.getByRole("button", { name: "Post Comment"…
+    165|     expectSuccess(await screen.findByText("Comment posted."));
+       |                                ^
+    166|   });
+    167| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 4 passed (6)
+   Start at  01:05:42
+   Duration  4.16s (transform 237ms, setup 87ms, collect 457ms, tests 2.83s, environment 435ms, prepare 130ms)
+

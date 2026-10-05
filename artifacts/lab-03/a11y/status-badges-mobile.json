@@ -1,0 +1,46 @@
+{
+  "screen": "Ticket Queue",
+  "viewport": "mobile",
+  "badges": [
+    {
+      "status": "NEW",
+      "badgeText": "New",
+      "className": "tk-badge tk-badge-square tk-status-new"
+    },
+    {
+      "status": "OPEN",
+      "badgeText": "Open",
+      "className": "tk-badge tk-badge-square tk-status-open"
+    },
+    {
+      "status": "IN_PROGRESS",
+      "badgeText": "In Progress",
+      "className": "tk-badge tk-badge-square tk-status-in-progress"
+    },
+    {
+      "status": "WAITING_FOR_REQUESTER",
+      "badgeText": "Waiting for Requester",
+      "className": "tk-badge tk-badge-square tk-status-waiting"
+    },
+    {
+      "status": "RESOLVED",
+      "badgeText": "Resolved",
+      "className": "tk-badge tk-badge-square tk-status-resolved"
+    },
+    {
+      "status": "CLOSED",
+      "badgeText": "Closed",
+      "className": "tk-badge tk-badge-square tk-status-closed"
+    },
+    {
+      "status": "REOPENED",
+      "badgeText": "Reopened",
+      "className": "tk-badge tk-badge-square tk-status-reopened"
+    },
+    {
+      "status": "CANCELLED",
+      "badgeText": "Cancelled",
+      "className": "tk-badge tk-badge-square tk-status-cancelled"
+    }
+  ]
+}

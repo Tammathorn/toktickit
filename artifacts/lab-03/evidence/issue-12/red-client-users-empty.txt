@@ -1,0 +1,30 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx -t UI-61
+Date: 2026-10-05 18:24 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; found while judging users-<vp>-empty-mocked.png: no icon, no body)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (9 tests | 1 failed | 8 skipped) 85ms
+   × Visual-checklist defects (Issue #12) > UI-61 User Management's Empty and No results states carry the ui-spec 20.1 icon and body, and differ from each other (17.3, C-121) 85ms
+     → outline document icon: expected null not to be null
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-61 User Management's Empty and No results states carry the ui-spec 20.1 icon and body, and differ from each other (17.3, C-121)
+AssertionError: outline document icon: expected null not to be null
+ ❯ tests/lab-03/UiDefects.test.tsx:223:83
+    221|     render(<App />);
+    222|     const empty = (await screen.findByRole("heading", { name: "No user…
+    223|     expect(empty.querySelector("svg.tk-empty-icon"), "outline document…
+       |                                                                                   ^
+    224|     expect(empty).toHaveTextContent("There are no user accounts yet. U…
+    225| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 8 skipped (9)
+   Start at  01:24:49
+   Duration  1.39s (transform 235ms, setup 82ms, collect 453ms, tests 85ms, environment 430ms, prepare 144ms)
+

@@ -1,0 +1,10 @@
+{
+  "dialog": "users-create",
+  "viewport": "tablet",
+  "controls": 7,
+  "tabFromLastWrapsToFirst": true,
+  "shiftTabFromFirstWrapsToLast": true,
+  "focusLeftDialogWhileTabbing": false,
+  "escapeClosed": true,
+  "focusRestoredToOpener": true
+}

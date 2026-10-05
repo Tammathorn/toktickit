@@ -1,0 +1,18 @@
+Command: grep checks over client/src (ui-spec 24, Colour row 4 and Naming rows 1, 2, 4)
+Date: 2026-10-05 18:37 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence, fixes in the working tree)
+
+$ grep -rnE "#[0-9A-Fa-f]{3,6}\b" client/src --include=*.tsx --include=*.ts   # hex in components
+(no match)
+
+$ hex values in client/src/theme.css outside the :root token block
+(no match)
+
+$ grep -rn "Development Requester\|Change Requester" client/src
+(no match)
+
+$ grep -rniE "Resolution Summary|Service Actions|Actions Taken|SLA|escalat" client/src
+(no match)
+
+$ grep -rnoE "Tik ?Tock ?IT|TokTickIt|Toktickit" client/src   # misspellings of TokTickIT
+(no match)

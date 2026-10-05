@@ -1,0 +1,928 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx
+Date: 2026-10-05 18:00 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; defects 1-5 fixed in the working tree, Not found (UI-55/56) not yet)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (4 tests | 2 failed) 2108ms
+   × Visual-checklist defects (Issue #12) > UI-55 a 404 renders the Not found state of ui-spec 20.1 - heading, a body naming what was addressed, a secondary link back - not the failure panel, and not Forbidden (C-65) 1010ms
+     → Unable to find role="heading" and name "That item does not exist."
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/tickets"
+            >
+              Back to My Tickets
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/tickets"
+            >
+              Back to My Tickets
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+   × Visual-checklist defects (Issue #12) > UI-56 IT Staff Ticket Detail renders the same Not found state for a 404, linking back to the Ticket Queue (ui-spec 20.1) 1007ms
+     → Unable to find role="heading" and name "That item does not exist."
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/queue"
+            >
+              Back to the Ticket Queue
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/queue"
+            >
+              Back to the Ticket Queue
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-55 a 404 renders the Not found state of ui-spec 20.1 - heading, a body naming what was addressed, a secondary link back - not the failure panel, and not Forbidden (C-65)
+TestingLibraryElementError: Unable to find role="heading" and name "That item does not exist."
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/tickets"
+            >
+              Back to My Tickets
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Anucha Prasert
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-requester"
+              >
+                Requester
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/tickets"
+            >
+              Back to My Tickets
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/lab-03/UiDefects.test.tsx:60:34
+     58|     window.history.pushState({}, "", "/tickets/999999");
+     59|     render(<App />);
+     60|     const heading = await screen.findByRole("heading", { level: 1, nam…
+       |                                  ^
+     61|     const panel = heading.closest(".tk-not-found")!;
+     62|     expect(panel, "the Not found component").not.toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-56 IT Staff Ticket Detail renders the same Not found state for a 404, linking back to the Ticket Queue (ui-spec 20.1)
+TestingLibraryElementError: Unable to find role="heading" and name "That item does not exist."
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/queue"
+            >
+              Back to the Ticket Queue
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/queue"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/queue"
+                >
+                  Ticket Queue
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-identity tk-identity-shell"
+            >
+              <span
+                class="tk-identity-name"
+              >
+                Araya Methee
+              </span>
+              <span
+                class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+              >
+                IT Staff
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Log Out
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-label="Ticket detail"
+      >
+        <div
+          aria-live="assertive"
+          class="tk-panel tk-panel-danger"
+          role="alert"
+        >
+          <p>
+            That item does not exist.
+          </p>
+          <div
+            class="d-flex flex-wrap gap-2"
+          >
+            <a
+              class="btn btn-secondary"
+              href="/queue"
+            >
+              Back to the Ticket Queue
+            </a>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/lab-03/UiDefects.test.tsx:75:34
+     73|     window.history.pushState({}, "", "/queue/999999");
+     74|     render(<App />);
+     75|     const heading = await screen.findByRole("heading", { level: 1, nam…
+       |                                  ^
+     76|     const panel = heading.closest(".tk-not-found") as HTMLElement;
+     77|     expect(panel).toHaveTextContent("There is no ticket with the ID 99…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 2 passed (4)
+   Start at  01:00:02
+   Duration  3.39s (transform 227ms, setup 79ms, collect 412ms, tests 2.11s, environment 423ms, prepare 103ms)
+

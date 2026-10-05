@@ -1,0 +1,46 @@
+{
+  "screen": "requester-detail",
+  "viewport": "tablet",
+  "url": "/tickets/103",
+  "focusableVisible": 7,
+  "reached": 7,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "My Tickets",
+      "ring": "box-shadow rgba(13, 110, 253, 0.25) 0px 0px 0px 4px"
+    },
+    {
+      "element": "a",
+      "name": "Create Ticket",
+      "ring": "box-shadow rgba(13, 110, 253, 0.25) 0px 0px 0px 4px"
+    },
+    {
+      "element": "button",
+      "name": "Log Out",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "textarea#comment-body",
+      "name": "Add a comment",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#add-attachment",
+      "name": "Add attachment",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Back to My Tickets",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}
