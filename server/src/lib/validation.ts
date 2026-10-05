@@ -24,6 +24,12 @@ export const MESSAGES = {
   ownerId: "Choose an active IT Staff or Administrator user.",
   // api-spec.md 3.1: a system-generated field supplied in the body.
   systemGenerated: (name: string) => `${name} is system generated and cannot be supplied.`,
+  // ui-spec.md 6.1, Lab 3 Administrator user management (#43). BR-99, BR-75, FR-59.
+  nameBounds: "Name is required and must be between 1 and 100 characters.",
+  emailBounds: "Email Address is required and must be a valid address of at most 254 characters.",
+  roleRequired: "Role is required.",
+  roleInvalid: "Role must be Requester, IT Staff or Administrator.",
+  statusRequired: "Status is required.",
 } as const;
 
 export const SUMMARY_MIN = 5;

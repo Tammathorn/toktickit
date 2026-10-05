@@ -28,6 +28,11 @@ export type ErrorCode =
   | "INVALID_STATUS_TRANSITION"
   | "RESOLUTION_NOT_PERMITTED_IN_STATUS"
   | "ASSIGNEE_NOT_ELIGIBLE"
+  // Lab 3 Administrator user management (api-spec.md 1.3, 9.1-9.4, #43).
+  | "USER_NOT_FOUND"
+  | "EMAIL_TAKEN"
+  | "LAST_ADMINISTRATOR"
+  | "SELF_DEACTIVATION"
   | "INTERNAL_ERROR";
 
 export function sendError(

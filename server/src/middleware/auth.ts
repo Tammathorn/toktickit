@@ -121,3 +121,7 @@ export const anyRole: readonly RequestHandler[] = [...protect, requireRole("REQU
 // Requester is refused 403 FORBIDDEN_ROLE before any query parameter is
 // parsed or any resource is loaded (C-63, C-65).
 export const staffOnly: readonly RequestHandler[] = [...protect, requireRole("IT_STAFF", "ADMINISTRATOR")];
+// Administrator user management (api-spec.md 9.1-9.4, #43). An IT Staff or
+// Requester caller is refused 403 FORBIDDEN_ROLE before any query parameter is
+// parsed or any User row is loaded (C-63, C-65, BR-39).
+export const adminOnly: readonly RequestHandler[] = [...protect, requireRole("ADMINISTRATOR")];
