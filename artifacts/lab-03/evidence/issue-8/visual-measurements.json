@@ -1,0 +1,1123 @@
+[
+  {
+    "screen": "Login",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Sign In",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Sign In",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Sign In",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Login",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Login",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 3,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Change Password",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Change Password",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Change Password",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Change Password",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Change Password",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 4,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "My Tickets",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "My Tickets",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Create Ticket",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All categoriesAccount and AccessHardware",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All related systemsEmailCampus Wi-FiVPNL",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All statusesNewOpenIn ProgressWaiting fo",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Newest firstOldest firstTicket Number, a",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000124",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000123",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000122",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "My Tickets",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "My Tickets",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 7,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Create Ticket",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "My Tickets",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Create Ticket",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Choose a CategoryAccount and AccessHardw",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Choose a Related SystemEmailCampus Wi-Fi",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Choose a priorityLowMediumHigh",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "TEXTAREA",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Create Ticket",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Create Ticket",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 13,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Requester Ticket Detail",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "My Tickets",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Create Ticket",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "TEXTAREA",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Back to My Tickets",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(0, 107, 60)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "My Tickets",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Create Ticket",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Requester Ticket Detail",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Requester Ticket Detail",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 2,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Ticket Queue",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Ticket Queue",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Open ticketsNewOpenIn ProgressWaiting fo",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All IT prioritiesLowMediumHigh",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Any ownerAssigned to meUnassignedAraya M",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All categoriesAccount and AccessHardware",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "IT Priority, then oldestNewest firstOlde",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000004",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000003",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Open TKT-2026-000001",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Ticket Queue",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Ticket Queue",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 8,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Staff Ticket Detail",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Ticket Queue",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Claim",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "Choose a userAraya MetheeDecha IntharatE",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "LowMediumHigh",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Save Changes",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(0, 107, 60)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "NewOpenIn ProgressCancelled",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "TEXTAREA",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "TEXTAREA",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Back to the Ticket Queue",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(0, 107, 60)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "Staff Ticket Detail",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "Staff Ticket Detail",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 2,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "User Management",
+    "viewport": "desktop",
+    "scrollWidth": 1280,
+    "innerWidth": 1280,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": [
+      {
+        "tag": "A",
+        "label": "TokTickIT",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "Ticket Queue",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "A",
+        "label": "User Management",
+        "outlineStyle": "none",
+        "outlineWidth": "0px",
+        "outlineColor": "rgb(234, 246, 239)",
+        "boxShadow": "rgba(13, 110, 253, 0.25) 0px 0px 0px 4px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Log Out",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Create User",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(255, 255, 255)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "INPUT",
+        "label": "",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "SELECT",
+        "label": "All rolesRequesterIT StaffAdministrator",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(31, 42, 36)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Edit Anucha Prasert",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Edit Araya Methee",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Edit Decha Intharat",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Edit E2E Created User",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      },
+      {
+        "tag": "BUTTON",
+        "label": "Edit E2E Created User",
+        "outlineStyle": "none",
+        "outlineWidth": "3px",
+        "outlineColor": "rgb(11, 122, 70)",
+        "boxShadow": "rgba(11, 122, 70, 0.35) 0px 0px 0px 3px",
+        "visibleRing": true
+      }
+    ]
+  },
+  {
+    "screen": "User Management",
+    "viewport": "tablet",
+    "scrollWidth": 834,
+    "innerWidth": 834,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": null,
+    "minTouchTarget": null,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  },
+  {
+    "screen": "User Management",
+    "viewport": "mobile",
+    "scrollWidth": 390,
+    "innerWidth": 390,
+    "horizontalOverflow": false,
+    "touchTargetsChecked": 5,
+    "minTouchTarget": 44,
+    "failingTouchTargets": [],
+    "clipped": [],
+    "overlaps": [],
+    "focusRingSample": null
+  }
+]
