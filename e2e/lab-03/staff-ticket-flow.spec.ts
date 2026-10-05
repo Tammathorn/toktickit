@@ -23,6 +23,7 @@ import {
 // Requires the manual start sequence in tests.md section 6.
 
 const SHOTS = path.resolve(__dirname, "../../artifacts/lab-03/screenshots/staff-ticket-detail");
+const SHOTS_QUEUE = path.resolve(__dirname, "../../artifacts/lab-03/screenshots/staff-queue");
 
 async function capture(page: Page, dir: string, name: string, desktopOnly = true) {
   if (desktopOnly && test.info().project.name !== "desktop") return;
@@ -45,6 +46,18 @@ async function createTicket(api: APIRequestContext, summary: string, overrides: 
   });
   expect(res.status(), summary).toBe(201);
   return res.json();
+}
+
+// The queue shows a <table> at desktop/tablet and cards (no table) at mobile
+// (RESP-02/03) - a results check used by captures that must work at all
+// three viewports has to branch on that, not assume a table.
+async function queueResultsVisible(page: Page) {
+  if (test.info().project.name === "mobile") {
+    await expect(page.locator("table")).toHaveCount(0);
+    await expect(page.getByRole("region", { name: "Ticket queue", exact: true })).toBeVisible();
+  } else {
+    await expect(page.locator("table")).toBeVisible();
+  }
 }
 
 async function gotoStaffDetail(page: Page, id: number) {
@@ -211,12 +224,13 @@ test.describe("IT Staff Ticket Detail flow", () => {
   });
 
   test("E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97)", async ({ browser }) => {
-    test.skip(test.info().project.name !== "desktop", "one capture suffices");
+    // RESP-09: queue-<vp>-forbidden.png needs all three viewports.
     const context = await browser.newContext({ storageState: STATE.requester });
     const page = await context.newPage();
     for (const url of ["/queue", "/users"]) {
       await page.goto(url);
       await expect(page.getByRole("heading", { name: "You do not have access to that page." })).toBeVisible();
+      if (url === "/queue") await capture(page, SHOTS_QUEUE, "queue-<vp>-forbidden", false);
     }
     const direct = await page.request.get("/api/staff/tickets");
     expect(direct.status()).toBe(403);
@@ -251,7 +265,7 @@ test.describe("IT Staff Ticket Detail flow", () => {
     await capture(page, SHOTS, "detail-<vp>-failure");
   });
 
-  test("an attachment uploaded by the Requester is downloadable by staff, with no upload or Remove control (FR-25, BR-91, C-103)", async ({ page }) => {
+  test("E2E-17 an attachment uploaded by the Requester is still listed and downloadable on the authenticated identity, and staff can download it with no upload or Remove control (FR-25, BR-91, C-103)", async ({ page, browser }) => {
     test.skip(test.info().project.name !== "desktop", "desktop evidence only");
     const requester = await apiAs(E2E_REQUESTER);
     const ticket = await createTicket(requester, "E2E: attachment continuity");
@@ -259,6 +273,23 @@ test.describe("IT Staff Ticket Detail flow", () => {
     const up = await requester.post(`/api/tickets/${ticket.id}/attachments`, { multipart: { file: { name: "evidence.png", mimeType: "image/png", buffer: png } } });
     expect(up.status()).toBe(201);
     await requester.dispose();
+
+    // Requester side first: the migration from the Lab 2 Requester selector to
+    // the authenticated identity (specification.md section 3) must not have
+    // broken the Requester's own continuity with an attachment they already
+    // uploaded - still listed, still downloadable, on STATE.requester (signed
+    // in as this same E2E_REQUESTER, per e2e/auth.setup.ts).
+    const reqContext = await browser.newContext({ storageState: STATE.requester });
+    const reqPage = await reqContext.newPage();
+    await reqPage.goto(`/tickets/${ticket.id}`);
+    const reqCard = reqPage.getByRole("region", { name: "Attachments" });
+    await expect(reqCard.getByText("1 of 5 active")).toBeVisible();
+    const [reqDownload] = await Promise.all([
+      reqPage.waitForEvent("download"),
+      reqCard.getByRole("button", { name: "Download evidence.png" }).click(),
+    ]);
+    expect(reqDownload.suggestedFilename()).toBe("evidence.png");
+    await reqContext.close();
 
     await gotoStaffDetail(page, ticket.id);
     const card = page.getByRole("region", { name: "Attachments" });
@@ -311,29 +342,54 @@ test.describe("IT Staff Ticket Detail flow", () => {
   });
 
   test("E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6)", async ({ page }) => {
-    test.skip(test.info().project.name !== "desktop", "one journey suffices");
+    // RESP-09: staff-queue/ needs all three viewports, so this journey (and
+    // its captures) run on every project - not desktop only.
+    // A per-run token, not a fixed string: re-running this spec against the
+    // same database (as Issue #44's evidence-DB captures do, repeatedly,
+    // before the final pass) must not let an earlier run's identically-named
+    // fixture push this run's own Ticket off the first results page.
+    const token = `e2e07-${test.info().project.name}-${Date.now()}`;
     const requester = await apiAs(E2E_REQUESTER);
-    const ticket = await createTicket(requester, "E2E-07 queue journey fixture");
+    const ticket = await createTicket(requester, `E2E-07 queue journey fixture ${token}`);
+    // Eleven more Open tickets so a page 2 exists deterministically - the
+    // default view hides Closed/Cancelled, and relying on other specs having
+    // already run enough fixtures through would make page-2 order-dependent.
+    for (let i = 0; i < 11; i++) {
+      await createTicket(requester, `E2E-07 pagination filler ${i} ${token}`);
+    }
     await requester.dispose();
 
     await page.goto("/queue");
     await expect(page.getByRole("heading", { level: 1, name: "Ticket Queue" })).toBeVisible();
-    await expect(page.locator("table")).toBeVisible();
+    await queueResultsVisible(page);
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-populated", false);
 
-    await page.getByLabel("Search", { exact: true }).fill("E2E-07 queue journey");
+    await page.getByLabel("Search", { exact: true }).fill(token);
     await expect(page.getByText(ticket.ticketNumber)).toBeVisible();
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-search", false);
 
     await page.getByLabel("Search", { exact: true }).fill("");
     await page.getByLabel("Current Status", { exact: true }).selectOption("NEW");
-    await expect(page.getByRole("table")).toBeVisible();
+    await queueResultsVisible(page);
     await page.getByLabel("IT Priority", { exact: true }).selectOption("MEDIUM");
     await page.getByLabel("Category").selectOption({ index: 1 });
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-filters", false);
+
     await page.getByLabel("Sort").selectOption("createdAt:desc");
     await expect(page).toHaveURL(/sort=createdAt%3Adesc/);
-    await page.getByLabel("Per page").selectOption("25");
-    await expect(page).toHaveURL(/pageSize=25/);
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-sorted", false);
+
+    await page.getByLabel("Ticket Owner", { exact: true }).selectOption("unassigned");
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-unassigned", false);
 
     await page.getByRole("button", { name: "Clear filters" }).click();
+    await page.getByLabel("Per page").selectOption("10");
+    await expect(page.getByText(/Page 1 of/)).toBeVisible();
+    await page.getByRole("button", { name: "Next" }).click();
+    await expect(page.getByText(/Page 2 of/)).toBeVisible();
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-page-2", false);
+
+    await page.getByRole("button", { name: "Previous" }).click();
     await page.getByLabel("Search", { exact: true }).fill(ticket.ticketNumber);
     await page.getByRole("link", { name: `Open ${ticket.ticketNumber}` }).click();
     await expect(page).toHaveURL(new RegExp(`/queue/${ticket.id}$`));
@@ -341,14 +397,35 @@ test.describe("IT Staff Ticket Detail flow", () => {
   });
 
   test("E2E-08 empty and no-results in the browser (AC-69, FR-41)", async ({ page }) => {
-    test.skip(test.info().project.name !== "desktop", "one capture suffices");
     await page.goto("/queue?search=zzz-no-ticket-matches-this-zzz");
     await expect(page.getByRole("heading", { name: "No matches" })).toBeVisible();
     await expect(page.getByText("No tickets match your search or filters.")).toBeVisible();
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-no-results", false);
     // The genuinely-empty queue (no filter, zero rows) is not reproduced here:
     // the shared dev database always carries seed Tickets, and emptying it
     // would corrupt other Issues' fixtures. UI-20 (StaffTicketQueue.test.tsx,
     // #41) already covers that state's component contract directly.
+  });
+
+  test("queue-<vp>-loading and queue-<vp>-failure: the busy state and a safe failure on the Queue (FR-68, BR-89)", async ({ page }) => {
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => (release = resolve));
+    await page.route("**/api/staff/tickets*", async (route) => {
+      await held;
+      await route.continue();
+    });
+    await page.goto("/queue");
+    await expect(page.getByRole("region", { name: "Ticket queue", exact: true })).toHaveAttribute("aria-busy", "true");
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-loading", false);
+    release();
+    await expect(page.getByRole("region", { name: "Ticket queue", exact: true })).not.toHaveAttribute("aria-busy", "true");
+
+    await page.unroute("**/api/staff/tickets*");
+    await page.route("**/api/staff/tickets*", (route) => route.abort("connectionrefused"));
+    await page.goto("/queue");
+    await expect(page.getByText("Something went wrong on our side. Your work has not been lost - please try again.")).toBeVisible();
+    await expect(page.getByRole("button", { name: "Retry" })).toBeVisible();
+    await capture(page, SHOTS_QUEUE, "queue-<vp>-failure", false);
   });
 });
 
