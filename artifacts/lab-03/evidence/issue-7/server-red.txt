@@ -1,0 +1,692 @@
+Command: cd server && npx vitest run tests/lab-03/users-admin.api.test.ts tests/lab-03/authorization.api.test.ts
+Date: 2026-10-04T16:39:22Z
+Commit: fe6ab26 (implementation stashed - route not yet mounted)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-03/authorization.api.test.ts (28 tests | 1 failed) 1715ms
+   × Administrator user management is Administrator-only (BR-39, #43) > SEC-11 IT Staff and Requester -> every user-administration route -> 403, no user data (AC-96, BR-39) 8ms
+     → IT Staff list: expected 404 to be 403 // Object.is equality
+ ❯ tests/lab-03/users-admin.api.test.ts (30 tests | 28 failed) 3395ms
+   × GET /api/users - the user list (9.1) > API-90 every user appears with name, email, role, isActive and mustChangePassword (AC-82, FR-56) 168ms
+     → expected 404 to be 200 // Object.is equality
+   × GET /api/users - the user list (9.1) > API-92 search matches a name fragment and an email fragment, case-insensitively (AC-83, FR-57) 104ms
+     → byName.body.map is not a function
+   × GET /api/users - the user list (9.1) > API-93 the role filter returns only users holding that role (AC-84, FR-58) 286ms
+     → requesterRes.body.map is not a function
+   × GET /api/users - the user list (9.1) > API-94 ?page and ?pageSize do not paginate; the full list is returned (BR-84, FR-66, AC-98) 78ms
+     → expected false to be true // Object.is equality
+   × GET /api/users - the user list (9.1) > API-95 inactive users are listed too - Status is a column, not a filter (FR-56) 104ms
+     → res.body.map is not a function
+   × GET /api/users - the user list (9.1) > API-117 the list is name ascending then id, and ?sort= changes nothing (BR-106, C-107) 68ms
+     → plain.body.map is not a function
+   × POST /api/users - create (9.2) > API-96 creates a user: 201, the given fields stored, mustChangePassword true (AC-85, BR-75, BR-16) 72ms
+     → expected 404 to be 201 // Object.is equality
+   × POST /api/users - create (9.2) > API-97 the created user signs in with the initial password, mustChangePassword true, and every other route is gated 403 (AC-86, BR-16) 262ms
+     → expected 401 to be 200 // Object.is equality
+   × POST /api/users - create (9.2) > API-98 a weak initial password is refused with the shared BR-12 message (BR-12, BR-14, C-60) 78ms
+     → expected 404 to be 400 // Object.is equality
+   × POST /api/users - create (9.2) > API-99 a duplicate email -> 409 EMAIL_TAKEN at the email field (AC-87, BR-77, FR-62) 108ms
+     → expected 404 to be 409 // Object.is equality
+   × POST /api/users - create (9.2) > API-100 an address differing only in case is still a duplicate (AC-88, BR-77, BR-06) 108ms
+     → expected 404 to be 409 // Object.is equality
+   × POST /api/users - create (9.2) > API-102 name bounds: 0 and 101 chars refused, 1 and 100 accepted, padding trimmed (AC-113, BR-99, C-94) 78ms
+     → expected 404 to be 400 // Object.is equality
+   × POST /api/users - create (9.2) > API-103 email bounds and format: 254 accepted, 255 refused, no @ refused, padding and case normalised (AC-114, BR-99, C-94) 77ms
+     → expected 404 to be 201 // Object.is equality
+   × POST /api/users - create (9.2) > role out of set -> 400 and exactly one role is accepted, never an array (BR-35, BR-75) 70ms
+     → expected 404 to be 400 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-101 editing to another user's address is 409; editing to one's own current address succeeds (AC-87) 141ms
+     → expected 404 to be 409 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-104 name, email, role and isActive are all saved; createdAt, mustChangePassword and the hash are unchanged (AC-89, BR-76, FR-60) 104ms
+     → expected 404 to be 200 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-105 extra fields (passwordHash, mustChangePassword, id, createdAt) are not editable (BR-76, FR-60) 99ms
+     → expected 404 to be 200 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-106 a role change revokes that user's sessions - their next request is 401 (AC-90, BR-83, BR-24) 151ms
+     → expected 404 to be 200 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-107 setting a new initial password revokes sessions, flags mustChangePassword, and the next login requires a change (AC-91, BR-78, C-79) 155ms
+     → expected 404 to be 200 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-108 self-deactivation -> 422 SELF_DEACTIVATION, stays active (AC-92, BR-79, C-81) 140ms
+     → expected 404 to be 422 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-109 the last active Administrator cannot be deactivated -> 409 LAST_ADMINISTRATOR, stays active (AC-93, BR-80, C-80) 95ms
+     → expected 404 to be 409 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-110 the last active Administrator's role cannot be changed away -> 409, twice over (AC-94, BR-80, BR-82) 83ms
+     → expected 404 to be 409 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-112 self role change is permitted while another active Administrator exists (BR-82, C-81) 135ms
+     → expected 404 to be 200 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > API-111 the last-Administrator race: two active Administrators deactivate each other concurrently - exactly one succeeds (AC-95, BR-80, C-80) 151ms
+     → expected [ 404, 404 ] to deeply equal [ 200, 409 ]
+   × PATCH /api/users/:id - edit (9.3) > the malformed-path-id convention: a non-numeric id is 400 INVALID_QUERY_PARAM, not VALIDATION_FAILED (C-113) 73ms
+     → expected 404 to be 400 // Object.is equality
+   × PATCH /api/users/:id - edit (9.3) > an unknown id is 404 USER_NOT_FOUND 75ms
+     → Cannot read properties of undefined (reading 'code')
+   × PATCH /api/users/:id - edit (9.3) > an empty body is 400, a no-op is a client defect (api-spec.md 9.3) 101ms
+     → expected 404 to be 400 // Object.is equality
+   × Deactivation retains data; no secrets ever (API-114, BR-29) > API-114 a deactivated user's Tickets, Attachments, comments and notes still exist and are reachable by staff 223ms
+     → expected 404 to be 200 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts [ tests/lab-03/users-admin.api.test.ts ]
+PrismaClientValidationError: 
+Invalid `prisma.session.deleteMany()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\support\agents.ts:49:24
+
+  46 
+  47 // A test file's own users and everything hanging off them, removed in afterAll.
+  48 export async function removeUsers(prisma: PrismaClient, ids: number[]): Promise<void> {
+→ 49   await prisma.session.deleteMany({
+         where: {
+           userId: {
+             in: [
+               1207,
+               1208,
+               1209,
+               1210,
+               1211,
+               1212,
+               1213,
+               1214,
+               1215,
+               1216,
+               1217,
+               1218,
+               1219,
+               1220,
+               undefined,
+               ~~~~~~~~~
+               1221,
+               1222,
+               1223,
+               1224,
+               1225,
+               1226,
+               1227,
+               1228,
+               1229,
+               1230,
+               1231,
+               1232,
+               1233,
+               1234,
+               1235,
+               1236,
+               1237,
+               1238,
+               1239,
+               1240,
+               1241,
+               1242,
+               1243,
+               1244,
+               1245,
+               1246,
+               1247,
+               1248,
+               1249,
+               1250,
+               1251,
+               1252,
+               1253,
+               1254
+             ]
+           }
+         }
+       })
+
+Invalid value for argument `in[14]`: Can not use `undefined` value within array. Use `null` or filter out `undefined` values.
+ ❯ wn node_modules/@prisma/client/runtime/library.js:29:1363
+ ❯ e.throwValidationError node_modules/@prisma/client/runtime/library.js:29:10206
+ ❯ od node_modules/@prisma/client/runtime/library.js:29:9323
+ ❯ sa node_modules/@prisma/client/runtime/library.js:29:8075
+ ❯ aa node_modules/@prisma/client/runtime/library.js:29:8908
+ ❯ sa node_modules/@prisma/client/runtime/library.js:29:8439
+ ❯ aa node_modules/@prisma/client/runtime/library.js:29:8908
+ ❯ sa node_modules/@prisma/client/runtime/library.js:29:8439
+ ❯ aa node_modules/@prisma/client/runtime/library.js:29:8908
+ ❯ mr node_modules/@prisma/client/runtime/library.js:29:6037
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/30]⎯
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 29 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Administrator user management is Administrator-only (BR-39, #43) > SEC-11 IT Staff and Requester -> every user-administration route -> 403, no user data (AC-96, BR-39)
+AssertionError: IT Staff list: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:455:42
+    453|     for (const [who, caller] of [["IT Staff", staff], ["Requester", a]…
+    454|       const list = await caller.agent.get("/api/users");
+    455|       expect(list.status, `${who} list`).toBe(403);
+       |                                          ^
+    456|       expect(list.body.error.code).toBe("FORBIDDEN_ROLE");
+    457|       expect(Array.isArray(list.body)).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-90 every user appears with name, email, role, isActive and mustChangePassword (AC-82, FR-56)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:88:24
+     86|     const u = await plainUser({ name: `${TAG} Visible User`, isActive:…
+     87|     const res = await a.agent.get("/api/users");
+     88|     expect(res.status).toBe(200);
+       |                        ^
+     89|     const row = res.body.find((r: { id: number }) => r.id === u.id);
+     90|     expect(row).toMatchObject({ id: u.id, name: u.name, email: u.email…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-92 search matches a name fragment and an email fragment, case-insensitively (AC-83, FR-57)
+TypeError: byName.body.map is not a function
+ ❯ tests/lab-03/users-admin.api.test.ts:100:24
+     98|     const u = await plainUser({ name: `${TAG} Siriwan Uniquename`, ema…
+     99|     const byName = await a.agent.get(`/api/users?search=${encodeURICom…
+    100|     expect(byName.body.map((r: { id: number }) => r.id)).toContain(u.i…
+       |                        ^
+    101|     const byEmail = await a.agent.get(`/api/users?search=${encodeURICo…
+    102|     expect(byEmail.body.map((r: { id: number }) => r.id)).toContain(u.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-93 the role filter returns only users holding that role (AC-84, FR-58)
+TypeError: requesterRes.body.map is not a function
+ ❯ tests/lab-03/users-admin.api.test.ts:111:35
+    109|     const admin2 = await admin("role-filter-admin2");
+    110|     const requesterRes = await a.agent.get("/api/users?role=REQUESTER"…
+    111|     const ids = requesterRes.body.map((r: { id: number; role: string }…
+       |                                   ^
+    112|     expect(ids.every((r: { role: string }) => r.role === "REQUESTER"))…
+    113|     expect(ids.map((r: { id: number }) => r.id)).toContain(req.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-94 ?page and ?pageSize do not paginate; the full list is returned (BR-84, FR-66, AC-98)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/users-admin.api.test.ts:122:39
+    120|     const plain = await a.agent.get("/api/users");
+    121|     const paged = await a.agent.get("/api/users?page=2&pageSize=25");
+    122|     expect(Array.isArray(paged.body)).toBe(true);
+       |                                       ^
+    123|     expect(paged.body.length).toBe(plain.body.length);
+    124|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-95 inactive users are listed too - Status is a column, not a filter (FR-56)
+TypeError: res.body.map is not a function
+ ❯ tests/lab-03/users-admin.api.test.ts:130:21
+    128|     const inactive = await plainUser({ isActive: false });
+    129|     const res = await a.agent.get("/api/users");
+    130|     expect(res.body.map((r: { id: number }) => r.id)).toContain(inacti…
+       |                     ^
+    131|   });
+    132| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-117 the list is name ascending then id, and ?sort= changes nothing (BR-106, C-107)
+TypeError: plain.body.map is not a function
+ ❯ tests/lab-03/users-admin.api.test.ts:137:30
+    135|     const plain = await a.agent.get("/api/users");
+    136|     const sorted = await a.agent.get("/api/users?sort=createdAt:desc");
+    137|     const names = plain.body.map((r: { name: string; id: number }) => …
+       |                              ^
+    138|     const expected = [...names].sort();
+    139|     expect(names).toEqual(expected);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-96 creates a user: 201, the given fields stored, mustChangePassword true (AC-85, BR-75, BR-16)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:153:24
+    151|     const body = { name: `${TAG} New Hire`, email: email("create-96"),…
+    152|     const res = await a.agent.post("/api/users").send(body);
+    153|     expect(res.status).toBe(201);
+       |                        ^
+    154|     created.push(res.body.id);
+    155|     expect(res.body).toMatchObject({ name: body.name, email: body.emai…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-97 the created user signs in with the initial password, mustChangePassword true, and every other route is gated 403 (AC-86, BR-16)
+AssertionError: expected 401 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 401
+
+ ❯ tests/lab-03/users-admin.api.test.ts:167:26
+    165|     const agent = request.agent(app);
+    166|     const login = await agent.post("/api/auth/login").send({ email: bo…
+    167|     expect(login.status).toBe(200);
+       |                          ^
+    168|     expect(login.body.mustChangePassword).toBe(true);
+    169|     const gated = await agent.get("/api/tickets");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-98 a weak initial password is refused with the shared BR-12 message (BR-12, BR-14, C-60)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:177:24
+    175|     const a = await admin("create-98");
+    176|     const res = await a.agent.post("/api/users").send({ name: `${TAG} …
+    177|     expect(res.status).toBe(400);
+       |                        ^
+    178|     expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    179|     expect(res.body.error.fields.initialPassword).toBe(
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-99 a duplicate email -> 409 EMAIL_TAKEN at the email field (AC-87, BR-77, FR-62)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:188:24
+    186|     const existing = await plainUser();
+    187|     const res = await a.agent.post("/api/users").send({ name: `${TAG} …
+    188|     expect(res.status).toBe(409);
+       |                        ^
+    189|     expect(res.body.error.code).toBe("EMAIL_TAKEN");
+    190|     expect(res.body.error.fields.email).toBeTruthy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-100 an address differing only in case is still a duplicate (AC-88, BR-77, BR-06)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:198:24
+    196|     const existing = await plainUser({ email: lower });
+    197|     const res = await a.agent.post("/api/users").send({ name: `${TAG} …
+    198|     expect(res.status).toBe(409);
+       |                        ^
+    199|     expect(res.body.error.code).toBe("EMAIL_TAKEN");
+    200|     expect(existing).toBeTruthy();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-102 name bounds: 0 and 101 chars refused, 1 and 100 accepted, padding trimmed (AC-113, BR-99, C-94)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:207:24
+    205|     const tooLong = "x".repeat(101);
+    206|     const bad = await a.agent.post("/api/users").send({ name: tooLong,…
+    207|     expect(bad.status).toBe(400);
+       |                        ^
+    208|     expect(bad.body.error.fields.name).toBeTruthy();
+    209|     const empty = await a.agent.post("/api/users").send({ name: "", em…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-103 email bounds and format: 254 accepted, 255 refused, no @ refused, padding and case normalised (AC-114, BR-99, C-94)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:224:26
+    222|     const local = "x".repeat(254 - "@example.test".length);
+    223|     const ok254 = await a.agent.post("/api/users").send({ name: `${TAG…
+    224|     expect(ok254.status).toBe(201);
+       |                          ^
+    225|     created.push(ok254.body.id);
+    226|     const local255 = "x".repeat(255 - "@example.test".length);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > role out of set -> 400 and exactly one role is accepted, never an array (BR-35, BR-75)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:242:24
+    240|     const a = await admin("create-role");
+    241|     const bad = await a.agent.post("/api/users").send({ name: `${TAG} …
+    242|     expect(bad.status).toBe(400);
+       |                        ^
+    243|     expect(bad.body.error.fields.role).toBeTruthy();
+    244|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-101 editing to another user's address is 409; editing to one's own current address succeeds (AC-87)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:263:29
+    261|     const target = await plainUser();
+    262|     const conflict = await a.agent.patch(`/api/users/${target.id}`).se…
+    263|     expect(conflict.status).toBe(409);
+       |                             ^
+    264|     expect(conflict.body.error.code).toBe("EMAIL_TAKEN");
+    265|     const same = await a.agent.patch(`/api/users/${target.id}`).send({…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-104 name, email, role and isActive are all saved; createdAt, mustChangePassword and the hash are unchanged (AC-89, BR-76, FR-60)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:275:24
+    273|     const newEmail = `${TAG.replace(/[[\]]/g, "")}-edited-${Date.now()…
+    274|     const res = await a.agent.patch(`/api/users/${target.id}`).send({ …
+    275|     expect(res.status).toBe(200);
+       |                        ^
+    276|     expect(res.body).toMatchObject({ name: `${TAG} Edited Name`, email…
+    277|     const after = await prisma.user.findUniqueOrThrow({ where: { id: t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-105 extra fields (passwordHash, mustChangePassword, id, createdAt) are not editable (BR-76, FR-60)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:294:24
+    292|       createdAt: "2000-01-01T00:00:00.000Z",
+    293|     });
+    294|     expect(res.status).toBe(200);
+       |                        ^
+    295|     const after = await prisma.user.findUniqueOrThrow({ where: { id: t…
+    296|     expect(after.passwordHash).toBe(before.passwordHash);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-106 a role change revokes that user's sessions - their next request is 401 (AC-90, BR-83, BR-24)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:306:24
+    304|     const target = await requester("role-change-target");
+    305|     const res = await a.agent.patch(`/api/users/${target.id}`).send({ …
+    306|     expect(res.status).toBe(200);
+       |                        ^
+    307|     const next = await target.agent.get("/api/tickets");
+    308|     expect(next.status).toBe(401);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-107 setting a new initial password revokes sessions, flags mustChangePassword, and the next login requires a change (AC-91, BR-78, C-79)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:316:24
+    314|     const target = await requester("reset-target");
+    315|     const res = await a.agent.post(`/api/users/${target.id}/initial-pa…
+    316|     expect(res.status).toBe(200);
+       |                        ^
+    317|     expect(res.body.mustChangePassword).toBe(true);
+    318|     const stale = await target.agent.get("/api/tickets");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-108 self-deactivation -> 422 SELF_DEACTIVATION, stays active (AC-92, BR-79, C-81)
+AssertionError: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:330:24
+    328|     await admin("edit-108-other"); // keeps a second active Administra…
+    329|     const res = await a.agent.patch(`/api/users/${a.id}`).send({ isAct…
+    330|     expect(res.status).toBe(422);
+       |                        ^
+    331|     expect(res.body.error.code).toBe("SELF_DEACTIVATION");
+    332|     expect((await prisma.user.findUniqueOrThrow({ where: { id: a.id } …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-109 the last active Administrator cannot be deactivated -> 409 LAST_ADMINISTRATOR, stays active (AC-93, BR-80, C-80)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:346:26
+    344|     await withOnlyActiveAdmins([sole.id], async () => {
+    345|       const res = await sole.agent.patch(`/api/users/${sole.id}`).send…
+    346|       expect(res.status).toBe(409);
+       |                          ^
+    347|       expect(res.body.error.code).toBe("LAST_ADMINISTRATOR");
+    348|       expect((await prisma.user.findUniqueOrThrow({ where: { id: sole.…
+ ❯ withOnlyActiveAdmins tests/lab-03/users-admin.api.test.ts:54:12
+ ❯ tests/lab-03/users-admin.api.test.ts:344:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-110 the last active Administrator's role cannot be changed away -> 409, twice over (AC-94, BR-80, BR-82)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:356:34
+    354|     await withOnlyActiveAdmins([sole.id], async () => {
+    355|       const toRequester = await sole.agent.patch(`/api/users/${sole.id…
+    356|       expect(toRequester.status).toBe(409);
+       |                                  ^
+    357|       expect(toRequester.body.error.code).toBe("LAST_ADMINISTRATOR");
+    358|       const toStaff = await sole.agent.patch(`/api/users/${sole.id}`).…
+ ❯ withOnlyActiveAdmins tests/lab-03/users-admin.api.test.ts:54:12
+ ❯ tests/lab-03/users-admin.api.test.ts:354:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-112 self role change is permitted while another active Administrator exists (BR-82, C-81)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:368:24
+    366|     await admin("edit-112-other");
+    367|     const res = await a.agent.patch(`/api/users/${a.id}`).send({ role:…
+    368|     expect(res.status).toBe(200);
+       |                        ^
+    369|     expect(res.body.role).toBe("IT_STAFF");
+    370|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-111 the last-Administrator race: two active Administrators deactivate each other concurrently - exactly one succeeds (AC-95, BR-80, C-80)
+AssertionError: expected [ 404, 404 ] to deeply equal [ 200, 409 ]
+
+- Expected
++ Received
+
+  Array [
+-   200,
+-   409,
++   404,
++   404,
+  ]
+
+ ❯ tests/lab-03/users-admin.api.test.ts:386:26
+    384|         ]);
+    385|         const statuses = [rx.status, ry.status].sort();
+    386|         expect(statuses).toEqual([200, 409]);
+       |                          ^
+    387|         const conflict = [rx, ry].find((r) => r.status === 409);
+    388|         expect(conflict?.body.error.code).toBe("LAST_ADMINISTRATOR");
+ ❯ withOnlyActiveAdmins tests/lab-03/users-admin.api.test.ts:54:12
+ ❯ tests/lab-03/users-admin.api.test.ts:376:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > the malformed-path-id convention: a non-numeric id is 400 INVALID_QUERY_PARAM, not VALIDATION_FAILED (C-113)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:398:24
+    396|     const a = await admin("edit-badid");
+    397|     const res = await a.agent.patch("/api/users/abc").send({ name: "x"…
+    398|     expect(res.status).toBe(400);
+       |                        ^
+    399|     expect(res.body.error.code).toBe("INVALID_QUERY_PARAM");
+    400|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an unknown id is 404 USER_NOT_FOUND
+TypeError: Cannot read properties of undefined (reading 'code')
+ ❯ tests/lab-03/users-admin.api.test.ts:406:27
+    404|     const res = await a.agent.patch("/api/users/999999").send({ name: …
+    405|     expect(res.status).toBe(404);
+    406|     expect(res.body.error.code).toBe("USER_NOT_FOUND");
+       |                           ^
+    407|   });
+    408| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an empty body is 400, a no-op is a client defect (api-spec.md 9.3)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:413:24
+    411|     const target = await plainUser();
+    412|     const res = await a.agent.patch(`/api/users/${target.id}`).send({}…
+    413|     expect(res.status).toBe(400);
+       |                        ^
+    414|     expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    415|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/30]⎯
+
+ FAIL  tests/lab-03/users-admin.api.test.ts > Deactivation retains data; no secrets ever (API-114, BR-29) > API-114 a deactivated user's Tickets, Attachments, comments and notes still exist and are reachable by staff
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/users-admin.api.test.ts:441:31
+    439| 
+    440|     const deactivate = await a.agent.patch(`/api/users/${owner.id}`).s…
+    441|     expect(deactivate.status).toBe(200);
+       |                               ^
+    442| 
+    443|     const stillThere = await prisma.ticket.findUniqueOrThrow({ where: …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/30]⎯
+
+ Test Files  2 failed (2)
+      Tests  29 failed | 29 passed (58)
+   Start at  23:39:08
+   Duration  8.56s (transform 185ms, setup 0ms, collect 656ms, tests 5.11s, environment 0ms, prepare 142ms)
+
