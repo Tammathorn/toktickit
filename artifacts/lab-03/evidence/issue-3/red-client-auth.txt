@@ -1,0 +1,1506 @@
+Command: (cd client && npx vitest run tests/lab-03)
+Date:    2026-10-04 16:02:26 +0700
+Commit:  83c837cb0dfe20383396810104faef41d162552b (feature/lab3-3-authentication)
+Tree:    clean
+----------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/ChangePassword.test.tsx (9 tests | 9 failed) 35ms
+   × Change Password > UI-09 shows the signed-in user's name and Role badge at the top, and no shell (AC-22, FR-15) 21ms
+     → fetchCurrentUser does not exist
+   × Change Password > UI-10 the BR-12 rule is stated before anything is typed (FR-16) 2ms
+     → fetchCurrentUser does not exist
+   × Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 2ms
+     → changePassword does not exist
+   × Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 1ms
+     → changePassword does not exist
+   × Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2ms
+     → changePassword does not exist
+   × Change Password > UI-14 a gated user sees Change Password at My Tickets, the Ticket Queue and User Management alike (FR-14, BR-20) 1ms
+     → fetchCurrentUser does not exist
+   × Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1ms
+     → changePassword does not exist
+   × Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 1ms
+     → fetchCurrentUser does not exist
+   × Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 1ms
+     → changePassword does not exist
+ ❯ tests/lab-03/Login.test.tsx (13 tests | 12 failed) 1087ms
+   × Login > UI-01 renders Email Address and Password, both required, and one Sign In button (FR-01) 18ms
+     → fetchCurrentUser does not exist
+   × Login > UI-02 submitting empty shows both catalogue messages below their fields and sends nothing (FR-01) 2ms
+     → fetchCurrentUser does not exist
+   × Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 1ms
+     → fetchCurrentUser does not exist
+   × Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 1ms
+     → fetchCurrentUser does not exist
+   × Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 1ms
+     → fetchCurrentUser does not exist
+   × Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 1ms
+     → fetchCurrentUser does not exist
+   × Login > UI-07 offers no forgot-password, create-account, remember-me, SSO or social sign-in (LS 4.2) 1ms
+     → fetchCurrentUser does not exist
+   × Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 1ms
+     → fetchCurrentUser does not exist
+   × Login > STYLE-12 the screen and the page title spell TokTickIT, and TikTockIT appears nowhere in the client (L2 C-41) 1ms
+     → fetchCurrentUser does not exist
+   × the authenticated shell > UI-49 (identity half) the shell shows the user's name, a Role badge and Log Out (AC-30, FR-09) 1ms
+     → fetchCurrentUser does not exist
+   × the authenticated shell > Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23) 1ms
+     → fetchCurrentUser does not exist
+   × the authenticated shell > UI-51 a 401 from a screen's own request discards the user and shows Login with the session-ended message (AC-35, BR-34) 1053ms
+     → Unable to find an element with the text: Your session has ended. Please sign in again.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-requester"
+            >
+              <span
+                class="tk-requester-name"
+              >
+                <span
+                  class="tk-requester-label"
+                >
+                  Development Requester:
+                </span>
+                 
+                <strong>
+                  Anucha Prasert
+                </strong>
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Change Requester
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="my-tickets-title"
+      >
+        <h1
+          class="tk-title"
+          id="my-tickets-title"
+        >
+          My Tickets
+        </h1>
+        <div
+          aria-label="Search and filter tickets"
+          class="card tk-card tk-toolbar mb-3"
+          role="search"
+        >
+          <div
+            class="row g-3"
+          >
+            <div
+              class="col-12 col-lg-4"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-search"
+              >
+                Search
+              </label>
+              <input
+                class="form-control"
+                id="list-search"
+                placeholder="Ticket Number or Ticket Summary"
+                type="search"
+                value=""
+              />
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-category"
+              >
+                Category
+              </label>
+              <select
+                class="form-select"
+                id="list-category"
+              >
+                <option
+                  value=""
+                >
+                  All categories
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-system"
+              >
+                Related System
+              </label>
+              <select
+                class="form-select"
+                id="list-system"
+              >
+                <option
+                  value=""
+                >
+                  All related systems
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-status"
+              >
+                Current Status
+              </label>
+              <select
+                class="form-select"
+                id="list-status"
+              >
+                <option
+                  value=""
+                >
+                  All statuses
+                </option>
+                <option
+                  value="NEW"
+                >
+                  New
+                </option>
+                <option
+                  value="IN_PROGRESS"
+                >
+                  In Progress
+                </option>
+                <option
+                  value="RESOLVED"
+                >
+                  Resolved
+                </option>
+                <option
+                  value="CLOSED"
+                >
+                  Closed
+                </option>
+                <option
+                  value="CANCELLED"
+                >
+                  Cancelled
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-sort"
+              >
+                Sort
+              </label>
+              <select
+                class="form-select"
+                id="list-sort"
+              >
+                <option
+                  value="createdAt:desc"
+                >
+                  Newest first
+                </option>
+                <option
+                  value="createdAt:asc"
+                >
+                  Oldest first
+                </option>
+                <option
+                  value="ticketNumber:asc"
+                >
+                  Ticket Number, ascending
+                </option>
+                <option
+                  value="ticketNumber:desc"
+                >
+                  Ticket Number, descending
+                </option>
+                <option
+                  value="summary:asc"
+                >
+                  Ticket Summary, A to Z
+                </option>
+                <option
+                  value="summary:desc"
+                >
+                  Ticket Summary, Z to A
+                </option>
+                <option
+                  value="currentStatus:asc"
+                >
+                  Current Status, A to Z
+                </option>
+                <option
+                  value="currentStatus:desc"
+                >
+                  Current Status, Z to A
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-label="Ticket list"
+          aria-live="polite"
+          class="tk-list-region"
+          role="region"
+        >
+          <div
+            aria-live="assertive"
+            class="tk-panel tk-panel-danger"
+            role="alert"
+          >
+            <p>
+              Something went wrong on our side. Your work has not been lost - please try again.
+            </p>
+            <button
+              class="btn btn-secondary"
+              type="button"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-requester"
+            >
+              <span
+                class="tk-requester-name"
+              >
+                <span
+                  class="tk-requester-label"
+                >
+                  Development Requester:
+                </span>
+                 
+                <strong>
+                  Anucha Prasert
+                </strong>
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Change Requester
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="my-tickets-title"
+      >
+        <h1
+          class="tk-title"
+          id="my-tickets-title"
+        >
+          My Tickets
+        </h1>
+        <div
+          aria-label="Search and filter tickets"
+          class="card tk-card tk-toolbar mb-3"
+          role="search"
+        >
+          <div
+            class="row g-3"
+          >
+            <div
+              class="col-12 col-lg-4"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-search"
+              >
+                Search
+              </label>
+              <input
+                class="form-control"
+                id="list-search"
+                placeholder="Ticket Number or Ticket Summary"
+                type="search"
+                value=""
+              />
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-category"
+              >
+                Category
+              </label>
+              <select
+                class="form-select"
+                id="list-category"
+              >
+                <option
+                  value=""
+                >
+                  All categories
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-system"
+              >
+                Related System
+              </label>
+              <select
+                class="form-select"
+                id="list-system"
+              >
+                <option
+                  value=""
+                >
+                  All related systems
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-status"
+              >
+                Current Status
+              </label>
+              <select
+                class="form-select"
+                id="list-status"
+              >
+                <option
+                  value=""
+                >
+                  All statuses
+                </option>
+                <option
+                  value="NEW"
+                >
+                  New
+                </option>
+                <option
+                  value="IN_PROGRESS"
+                >
+                  In Progress
+                </option>
+                <option
+                  value="RESOLVED"
+                >
+                  Resolved
+                </option>
+                <option
+                  value="CLOSED"
+                >
+                  Closed
+                </option>
+                <option
+                  value="CANCELLED"
+                >
+                  Cancelled
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-sort"
+              >
+                Sort
+              </label>
+              <select
+                class="form-select"
+                id="list-sort"
+              >
+                <option
+                  value="createdAt:desc"
+                >
+                  Newest first
+                </option>
+                <option
+                  value="createdAt:asc"
+                >
+                  Oldest first
+                </option>
+                <option
+                  value="ticketNumber:asc"
+                >
+                  Ticket Number, ascending
+                </option>
+                <option
+                  value="ticketNumber:desc"
+                >
+                  Ticket Number, descending
+                </option>
+                <option
+                  value="summary:asc"
+                >
+                  Ticket Summary, A to Z
+                </option>
+                <option
+                  value="summary:desc"
+                >
+                  Ticket Summary, Z to A
+                </option>
+                <option
+                  value="currentStatus:asc"
+                >
+                  Current Status, A to Z
+                </option>
+                <option
+                  value="currentStatus:desc"
+                >
+                  Current Status, Z to A
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-label="Ticket list"
+          aria-live="polite"
+          class="tk-list-region"
+          role="region"
+        >
+          <div
+            aria-live="assertive"
+            class="tk-panel tk-panel-danger"
+            role="alert"
+          >
+            <p>
+              Something went wrong on our side. Your work has not been lost - please try again.
+            </p>
+            <button
+              class="btn btn-secondary"
+              type="button"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 21 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-09 shows the signed-in user's name and Role badge at the top, and no shell (AC-22, FR-15)
+Error: fetchCurrentUser does not exist
+ ❯ renderGated tests/lab-03/ChangePassword.test.tsx:40:6
+     38| 
+     39| function renderGated(pathname = "/tickets") {
+     40|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(GATED);
+       |      ^
+     41|   window.history.pushState({}, "", pathname);
+     42|   render(<App />);
+ ❯ tests/lab-03/ChangePassword.test.tsx:79:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-10 the BR-12 rule is stated before anything is typed (FR-16)
+Error: fetchCurrentUser does not exist
+ ❯ renderGated tests/lab-03/ChangePassword.test.tsx:40:6
+     38| 
+     39| function renderGated(pathname = "/tickets") {
+     40|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(GATED);
+       |      ^
+     41|   window.history.pushState({}, "", pathname);
+     42|   render(<App />);
+ ❯ tests/lab-03/ChangePassword.test.tsx:89:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13)
+Error: changePassword does not exist
+ ❯ tests/lab-03/ChangePassword.test.tsx:100:23
+     98| 
+     99|   it("UI-11 a confirmation mismatch shows the catalogue message and se…
+    100|     const change = vi.spyOn(api, "changePassword");
+       |                       ^
+    101|     renderGated();
+    102|     await submit({ current: CURRENT, next: NEXT, confirm: "Other#Pass9…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24)
+Error: changePassword does not exist
+ ❯ tests/lab-03/ChangePassword.test.tsx:109:23
+    107| 
+    108|   it("UI-12 each policy failure renders the BR-12 message directly bel…
+    109|     const change = vi.spyOn(api, "changePassword");
+       |                       ^
+    110|     for (const candidate of ["Aa1!xyz", "abcdef1!", "ABCDEF1!", "Abcde…
+    111|       renderGated();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18)
+Error: changePassword does not exist
+ ❯ tests/lab-03/ChangePassword.test.tsx:125:23
+    123|   it("UI-13 success shows the panel with an icon and a sentence, then …
+    124|     window.localStorage.setItem(STORAGE_KEY, String(GATED.id));
+    125|     const change = vi.spyOn(api, "changePassword").mockResolvedValue({…
+       |                       ^
+    126|     renderGated();
+    127|     await submit({ current: CURRENT, next: NEXT, confirm: NEXT });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-14 a gated user sees Change Password at My Tickets, the Ticket Queue and User Management alike (FR-14, BR-20)
+Error: fetchCurrentUser does not exist
+ ❯ renderGated tests/lab-03/ChangePassword.test.tsx:40:6
+     38| 
+     39| function renderGated(pathname = "/tickets") {
+     40|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(GATED);
+       |      ^
+     41|   window.history.pushState({}, "", pathname);
+     42|   render(<App />);
+ ❯ tests/lab-03/ChangePassword.test.tsx:138:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88)
+Error: changePassword does not exist
+ ❯ tests/lab-03/ChangePassword.test.tsx:147:8
+    145| 
+    146|   it("UI-15 no password survives in the DOM: a wrong current password …
+    147|     vi.spyOn(api, "changePassword")
+       |        ^
+    148|       .mockRejectedValueOnce(new api.ApiError(422, "CURRENT_PASSWORD_I…
+    149|       .mockRejectedValueOnce(new api.ApiError(0, "INTERNAL_ERROR", "Ne…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87)
+Error: fetchCurrentUser does not exist
+ ❯ renderGated tests/lab-03/ChangePassword.test.tsx:40:6
+     38| 
+     39| function renderGated(pathname = "/tickets") {
+     40|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(GATED);
+       |      ^
+     41|   window.history.pushState({}, "", pathname);
+     42|   render(<App />);
+ ❯ tests/lab-03/ChangePassword.test.tsx:169:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/21]⎯
+
+ FAIL  tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md)
+Error: changePassword does not exist
+ ❯ tests/lab-03/ChangePassword.test.tsx:178:8
+    176| 
+    177|   it("STYLE-10 the success panel is not colour alone: it carries an ic…
+    178|     vi.spyOn(api, "changePassword").mockResolvedValue({ ...GATED, must…
+       |        ^
+    179|     renderGated();
+    180|     await submit({ current: CURRENT, next: NEXT, confirm: NEXT });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-01 renders Email Address and Password, both required, and one Sign In button (FR-01)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:78:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-02 submitting empty shows both catalogue messages below their fields and sends nothing (FR-01)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:94:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:108:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:125:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:142:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:153:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-07 offers no forgot-password, create-account, remember-me, SSO or social sign-in (LS 4.2)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:168:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:180:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > Login > STYLE-12 the screen and the page title spell TokTickIT, and TikTockIT appears nowhere in the client (L2 C-41)
+Error: fetchCurrentUser does not exist
+ ❯ signedOut tests/lab-03/Login.test.tsx:43:6
+     41| 
+     42| function signedOut() {
+     43|   vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
+       |      ^
+     44| }
+     45| 
+ ❯ tests/lab-03/Login.test.tsx:190:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > the authenticated shell > UI-49 (identity half) the shell shows the user's name, a Role badge and Log Out (AC-30, FR-09)
+Error: fetchCurrentUser does not exist
+ ❯ signedIn tests/lab-03/Login.test.tsx:209:8
+    207| describe("the authenticated shell", () => {
+    208|   function signedIn() {
+    209|     vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(REQUESTER);
+       |        ^
+    210|     window.localStorage.setItem(STORAGE_KEY, String(REQUESTER.id));
+    211|   }
+ ❯ tests/lab-03/Login.test.tsx:214:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > the authenticated shell > Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23)
+Error: fetchCurrentUser does not exist
+ ❯ signedIn tests/lab-03/Login.test.tsx:209:8
+    207| describe("the authenticated shell", () => {
+    208|   function signedIn() {
+    209|     vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(REQUESTER);
+       |        ^
+    210|     window.localStorage.setItem(STORAGE_KEY, String(REQUESTER.id));
+    211|   }
+ ❯ tests/lab-03/Login.test.tsx:224:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/21]⎯
+
+ FAIL  tests/lab-03/Login.test.tsx > the authenticated shell > UI-51 a 401 from a screen's own request discards the user and shows Login with the session-ended message (AC-35, BR-34)
+TestingLibraryElementError: Unable to find an element with the text: Your session has ended. Please sign in again.. This could be because the text is broken up by multiple elements. In this case, you can provide a function for your text matcher to make your matcher more flexible.
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-requester"
+            >
+              <span
+                class="tk-requester-name"
+              >
+                <span
+                  class="tk-requester-label"
+                >
+                  Development Requester:
+                </span>
+                 
+                <strong>
+                  Anucha Prasert
+                </strong>
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Change Requester
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="my-tickets-title"
+      >
+        <h1
+          class="tk-title"
+          id="my-tickets-title"
+        >
+          My Tickets
+        </h1>
+        <div
+          aria-label="Search and filter tickets"
+          class="card tk-card tk-toolbar mb-3"
+          role="search"
+        >
+          <div
+            class="row g-3"
+          >
+            <div
+              class="col-12 col-lg-4"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-search"
+              >
+                Search
+              </label>
+              <input
+                class="form-control"
+                id="list-search"
+                placeholder="Ticket Number or Ticket Summary"
+                type="search"
+                value=""
+              />
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-category"
+              >
+                Category
+              </label>
+              <select
+                class="form-select"
+                id="list-category"
+              >
+                <option
+                  value=""
+                >
+                  All categories
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-system"
+              >
+                Related System
+              </label>
+              <select
+                class="form-select"
+                id="list-system"
+              >
+                <option
+                  value=""
+                >
+                  All related systems
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-status"
+              >
+                Current Status
+              </label>
+              <select
+                class="form-select"
+                id="list-status"
+              >
+                <option
+                  value=""
+                >
+                  All statuses
+                </option>
+                <option
+                  value="NEW"
+                >
+                  New
+                </option>
+                <option
+                  value="IN_PROGRESS"
+                >
+                  In Progress
+                </option>
+                <option
+                  value="RESOLVED"
+                >
+                  Resolved
+                </option>
+                <option
+                  value="CLOSED"
+                >
+                  Closed
+                </option>
+                <option
+                  value="CANCELLED"
+                >
+                  Cancelled
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-sort"
+              >
+                Sort
+              </label>
+              <select
+                class="form-select"
+                id="list-sort"
+              >
+                <option
+                  value="createdAt:desc"
+                >
+                  Newest first
+                </option>
+                <option
+                  value="createdAt:asc"
+                >
+                  Oldest first
+                </option>
+                <option
+                  value="ticketNumber:asc"
+                >
+                  Ticket Number, ascending
+                </option>
+                <option
+                  value="ticketNumber:desc"
+                >
+                  Ticket Number, descending
+                </option>
+                <option
+                  value="summary:asc"
+                >
+                  Ticket Summary, A to Z
+                </option>
+                <option
+                  value="summary:desc"
+                >
+                  Ticket Summary, Z to A
+                </option>
+                <option
+                  value="currentStatus:asc"
+                >
+                  Current Status, A to Z
+                </option>
+                <option
+                  value="currentStatus:desc"
+                >
+                  Current Status, Z to A
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-label="Ticket list"
+          aria-live="polite"
+          class="tk-list-region"
+          role="region"
+        >
+          <div
+            aria-live="assertive"
+            class="tk-panel tk-panel-danger"
+            role="alert"
+          >
+            <p>
+              Something went wrong on our side. Your work has not been lost - please try again.
+            </p>
+            <button
+              class="btn btn-secondary"
+              type="button"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+
+Ignored nodes: comments, script, style
+<body>
+  <div>
+    <header
+      class="tk-header"
+    >
+      <nav
+        aria-label="Main navigation"
+        class="navbar navbar-expand-md"
+        data-bs-theme="dark"
+      >
+        <div
+          class="container"
+        >
+          <a
+            class="navbar-brand tk-brand"
+            href="/tickets"
+          >
+            TokTickIT
+          </a>
+          <button
+            aria-controls="tk-nav-panel"
+            aria-expanded="false"
+            aria-label="Toggle navigation"
+            class="navbar-toggler"
+            type="button"
+          >
+            <span
+              aria-hidden="true"
+              class="navbar-toggler-icon"
+            />
+          </button>
+          <div
+            class="collapse navbar-collapse"
+            id="tk-nav-panel"
+          >
+            <ul
+              class="navbar-nav mx-auto"
+            >
+              <li
+                class="nav-item"
+              >
+                <a
+                  aria-current="page"
+                  class="nav-link tk-nav-link tk-nav-link-active"
+                  href="/tickets"
+                >
+                  My Tickets
+                </a>
+              </li>
+              <li
+                class="nav-item"
+              >
+                <a
+                  class="nav-link tk-nav-link"
+                  href="/tickets/new"
+                >
+                  Create Ticket
+                </a>
+              </li>
+            </ul>
+            <div
+              class="tk-requester"
+            >
+              <span
+                class="tk-requester-name"
+              >
+                <span
+                  class="tk-requester-label"
+                >
+                  Development Requester:
+                </span>
+                 
+                <strong>
+                  Anucha Prasert
+                </strong>
+              </span>
+              <button
+                class="btn tk-btn-tertiary tk-btn-on-primary"
+                type="button"
+              >
+                Change Requester
+              </button>
+            </div>
+          </div>
+        </div>
+      </nav>
+    </header>
+    <main
+      class="container tk-main"
+    >
+      <section
+        aria-labelledby="my-tickets-title"
+      >
+        <h1
+          class="tk-title"
+          id="my-tickets-title"
+        >
+          My Tickets
+        </h1>
+        <div
+          aria-label="Search and filter tickets"
+          class="card tk-card tk-toolbar mb-3"
+          role="search"
+        >
+          <div
+            class="row g-3"
+          >
+            <div
+              class="col-12 col-lg-4"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-search"
+              >
+                Search
+              </label>
+              <input
+                class="form-control"
+                id="list-search"
+                placeholder="Ticket Number or Ticket Summary"
+                type="search"
+                value=""
+              />
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-category"
+              >
+                Category
+              </label>
+              <select
+                class="form-select"
+                id="list-category"
+              >
+                <option
+                  value=""
+                >
+                  All categories
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-system"
+              >
+                Related System
+              </label>
+              <select
+                class="form-select"
+                id="list-system"
+              >
+                <option
+                  value=""
+                >
+                  All related systems
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-4 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-status"
+              >
+                Current Status
+              </label>
+              <select
+                class="form-select"
+                id="list-status"
+              >
+                <option
+                  value=""
+                >
+                  All statuses
+                </option>
+                <option
+                  value="NEW"
+                >
+                  New
+                </option>
+                <option
+                  value="IN_PROGRESS"
+                >
+                  In Progress
+                </option>
+                <option
+                  value="RESOLVED"
+                >
+                  Resolved
+                </option>
+                <option
+                  value="CLOSED"
+                >
+                  Closed
+                </option>
+                <option
+                  value="CANCELLED"
+                >
+                  Cancelled
+                </option>
+              </select>
+            </div>
+            <div
+              class="col-12 col-md-6 col-lg-2"
+            >
+              <label
+                class="form-label tk-label"
+                for="list-sort"
+              >
+                Sort
+              </label>
+              <select
+                class="form-select"
+                id="list-sort"
+              >
+                <option
+                  value="createdAt:desc"
+                >
+                  Newest first
+                </option>
+                <option
+                  value="createdAt:asc"
+                >
+                  Oldest first
+                </option>
+                <option
+                  value="ticketNumber:asc"
+                >
+                  Ticket Number, ascending
+                </option>
+                <option
+                  value="ticketNumber:desc"
+                >
+                  Ticket Number, descending
+                </option>
+                <option
+                  value="summary:asc"
+                >
+                  Ticket Summary, A to Z
+                </option>
+                <option
+                  value="summary:desc"
+                >
+                  Ticket Summary, Z to A
+                </option>
+                <option
+                  value="currentStatus:asc"
+                >
+                  Current Status, A to Z
+                </option>
+                <option
+                  value="currentStatus:desc"
+                >
+                  Current Status, Z to A
+                </option>
+              </select>
+            </div>
+          </div>
+        </div>
+        <div
+          aria-label="Ticket list"
+          aria-live="polite"
+          class="tk-list-region"
+          role="region"
+        >
+          <div
+            aria-live="assertive"
+            class="tk-panel tk-panel-danger"
+            role="alert"
+          >
+            <p>
+              Something went wrong on our side. Your work has not been lost - please try again.
+            </p>
+            <button
+              class="btn btn-secondary"
+              type="button"
+            >
+              Retry
+            </button>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+</body>
+ ❯ waitForWrapper node_modules/@testing-library/dom/dist/wait-for.js:163:27
+ ❯ node_modules/@testing-library/dom/dist/query-helpers.js:86:33
+ ❯ tests/lab-03/Login.test.tsx:250:25
+    248|     );
+    249|     renderAt("/tickets");
+    250|     expect(await screen.findByText(MESSAGES.ended)).toBeInTheDocument(…
+       |                         ^
+    251|     expect(screen.getByRole("button", { name: "Sign In" })).toBeInTheD…
+    252|     expect(screen.queryByRole("banner")).not.toBeInTheDocument();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/21]⎯
+
+ Test Files  2 failed (2)
+      Tests  21 failed | 1 passed (22)
+   Start at  16:02:29
+   Duration  3.47s (transform 336ms, setup 356ms, collect 1.32s, tests 1.12s, environment 1.85s, prepare 517ms)
+
+Exit code: 1

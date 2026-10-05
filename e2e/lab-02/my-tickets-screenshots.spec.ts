@@ -1,6 +1,12 @@
 import { test, expect, type Page, type APIRequestContext } from "@playwright/test";
 import path from "node:path";
 import { API_URL } from "../../playwright.config";
+import { signIn } from "../support/auth";
+
+// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
+// seeded Requester before anything else and is otherwise unchanged
+// (CLAUDE.md); #40 replaces this with a storageState per role.
+test.beforeEach(async ({ page }) => signIn(page));
 
 // My Tickets - screenshot evidence for LS 14 Part 7 at the three C-10
 // viewports, written to artifacts/lab-02/screenshots/my-tickets/list-<vp>-<state>.png.
@@ -134,8 +140,12 @@ test.describe("My Tickets", () => {
     await expect(page).toHaveURL(/sort=ticketNumber%3Aasc/);
     // the number text alone: the row link at md+ carries just the number, the
     // mobile card link carries the whole card, so read the number element
-    const numbers = await page.locator(".tk-row-link, .tk-ticket-card-number").allTextContents();
-    expect(numbers).toEqual(expected.data.map((r) => r.ticketNumber));
+    // Lab 3 (#39): the URL changes before the re-sorted list arrives, so the
+    // rows are read once they have re-rendered rather than at that instant -
+    // the same assertion, without the race that failed 2 runs in 24.
+    const numberCells = page.locator(".tk-row-link, .tk-ticket-card-number");
+    await expect.poll(() => numberCells.allTextContents()).toEqual(expected.data.map((r) => r.ticketNumber));
+    const numbers = await numberCells.allTextContents();
     expect(numbers).toEqual([...numbers].sort());
     await shot(page, "sorted");
   });

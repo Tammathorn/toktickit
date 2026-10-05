@@ -1,6 +1,12 @@
 import { test, expect, type Page, type APIRequestContext } from "@playwright/test";
 import path from "node:path";
 import { API_URL } from "../../playwright.config";
+import { signIn } from "../support/auth";
+
+// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
+// seeded Requester before anything else and is otherwise unchanged
+// (CLAUDE.md); #40 replaces this with a storageState per role.
+test.beforeEach(async ({ page }) => signIn(page));
 
 // Requester Ticket Detail - screenshot evidence for LS 14 Part 8 at the three
 // C-10 viewports, written to artifacts/lab-02/screenshots/ticket-detail/detail-<vp>-<state>.png.

@@ -1,5 +1,11 @@
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
+import { signIn } from "../support/auth";
+
+// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
+// seeded Requester before anything else and is otherwise unchanged
+// (CLAUDE.md); #40 replaces this with a storageState per role.
+test.beforeEach(async ({ page }) => signIn(page));
 
 // Development Requester Selection screen - screenshot evidence for LS 14 Part 6
 // and the specification.md Definition of Done ("the four Selection screen

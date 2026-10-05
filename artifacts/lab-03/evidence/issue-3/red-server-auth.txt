@@ -1,0 +1,757 @@
+Command: (cd server && npx vitest run tests/lab-03/auth.api.test.ts)
+Date:    2026-10-02 15:27:31 +0700
+Commit:  de47608276868930a494ce94ccde0ea41be5db67 (feature/lab3-3-authentication)
+Tree:    clean
+----------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 8.0.0-rc.19                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+ ❯ tests/lab-03/auth.api.test.ts (44 tests | 34 failed | 10 skipped) 895ms
+   × POST /api/auth/login > API-01 valid credentials -> 200 with the user's identity and role (AC-01, FR-02) 35ms
+     → expected 404 to be 200 // Object.is equality
+   × POST /api/auth/login > API-02 the login body has exactly six keys and no password, hash, token or session id (AC-12, BR-10) 7ms
+     → expected [] to deeply equal [ 'email', 'id', 'isActive', …(3) ]
+   × POST /api/auth/login > API-03 Set-Cookie names tt_session with HttpOnly, SameSite=Strict, Path=/ and no expiry or Secure (AC-13, BR-21) 4ms
+     → expected '' to match /^[0-9a-f]{64}$/
+   × POST /api/auth/login > API-04 the Session row stores the token's SHA-256 and the raw token appears in no column (AC-14, BR-21) 7ms
+     → expected null not to be null
+   × POST /api/auth/login > API-05 unknown email -> 401 INVALID_CREDENTIALS, byte-identical to a wrong password, no cookie (AC-05, BR-07) 6ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/login > API-06 wrong password -> 401, and the password appears in no response body or log line (AC-06, BR-88) 3ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/login > API-07 a NULL password hash -> the same generic 401 for any password (AC-07, BR-17) 7ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/login > API-08 inactive account with the right password -> 403 ACCOUNT_INACTIVE and no cookie (AC-08, BR-09) 4ms
+     → expected 404 to be 403 // Object.is equality
+   × POST /api/auth/login > API-09 inactive account with a wrong password -> the generic 401, not ACCOUNT_INACTIVE (AC-09, BR-09) 2ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/login > API-10 ten failures then the right password -> 200: there is no lockout (AC-10, BR-08) 2ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/login > API-11 a mixed-case, padded email logs in to the lower-case account (AC-11, BR-06) 2ms
+     → expected 404 to be 200 // Object.is equality
+   × POST /api/auth/login > a missing email or password -> 400 VALIDATION_FAILED with the catalogue message at each field (api-spec 2.4) 2ms
+     → expected 404 to be 400 // Object.is equality
+   × POST /api/auth/login > a malformed JSON body -> 400, and the text sent is echoed nowhere (BR-88, BR-89) 3ms
+     → Cannot read properties of undefined (reading 'code')
+   × GET /api/auth/me > API-12 a user who must change their password still gets 200 with name and role (AC-22, BR-32) 37ms
+     → expected 404 to be 200 // Object.is equality
+   × GET /api/auth/me > API-13 the current-user body has the six keys and no hash or token (BR-33, FR-70) 36ms
+     → expected [] to deeply equal [ 'email', 'id', 'isActive', …(3) ]
+   × GET /api/auth/me > no cookie -> 401 AUTH_REQUIRED (BR-34) 2ms
+     → expected 404 to be 401 // Object.is equality
+   × GET /api/auth/me > an unknown token -> 401 with a body byte-identical to no cookie at all (api-spec 1.1) 5ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/change-password > API-15 a valid change -> 200, mustChangePassword false in the body, the session still works (AC-28, BR-18) 39ms
+     → expected 404 to be 200 // Object.is equality
+   × POST /api/auth/change-password > API-16 a wrong current password -> 422 CURRENT_PASSWORD_INCORRECT at the field, not 401; nothing changes (AC-27, BR-105, C-106) 45ms
+     → expected 404 to be 422 // Object.is equality
+   × POST /api/auth/change-password > API-17 7 characters, 129 characters and each missing class -> 400 with the BR-12 message at newPassword (AC-23, AC-24) 37ms
+     → Aa1!xyz: expected 404 to be 400 // Object.is equality
+   × POST /api/auth/change-password > API-18 the current password as the new one -> 400 with the BR-13 message (AC-25) 41ms
+     → expected 404 to be 400 // Object.is equality
+   × POST /api/auth/change-password > API-19 a mismatched confirmation is refused by the server too, and the current password is required (AC-26, BR-13) 46ms
+     → expected 404 to be 400 // Object.is equality
+   × POST /api/auth/change-password > API-20 changing the password keeps the calling session and ends the user's other session (AC-29, BR-102, C-97) 43ms
+     → expected 404 to be 200 // Object.is equality
+   × POST /api/auth/change-password > no session -> 401 AUTH_REQUIRED 2ms
+     → expected 404 to be 401 // Object.is equality
+   × POST /api/auth/logout > API-21 logging out one session -> 204 and the user's other session still works (AC-16, BR-23) 41ms
+     → expected 404 to be 204 // Object.is equality
+   × POST /api/auth/logout > API-22 the logged-out token replayed -> 401, its row is gone, and the cookie was cleared (AC-17, FR-07) 38ms
+     → expected undefined to be 'tt_session=; Max-Age=0; HttpOnly; Sam…' // Object.is equality
+   × POST /api/auth/logout > no session -> 401 AUTH_REQUIRED 2ms
+     → expected 404 to be 401 // Object.is equality
+   × session lifetime > API-23 a session older than 8 hours -> 401 on every protected route; one at 7h59m still works (AC-15, BR-22) 44ms
+     → expected 404 to be 200 // Object.is equality
+   × session lifetime > API-24 the lookup that finds a session expired deletes its row (AC-116, BR-101, C-96) 44ms
+     → expected 404 to be 401 // Object.is equality
+   × session lifetime > API-25 a user deactivated after logging in -> 401 on their next request (AC-18, BR-24) 38ms
+     → expected 404 to be 200 // Object.is equality
+   × session lifetime > API-26 logging in again while signed in issues a second Session row and both tokens work (A-01) 42ms
+     → expected '' not to be '' // Object.is equality
+   × the Origin check on state-changing requests > API-27 POST with a valid session and Origin http://evil.example -> 403 ORIGIN_NOT_ALLOWED, nothing done (AC-19, BR-27) 38ms
+     → expected 404 to be 403 // Object.is equality
+   × the Origin check on state-changing requests > API-28 the same POST with no Origin header -> accepted (AC-20, BR-27) 38ms
+     → expected 404 to be 204 // Object.is equality
+   × the Origin check on state-changing requests > a POST from the configured client origin is accepted, and a GET is never Origin-checked (C-58) 36ms
+     → expected 404 to be 200 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Suites 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > password and session primitives
+Error: Failed to load url ../../src/lib/password-policy.js (resolved id: ../../src/lib/password-policy.js) in C:/Downloads/Lab1_Starter_Scaffold/toktickit/server/tests/lab-03/auth.api.test.ts. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > the password-change gate on a protected probe route
+Error: Failed to load url ../../src/middleware/auth.js (resolved id: ../../src/middleware/auth.js) in C:/Downloads/Lab1_Starter_Scaffold/toktickit/server/tests/lab-03/auth.api.test.ts. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/36]⎯
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 34 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-01 valid credentials -> 200 with the user's identity and role (AC-01, FR-02)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:211:24
+    209|   it("API-01 valid credentials -> 200 with the user's identity and rol…
+    210|     const { res } = await login(active.email);
+    211|     expect(res.status).toBe(200);
+       |                        ^
+    212|     expect(res.body).toMatchObject({ id: active.id, email: active.emai…
+    213|     expect(typeof res.body.name).toBe("string");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-02 the login body has exactly six keys and no password, hash, token or session id (AC-12, BR-10)
+AssertionError: expected [] to deeply equal [ 'email', 'id', 'isActive', …(3) ]
+
+- Expected
++ Received
+
+- Array [
+-   "email",
+-   "id",
+-   "isActive",
+-   "mustChangePassword",
+-   "name",
+-   "role",
+- ]
++ Array []
+
+ ❯ tests/lab-03/auth.api.test.ts:218:42
+    216|   it("API-02 the login body has exactly six keys and no password, hash…
+    217|     const { res, token } = await login(active.email);
+    218|     expect(Object.keys(res.body).sort()).toEqual(USER_KEYS);
+       |                                          ^
+    219|     const text = JSON.stringify(res.body);
+    220|     expect(text).not.toContain(PASSWORD);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-03 Set-Cookie names tt_session with HttpOnly, SameSite=Strict, Path=/ and no expiry or Secure (AC-13, BR-21)
+AssertionError: expected '' to match /^[0-9a-f]{64}$/
+
+- Expected: 
+/^[0-9a-f]{64}$/
+
++ Received: 
+""
+
+ ❯ tests/lab-03/auth.api.test.ts:228:19
+    226|     const { res, token } = await login(active.email);
+    227|     const cookie = sessionCookie(res)!;
+    228|     expect(token).toMatch(/^[0-9a-f]{64}$/);
+       |                   ^
+    229|     const attributes = cookie.split(";").slice(1).map((a) => a.trim().…
+    230|     expect(attributes).toContain("httponly");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-04 the Session row stores the token's SHA-256 and the raw token appears in no column (AC-14, BR-21)
+AssertionError: expected null not to be null
+ ❯ tests/lab-03/auth.api.test.ts:239:21
+    237|     const { token } = await login(active.email);
+    238|     const row = await prisma.session.findUnique({ where: { tokenHash: …
+    239|     expect(row).not.toBeNull();
+       |                     ^
+    240|     expect(row!.userId).toBe(active.id);
+    241|     const rows = await prisma.session.findMany({ where: { userId: acti…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-05 unknown email -> 401 INVALID_CREDENTIALS, byte-identical to a wrong password, no cookie (AC-05, BR-07)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:248:28
+    246|     const unknown = await request(app).post("/api/auth/login").send({ …
+    247|     const wrong = await request(app).post("/api/auth/login").send({ em…
+    248|     expect(unknown.status).toBe(401);
+       |                            ^
+    249|     expect(unknown.body.error.code).toBe("INVALID_CREDENTIALS");
+    250|     expect(unknown.text).toBe(wrong.text);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-06 wrong password -> 401, and the password appears in no response body or log line (AC-06, BR-88)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:264:26
+    262|     try {
+    263|       const res = await request(app).post("/api/auth/login").send({ em…
+    264|       expect(res.status).toBe(401);
+       |                          ^
+    265|       expect(res.body.error.code).toBe("INVALID_CREDENTIALS");
+    266|       expect(res.text).not.toContain(secret);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-07 a NULL password hash -> the same generic 401 for any password (AC-07, BR-17)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:278:26
+    276|     for (const password of [PASSWORD, " ", "anything"]) {
+    277|       const res = await request(app).post("/api/auth/login").send({ em…
+    278|       expect(res.status).toBe(401);
+       |                          ^
+    279|       expect(res.text).toBe(wrong.text);
+    280|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-08 inactive account with the right password -> 403 ACCOUNT_INACTIVE and no cookie (AC-08, BR-09)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:285:24
+    283|   it("API-08 inactive account with the right password -> 403 ACCOUNT_I…
+    284|     const res = await request(app).post("/api/auth/login").send({ emai…
+    285|     expect(res.status).toBe(403);
+       |                        ^
+    286|     expect(res.body.error.code).toBe("ACCOUNT_INACTIVE");
+    287|     expect(sessionCookie(res)).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-09 inactive account with a wrong password -> the generic 401, not ACCOUNT_INACTIVE (AC-09, BR-09)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:292:24
+    290|   it("API-09 inactive account with a wrong password -> the generic 401…
+    291|     const res = await request(app).post("/api/auth/login").send({ emai…
+    292|     expect(res.status).toBe(401);
+       |                        ^
+    293|     expect(res.body.error.code).toBe("INVALID_CREDENTIALS");
+    294|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-10 ten failures then the right password -> 200: there is no lockout (AC-10, BR-08)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:299:26
+    297|     for (let i = 0; i < 10; i += 1) {
+    298|       const res = await request(app).post("/api/auth/login").send({ em…
+    299|       expect(res.status).toBe(401);
+       |                          ^
+    300|     }
+    301|     const { res } = await login(active.email);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-11 a mixed-case, padded email logs in to the lower-case account (AC-11, BR-06)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:307:24
+    305|   it("API-11 a mixed-case, padded email logs in to the lower-case acco…
+    306|     const { res } = await login(`  ${active.email.toUpperCase()} `);
+    307|     expect(res.status).toBe(200);
+       |                        ^
+    308|     expect(res.body.id).toBe(active.id);
+    309|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > a missing email or password -> 400 VALIDATION_FAILED with the catalogue message at each field (api-spec 2.4)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:313:24
+    311|   it("a missing email or password -> 400 VALIDATION_FAILED with the ca…
+    312|     const res = await request(app).post("/api/auth/login").send({ emai…
+    313|     expect(res.status).toBe(400);
+       |                        ^
+    314|     expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    315|     expect(res.body.error.fields).toEqual({ email: MSG.email, password…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/login > a malformed JSON body -> 400, and the text sent is echoed nowhere (BR-88, BR-89)
+TypeError: Cannot read properties of undefined (reading 'code')
+ ❯ tests/lab-03/auth.api.test.ts:325:27
+    323|       .send('{"email":"a@auth.test","password":"Leaky#Secret9"');
+    324|     expect(res.status).toBe(400);
+    325|     expect(res.body.error.code).toBe("VALIDATION_FAILED");
+       |                           ^
+    326|     expect(res.text).not.toContain("Leaky#Secret9");
+    327|     expect(res.text).not.toMatch(/at .*\.(js|ts):\d+/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > GET /api/auth/me > API-12 a user who must change their password still gets 200 with name and role (AC-22, BR-32)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:339:24
+    337|     const { token } = await login(gated.email);
+    338|     const res = await me(token);
+    339|     expect(res.status).toBe(200);
+       |                        ^
+    340|     expect(res.body).toMatchObject({ id: gated.id, role: "IT_STAFF", m…
+    341|     expect(res.body.name).toMatch(/^Auth Test/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > GET /api/auth/me > API-13 the current-user body has the six keys and no hash or token (BR-33, FR-70)
+AssertionError: expected [] to deeply equal [ 'email', 'id', 'isActive', …(3) ]
+
+- Expected
++ Received
+
+- Array [
+-   "email",
+-   "id",
+-   "isActive",
+-   "mustChangePassword",
+-   "name",
+-   "role",
+- ]
++ Array []
+
+ ❯ tests/lab-03/auth.api.test.ts:348:42
+    346|     const { token } = await login(user.email);
+    347|     const res = await me(token);
+    348|     expect(Object.keys(res.body).sort()).toEqual(USER_KEYS);
+       |                                          ^
+    349|     expect(res.text).not.toContain("scrypt$");
+    350|     expect(res.text).not.toContain(token);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > GET /api/auth/me > no cookie -> 401 AUTH_REQUIRED (BR-34)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:355:24
+    353|   it("no cookie -> 401 AUTH_REQUIRED (BR-34)", async () => {
+    354|     const res = await request(app).get("/api/auth/me");
+    355|     expect(res.status).toBe(401);
+       |                        ^
+    356|     expect(res.body.error.code).toBe("AUTH_REQUIRED");
+    357|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > GET /api/auth/me > an unknown token -> 401 with a body byte-identical to no cookie at all (api-spec 1.1)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:363:28
+    361|     const unknown = await me(randomBytes(32).toString("hex"));
+    362|     const garbage = await me("not-a-token");
+    363|     expect(unknown.status).toBe(401);
+       |                            ^
+    364|     expect(unknown.text).toBe(none.text);
+    365|     expect(garbage.text).toBe(none.text);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-15 a valid change -> 200, mustChangePassword false in the body, the session still works (AC-28, BR-18)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:417:24
+    415|     const { token } = await login(user.email);
+    416|     const res = await change(token, { currentPassword: PASSWORD, newPa…
+    417|     expect(res.status).toBe(200);
+       |                        ^
+    418|     expect(Object.keys(res.body).sort()).toEqual(USER_KEYS);
+    419|     expect(res.body.mustChangePassword).toBe(false);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-16 a wrong current password -> 422 CURRENT_PASSWORD_INCORRECT at the field, not 401; nothing changes (AC-27, BR-105, C-106)
+AssertionError: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:431:24
+    429|     const res = await change(token, { currentPassword: "Wrong#Horse1",…
+    430|     expect(res.status).not.toBe(401);
+    431|     expect(res.status).toBe(422);
+       |                        ^
+    432|     expect(res.body.error.code).toBe("CURRENT_PASSWORD_INCORRECT");
+    433|     expect(res.body.error.fields).toEqual({ currentPassword: MSG.curre…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-17 7 characters, 129 characters and each missing class -> 400 with the BR-12 message at newPassword (AC-23, AC-24)
+AssertionError: Aa1!xyz: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:445:37
+    443|     for (const candidate of ["Aa1!xyz", "Aa1!" + "x".repeat(125), "abc…
+    444|       const res = await change(token, { currentPassword: PASSWORD, new…
+    445|       expect(res.status, candidate).toBe(400);
+       |                                     ^
+    446|       expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    447|       expect(res.body.error.fields.newPassword).toBe(MSG.policy);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-18 the current password as the new one -> 400 with the BR-13 message (AC-25)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:455:24
+    453|     const { token } = await login(user.email);
+    454|     const res = await change(token, { currentPassword: PASSWORD, newPa…
+    455|     expect(res.status).toBe(400);
+       |                        ^
+    456|     expect(res.body.error.fields.newPassword).toBe(MSG.sameAsCurrent);
+    457|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-19 a mismatched confirmation is refused by the server too, and the current password is required (AC-26, BR-13)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:463:29
+    461|     const { token } = await login(user.email);
+    462|     const mismatch = await change(token, { currentPassword: PASSWORD, …
+    463|     expect(mismatch.status).toBe(400);
+       |                             ^
+    464|     expect(mismatch.body.error.fields).toEqual({ confirmPassword: MSG.…
+    465|     const missing = await change(token, { newPassword: NEW_PASSWORD, c…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-20 changing the password keeps the calling session and ends the user's other session (AC-29, BR-102, C-97)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:475:24
+    473|     const second = await login(user.email);
+    474|     const res = await change(first.token, { currentPassword: PASSWORD,…
+    475|     expect(res.status).toBe(200);
+       |                        ^
+    476|     expect((await me(first.token)).status).toBe(200);
+    477|     expect((await me(second.token)).status).toBe(401);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > no session -> 401 AUTH_REQUIRED
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:482:24
+    480|   it("no session -> 401 AUTH_REQUIRED", async () => {
+    481|     const res = await request(app).post("/api/auth/change-password").s…
+    482|     expect(res.status).toBe(401);
+       |                        ^
+    483|     expect(res.body.error.code).toBe("AUTH_REQUIRED");
+    484|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/logout > API-21 logging out one session -> 204 and the user's other session still works (AC-16, BR-23)
+AssertionError: expected 404 to be 204 // Object.is equality
+
+- Expected
++ Received
+
+- 204
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:496:24
+    494|     const second = await login(user.email);
+    495|     const res = await request(app).post("/api/auth/logout").set("Cooki…
+    496|     expect(res.status).toBe(204);
+       |                        ^
+    497|     expect(res.text).toBe("");
+    498|     expect((await me(second.token)).status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/logout > API-22 the logged-out token replayed -> 401, its row is gone, and the cookie was cleared (AC-17, FR-07)
+AssertionError: expected undefined to be 'tt_session=; Max-Age=0; HttpOnly; Sam…' // Object.is equality
+
+- Expected: 
+"tt_session=; Max-Age=0; HttpOnly; SameSite=Strict; Path=/"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-03/auth.api.test.ts:505:32
+    503|     const { token } = await login(user.email);
+    504|     const res = await request(app).post("/api/auth/logout").set("Cooki…
+    505|     expect(sessionCookie(res)).toBe("tt_session=; Max-Age=0; HttpOnly;…
+       |                                ^
+    506|     expect(await prisma.session.findUnique({ where: { tokenHash: sha25…
+    507|     expect((await me(token)).status).toBe(401);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > POST /api/auth/logout > no session -> 401 AUTH_REQUIRED
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:512:24
+    510|   it("no session -> 401 AUTH_REQUIRED", async () => {
+    511|     const res = await request(app).post("/api/auth/logout");
+    512|     expect(res.status).toBe(401);
+       |                        ^
+    513|     expect(res.body.error.code).toBe("AUTH_REQUIRED");
+    514|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > session lifetime > API-23 a session older than 8 hours -> 401 on every protected route; one at 7h59m still works (AC-15, BR-22)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:524:37
+    522|     const user = await makeUser();
+    523|     const live = await insertSession(user.id, new Date(Date.now() - EI…
+    524|     expect((await me(live)).status).toBe(200);
+       |                                     ^
+    525|     for (const call of [
+    526|       (t: string) => me(t),
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > session lifetime > API-24 the lookup that finds a session expired deletes its row (AC-116, BR-101, C-96)
+AssertionError: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:541:40
+    539|     const expired = await insertSession(user.id, new Date(Date.now() -…
+    540|     expect(await prisma.session.findUnique({ where: { tokenHash: sha25…
+    541|     expect((await me(expired)).status).toBe(401);
+       |                                        ^
+    542|     expect(await prisma.session.findUnique({ where: { tokenHash: sha25…
+    543|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > session lifetime > API-25 a user deactivated after logging in -> 401 on their next request (AC-18, BR-24)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:550:38
+    548|     const user = await makeUser();
+    549|     const { token } = await login(user.email);
+    550|     expect((await me(token)).status).toBe(200);
+       |                                      ^
+    551|     await prisma.user.update({ where: { id: user.id }, data: { isActiv…
+    552|     const res = await me(token);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > session lifetime > API-26 logging in again while signed in issues a second Session row and both tokens work (A-01)
+AssertionError: expected '' not to be '' // Object.is equality
+ ❯ tests/lab-03/auth.api.test.ts:561:29
+    559|     const first = await login(user.email);
+    560|     const second = await login(user.email);
+    561|     expect(first.token).not.toBe(second.token);
+       |                             ^
+    562|     expect(await prisma.session.count({ where: { userId: user.id } }))…
+    563|     expect((await me(first.token)).status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > API-27 POST with a valid session and Origin http://evil.example -> 403 ORIGIN_NOT_ALLOWED, nothing done (AC-19, BR-27)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:576:24
+    574|     const { token } = await login(user.email);
+    575|     const res = await request(app).post("/api/auth/logout").set("Cooki…
+    576|     expect(res.status).toBe(403);
+       |                        ^
+    577|     expect(res.body.error.code).toBe("ORIGIN_NOT_ALLOWED");
+    578|     expect((await me(token)).status).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > API-28 the same POST with no Origin header -> accepted (AC-20, BR-27)
+AssertionError: expected 404 to be 204 // Object.is equality
+
+- Expected
++ Received
+
+- 204
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:588:24
+    586|     const { token } = await login(user.email);
+    587|     const res = await request(app).post("/api/auth/logout").set("Cooki…
+    588|     expect(res.status).toBe(204);
+       |                        ^
+    589|   });
+    590| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/36]⎯
+
+ FAIL  tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > a POST from the configured client origin is accepted, and a GET is never Origin-checked (C-58)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/auth.api.test.ts:594:75
+    592|     const user = await makeUser();
+    593|     const { token } = await login(user.email);
+    594|     expect((await me(token).set("Origin", "http://evil.example")).stat…
+       |                                                                           ^
+    595|     const res = await request(app).post("/api/auth/logout").set("Cooki…
+    596|     expect(res.status).toBe(204);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/36]⎯
+
+ Test Files  1 failed (1)
+      Tests  34 failed | 10 skipped (44)
+   Start at  15:27:33
+   Duration  3.87s (transform 157ms, setup 0ms, collect 378ms, tests 895ms, environment 0ms, prepare 78ms)
+
+Exit code: 1

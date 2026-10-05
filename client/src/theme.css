@@ -479,3 +479,59 @@ textarea.form-control { height: auto; resize: vertical; }
   .tk-brand, .navbar-toggler { min-height: 44px; display: inline-flex; align-items: center; }
   .tk-row-link, .tk-ticket-card { min-height: 44px; }
 }
+
+/* ---- Lab 3: Login and Change Password (ui-spec sections 10, 11) ------- */
+
+.tk-auth {
+  min-height: 100vh;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding: 3rem 1rem;
+}
+.tk-auth-card { width: 100%; max-width: 26rem; }
+.tk-auth-card-wide { max-width: 30rem; }
+.tk-wordmark {
+  color: var(--tk-primary);
+  font-size: 1.5rem;
+  font-weight: 600;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+.tk-auth .btn-primary .spinner-border { vertical-align: -0.125em; }
+.tk-panel-warning { background-color: var(--tk-surface); border: 1px solid var(--tk-warning); }
+.tk-panel-warning p { color: var(--tk-warning); font-weight: 500; }
+.tk-panel-success p { color: var(--tk-primary); font-weight: 500; }
+.tk-success-icon { vertical-align: -0.125em; }
+
+/* ---- Lab 3: Role badge (ui-spec section 8.4) ------------------------- */
+
+/* Square-cornered and outlined with no fill: told apart from a status badge
+   by the outline, and from a priority pill by the corners. */
+.tk-badge-role { background-color: transparent; border: 1px solid var(--tk-border); color: var(--tk-text-muted); }
+.tk-role-it-staff { border-color: var(--tk-secondary); color: var(--tk-secondary); }
+.tk-role-administrator { border-color: var(--tk-primary); color: var(--tk-primary); font-weight: 700; }
+
+/* ---- Lab 3: the signed-in identity (ui-spec section 9) ---------------- */
+
+.tk-identity { display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap; margin-bottom: 1rem; }
+.tk-identity-name { font-weight: 600; }
+.tk-identity-shell { margin-bottom: 0; margin-right: 0.5rem; }
+.tk-identity-shell .tk-identity-name { color: var(--tk-surface); white-space: nowrap; }
+/* On the primary-green header the outlined treatment's per-role colours would
+   sit on green with too little contrast, so there the badge is white ground
+   with primary-green text for every role (ui-spec 8.4). */
+.tk-header .tk-badge-role,
+.tk-header .tk-role-it-staff,
+.tk-header .tk-role-administrator {
+  background-color: var(--tk-surface);
+  border-color: var(--tk-primary);
+  color: var(--tk-primary);
+}
+
+@media (max-width: 767.98px) {
+  .tk-header .tk-identity-shell { flex-direction: column; align-items: stretch; gap: 0; margin-right: 0; }
+  .tk-header .tk-identity-shell .tk-identity-name,
+  .tk-header .tk-identity-shell .tk-badge-role { align-self: flex-start; }
+  .tk-header .tk-identity-shell .tk-identity-name { display: flex; align-items: center; min-height: 44px; }
+}

@@ -1,7 +1,9 @@
-import express, { Request, Response } from "express";
+import express, { NextFunction, Request, Response } from "express";
 import cors from "cors";
 import { getPrisma } from "./prisma.js";
-import { sendInternalError } from "./lib/http-error.js";
+import { sendError, sendInternalError } from "./lib/http-error.js";
+import { clientOrigin, originCheck } from "./middleware/auth.js";
+import { authRouter } from "./routes/auth.js";
 import { ticketsRouter } from "./routes/tickets.js";
 import { attachmentsRouter } from "./routes/attachments.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the routes that
@@ -11,7 +13,12 @@ import { attachmentsRouter } from "./routes/attachments.js";
 // Supertest can import `app` without opening a port. Do not merge these files.
 export const app = express();
 
-app.use(cors());          // already wired: lets the Vite dev server call this API
+// C-56 - the client reaches this API same-origin through the Vite proxy, so the
+// Lab 2 wildcard cors() is pinned to CLIENT_ORIGIN: a wildcard origin cannot
+// carry credentials, and nothing else should be calling from a browser.
+app.use(cors({ origin: (_origin, allow) => allow(null, clientOrigin()) }));
+// C-58 - a cross-origin write is refused before its body is even parsed.
+app.use(originCheck);
 app.use(express.json());
 
 // ---------------------------------------------------------------------------
@@ -78,8 +85,28 @@ app.get("/api/requesters", async (_req: Request, res: Response) => {
 });
 // ---------------------------------------------------------------------------
 
+// Lab 3 authentication - login, current user, change-password, logout.
+app.use(authRouter);
+
 // Lab 2 Ticket and Attachment endpoints (Issues #13-#15).
 app.use(ticketsRouter);
 app.use(attachmentsRouter);
+
+// The one error handler, last. Express's own would answer with an HTML page
+// quoting the error - for a body express.json cannot parse, a page quoting the
+// body, which on /api/auth/login is the password (BR-88, BR-89). Instead:
+// a client error Express or the body parser raised (a malformed body, an
+// undecodable path) is the 400 envelope, and anything else is the safe 500.
+// Nothing about the error is logged, because its message can quote request
+// data.
+app.use((error: { status?: unknown }, _req: Request, res: Response, next: NextFunction) => {
+  if (res.headersSent) {
+    next(error);
+    return;
+  }
+  const status = typeof error?.status === "number" ? error.status : 500;
+  if (status >= 400 && status < 500) sendError(res, 400, "VALIDATION_FAILED", "Some fields need attention.");
+  else sendInternalError(res);
+});
 
 export default app;

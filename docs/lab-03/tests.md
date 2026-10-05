@@ -140,7 +140,7 @@ test file, and section 2.8 says so explicitly rather than counting them as autom
 
 | Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
 |---|---|---|---|---|---|---|
-| UNIT-01 | Unit | BR-11, C-53 | scrypt hash format | `hashPassword()` returns `scrypt$N$r$p$salt$hash`, five `$`-separated parts, salt 16 bytes as 32 hex characters | `server/tests/lab-03/auth.api.test.ts` | |
+| UNIT-01 | Unit | BR-11, C-53 | scrypt hash format | `hashPassword()` returns `scrypt$N$r$p$salt$hash`, six `$`-separated parts, salt 16 bytes as 32 hex characters | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-02 | Unit | BR-11 | Per-user salt | The same plaintext hashed twice yields two different stored strings, and both verify | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-03 | Unit | BR-11 | Verification is correct and constant-time | `verifyPassword()` is true for the right password, false for a wrong one, and uses `timingSafeEqual` rather than `===` | `server/tests/lab-03/auth.api.test.ts` | |
 | UNIT-04 | Unit | BR-17, C-72 | NULL hash never authenticates | `verifyPassword(null, anything)` is false and throws nothing | `server/tests/lab-03/auth.api.test.ts` | |
@@ -530,6 +530,16 @@ so rather than claiming full automation.
 | E2E-24 | E2E | AC-96, `LS 14` Part 8 | A non-Administrator is forbidden | An IT Staff user opening User Management sees the forbidden state and fetches no user data | `e2e/lab-03/user-administration.spec.ts` | |
 | E2E-25 | E2E | AC-89, AC-91 | Edit and reset | A user's four fields are edited and saved; a new initial password is set and that user's session stops working | `e2e/lab-03/user-administration.spec.ts` | |
 | E2E-26 | E2E | AC-118, BR-108, C-109 | A closed Ticket in the browser | The owning Requester opens a Closed Ticket: existing comments are readable, no composer and no upload control render, and the closed-ticket line shows. A direct `POST` to the comments endpoint returns 409 `TICKET_CLOSED` | `e2e/lab-03/staff-ticket-flow.spec.ts` | |
+
+**Temporary fixture for E2E-03 (Issue #39), replaced in Issue #43.** The forced first-password
+change consumes the seeded first-login account, and the Administrator set-initial-password action
+that would reset it (handoff Issue 8) does not exist until #43. Until then
+`resetFirstLoginAccount()` in `e2e/support/auth.ts` puts that one account back into the state the
+seed creates it in, before and after the test: it finds the account by its email, fails loudly if
+it does not exist, takes the password from the seed's own `FIRST_LOGIN_ACCOUNT` constant rather
+than a copy, and updates no other row. A directory lock serialises it across the three viewport
+projects, which would otherwise share the one account. #43 swaps the fixture for the Administrator
+action.
 
 **E2E-20 runs on the desktop project only**, and creates its user with an `@e2e.test` address, so
 three viewport runs do not create three users and drift the demo data (C-83). Every other row runs
