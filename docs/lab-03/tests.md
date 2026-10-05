@@ -669,10 +669,10 @@ The `Tests` column counts `it(` occurrences as of commit `e5a27ae`, from
 
 | File | Tests | What changes | Decision |
 |---|---|---|---|
-| `server/tests/lab-02/create-ticket.api.test.ts` | 15 | Logged-in Supertest agent; the body `requesterId` is dropped. **API-03 inverts**: `itPriority` is no longer null but equals `requestedPriority`. **API-12 and API-13 retire** (below) | C-64, C-71 |
+| `server/tests/lab-02/create-ticket.api.test.ts` | 15 | Logged-in Supertest agent; the body `requesterId` is dropped. **API-03 inverts**: `itPriority` is no longer null but equals `requestedPriority`. **API-11 and API-12 retire** (below) | C-64, C-71 |
 | `server/tests/lab-02/my-tickets.api.test.ts` | 15 | 29 `requesterId` references become the agent's session. **The 403 at `:241` becomes 404.** The status filter gains three values | C-64, C-65, C-70 |
 | `server/tests/lab-02/ticket-detail.api.test.ts` | 6 | **Two 403s become 404** (`:67`, `:116`). **API-28 inverts**: the payload must now carry `publicComments` and must still carry no Internal Note key. **API-13 retires** | C-64, C-65 |
-| `server/tests/lab-02/attachments.api.test.ts` | 17 | **Three 403s become 404** (`:148`, `:286`, `:294`). API-40's point is preserved: a non-owner gets **404 not 410**, so removal state still does not leak. Two inactive/unknown-caller rows retire | C-64, C-65 |
+| `server/tests/lab-02/attachments.api.test.ts` | 17 | **Three 403s become 404** (`:148`, `:286`, `:294`). API-40's point is preserved: a non-owner gets **404 not 410**, so removal state still does not leak. The inactive-caller and unknown-caller cases are **merged into one 401 test** (`:159`) rather than retired - no test ID disappears | C-64, C-65 |
 | `server/tests/lab-02/data-model.db.test.ts` | 18 | Heaviest. Five `prisma.requesterUser` become `prisma.user`; **DB-04's enum equality goes from five values to eight**; **DB-08's FK becomes `Ticket -> User`**; DB-06's `itPriority: null` assertion inverts; DB-01 and DB-02 grow to the `LS 5.3` role counts; DB-05 grows to the queue indexes | C-67, C-70, C-71, C-91 |
 | `client/tests/lab-02/CreateTicket.test.tsx` | 12 | The `STORAGE_KEY` + `RequesterProvider` harness becomes an `AuthContext` wrapper | C-56, C-64 |
 | `client/tests/lab-02/MyTickets.test.tsx` | 11 | Same wrapper. **`:217` is rewritten, not deleted**: "no IT badge anywhere" becomes "the IT Priority badge renders with the backfilled value" | C-71, BR-95 |

@@ -2,25 +2,27 @@ import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
 import { render, screen, within } from "@testing-library/react";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
+import { REQUESTER_A, signInAs } from "../support/auth.js";
 
 // UI-24, UI-25, STYLE-07 and STYLE-09 from tests.md. The detail is reached
-// through <App /> at /tickets/:id with a stored selection; the API module is
+// through <App /> at /tickets/:id as a signed-in Requester; the API module is
 // mocked at its boundary.
+//
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext wrapper
+// replaces the stored selection, and STYLE-07 at line 78 is rewritten, not
+// deleted - the IT Priority badge now always renders (C-71, FR-31).
 
-const REQUESTERS = [{ id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" }];
 
 const TICKET: api.Ticket = {
   id: 42,
   ticketNumber: "TKT-2026-000042",
-  requesterId: 1,
   requester: { id: 1, name: "Anucha Prasert" },
   category: { id: 2, name: "Hardware" },
   relatedSystem: { id: 6, name: "Printer" },
   summary: "Laptop battery drains quickly",
   description: "The battery drops from full to twenty percent.\nSecond line kept.",
   requestedPriority: "MEDIUM",
-  itPriority: null,
+  itPriority: "MEDIUM",
   currentStatus: "NEW",
   createdAt: "2026-09-05T04:12:33.000Z",
   updatedAt: "2026-09-05T05:02:44.000Z",
@@ -33,7 +35,6 @@ const TICKET: api.Ticket = {
 };
 
 async function renderDetail() {
-  window.localStorage.setItem(STORAGE_KEY, "1");
   window.history.pushState({}, "", "/tickets/42");
   render(<App />);
   await screen.findByRole("heading", { level: 1, name: /TKT-2026-000042/ });
@@ -42,18 +43,9 @@ async function renderDetail() {
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
-  // Lab 3 (#39): <App /> now asks who is signed in before any screen renders.
-  // Adapted to sign in and nothing else (CLAUDE.md); #40 replaces this line
-  // with the AuthContext test wrapper tests.md section 4.2 plans.
-  vi.spyOn(api, "fetchCurrentUser").mockResolvedValue({
-    id: 1,
-    name: "Anucha Prasert",
-    email: "anucha.p@example.ac.th",
-    role: "REQUESTER",
-    isActive: true,
-    mustChangePassword: false,
-  });
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue(REQUESTERS);
+  // Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext test
+  // wrapper signs Requester A in; there is no selector and nothing in storage.
+  signInAs(REQUESTER_A);
   vi.spyOn(api, "fetchTicket").mockResolvedValue(TICKET);
 });
 afterEach(() => vi.restoreAllMocks());
@@ -86,12 +78,13 @@ describe("Requester Ticket Detail", () => {
     expect(timestamps).toHaveLength(2);
   });
 
-  it("STYLE-07 renders the Current Status badge and no IT Priority badge (BR-07)", async () => {
+  it("STYLE-07 renders the Current Status badge and the IT Priority badge beside it (FR-31, C-71)", async () => {
     await renderDetail();
     const heading = screen.getByRole("heading", { level: 1, name: /TKT-2026-000042/ });
     const status = within(heading.parentElement!).getByText("New");
     expect(status).toHaveClass("tk-badge", "tk-badge-square", "tk-status-new");
-    expect(screen.queryByText(/^IT /)).not.toBeInTheDocument();
+    const it = within(heading.parentElement!).getByText("IT Medium");
+    expect(it).toHaveClass("tk-badge", "tk-badge-pill", "tk-priority-medium");
   });
 
   it("STYLE-09 gives every interactive control a non-empty accessible name (AC-56)", async () => {

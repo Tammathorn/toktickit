@@ -38,11 +38,9 @@ let pendingKey = 0;
 
 export default function AttachmentSection({
   ticketId,
-  requesterId,
   initial,
 }: {
   ticketId: number;
-  requesterId: number;
   initial: AttachmentMeta[];
 }) {
   const [rows, setRows] = useState<Row[]>(() => initial.map(fromMeta));
@@ -59,7 +57,7 @@ export default function AttachmentSection({
   async function refresh() {
     setRefreshing(true);
     try {
-      const list = await fetchAttachments(ticketId, requesterId);
+      const list = await fetchAttachments(ticketId);
       setRows((current) => [...list.map(fromMeta), ...current.filter((r) => r.kind === "uploading" || r.kind === "invalid")]);
     } catch {
       // keep what is on screen; the user can try again
@@ -71,7 +69,7 @@ export default function AttachmentSection({
   async function send(key: string, file: File) {
     patch(key, { kind: "uploading", key, file, progress: 0 });
     try {
-      const meta = await uploadAttachment(ticketId, requesterId, file, (p) => {
+      const meta = await uploadAttachment(ticketId, file, (p) => {
         setRows((current) => current.map((r) => (r.key === key && r.kind === "uploading" ? { ...r, progress: p } : r)));
       });
       patch(key, { kind: "active", key, meta });
@@ -98,7 +96,7 @@ export default function AttachmentSection({
 
   async function open(row: Extract<Row, { kind: "active" }>, disposition: "attachment" | "inline") {
     try {
-      const blob = await downloadAttachment(row.meta.id, requesterId, disposition);
+      const blob = await downloadAttachment(row.meta.id, disposition);
       const url = URL.createObjectURL(blob);
       if (disposition === "attachment") {
         const a = document.createElement("a");
@@ -137,7 +135,7 @@ export default function AttachmentSection({
   async function confirmRemoval(row: Row, reason: string): Promise<string | null> {
     if (row.kind !== "active") return null;
     try {
-      const meta = await removeAttachment(row.meta.id, requesterId, reason);
+      const meta = await removeAttachment(row.meta.id, reason);
       patch(row.key, { kind: "removed", key: row.key, meta });
       if (preview?.key === row.key) closePreview();
       return null;

@@ -1,5 +1,5 @@
 import type { Request, RequestHandler, Response } from "express";
-import type { User } from "@prisma/client";
+import type { User, UserRole } from "@prisma/client";
 import { getPrisma } from "../prisma.js";
 import { sendError, sendInternalError } from "../lib/http-error.js";
 import { SESSION_COOKIE, findSession } from "../lib/session.js";
@@ -10,7 +10,8 @@ import { SESSION_COOKIE, findSession } from "../lib/session.js";
 //   originCheck        before step 1, on POST, PATCH and DELETE only (C-58)
 //   1. requireAuth     a valid tt_session, or 401
 //   2. requirePasswordChanged   mustChangePassword set, or 403 (C-99)
-//   3. role            requireRole - Issue #40
+//   3. requireRole     the caller's role may perform this operation, or 403
+//                      - before the resource is loaded (C-63, C-65)
 //   4.-7.              parameters, load, ownership, body - inside each route
 //
 // `protect` is steps 1 and 2 together. Every protected route uses it except the
@@ -97,3 +98,22 @@ export const requirePasswordChanged: RequestHandler = (_req, res, next) => {
 };
 
 export const protect: readonly RequestHandler[] = [requireAuth, requirePasswordChanged];
+
+// Step 3 (BR-38, C-65). Runs before any parameter is parsed or row loaded, so
+// its 403 is byte-identical whether or not the addressed resource exists, and a
+// malformed id cannot be used to tell a forbidden route from a missing one
+// (api-spec.md 1.4). The roles each route admits are specification.md 5.2.
+export function requireRole(...roles: UserRole[]): RequestHandler {
+  return (_req, res, next) => {
+    if (!roles.includes(authOf(res).user.role)) {
+      sendError(res, 403, "FORBIDDEN_ROLE", "You do not have access to that page.");
+      return;
+    }
+    next();
+  };
+}
+
+// The two chains every ticket route uses: Requester-only operations, and the
+// reads every role may make, whose ownership rule the route applies itself.
+export const requesterOnly: readonly RequestHandler[] = [...protect, requireRole("REQUESTER")];
+export const anyRole: readonly RequestHandler[] = [...protect, requireRole("REQUESTER", "IT_STAFF", "ADMINISTRATOR")];

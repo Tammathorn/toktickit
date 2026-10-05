@@ -1,19 +1,18 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from "vitest";
-import { render, screen, within, waitFor } from "@testing-library/react";
+import { cleanup, render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
+import { ADMINISTRATOR, IT_STAFF, REQUESTER_A, signInAs, signedOut } from "../support/auth.js";
 
 // tests.md section 2.9 UI-01..UI-08 and UI-51, section 2.10 STYLE-01 and
-// STYLE-12 (Issue #39), plus the identity half of UI-49.
+// STYLE-12 (Issue #39); UI-49 and UI-50, per-role landing and the Forbidden
+// screen (Issue #40).
 //
-// Deferred, by Issue: UI-49's absence assertion ("Development Requester" and
-// "Change Requester" appear nowhere) and UI-50's role navigation belong to
-// #40, which removes the selector and adds per-role navigation; STYLE-02's
-// three Lab 3 tokens arrive with the screens that use them (#41, #42).
+// Deferred, by Issue: STYLE-02's three Lab 3 tokens arrive with the screens
+// that use them (#41, #42).
 //
 // The API module is mocked at its boundary, as in the Lab 2 client tests,
 // except UI-51, which stubs fetch itself so a real 401 travels through the
@@ -21,14 +20,7 @@ import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
 
 const CLIENT = path.resolve(__dirname, "../..");
 
-const REQUESTER: api.AuthUser = {
-  id: 3,
-  name: "Anucha Prasert",
-  email: "anucha.p@example.ac.th",
-  role: "REQUESTER",
-  isActive: true,
-  mustChangePassword: false,
-};
+const REQUESTER = REQUESTER_A;
 
 const MESSAGES = {
   email: "Email Address is required.",
@@ -38,10 +30,6 @@ const MESSAGES = {
   failure: "Something went wrong on our side. Your work has not been lost - please try again.",
   ended: "Your session has ended. Please sign in again.",
 };
-
-function signedOut() {
-  vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(null);
-}
 
 function renderAt(pathname = "/tickets") {
   window.history.pushState({}, "", pathname);
@@ -61,7 +49,6 @@ beforeEach(() => {
   window.localStorage.clear();
   window.sessionStorage.clear();
   window.history.replaceState({}, "", "/");
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue([{ id: 3, name: REQUESTER.name, email: REQUESTER.email }]);
   vi.spyOn(api, "fetchCategories").mockResolvedValue([]);
   vi.spyOn(api, "fetchRelatedSystems").mockResolvedValue([]);
   vi.spyOn(api, "fetchTickets").mockResolvedValue({
@@ -206,20 +193,127 @@ describe("Login", () => {
 });
 
 describe("the authenticated shell", () => {
-  function signedIn() {
-    vi.spyOn(api, "fetchCurrentUser").mockResolvedValue(REQUESTER);
-    window.localStorage.setItem(STORAGE_KEY, String(REQUESTER.id));
+  const signedIn = () => signInAs(REQUESTER);
+
+  function walk(dir: string, into: string[] = []): string[] {
+    for (const entry of fs.readdirSync(dir, { withFileTypes: true })) {
+      const full = path.join(dir, entry.name);
+      if (entry.isDirectory()) walk(full, into);
+      else into.push(fs.readFileSync(full, "utf8"));
+    }
+    return into;
   }
 
-  it("UI-49 (identity half) the shell shows the user's name, a Role badge and Log Out (AC-30, FR-09)", async () => {
+  it("UI-49 the shell shows name, Role badge and Log Out, and 'Development Requester' and 'Change Requester' exist nowhere in the client (AC-30, FR-09, BR-94)", async () => {
     signedIn();
     renderAt();
     const header = await screen.findByRole("banner");
-    // The selector's own line also names the Requester until #40 removes it.
-    expect(within(header).getByText(REQUESTER.name, { selector: ".tk-identity-name" })).toBeInTheDocument();
+    expect(within(header).getByText(REQUESTER.name)).toHaveClass("tk-identity-name");
     const badge = within(header).getByText("Requester", { selector: ".tk-badge-role" });
     expect(badge).toHaveClass("tk-badge-square");
     expect(within(header).getByRole("button", { name: "Log Out" })).toBeInTheDocument();
+    expect(document.body.textContent).not.toMatch(/Development Requester|Change Requester/);
+    const sources = walk(path.join(CLIENT, "src")).join("\n");
+    expect(sources).not.toContain("Development Requester");
+    expect(sources).not.toContain("Change Requester");
+    expect(sources).not.toContain("toktickit.requesterId");
+  });
+
+  it("UI-50 navigation is derived from the role: Requester, IT Staff and Administrator each see exactly their destinations (AC-31..AC-33, BR-36)", async () => {
+    const expected: Array<[api.AuthUser, string[]]> = [
+      [REQUESTER, ["My Tickets", "Create Ticket"]],
+      [IT_STAFF, ["Ticket Queue"]],
+      [ADMINISTRATOR, ["Ticket Queue", "User Management"]],
+    ];
+    for (const [user, destinations] of expected) {
+      signInAs(user);
+      renderAt("/");
+      const nav = await screen.findByRole("navigation", { name: "Main navigation" });
+      await within(nav).findByText(user.name);
+      const links = within(nav)
+        .getAllByRole("link")
+        .filter((link) => !link.classList.contains("tk-brand"))
+        .map((link) => link.textContent);
+      expect(links, user.role).toEqual(destinations);
+      cleanup();
+    }
+  });
+
+  it("each role lands on its own screen: a Requester on My Tickets, IT Staff and Administrator on the Ticket Queue (ui-spec 9.1)", async () => {
+    for (const [user, heading, pathname] of [
+      [REQUESTER, "My Tickets", "/tickets"],
+      [IT_STAFF, "Ticket Queue", "/queue"],
+      [ADMINISTRATOR, "Ticket Queue", "/queue"],
+    ] as const) {
+      signInAs(user);
+      renderAt("/");
+      expect(await screen.findByRole("heading", { level: 1, name: heading }), user.role).toBeInTheDocument();
+      expect(window.location.pathname).toBe(pathname);
+      cleanup();
+    }
+  });
+
+  it("a destination the role may not use renders the Forbidden state inside the shell and fetches nothing for it (FR-24, BR-40)", async () => {
+    const fetchTickets = vi.mocked(api.fetchTickets);
+    const fetchTicket = vi.spyOn(api, "fetchTicket");
+    const fetchCategories = vi.mocked(api.fetchCategories);
+    for (const [user, pathname] of [
+      [REQUESTER, "/queue"],
+      [REQUESTER, "/users"],
+      [IT_STAFF, "/tickets"],
+      [IT_STAFF, "/tickets/new"],
+      [IT_STAFF, "/users"],
+      [ADMINISTRATOR, "/tickets/42"],
+    ] as const) {
+      signInAs(user);
+      for (const spy of [fetchTickets, fetchTicket, fetchCategories]) spy.mockClear();
+      renderAt(pathname);
+      expect(await screen.findByRole("heading", { name: "You do not have access to that page." }), `${user.role} ${pathname}`).toBeInTheDocument();
+      expect(screen.getByText("Your role does not allow this. Choose a destination from the menu above.")).toBeInTheDocument();
+      expect(screen.getByRole("banner")).toBeInTheDocument();
+      const back = screen.getByRole("link", { name: /Go to / });
+      expect(back).toHaveClass("btn-primary");
+      // Nothing is fetched for the refused screen: not its list, not its
+      // detail, not its form's reference data (AC-97).
+      for (const spy of [fetchTickets, fetchTicket, fetchCategories]) expect(spy, `${user.role} ${pathname}`).not.toHaveBeenCalled();
+      cleanup();
+    }
+  });
+
+  it("a 403 FORBIDDEN_ROLE from a screen's own request renders the Forbidden state, not a failure (ui-spec 20.1, FR-24)", async () => {
+    signedIn();
+    vi.mocked(api.fetchTickets).mockRejectedValue(new api.ApiError(403, "FORBIDDEN_ROLE", "x"));
+    renderAt("/tickets");
+    expect(await screen.findByRole("heading", { name: "You do not have access to that page." })).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: "Retry" })).not.toBeInTheDocument();
+    cleanup();
+
+    signedIn();
+    vi.spyOn(api, "fetchTicket").mockRejectedValue(new api.ApiError(403, "FORBIDDEN_ROLE", "x"));
+    renderAt("/tickets/42");
+    expect(await screen.findByRole("heading", { name: "You do not have access to that page." })).toBeInTheDocument();
+    expect(screen.queryByText(MESSAGES.failure)).not.toBeInTheDocument();
+  });
+
+  it("a 403 PASSWORD_CHANGE_REQUIRED from any request shows Change Password, not a banner (ui-spec 6.2, BR-19)", async () => {
+    vi.restoreAllMocks();
+    let gated = false;
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (input: RequestInfo | URL) => {
+        const url = String(input);
+        const json = (status: number, body: unknown) =>
+          new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
+        if (url.endsWith("/api/auth/me")) return json(200, { ...REQUESTER, mustChangePassword: gated });
+        if (url.includes("/api/categories") || url.includes("/api/related-systems")) return json(200, []);
+        // An Administrator set a new initial password behind this session's back.
+        gated = true;
+        return json(403, { error: { code: "PASSWORD_CHANGE_REQUIRED", message: "x" } });
+      }),
+    );
+    renderAt("/tickets");
+    expect(await screen.findByRole("heading", { level: 1, name: "Change Password" })).toBeInTheDocument();
+    expect(screen.queryByRole("banner")).not.toBeInTheDocument();
   });
 
   it("Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23)", async () => {
@@ -234,7 +328,6 @@ describe("the authenticated shell", () => {
   });
 
   it("UI-51 a 401 from a screen's own request discards the user and shows Login with the session-ended message (AC-35, BR-34)", async () => {
-    window.localStorage.setItem(STORAGE_KEY, String(REQUESTER.id));
     vi.restoreAllMocks();
     vi.stubGlobal(
       "fetch",
@@ -243,7 +336,6 @@ describe("the authenticated shell", () => {
         const json = (status: number, body: unknown) =>
           new Response(JSON.stringify(body), { status, headers: { "Content-Type": "application/json" } });
         if (url.endsWith("/api/auth/me")) return json(200, REQUESTER);
-        if (url.includes("/api/requesters")) return json(200, [{ id: 3, name: REQUESTER.name, email: REQUESTER.email }]);
         if (url.includes("/api/categories") || url.includes("/api/related-systems")) return json(200, []);
         return json(401, { error: { code: "AUTH_REQUIRED", message: MESSAGES.ended } });
       }),

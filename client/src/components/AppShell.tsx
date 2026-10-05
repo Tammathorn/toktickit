@@ -1,30 +1,23 @@
 import { useEffect, useRef, useState, type KeyboardEvent, type ReactNode } from "react";
 import { Link, useRouter } from "../router.js";
-import { useRequester } from "../requester/RequesterContext.js";
 import { useAuth, useCurrentUser } from "../auth/AuthContext.js";
+import { LANDING, NAV_ITEMS } from "../auth/roles.js";
 import { RoleBadge } from "./Badge.js";
 
 // Application shell — ui-spec.md section 9. Rendered only for a signed-in user
-// with no outstanding password change, and - until #40 removes the selector -
-// once a valid Development Requester is selected (BR-15, FR-10); App decides
-// that. Lab 3 (#39) adds the signed-in user's name, Role badge and Log Out
-// (FR-09); the Development Requester block beside them goes in #40.
+// with no outstanding password change; App decides that.
 //
-// Desktop and tablet: one primary-green header bar with the wordmark, the two
-// nav items, the selected Requester's name and Change Requester (FR-07, FR-08).
-// Mobile: wordmark plus a toggler; the expanded panel lists the same four rows
-// and traps focus while open.
-
-const NAV_ITEMS = [
-  { to: "/tickets", label: "My Tickets", matches: (p: string) => p === "/" || p.startsWith("/tickets") && p !== "/tickets/new" },
-  { to: "/tickets/new", label: "Create Ticket", matches: (p: string) => p === "/tickets/new" },
-];
+// Desktop and tablet: one primary-green header bar with the wordmark (linking
+// to the role's landing screen), the role's navigation (BR-36, FR-10), and the
+// signed-in user's name, Role badge and Log Out (FR-09). The Lab 2 selector's
+// identity line and its switch control are gone (BR-94).
+// Mobile: wordmark plus a toggler; the expanded panel lists the same rows and
+// traps focus while open.
 
 const FOCUSABLE = 'a[href], button:not([disabled])';
 
 export default function AppShell({ children }: { children: ReactNode }) {
   const { path } = useRouter();
-  const { selected, clearSelection } = useRequester();
   const user = useCurrentUser();
   const { signOut } = useAuth();
   const [signingOut, setSigningOut] = useState(false);
@@ -90,7 +83,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
       <header className="tk-header" onKeyDown={handlePanelKeyDown}>
         <nav className="navbar navbar-expand-md" aria-label="Main navigation" data-bs-theme="dark">
           <div className="container">
-            <Link to="/tickets" className="navbar-brand tk-brand">
+            <Link to={LANDING[user.role]} className="navbar-brand tk-brand">
               TokTickIT
             </Link>
             <button
@@ -111,7 +104,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
               className={`collapse navbar-collapse${open ? " show" : ""}`}
             >
               <ul className="navbar-nav mx-auto">
-                {NAV_ITEMS.map((item) => {
+                {NAV_ITEMS[user.role].map((item) => {
                   const active = item.matches(path);
                   return (
                     <li className="nav-item" key={item.to}>
@@ -137,16 +130,6 @@ export default function AppShell({ children }: { children: ReactNode }) {
                   onClick={handleSignOut}
                 >
                   Log Out
-                </button>
-              </div>
-
-              <div className="tk-requester">
-                <span className="tk-requester-name">
-                  <span className="tk-requester-label">Development Requester:</span>{" "}
-                  <strong>{selected?.name}</strong>
-                </span>
-                <button type="button" className="btn tk-btn-tertiary tk-btn-on-primary" onClick={clearSelection}>
-                  Change Requester
                 </button>
               </div>
             </div>

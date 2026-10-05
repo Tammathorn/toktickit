@@ -18,9 +18,9 @@ import { hashPassword } from "../../src/lib/password.js";
 // Lab 3 authentication - tests.md section 2.1 (UNIT-01..06, 08, 09) and
 // section 2.2 (API-01..API-28), Issue #39.
 //
-// Not here yet, by Issue: API-14 needs the ticket, queue and user routes to
-// sit behind the gate, which happens in Issues #40, #41 and #43 - until then
-// the gate is proven on a probe route that uses the real middleware chain.
+// API-14 grows with the routes behind the gate: GET /api/tickets from #40, the
+// queue in #41, the user list in #43. The probe route below proves the chain
+// itself, independently of any one route.
 // UNIT-07 needs the Administrator call sites (#43); UNIT-10 and UNIT-11 test
 // the name, email and comment bounds of #42 and #43.
 //
@@ -418,6 +418,27 @@ describe("the password-change gate on a protected probe route", () => {
     const anonymous = await request(probe).get("/probe");
     expect(anonymous.status).toBe(401);
     expect(anonymous.body.error.code).toBe("AUTH_REQUIRED");
+  });
+});
+
+describe("API-14 the gate on the real protected routes", () => {
+  it("API-14 a gated user gets 403 PASSWORD_CHANGE_REQUIRED, never 401, from GET /api/tickets (AC-21, AC-02, C-99)", async () => {
+    const gated = await makeUser({ mustChangePassword: true });
+    const { token } = await login(gated.email);
+    const calls: Array<[string, () => request.Test]> = [
+      ["GET /api/tickets", () => request(app).get("/api/tickets")],
+      ["GET /api/tickets/1", () => request(app).get("/api/tickets/1")],
+      ["GET /api/tickets/1/attachments", () => request(app).get("/api/tickets/1/attachments")],
+      ["POST /api/tickets", () => request(app).post("/api/tickets").send({})],
+      ["POST /api/tickets/1/attachments", () => request(app).post("/api/tickets/1/attachments")],
+      ["GET /api/attachments/1/download", () => request(app).get("/api/attachments/1/download")],
+      ["DELETE /api/attachments/1", () => request(app).delete("/api/attachments/1").send({ removalReason: "x" })],
+    ];
+    for (const [route, call] of calls) {
+      const res = await call().set("Cookie", asCookie(token));
+      expect(res.status, route).toBe(403);
+      expect(res.body.error.code, route).toBe("PASSWORD_CHANGE_REQUIRED");
+    }
   });
 });
 

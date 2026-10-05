@@ -20,6 +20,20 @@ app.use(cors({ origin: (_origin, allow) => allow(null, clientOrigin()) }));
 // C-58 - a cross-origin write is refused before its body is even parsed.
 app.use(originCheck);
 app.use(express.json());
+// A body express.json cannot parse is treated as no body at all, and the
+// request carries on through the chain. The session, gate and role checks then
+// answer first, exactly as for any other request, and the route's own body
+// validation - the last step of api-spec.md 1.4 - reports what is missing. An
+// anonymous caller is told 401, never whether their body would have parsed
+// (BR-86). The parser's message, which quotes the body, is dropped (BR-88).
+app.use((error: { type?: unknown }, req: Request, _res: Response, next: NextFunction) => {
+  if (error?.type === "entity.parse.failed") {
+    req.body = {};
+    next();
+    return;
+  }
+  next(error);
+});
 
 // ---------------------------------------------------------------------------
 // Issue 2 — API health check
@@ -65,25 +79,9 @@ app.get("/api/related-systems", async (_req: Request, res: Response) => {
     sendInternalError(res);
   }
 });
-// ---------------------------------------------------------------------------
-// Lab 2, Issue #12 — GET /api/requesters (api-spec.md 2.3)
-//   -> active RequesterUser rows only (BR-11, C-33), ascending id
-//   -> { id, name, email }; no credential of any kind (BR-03, BR-65)
-//   -> [] when none is active: that is the Selection screen's empty state, not an error
-//   -> 500 INTERNAL_ERROR envelope on failure, which drives the failure state
-app.get("/api/requesters", async (_req: Request, res: Response) => {
-  try {
-    const requesters = await getPrisma().user.findMany({
-      where: { role: "REQUESTER", isActive: true },
-      orderBy: { id: "asc" },
-      select: { id: true, name: true, email: true },
-    });
-    res.status(200).json(requesters);
-  } catch {
-    sendInternalError(res);
-  }
-});
-// ---------------------------------------------------------------------------
+// Lab 2's GET /api/requesters is removed (api-spec.md 1.7, C-62, C-64): it was
+// an unauthenticated list of every active user, the selector's data source.
+// The Administrator user list replaces its one legitimate purpose (#43).
 
 // Lab 3 authentication - login, current user, change-password, logout.
 app.use(authRouter);

@@ -1,47 +1,36 @@
-import { test, expect, type Page, type APIRequestContext } from "@playwright/test";
+import { test, expect, type Page } from "@playwright/test";
 import fs from "node:fs";
 import path from "node:path";
-import { API_URL } from "../../playwright.config";
-import { signIn } from "../support/auth";
-
-// Lab 3 (#39): every screen now sits behind Login, so each test signs in as a
-// seeded Requester before anything else and is otherwise unchanged
-// (CLAUDE.md); #40 replaces this with a storageState per role.
-test.beforeEach(async ({ page }) => signIn(page));
+import { E2E_REQUESTER, REQUESTER_A, REQUESTER_B, REQUESTER_C, STATE, apiAs, signIn } from "../support/auth";
 
 // The end-to-end Requester flow (E2E-01..E2E-06) and the responsive rows
 // (RESP-01..RESP-06) from docs/lab-02/tests.md, run at the three C-10 viewport
 // projects. The filename is the one LS 12 fixes.
 //
-// Data discipline: the flow creates its Ticket as the LAST active Development
-// Requester, which the demo seed never touches, so Part 7's counts for
-// Requesters A, B and C stay 14 / 3 / 0. The switch, empty and no-results
-// steps read A, B and C without changing them.
+// Data discipline: the flow creates its Ticket as the dedicated E2E Requester,
+// which the demo seed never touches, so Part 7's counts for Requesters A, B
+// and C stay 14 / 3 / 0. The empty and no-results steps read A and C without
+// changing them.
 //
-// The E2E-01 -> E2E-04 steps share one Ticket and run in order (serial);
-// the rest are independent. Requires the manual start sequence in tests.md
-// section 5.
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the stored selection becomes
+// a signed-in session - the E2E Requester's storageState by default, a
+// sign-in where a test needs another persona. E2E-01's Selection step is now
+// Login, E2E-02's switch is a sign-out and a sign-in as B, and E2E-05's
+// direct refusals are 404, not 403 (C-65). RESP-02's desktop table gains the
+// IT Priority column (C-71), RESP-04 checks Log Out where Change Requester was,
+// and RESP-06 traverses Login where it traversed the Selection screen. Direct
+// API calls are made as a signed-in user; none carries ?requesterId=.
+//
+// The E2E-01 -> E2E-05 steps share one Ticket and run in order (serial);
+// the rest are independent. Requires the manual start sequence in tests.md.
 
-const STORAGE_KEY = "toktickit.requesterId";
+test.use({ storageState: STATE.requester });
+
 const ARTIFACTS = path.resolve(__dirname, "../../artifacts/lab-02/screenshots");
 const PNG = Buffer.from(
   "iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNkYPhfDwAChwGA60e6kgAAAABJRU5ErkJggg==",
   "base64",
 );
-
-type Requester = { id: number; name: string };
-
-async function activeRequesters(request: APIRequestContext): Promise<Requester[]> {
-  const res = await request.get(`${API_URL}/api/requesters`);
-  expect(res.ok()).toBeTruthy();
-  const all: Requester[] = await res.json();
-  expect(all.length, "graded seed: at least four active Requesters").toBeGreaterThanOrEqual(4);
-  return all;
-}
-
-async function preselect(page: Page, id: number) {
-  await page.addInitScript(([key, value]) => window.localStorage.setItem(key, String(value)), [STORAGE_KEY, id] as const);
-}
 
 async function openNav(page: Page) {
   if (test.info().project.name === "mobile") await page.getByRole("button", { name: "Toggle navigation" }).click();
@@ -52,35 +41,37 @@ async function expectNoHorizontalScroll(page: Page) {
   expect(scrollWidth, `scrollWidth ${scrollWidth} > innerWidth ${innerWidth} on ${page.url()}`).toBeLessThanOrEqual(innerWidth);
 }
 
+async function ticketsOf(account: typeof REQUESTER_A) {
+  const api = await apiAs(account);
+  const body = await (await api.get("/api/tickets?pageSize=50")).json();
+  await api.dispose();
+  return body;
+}
+
 // ---------------------------------------------------------------------------
 // E2E-01, E2E-03, E2E-04, E2E-05: one Ticket carried through the flow.
 // ---------------------------------------------------------------------------
 test.describe("The Requester flow", () => {
   test.describe.configure({ mode: "serial" });
 
-  let owner: Requester;
-  let other: Requester;
   let ticketNumber: string;
   let ticketId: number;
 
-  test.beforeAll(async ({ request }) => {
-    const all = await activeRequesters(request);
-    owner = all[all.length - 1];
-    other = all[1];
-  });
-
-  test("E2E-01 selects a Requester, creates a Ticket with an attachment, finds it in My Tickets and opens its detail (AC-01, AC-08, AC-09)", async ({ page }) => {
+  test("E2E-01 signs in, creates a Ticket with an attachment, finds it in My Tickets and opens its detail (AC-01, AC-08, AC-09)", async ({ browser }) => {
+    // A fresh context with no session: the Login screen stands where the
+    // Lab 2 Selection screen stood (AC-08's "this is a real sign-in now").
+    const context = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const page = await context.newPage();
     await page.goto("/");
+    await page.getByLabel(/Email Address/).fill(E2E_REQUESTER.email);
+    await page.getByLabel(/^Password/).fill(E2E_REQUESTER.password);
+    await page.getByRole("button", { name: "Sign In" }).click();
+    const name = page.getByRole("banner").locator(".tk-identity-name");
+    await expect(name).toHaveText("Siriporn Chaiyo");
 
-    // Selection: not a login screen (AC-08)
-    await expect(page.getByText("This is not a login screen")).toBeVisible();
-    await page.getByLabel("Development Requester").selectOption(String(owner.id));
-    await page.getByRole("button", { name: "Continue" }).click();
-    await expect(page.getByRole("banner")).toContainText(owner.name);
-
-    // Reload keeps the selection (AC-09)
+    // Reload keeps the session (AC-09)
     await page.reload();
-    await expect(page.getByRole("banner")).toContainText(owner.name);
+    await expect(page.getByRole("banner").locator(".tk-identity-name")).toHaveText("Siriporn Chaiyo");
 
     // Create Ticket with one attachment
     await openNav(page);
@@ -115,10 +106,10 @@ test.describe("The Requester flow", () => {
     await expect(page).toHaveURL(new RegExp(`/tickets/${ticketId}$`));
     await expect(page.getByRole("heading", { level: 1, name: ticketNumber })).toBeVisible();
     await expect(page.getByText("1 of 5 active")).toBeVisible();
+    await context.close();
   });
 
   test("E2E-03 adds, downloads and soft-removes an attachment; metadata and reason remain (AC-32, AC-30, AC-34)", async ({ page }) => {
-    await preselect(page, owner.id);
     await page.goto(`/tickets/${ticketId}`);
     await expect(page.getByText("1 of 5 active")).toBeVisible();
 
@@ -146,41 +137,46 @@ test.describe("The Requester flow", () => {
     await expect(page.getByText("1 of 5 active")).toBeVisible();
   });
 
-  test("E2E-04 the removed attachment offers no download, and a direct request returns 410 (AC-36)", async ({ page, request }) => {
-    await preselect(page, owner.id);
+  test("E2E-04 the removed attachment offers no download, and a direct request returns 410 (AC-36)", async ({ page }) => {
     await page.goto(`/tickets/${ticketId}`);
     const removedRow = page.getByRole("list", { name: "Removed attachments" }).getByRole("listitem");
     await expect(removedRow).toContainText("receipt.png");
     await expect(removedRow.getByRole("button", { name: /Download/ })).toHaveCount(0);
     await expect(removedRow.getByRole("button", { name: /Preview/ })).toHaveCount(0);
 
-    const list = await (await request.get(`${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${owner.id}`)).json();
+    const owner = await apiAs(E2E_REQUESTER);
+    const list = await (await owner.get(`/api/tickets/${ticketId}/attachments`)).json();
     const removed = list.find((a: { originalFilename: string }) => a.originalFilename === "receipt.png");
     expect(removed.isRemoved).toBe(true);
     for (const disposition of ["attachment", "inline"]) {
-      const res = await request.get(`${API_URL}/api/attachments/${removed.id}/download?requesterId=${owner.id}&disposition=${disposition}`);
+      const res = await owner.get(`/api/attachments/${removed.id}/download?disposition=${disposition}`);
       expect(res.status(), disposition).toBe(410);
       expect((await res.json()).error.code).toBe("ATTACHMENT_REMOVED");
     }
+    await owner.dispose();
   });
 
-  test("E2E-05 another Requester is refused: direct navigation to the Ticket and a direct attachment request both give 403 (AC-03, AC-39)", async ({ page, request }) => {
-    const list = await (await request.get(`${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${owner.id}`)).json();
+  test("E2E-05 another Requester is refused: direct navigation to the Ticket and a direct attachment request both give 404 (AC-38, AC-39, C-65)", async ({ page }) => {
+    const owner = await apiAs(E2E_REQUESTER);
+    const list = await (await owner.get(`/api/tickets/${ticketId}/attachments`)).json();
+    await owner.dispose();
     const activeFile = list.find((a: { isRemoved: boolean }) => !a.isRemoved);
     const removedFile = list.find((a: { isRemoved: boolean }) => a.isRemoved);
 
-    const ticket = await request.get(`${API_URL}/api/tickets/${ticketId}?requesterId=${other.id}`);
-    expect(ticket.status()).toBe(403);
-    expect((await ticket.json()).error.code).toBe("TICKET_FORBIDDEN");
+    const other = await apiAs(REQUESTER_B);
+    const ticket = await other.get(`/api/tickets/${ticketId}`);
+    expect(ticket.status()).toBe(404);
+    expect((await ticket.json()).error.code).toBe("TICKET_NOT_FOUND");
     for (const file of [activeFile, removedFile]) {
-      const res = await request.get(`${API_URL}/api/attachments/${file.id}/download?requesterId=${other.id}`);
-      expect(res.status(), file.originalFilename).toBe(403); // never 410 to a non-owner (C-20)
-      expect((await res.json()).error.code).toBe("ATTACHMENT_FORBIDDEN");
+      const res = await other.get(`/api/attachments/${file.id}/download`);
+      expect(res.status(), file.originalFilename).toBe(404); // never 410 to a non-owner (C-65)
+      expect((await res.json()).error.code).toBe("ATTACHMENT_NOT_FOUND");
     }
+    await other.dispose();
 
-    await preselect(page, other.id);
+    await signIn(page, REQUESTER_B);
     await page.goto(`/tickets/${ticketId}`);
-    await expect(page.getByRole("alert")).toContainText("You do not have access to that item.");
+    await expect(page.getByRole("alert")).toContainText("That item does not exist.");
     await expect(page.getByText(ticketNumber)).toHaveCount(0);
   });
 });
@@ -188,34 +184,33 @@ test.describe("The Requester flow", () => {
 // ---------------------------------------------------------------------------
 // E2E-02 and E2E-06 against the demo seed, read-only.
 // ---------------------------------------------------------------------------
-test("E2E-02 switching from Requester A to B makes A's Tickets disappear and lists B's (AC-11, AC-03)", async ({ page, request }) => {
-  const [a, b] = await activeRequesters(request);
-  const aList = await (await request.get(`${API_URL}/api/tickets?requesterId=${a.id}`)).json();
-  const bList = await (await request.get(`${API_URL}/api/tickets?requesterId=${b.id}`)).json();
+test("E2E-02 A signing out and B signing in makes A's Tickets disappear and lists B's (AC-11, AC-03)", async ({ page }) => {
+  const aList = await ticketsOf(REQUESTER_A);
+  const bList = await ticketsOf(REQUESTER_B);
   expect(aList.meta.total).toBeGreaterThan(0);
 
-  await preselect(page, a.id);
+  await signIn(page, REQUESTER_A);
   await page.goto("/tickets");
   await expect(page.getByText(aList.data[0].ticketNumber)).toBeVisible();
 
   await openNav(page);
-  await page.getByRole("button", { name: "Change Requester" }).click();
-  await page.getByLabel("Development Requester").selectOption(String(b.id));
-  await page.getByRole("button", { name: "Continue" }).click();
+  await page.getByRole("banner").getByRole("button", { name: "Log Out" }).click();
+  await page.getByLabel(/Email Address/).fill(REQUESTER_B.email);
+  await page.getByLabel(/^Password/).fill(REQUESTER_B.password);
+  await page.getByRole("button", { name: "Sign In" }).click();
 
-  await expect(page.getByRole("banner")).toContainText(b.name);
-  await expect(page.getByRole("link", { name: /^Open TKT-/ })).toHaveCount(bList.data.length);
+  await expect(page.getByRole("banner").locator(".tk-identity-name")).toHaveText("Kanya Somsri");
+  await expect(page.getByRole("link", { name: /^Open TKT-/ })).toHaveCount(Math.min(bList.data.length, 10));
   for (const row of aList.data) await expect(page.getByText(row.ticketNumber)).toHaveCount(0);
 });
 
-test("E2E-06 a Requester with no Tickets sees `No tickets yet`; a filter that excludes everything shows `No matches` (AC-49, AC-50)", async ({ page, request }) => {
-  const [a, , c] = await activeRequesters(request);
-  await preselect(page, c.id);
+test("E2E-06 a Requester with no Tickets sees `No tickets yet`; a filter that excludes everything shows `No matches` (AC-49, AC-50)", async ({ page }) => {
+  await signIn(page, REQUESTER_C);
   await page.goto("/tickets");
   await expect(page.getByRole("heading", { name: "No tickets yet" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Ticket list" }).getByRole("link", { name: "Create Ticket" })).toBeVisible();
 
-  await page.evaluate(([key, value]) => window.localStorage.setItem(key, String(value)), [STORAGE_KEY, a.id] as const);
+  await signIn(page, REQUESTER_A);
   await page.goto("/tickets?search=zzzz-no-such-ticket");
   await expect(page.getByRole("heading", { name: "No matches" })).toBeVisible();
   await expect(page.getByRole("region", { name: "Ticket list" }).getByRole("button", { name: "Clear filters" })).toBeVisible();
@@ -226,16 +221,16 @@ test("E2E-06 a Requester with no Tickets sees `No tickets yet`; a filter that ex
 // RESP-01..RESP-06 - responsive behaviour and the built theme.
 // ---------------------------------------------------------------------------
 test.describe("Responsive", () => {
-  test("RESP-01 no horizontal page scroll on any of the four screens (AC-55)", async ({ page, request }) => {
-    const all = await activeRequesters(request);
-    const owner = all[all.length - 1];
-    const list = await (await request.get(`${API_URL}/api/tickets?requesterId=${all[0].id}`)).json();
+  test("RESP-01 no horizontal page scroll on any of the four screens (AC-55)", async ({ browser, page }) => {
+    const signedOut = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const login = await signedOut.newPage();
+    await login.goto("/");
+    await expect(login.getByRole("button", { name: "Sign In" })).toBeVisible();
+    await expectNoHorizontalScroll(login);
+    await signedOut.close();
 
-    await page.goto("/");
-    await expect(page.getByLabel("Development Requester")).toBeVisible();
-    await expectNoHorizontalScroll(page);
-
-    await preselect(page, all[0].id);
+    await signIn(page, REQUESTER_A);
+    const list = await ticketsOf(REQUESTER_A);
     await page.goto("/tickets");
     await expect(page.getByRole("link", { name: /^Open TKT-/ }).first()).toBeVisible();
     await expectNoHorizontalScroll(page);
@@ -247,12 +242,10 @@ test.describe("Responsive", () => {
     await page.goto(`/tickets/${list.data[0].id}`);
     await expect(page.getByRole("heading", { level: 1, name: /^TKT-/ })).toBeVisible();
     await expectNoHorizontalScroll(page);
-    void owner;
   });
 
-  test("RESP-02 / RESP-03 My Tickets is cards at 390 px and a six-column table at 1280 px", async ({ page, request }) => {
-    const [a] = await activeRequesters(request);
-    await preselect(page, a.id);
+  test("RESP-02 / RESP-03 My Tickets is cards at 390 px and a seven-column table at 1280 px", async ({ page }) => {
+    await signIn(page, REQUESTER_A);
     await page.goto("/tickets");
     await expect(page.getByRole("link", { name: /^Open TKT-/ }).first()).toBeVisible();
 
@@ -265,16 +258,15 @@ test.describe("Responsive", () => {
       const headers = page.locator("table thead th");
       const visible = await headers.evaluateAll((ths) => ths.filter((th) => (th as HTMLElement).offsetParent !== null).map((th) => th.textContent!.trim()));
       if (vp === "desktop") {
-        expect(visible).toEqual(["Ticket Number", "Ticket Summary", "Category", "Requested Priority", "Current Status", "Last Updated"]);
+        // C-71, ui-spec 12 change 3: IT Priority is its own column beside Requested Priority at lg.
+        expect(visible).toEqual(["Ticket Number", "Ticket Summary", "Category", "Requested Priority", "IT Priority", "Current Status", "Last Updated"]);
       } else {
         expect(visible).toEqual(["Ticket Number", "Ticket Summary", "Current Status", "Last Updated"]); // ui-spec 12.3 at md
       }
     }
   });
 
-  test("RESP-04 at 390 px the toggler opens a panel with both nav items and Change Requester (ui-spec 9)", async ({ page, request }) => {
-    const [a] = await activeRequesters(request);
-    await preselect(page, a.id);
+  test("RESP-04 at 390 px the toggler opens a panel with both nav items and Log Out (ui-spec 9)", async ({ page }) => {
     await page.goto("/tickets");
     const toggler = page.getByRole("button", { name: "Toggle navigation" });
     const banner = page.getByRole("banner");
@@ -283,7 +275,7 @@ test.describe("Responsive", () => {
       await expect(toggler).toBeHidden();
       await expect(banner.getByRole("link", { name: "My Tickets" })).toBeVisible();
       await expect(banner.getByRole("link", { name: "Create Ticket" })).toBeVisible();
-      await expect(banner.getByRole("button", { name: "Change Requester" })).toBeVisible();
+      await expect(banner.getByRole("button", { name: "Log Out" })).toBeVisible();
       return;
     }
     await expect(toggler).toBeVisible();
@@ -292,8 +284,8 @@ test.describe("Responsive", () => {
     await expect(toggler).toHaveAttribute("aria-expanded", "true");
     await expect(banner.getByRole("link", { name: "My Tickets" })).toBeVisible();
     await expect(banner.getByRole("link", { name: "Create Ticket" })).toBeVisible();
-    await expect(banner.getByRole("button", { name: "Change Requester" })).toBeVisible();
-    for (const target of [banner.getByRole("link", { name: "My Tickets" }), banner.getByRole("button", { name: "Change Requester" })]) {
+    await expect(banner.getByRole("button", { name: "Log Out" })).toBeVisible();
+    for (const target of [banner.getByRole("link", { name: "My Tickets" }), banner.getByRole("button", { name: "Log Out" })]) {
       const box = await target.boundingBox();
       expect(box!.height).toBeGreaterThanOrEqual(44); // touch target
     }
@@ -308,19 +300,17 @@ test.describe("Responsive", () => {
       ...["active", "removed", "removal-dialog", "unauthorized"].map((s) => `ticket-detail/detail-${vp}-${s}.png`),
     ];
     const missing = expected.filter((rel) => !fs.existsSync(path.join(ARTIFACTS, rel)) || fs.statSync(path.join(ARTIFACTS, rel)).size === 0);
-    expect(missing, "written by the three *-screenshots.spec.ts files in this directory").toEqual([]);
+    expect(missing, "the Lab 2 evidence set, kept in artifacts/lab-02/").toEqual([]);
   });
 
-  test("RESP-06 tabbing each screen reaches every control, each named and with a visible focus ring (AC-56)", async ({ page, request }) => {
-    const all = await activeRequesters(request);
-    const list = await (await request.get(`${API_URL}/api/tickets?requesterId=${all[0].id}`)).json();
+  test("RESP-06 tabbing each screen reaches every control, each named and with a visible focus ring (AC-56)", async ({ browser, page }) => {
     const vp = test.info().project.name;
 
-    async function traverse(label: string, expectAtLeast: number) {
+    async function traverse(on: Page, label: string, expectAtLeast: number) {
       const seen: string[] = [];
       for (let i = 0; i < 80; i++) {
-        await page.keyboard.press("Tab");
-        const info = await page.evaluate(() => {
+        await on.keyboard.press("Tab");
+        const info = await on.evaluate(() => {
           const el = document.activeElement as HTMLElement | null;
           if (!el || el === document.body) return null;
           const cs = getComputedStyle(el);
@@ -341,17 +331,19 @@ test.describe("Responsive", () => {
       expect(seen.length, `${label}: controls reached`).toBeGreaterThanOrEqual(expectAtLeast);
     }
 
-    await page.goto("/");
-    await expect(page.getByLabel("Development Requester")).toBeEnabled();
-    // Continue is disabled until a value is chosen (BR-16), so choose one first
-    await page.getByLabel("Development Requester").selectOption(String(all[0].id));
-    await page.locator("body").click({ position: { x: 1, y: 1 } });
-    await traverse("Selection", 2);
+    // Login stands where the Lab 2 Selection screen stood.
+    const signedOut = await browser.newContext({ storageState: { cookies: [], origins: [] } });
+    const login = await signedOut.newPage();
+    await login.goto("/");
+    await expect(login.getByRole("button", { name: "Sign In" })).toBeEnabled();
+    await traverse(login, "Login", 3);
+    await signedOut.close();
 
-    await preselect(page, all[0].id);
+    await signIn(page, REQUESTER_A);
+    const list = await ticketsOf(REQUESTER_A);
     await page.goto("/tickets");
     await expect(page.getByRole("link", { name: /^Open TKT-/ }).first()).toBeVisible();
-    await traverse("My Tickets", 8);
+    await traverse(page, "My Tickets", 8);
 
     await page.goto("/tickets/new");
     await expect(page.getByLabel("Category", { exact: false })).toBeEnabled();
@@ -366,16 +358,14 @@ test.describe("Responsive", () => {
     // then traverse the whole screen from the top
     await page.reload();
     await expect(page.getByLabel("Category", { exact: false })).toBeEnabled();
-    await traverse("Create Ticket", 8);
+    await traverse(page, "Create Ticket", 8);
 
     await page.goto(`/tickets/${list.data[0].id}`);
     await expect(page.getByRole("heading", { level: 1, name: /^TKT-/ })).toBeVisible();
-    await traverse("Ticket Detail", 4);
+    await traverse(page, "Ticket Detail", 4);
   });
 
-  test("the Zen Green tokens are what the built CSS paints (ui-spec 2, VIS-01 rows 1-6)", async ({ page, request }) => {
-    const [a] = await activeRequesters(request);
-    await preselect(page, a.id);
+  test("the Zen Green tokens are what the built CSS paints (ui-spec 2, VIS-01 rows 1-6)", async ({ page }) => {
     await page.goto("/tickets/new");
     await expect(page.getByLabel("Category", { exact: false })).toBeEnabled();
 

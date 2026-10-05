@@ -45,6 +45,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => api.onSessionLost(() => setState({ status: "anonymous", sessionEnded: true })), []);
 
+  // The server says a password change is owed: re-read who this is, and the
+  // gate shows Change Password (ui-spec 6.2, BR-19).
+  useEffect(
+    () =>
+      api.onPasswordChangeRequired(() => {
+        api.fetchCurrentUser().then(
+          (user) => user && setState({ status: "authenticated", user }),
+          () => undefined,
+        );
+      }),
+    [],
+  );
+
   const signedIn = useCallback((user: AuthUser) => setState({ status: "authenticated", user }), []);
   const passwordChanged = useCallback((user: AuthUser) => setState({ status: "authenticated", user }), []);
 

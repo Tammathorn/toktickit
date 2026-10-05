@@ -763,7 +763,10 @@ gets 404.
 
 Soft removal only. The row, the file on disk, the reason and `removedAt` are all retained, and
 the Attachment stays listed (`L2 BR-46`, BR-29). Removal frees a slot against the five-active
-limit (`L2 BR-44`).
+limit (`L2 BR-44`). **Carried from Lab 2 (`L2 BR-51`):** removing an already-removed
+Attachment is 410 to the owner, `ATTACHMENT_REMOVED` - the confirmation step of BR-48 makes
+this unreachable from the UI, but the API is not entitled to assume the UI is the only
+caller.
 
 **Response 200** - the updated Attachment metadata with `isRemoved` true.
 
@@ -775,6 +778,7 @@ limit (`L2 BR-44`).
 | 403 | Gate set; or the caller is IT Staff or Administrator |
 | 404 | No such Attachment, or its Ticket belongs to another Requester |
 | 409 | The Attachment's Ticket is `CLOSED` or `CANCELLED`, `TICKET_CLOSED` (BR-108) |
+| 410 | The Attachment is already removed and the caller owns it, `ATTACHMENT_REMOVED` (`L2 BR-51`) |
 | 422 | `removalReason` is empty after trimming, `REMOVAL_REASON_REQUIRED` (`L2 BR-47`) |
 | 500 | Unexpected error |
 
