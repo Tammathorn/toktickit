@@ -180,13 +180,34 @@ documents); I am not recording it as approved, because it was not.
 
 ## 3. Pull Requests I reviewed for my partner
 
-> **To be filled by the author.** No review I gave on a PR in @PAKATO123's repository is
-> recorded here yet. **Do not invent entries** - an empty section is the accurate state on
-> 5 October 2026.
+Read back with `gh api repos/PAKATO123/toktickit/pulls/N/reviews` and `.../issues/N/comments`
+on 5 October 2026. These are the eleven Lab 3 PRs in @PAKATO123's repository
+(`PAKATO123/toktickit`) that I reviewed - the contract PR #39, the nine implementation PRs
+#40-#48, and the cleanup PR #61. Each PR has exactly one review from me; none has an inline
+or conversation comment from me. My review text is quoted verbatim, including its spacing.
+Timestamps are UTC as GitHub records them.
 
-| Partner's PR | My comment | Partner's response | Outcome |
-|---|---|---|---|
-| _none yet_ | | | |
+| Partner's PR | Reviewed | My review (verbatim) | Partner's response | Outcome |
+|---|---|---|---|---|
+| [#39](https://github.com/PAKATO123/toktickit/pull/39) docs(lab-03): add Sprint 3 engineering contract and specification docs | 2026-09-27 14:37:18 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:41:55 into `lab3-staging` |
+| [#40](https://github.com/PAKATO123/toktickit/pull/40) Implemented Feature/lab03 01 schema and migration | 2026-09-24 06:22:37 | `APPROVED` - "Approve" | None | Merged 2026-09-28 08:42:11 into `main` |
+| [#41](https://github.com/PAKATO123/toktickit/pull/41) Implemented Feature/lab03 02 auth backend | 2026-09-27 14:37:06 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:42:25 into `lab3-staging` |
+| [#42](https://github.com/PAKATO123/toktickit/pull/42) Implemented Feature/lab03 03 authorization and requester refactor | 2026-09-27 14:36:54 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:42:42 into `lab3-staging` |
+| [#43](https://github.com/PAKATO123/toktickit/pull/43) Implemented Feature/lab03 04 staff queue and workflow backend | 2026-09-27 14:36:34 | `COMMENTED` - "approve " | None | Merged 2026-09-28 08:46:47 into `lab3-staging` |
+| [#44](https://github.com/PAKATO123/toktickit/pull/44) Implemented Feature/lab03 05 auth UI | 2026-09-27 14:36:22 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:51:08 into `lab3-staging` |
+| [#45](https://github.com/PAKATO123/toktickit/pull/45) Implemented Feature/lab03 06 requester resolution UI | 2026-09-27 14:35:49 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:53:04 into `lab3-staging` |
+| [#46](https://github.com/PAKATO123/toktickit/pull/46) Implemented Feature/lab03 07 staff queue UI | 2026-09-27 14:35:34 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:53:30 into `lab3-staging` |
+| [#47](https://github.com/PAKATO123/toktickit/pull/47) Implemented Feature/lab03 08 staff ticket detail UI | 2026-09-24 06:25:18 | `CHANGES_REQUESTED` - " Request changes — staff cannot open attachments" | @PAKATO123, 2026-09-28 08:05:02: "Will address this in clean up branch" | Merged 2026-09-28 08:55:46 into `lab3-staging`; my review state still reads `CHANGES_REQUESTED` - I did not re-review |
+| [#48](https://github.com/PAKATO123/toktickit/pull/48) Implemented Feature/lab03 09 admin users | 2026-09-24 09:34:40 | `APPROVED` - "Approve" | None | Merged 2026-09-28 08:56:02 into `lab3-staging` |
+| [#61](https://github.com/PAKATO123/toktickit/pull/61) Lab3 post implementation cleanup1 | 2026-09-27 14:36:06 | `APPROVED` - "approve " | None | Merged 2026-09-28 08:58:02 into `lab3-staging` |
+
+Two entries are not what a quick read of the table would suggest:
+
+- **#43** carries review state `COMMENTED`, not `APPROVED`, although the body says
+  "approve ". GitHub does not count it as an approval.
+- **#47** is the only review that asked for a change. The partner replied at 08:05:02 on
+  2026-09-28 that the fix would go in a cleanup branch, and the PR merged at 08:55:46 the
+  same day with my `CHANGES_REQUESTED` review still standing.
 
 ---
 
