@@ -41,7 +41,7 @@ const PUBLIC_ROUTES = new Set([
   "POST /api/auth/login",
 ]);
 
-type Person = { id: number; agent: Agent };
+type Person = { id: number; email: string; agent: Agent };
 let a: Person;
 let b: Person;
 let staff: Person;
@@ -440,6 +440,59 @@ describe("a client-supplied requesterId is ignored", () => {
     };
     walk(path.join(SERVER_DIR, "src"));
     expect(offenders).toEqual([]);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// Administrator user management - api-spec.md section 9 (#43). SEC-11 and
+// SEC-23 arrive here per tests.md, since both name GET /api/users as their
+// subject (SEC-23's success path, SEC-11 absorbing SEC-12).
+// ---------------------------------------------------------------------------
+describe("Administrator user management is Administrator-only (BR-39, #43)", () => {
+  it("SEC-11 IT Staff and Requester -> every user-administration route -> 403, no user data (AC-96, BR-39)", async () => {
+    for (const [who, caller] of [["IT Staff", staff], ["Requester", a]] as const) {
+      const list = await caller.agent.get("/api/users");
+      expect(list.status, `${who} list`).toBe(403);
+      expect(list.body.error.code).toBe("FORBIDDEN_ROLE");
+      expect(Array.isArray(list.body)).toBe(false);
+
+      const create = await caller.agent
+        .post("/api/users")
+        .send({ name: `${TAG} sec11`, email: `sec11-${who.replace(/\s/g, "")}-${Date.now()}@example.test`, role: "REQUESTER", isActive: true, initialPassword: "Whatever#1" });
+      expect(create.status, `${who} create`).toBe(403);
+      expect(create.body.error.code).toBe("FORBIDDEN_ROLE");
+
+      const edit = await caller.agent.patch(`/api/users/${b.id}`).send({ name: `${TAG} renamed` });
+      expect(edit.status, `${who} edit`).toBe(403);
+      expect(edit.body.error.code).toBe("FORBIDDEN_ROLE");
+
+      const reset = await caller.agent.post(`/api/users/${b.id}/initial-password`).send({ initialPassword: "Whatever#1" });
+      expect(reset.status, `${who} reset`).toBe(403);
+      expect(reset.body.error.code).toBe("FORBIDDEN_ROLE");
+    }
+    expect(await prisma.user.count({ where: { email: { contains: "sec11-" } } })).toBe(0);
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: b.id } })).name).not.toContain("renamed");
+  });
+
+  it("SEC-23 no response body on any path carries a password, a passwordHash or a session token (BR-88, FR-70, AC-06)", async () => {
+    const bodies: string[] = [];
+    // The success path named explicitly: GET /api/users builds every row from
+    // the User table, the likeliest place a hash could surface.
+    bodies.push((await admin.agent.get("/api/users")).text);
+    bodies.push((await request(app).get("/api/users")).text); // 401
+    bodies.push((await a.agent.get("/api/users")).text); // 403
+    bodies.push((await admin.agent.patch("/api/users/999999").send({ name: "x" })).text); // 404
+    bodies.push(
+      (await admin.agent.post("/api/users").send({ name: "x", email: a.email, role: "REQUESTER", isActive: true, initialPassword: "Whatever#1" })).text,
+    ); // 409 EMAIL_TAKEN
+    bodies.push((await admin.agent.patch(`/api/users/${admin.id}`).send({ isActive: false })).text); // 422 SELF_DEACTIVATION
+    const spy = vi.spyOn(prisma.user, "findMany").mockRejectedValueOnce(new Error("boom"));
+    bodies.push((await admin.agent.get("/api/users")).text); // forced 500
+    spy.mockRestore();
+
+    const secretPattern = /scrypt\$|passwordHash|tt_session|[0-9a-f]{64}/i;
+    for (const body of bodies) expect(body).not.toMatch(secretPattern);
+    expect((await prisma.user.findUniqueOrThrow({ where: { id: admin.id } })).isActive).toBe(true);
   });
 });
 
