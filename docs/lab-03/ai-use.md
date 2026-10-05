@@ -660,43 +660,21 @@ resolve - only an unapplied technique. The carve-out is gone; `queue-<vp>-empty.
 captured at all three viewports the same way its neighbors already were.
 
 ## 5. My Reflection
-<!-- DRAFT: Tammathorn edits this before merge -->
 
-**The specification agent was most useful when it disagreed with me.** Before writing
-anything, it read the labsheet and the Lab 2 code and found what my own plan had missed:
-the five-value status list hard-coded in three more places, the IT Priority backfill
-breaking four existing tests, queue indexes that could not serve an unscoped queue, and
-two of my own decisions answering the same question two ways. Across sixty-three decision
-rows (C-53 to C-115), the rule that paid off most was the one carried over from Lab 2:
-report a conflict, never resolve it silently.
+**The specification agent helped most when it disagreed with me.** It found gaps my plan
+missed, such as hard-coded status lists and tests the IT Priority backfill would break.
+Its typical failure was inventing rules: a reopenable Closed ticket, then an extra route
+into Change Password in the very next prompt. A separate audit subagent caught both;
+no test could have.
 
-**Its characteristic failure was inventing rules, and writing the failure down did not
-stop it.** The first draft of specification.md made a Closed ticket reopenable with no
-decision behind it. I recorded that here as a defect, and two documents later ui-spec.md
-invented a second route into Change Password in the same way. An audit subagent that had
-not written either document caught both. No test could have caught them, because a test
-only checks what the contract already says.
+**Peer review found what the AI audits missed.** PAKATO asked whether a Closed ticket
+can take comments. Each document was internally consistent, so there was no
+contradiction to detect, only a missing question. It became C-109.
 
-**Peer review found what four AI audits could not.** PAKATO asked whether a Closed ticket
-can still take comments. BR-68 and the status matrix were each internally consistent, so
-there was no contradiction for an audit to detect - only a question nobody had asked. It
-became C-109 and changed five documents. AI audits are good at finding contradictions; a
-human reader is better at finding missing questions.
+**I could not trust the coding agent's own report.** Tests first and audits caught real
+bugs, including a login error page that echoed the password. But the agent silently
+skipped one item of a four-item prompt, and an early E2E test deactivated the seeded
+Administrator and broke other specs. "Verify by evidence" still mattered most.
 
-**The coding agent was fast and mostly careful, but I could not trust its own account of
-what it had done.** Tests first and per-Issue audits caught real defects, including a
-malformed login body that came back as Express's HTML error page quoting the password.
-But it silently skipped one item of a four-item prompt, and I only found out by checking
-the branches on GitHub myself. In #43, its first attempt at the last-Administrator test
-deactivated the seeded Administrator mid-run and broke every other spec's shared session;
-the fix (C-115) was to test the rule through a refusal that changes nothing. "Verify by
-evidence, not by the report" was still the most important rule from Lab 1.
-
-**What I would change.** I stacked nine PRs and asked for review once, so I would never
-wait on it. That kept the work moving, but every review comment now arrives after the
-code built on top of it. Next time I would keep stacks to two or three PRs and ask for
-review as each one opens. I would also write long prompts as numbered checklists and
-confirm each item against the repository before moving on - the real cost of an agent
-was less the tokens it used than the instructions it quietly dropped.
-
-*Drafted with Claude from my notes and the sprint record; edited by me.*
+**Next time** I would keep PR stacks to two or three and ask for review as each opens,
+and write long prompts as numbered checklists checked against the repository.
