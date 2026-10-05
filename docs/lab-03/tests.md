@@ -736,17 +736,31 @@ greyscale are checked by eye, the greyscale ones on greyscale conversions of the
 not duplicated into this document, so the two cannot drift; `ui-spec.md` section 24 is the list
 and this section is where its result is recorded.
 
+Each cell is the number of rows in the group that **pass** at that viewport.
+
 | Group | Rows | D | T | M |
 |---|---|---|---|---|
-| Colour and tokens | 4 | | | |
-| Badges - all four families | 7 | | | |
-| Fields and forms | 6 | | | |
-| Comments and notes | 6 | | | |
-| States | 6 | | | |
-| Layout | 5 | | | |
-| Accessibility | 4 | | | |
-| Naming and absence | 4 | | | |
-| **Total** | **42** | | | |
+| Colour and tokens | 4 | 4 | 4 | 4 |
+| Badges - all four families | 7 | 6 | 5 | 6 |
+| Fields and forms | 6 | 6 | 6 | 6 |
+| Comments and notes | 6 | 4 | 4 | 4 |
+| States | 6 | 2 | 1 | 1 |
+| Layout | 5 | 4 | 4 | 5 |
+| Accessibility | 4 | 1 | 0 | 0 |
+| Naming and absence | 4 | 4 | 4 | 4 |
+| **Total** | **42** | **31** | **28** | **30** |
+
+**Result, recorded 2026-10-05: 27 of 42 rows pass at all three widths; 15 rows fail at one width or
+more - 37 failing cells (D 11, T 14, M 12).** The row-by-row result, with the reason for every
+failure, is `ui-spec.md` section 24. **Five UI defects are open and not fixed** - they are code
+changes, outside a docs-only release: (1) the Queue table clips Current Status, Ticket Owner and
+Last Updated at 1280 px; (2) the User Management table has no Edit column and its header wraps at
+834 px; (3) My Tickets has no IT Priority column at 834 px; (4) the closed / cancelled line renders
+twice on a terminal Ticket; (5) Post Comment and Add Note look identical when disabled. The other ten
+failing rows are rows no capture can show (accessible names, `aria-current`, modal focus) or states
+not captured at 834 / 390 px. The measured rows (colour, overflow, touch targets, focus rings) are
+`artifacts/lab-03/evidence/issue-8/visual-checklist-results.txt` and `visual-measurements.json`; the
+judged rows come from `artifacts/lab-03/screenshots/final/vis/` (28 captures, 2026-10-05).
 
 A row that fails is fixed **in the UI, not in the checklist**. Lab 2's two failures - the 40 px
 touch targets at 390 px, and a focus ring captured before it had painted - were both invisible to
@@ -830,19 +844,33 @@ seed - so the server suite never touches dev data (C-83).
 
 ## 7. Final Results
 
-To be completed on the release branch, from a clean state, after the container is restarted,
-migrations applied and both seeds run - that has not happened yet (C-110: the release PR,
-`lab3-staging` into `main`, opens only after every feature PR has merged). Section 2's own
-per-row `Final` column is filled in Issue #45, from the real runs at the top of each stacked
-feature branch (commit cited per row); this table's suite-level totals wait for the release
-branch specifically, because "Lab 2 count" and "Expected Lab 3 additions" are only meaningful
-once all nine feature branches' tests exist together in one tree.
+Section 2's own per-row `Final` column is filled from the real runs at the top of each stacked
+feature branch (commit cited per row). The suite-level totals below are from the release: **local
+runs on `main` @ `347e25e989d74e3d12cf9df13bfd93f62ec5bbf4`**, the merge commit of PR #59
+(`lab3-staging` into `main`), on 2026-10-05 at about 16:12 UTC. **The repository has no CI** - there
+is no `.github/` directory and no GitHub Actions workflow or run - so these are local runs, the same
+as Lab 2, and no Actions page exists to cite. The container `toktickit-db` was already running (it
+was not restarted); `prisma migrate deploy` reported no pending migrations, and `prisma:seed` and
+`prisma/seed-demo.ts` were run (both idempotent; the demo seed created 0 new Tickets). The server
+suite ran against `toktickit_test`; Playwright ran against the development database with the API on
+`:3000` and the client on `:5173`. The full terminal output, with the command, date and commit
+hash at the top of each file, is in `artifacts/lab-03/test-output/`.
 
 | Suite | Command | Lab 2 | Expected Lab 3 | Actual | Result |
 |---|---|---|---|---|---|
-| Server | `cd server && npm test` | 86 | 83 + Lab 3 additions | | |
-| Client | `cd client && npm test` | 48 | 38 + Lab 3 additions | | |
-| Playwright | `npm run test:e2e` | 126 (42 x 3) | 108 + Lab 3 additions | | |
+| Server | `cd server && npm test` | 86 | 83 + Lab 3 additions | 297 passed, 15 files | Pass - `test-output/main-server.txt` |
+| Client | `cd client && npm test` | 48 | 38 + Lab 3 additions | 119 passed, 10 files | Pass - `test-output/main-client.txt` |
+| Playwright, Lab 3 specs | `npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile` | - | - | 92 passed, 28 skipped, 0 failed | Pass - `test-output/main-e2e.txt` |
+| Playwright, whole suite | `npm run test:e2e` | 126 (42 x 3) | 108 + Lab 3 additions | 200 passed, 28 skipped, 0 failed | Pass - `test-output/main-e2e-full.txt` |
+
+**Notes on the counts.** E2E-07 passes at desktop, tablet and mobile; it was the three failures on
+`main` at `fc29ca4` (after #55), fixed by #56 and #57 and merged to `main` by #59. The Playwright
+whole-suite figure is the Lab 2 specs' 108 plus the Lab 3 specs' 92, which includes the three role
+sign-ins of the `setup` project. The 28 skipped are the viewport-gated `test.skip` calls in the
+specs (the desktop-only functional flows and evidence captures, and the single-viewport RESP checks)
+- none is a disabled test, and none was added to make a run pass. The server and client figures
+equal the run on `lab3-staging` at `f523f49` (`artifacts/lab-03/evidence/staging/`); the client is
+one test above the 118 on `main` at `fc29ca4`, the regression test #57 added for E2E-07's cause.
 
 **The evidence is passing terminal output**, pasted here, not a claim that the tests pass
 (`CLAUDE.md`). Every count change against the Lab 2 figures must match section 4.3, and MIG-23

@@ -1,0 +1,3 @@
+Browser: IT Staff opened /users -> forbidden screen; /api/users requested by the page: false
+GET /api/users as IT Staff -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+GET /api/users as Requester -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}

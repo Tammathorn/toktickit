@@ -1,0 +1,21 @@
+Command: DATABASE_URL=<toktickit_evidence> npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile --workers=1 --reporter=list
+Date: 2026-10-05 13:43 UTC
+Commit: fc29ca4310bc21e69c0d35df3645f56496bcf078 (main, after merge of PR #55)
+Database: toktickit_evidence, dropped, recreated, migrate deploy + prisma:seed immediately before the run (11 users / 9 tickets at seed time)
+Result: RED - 3 failed (E2E-07 on desktop, tablet, mobile), 28 skipped, 89 passed. Failure list and summary only:
+
+  1) [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) 
+    Test timeout of 30000ms exceeded.
+    Error: locator.click: Test timeout of 30000ms exceeded.
+      - waiting for getByRole('button', { name: 'Clear filters' })
+  2) [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) 
+    Test timeout of 30000ms exceeded.
+    Error: locator.click: Test timeout of 30000ms exceeded.
+      - waiting for getByRole('button', { name: 'Clear filters' })
+  3) [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) 
+    Test timeout of 30000ms exceeded.
+    Error: locator.click: Test timeout of 30000ms exceeded.
+      - waiting for getByRole('button', { name: 'Clear filters' })
+  3 failed
+  28 skipped
+  89 passed (2.6m)

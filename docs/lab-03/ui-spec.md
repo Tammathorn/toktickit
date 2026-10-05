@@ -1297,71 +1297,99 @@ colour, a height, a width or a count are measured in the browser at each viewpor
 legibility, clipping, overlap and greyscale are checked by eye, the greyscale ones on greyscale
 conversions.
 
+**Result, recorded 2026-10-05: 27 of 42 rows pass at all three widths; 15 rows fail at one width
+or more (37 failing cells: D 11, T 14, M 12).** `[x]` marks a row that passes at D 1280, T 834 and
+M 390. A row left `[ ]` failed at the width or widths named after **Fail**, with the reason. A row
+no capture could show is a Fail, not a Pass. The measured rows (colour, overflow, touch targets,
+focus rings) come from `artifacts/lab-03/evidence/issue-8/visual-checklist-results.txt` and
+`visual-measurements.json`; the rest were judged by eye from the 28 captures in
+`artifacts/lab-03/screenshots/final/vis/` and the Part 5 to 9 sets. The per-group totals are in
+`tests.md` section 5.
+
+**Five UI defects are open - found by this checklist and not fixed**, because a fix is a code
+change, which a docs-only release does not make:
+
+1. **Queue table clipped at 1280 px.** Current Status, Ticket Owner and Last Updated are cut off by
+   `overflow: hidden` (Layout, D; and Badges row 1, D, since Waiting for Requester and Reopened
+   appear only in that column).
+2. **User Management at 834 px.** The table has no Edit column and the Administrator header wraps
+   to three lines (Layout, T).
+3. **My Tickets at 834 px.** The table has no IT Priority column (Badges row 3, T).
+4. **Closed-ticket line renders twice** on a Closed or Cancelled Ticket - once in the operations
+   card and once below Internal Notes, at all three widths (Comments and notes row 6).
+5. **Post Comment and Add Note look identical when disabled** - the same grey button, so primary
+   against secondary is not visible (Comments and notes row 1, all three widths).
+
+The other 10 failing rows are not defects in what a capture shows; they are rows no capture can
+show (accessible names, `aria-current`, modal focus) or states not captured at 834 / 390 px
+(inactive owner, claim conflict, Not found, empty My Tickets and User Management, loading and
+failure of detail and User Management, the Requester's view of a terminal Ticket).
+
 **Colour and tokens**
 
-- [ ] The four fixed hex values of section 2.1 appear unchanged in the built CSS
-- [ ] `--tk-surface` is `#FFFFFF` and `--tk-text` is `#1F2A24`
-- [ ] The three Lab 3 tokens of section 2.4 are present and used only where section 2.4 says
-- [ ] No component hard-codes a hex outside sections 2.1 to 2.4
+- [x] The four fixed hex values of section 2.1 appear unchanged in the built CSS
+- [x] `--tk-surface` is `#FFFFFF` and `--tk-text` is `#1F2A24`
+- [x] The three Lab 3 tokens of section 2.4 are present and used only where section 2.4 says
+- [x] No component hard-codes a hex outside sections 2.1 to 2.4
 
 **Badges - all four families**
 
-- [ ] All eight Current Status values render with the section 8.2 treatment, each as text
-- [ ] Priority badges are pills; status and role badges are square-cornered
-- [ ] The IT Priority badge renders on **every** Ticket, on every screen that shows one
-- [ ] All three Role values render with the section 8.4 treatment
-- [ ] `Requester says resolved` renders as a marker, never in the status column
-- [ ] `(inactive)` renders inline after an owner's name, not as a badge
-- [ ] No badge conveys its meaning by colour alone, checked in greyscale
+- [ ] All eight Current Status values render with the section 8.2 treatment, each as text - **Fail D**: Waiting for Requester and Reopened appear only in the Queue's Current Status column, which is clipped at 1280 (defect 1); T and M pass
+- [x] Priority badges are pills; status and role badges are square-cornered
+- [ ] The IT Priority badge renders on **every** Ticket, on every screen that shows one - **Fail T**: the My Tickets table at 834 has no IT Priority column (defect 3); D and M pass
+- [x] All three Role values render with the section 8.4 treatment
+- [x] `Requester says resolved` renders as a marker, never in the status column
+- [ ] `(inactive)` renders inline after an owner's name, not as a badge - **Fail T, M**: no capture of an inactive owner at 834 or 390; D passes
+- [x] No badge conveys its meaning by colour alone, checked in greyscale
 
 **Fields and forms**
 
-- [ ] Read-only fields are visibly shaded and distinguishable from editable ones in greyscale
-- [ ] On IT Staff Ticket Detail the read-only card and the operations card are visibly different groups in greyscale
-- [ ] Every single-line control shares one height per band; the composers and Description are taller
-- [ ] Every required field shows the red asterisk
-- [ ] Every validation message sits directly below its own control, never only at the top
-- [ ] The password rules are visible before typing on Change Password and on Administrator create
+- [x] Read-only fields are visibly shaded and distinguishable from editable ones in greyscale
+- [x] On IT Staff Ticket Detail the read-only card and the operations card are visibly different groups in greyscale
+- [x] Every single-line control shares one height per band; the composers and Description are taller
+- [x] Every required field shows the red asterisk
+- [x] Every validation message sits directly below its own control, never only at the top
+- [x] The password rules are visible before typing on Change Password and on Administrator create
 
 **Comments and notes**
 
-- [ ] The Internal Notes panel differs from Public Comments on all seven counts of section 19
-- [ ] The `Not visible to the Requester.` label is always present, never a tooltip or hover
-- [ ] The distinction survives greyscale conversion
-- [ ] No Internal Note content, count or placeholder appears on any Requester screen
-- [ ] Neither list offers an edit or a delete control
-- [ ] On a Closed and on a Cancelled Ticket neither composer renders, both lists stay readable, and the closed-ticket line appears once
+- [ ] The Internal Notes panel differs from Public Comments on all seven counts of section 19 - **Fail D, T, M**: 6 of 7 seen; Post Comment and Add Note render as the same disabled grey button, so primary against secondary is not visible (defect 5)
+- [x] The `Not visible to the Requester.` label is always present, never a tooltip or hover
+- [x] The distinction survives greyscale conversion
+- [x] No Internal Note content, count or placeholder appears on any Requester screen
+- [x] Neither list offers an edit or a delete control
+- [ ] On a Closed and on a Cancelled Ticket neither composer renders, both lists stay readable, and the closed-ticket line appears once - **Fail D, T, M**: the closed / cancelled line appears twice, in the operations card and below Internal Notes (defect 4)
 
 **States**
 
-- [ ] Every `Y` cell of the section 20 matrix renders as section 20.1 specifies
-- [ ] Empty and no-results differ in heading, body, icon and action, on all three list screens
-- [ ] Forbidden and Not found are different components
-- [ ] Success carries an icon and a sentence, never colour alone
-- [ ] The claim conflict renders inline in the owner group, with the view refreshed
-- [ ] On a terminal Ticket the operations card renders no status, owner or IT Priority control, and no attachment upload or Remove control renders on any screen
+- [ ] Every `Y` cell of the section 20 matrix renders as section 20.1 specifies - **Fail D, T, M**: not every cell is captured (no Not found state on any screen); at 834 and 390 the loading and failure states of detail and User Management are not captured
+- [ ] Empty and no-results differ in heading, body, icon and action, on all three list screens - **Fail D, T, M**: only the Queue pair is captured; My Tickets and User Management empty and no-results are not
+- [ ] Forbidden and Not found are different components - **Fail D, T, M**: Not found was never captured
+- [x] Success carries an icon and a sentence, never colour alone
+- [ ] The claim conflict renders inline in the owner group, with the view refreshed - **Fail T, M**: not captured at 834 or 390; D passes
+- [ ] On a terminal Ticket the operations card renders no status, owner or IT Priority control, and no attachment upload or Remove control renders on any screen - **Fail D, T, M**: the staff side passes; the Requester's view of a terminal Ticket is not captured
 
 **Layout at 1280, 834 and 390 px**
 
-- [ ] No clipped label, no overlapping message, no hidden or unreachable control
-- [ ] No horizontal page scrolling
-- [ ] The Queue renders a table at `lg`, a table with a second line at `md`, and cards below
-- [ ] User Management renders cards below `md`
-- [ ] Touch targets are at least 44 px below `md`
+- [ ] No clipped label, no overlapping message, no hidden or unreachable control - **Fail D, T**: the Queue table clips Current Status, Ticket Owner and Last Updated at 1280 (defect 1); the User Management table has no Edit column at 834 (defect 2); M passes
+- [x] No horizontal page scrolling
+- [x] The Queue renders a table at `lg`, a table with a second line at `md`, and cards below
+- [x] User Management renders cards below `md`
+- [x] Touch targets are at least 44 px below `md`
 
 **Accessibility**
 
-- [ ] Every interactive control is tab-reachable with a visible focus ring
-- [ ] Every control has an accessible name
-- [ ] The active nav item carries weight, an underline and `aria-current`
-- [ ] Every modal traps focus and restores it on close
+- [ ] Every interactive control is tab-reachable with a visible focus ring - **Fail T, M**: measured at 1280 only (12 Tab hops, 0 without a ring); not measured at 834 or 390
+- [ ] Every control has an accessible name - **Fail D, T, M**: cannot be judged from a screenshot
+- [ ] The active nav item carries weight, an underline and `aria-current` - **Fail D, T, M**: weight and underline are seen; `aria-current` is not visible in a capture
+- [ ] Every modal traps focus and restores it on close - **Fail D, T, M**: cannot be judged from a screenshot
 
 **Naming and absence**
 
-- [ ] The strings `Development Requester` and `Change Requester` appear nowhere in the built client
-- [ ] The product is spelled `TokTickIT` in every heading, title and label
-- [ ] Glossary spellings are used verbatim: `IT Staff`, `Administrator`, `Ticket Owner`, `IT Priority`, `Public Comment`, `Internal Note`, `Initial Password`
-- [ ] No Resolution Summary, Service Actions tab, Actions Taken field, SLA indicator or escalation control appears on any screen
+- [x] The strings `Development Requester` and `Change Requester` appear nowhere in the built client
+- [x] The product is spelled `TokTickIT` in every heading, title and label
+- [x] Glossary spellings are used verbatim: `IT Staff`, `Administrator`, `Ticket Owner`, `IT Priority`, `Public Comment`, `Internal Note`, `Initial Password`
+- [x] No Resolution Summary, Service Actions tab, Actions Taken field, SLA indicator or escalation control appears on any screen
 
 ---
 

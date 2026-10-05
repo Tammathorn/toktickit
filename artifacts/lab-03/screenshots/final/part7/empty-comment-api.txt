@@ -1,0 +1,1 @@
+POST /api/tickets/23/public-comments {"body":"   "} as IT Staff -> 400 {"error":{"code":"VALIDATION_FAILED","message":"Some fields need attention.","fields":{"body":"A comment cannot be empty and must be 2000 characters or fewer."}}}

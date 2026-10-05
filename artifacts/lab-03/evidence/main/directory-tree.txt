@@ -1,0 +1,114 @@
+Command: git ls-files  (tracked files on main, directories deeper than 3 levels collapsed to counts)
+Date: 2026-10-05
+Commit: fc29ca4310bc21e69c0d35df3645f56496bcf078 (main)
+Total tracked files: 496
+
+toktickit/
+|-- artifacts/
+|   |-- lab-02/
+|   |   |-- evidence/  (51 files)
+|   |   |-- screenshots/  (96 files)
+|   |   |-- evidence.md
+|   |   `-- report-lab02.md
+|   `-- lab-03/
+|       |-- evidence/  (48 files)
+|       |-- migration/  (9 files)
+|       |-- screenshots/  (142 files)
+|       |-- evidence.md
+|       `-- report-lab03.md
+|-- client/
+|   |-- src/
+|   |   |-- auth/  (3 files)
+|   |   |-- components/  (7 files)
+|   |   |-- pages/  (9 files)
+|   |   |-- App.tsx
+|   |   |-- api.ts
+|   |   |-- format.ts
+|   |   |-- main.tsx
+|   |   |-- router.tsx
+|   |   |-- theme.css
+|   |   |-- useMediaQuery.ts
+|   |   |-- validation.ts
+|   |   `-- vite-env.d.ts
+|   |-- tests/
+|   |   |-- lab-01/  (1 files)
+|   |   |-- lab-02/  (4 files)
+|   |   |-- lab-03/  (5 files)
+|   |   |-- support/  (1 files)
+|   |   |-- types/  (1 files)
+|   |   `-- setup.ts
+|   |-- .env.example
+|   |-- index.html
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- tsconfig.json
+|   `-- vite.config.ts
+|-- docs/
+|   |-- lab-01/
+|   |   |-- spec/  (3 files)
+|   |   |-- ai_use.md
+|   |   |-- reviewer.md
+|   |   `-- tests.md
+|   |-- lab-02/
+|   |   |-- ai-use.md
+|   |   |-- api-spec.md
+|   |   |-- decisions.md
+|   |   |-- handoff.md
+|   |   |-- reviewer.md
+|   |   |-- specification.md
+|   |   |-- tests.md
+|   |   `-- ui-spec.md
+|   `-- lab-03/
+|       |-- ai-use.md
+|       |-- api-spec.md
+|       |-- decisions.md
+|       |-- handoff.md
+|       |-- phase1-analysis.md
+|       |-- reviewer.md
+|       |-- specification.md
+|       |-- tests.md
+|       `-- ui-spec.md
+|-- e2e/
+|   |-- lab-02/
+|   |   |-- create-ticket-screenshots.spec.ts
+|   |   |-- my-tickets-screenshots.spec.ts
+|   |   |-- requester-ticket-flow.spec.ts
+|   |   `-- ticket-detail-screenshots.spec.ts
+|   |-- lab-03/
+|   |   |-- authentication.spec.ts
+|   |   |-- staff-ticket-flow.spec.ts
+|   |   `-- user-administration.spec.ts
+|   |-- support/
+|   |   `-- auth.ts
+|   `-- auth.setup.ts
+|-- server/
+|   |-- prisma/
+|   |   |-- migrations/  (7 files)
+|   |   |-- schema.prisma
+|   |   |-- seed-demo.ts
+|   |   `-- seed.ts
+|   |-- src/
+|   |   |-- lib/  (16 files)
+|   |   |-- middleware/  (1 files)
+|   |   |-- routes/  (6 files)
+|   |   |-- seed/  (2 files)
+|   |   |-- app.ts
+|   |   |-- index.ts
+|   |   `-- prisma.ts
+|   |-- tests/
+|   |   |-- lab-01/  (2 files)
+|   |   |-- lab-02/  (6 files)
+|   |   |-- lab-03/  (7 files)
+|   |   |-- support/  (2 files)
+|   |   `-- global-setup.ts
+|   |-- .env.example
+|   |-- package-lock.json
+|   |-- package.json
+|   |-- tsconfig.json
+|   `-- vitest.config.ts
+|-- .gitignore
+|-- CLAUDE.md
+|-- README.md
+|-- package-lock.json
+|-- package.json
+`-- playwright.config.ts

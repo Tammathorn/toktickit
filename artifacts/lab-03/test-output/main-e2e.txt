@@ -1,0 +1,203 @@
+Command: npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile   (Lab 3 specs, 3 viewports, dev servers on :3000/:5173)
+Date:    2026-10-05 16:16 UTC
+Commit:  347e25e989d74e3d12cf9df13bfd93f62ec5bbf4 (main, after merge of PR #59, lab3-staging -> main)
+Note:    local run - the repository has no CI workflow; no GitHub Actions run exists.
+
+
+Running 120 tests using 11 workers
+
+(node:51656) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:33592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:44192) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (216ms)
+  ✓    3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (214ms)
+  ✓    2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (218ms)
+(node:28184) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:26836) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48920) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:10592) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:30132) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51176) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:28776) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7388) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17568) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:18036) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:16840) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓    5 [desktop] › e2e\lab-03\authentication.spec.ts:89:5 › Login safe failure: a network failure shows the INTERNAL_ERROR banner with Retry, nothing leaked (BR-89) (1.2s)
+  ✓   13 [desktop] › e2e\lab-03\authentication.spec.ts:252:5 › a role reaching another role's address sees the Forbidden state inside the shell (FR-24, ui-spec 20.1) (1.1s)
+  ✓   11 [desktop] › e2e\lab-03\authentication.spec.ts:238:5 › E2E-06 after signing in, localStorage and sessionStorage hold no identity in the real browser (AC-34, FR-11) (1.0s)
+  ✓    9 [desktop] › e2e\lab-03\authentication.spec.ts:211:5 › E2E-01 a Requester signs in at the root, lands on My Tickets, and the shell shows their name and Role badge (AC-01) (1.1s)
+  ✓    8 [desktop] › e2e\lab-03\authentication.spec.ts:71:5 › Login busy state: Signing in…, button and fields disabled while the real request is in flight (FR-01) (1.3s)
+  ✓    4 [desktop] › e2e\lab-03\authentication.spec.ts:47:5 › E2E-02 Login: validation, a wrong password gets the generic message, an inactive account its own (AC-05, AC-08) (1.9s)
+  ✓    6 [desktop] › e2e\lab-03\authentication.spec.ts:140:5 › E2E-04 the shell shows who is signed in; after Log Out a bookmarked URL, Back and the old cookie are all refused (AC-17, FR-07) (2.3s)
+  ✓   14 [desktop] › e2e\lab-03\authentication.spec.ts:260:5 › RESP-07 at 390 px the toggler opens a panel with exactly the role's destinations, the name, the Role badge and Log Out (ui-spec 9.1) (2.2s)
+  ✓   18 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:173:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81) (1.1s)
+  ✓   20 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:226:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97) (523ms)
+  ✓   16 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:102:7 › IT Staff Ticket Detail flow › E2E-10 the lost claim race, then Reassign to another eligible user (FR-44, AC-71, AC-72, FR-45) (1.4s)
+  -   25 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:329:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68)
+  ✓   15 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:71:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109) (1.8s)
+  ✓   10 [desktop] › e2e\lab-03\authentication.spec.ts:220:5 › E2E-05 each role signs in and sees exactly its own destinations, landing on its own screen (AC-31..AC-33) (2.9s)
+  ✓   24 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:320:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68) (529ms)
+  ✓   12 [desktop] › e2e\lab-03\authentication.spec.ts:287:5 › RESP-08 tabbing Login, the shell and the Forbidden state reaches every control, each named with a visible focus ring (AC-106) (3.0s)
+  ✓   22 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:307:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53) (888ms)
+  -   31 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:467:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108)
+  ✓   28 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:406:7 › IT Staff Ticket Detail flow › queue-<vp>-empty: the true Empty state, no filter active (AC-69, FR-41, L2 C-28) (496ms)
+  ✓   21 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:241:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89) (1.2s)
+  ✓   27 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:399:7 › IT Staff Ticket Detail flow › E2E-08 no-results in the browser (AC-69, FR-41) (595ms)
+  ✓   17 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:133:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80) (2.2s)
+  ✓   19 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:194:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107) (2.1s)
+  -   36 [desktop] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table
+  ✓   23 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:268:7 › IT Staff Ticket Detail flow › E2E-17 an attachment uploaded by the Requester is still listed and downloadable on the authenticated identity, and staff can download it with no upload or Remove control (FR-25, BR-91, C-103) (1.3s)
+  ✓   29 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:430:7 › IT Staff Ticket Detail flow › queue-<vp>-loading and queue-<vp>-failure: the busy state and a safe failure on the Queue (FR-68, BR-89) (897ms)
+  ✓   30 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:455:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile (642ms)
+  ✓    7 [desktop] › e2e\lab-03\authentication.spec.ts:100:5 › E2E-03 the first-login account meets only Change Password, cannot leave it by URL, changes it, and goes on (AC-02, AC-86) (4.3s)
+  ✓   32 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:486:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-14/E2E-16 an Internal Note and the owner's email never reach the Requester (AC-54, AC-04, AC-115, BR-100) (1.0s)
+  ✓   41 [desktop] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (522ms)
+  ✓   39 [desktop] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92) (1.0s)
+  ✓   34 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:557:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-26 a Closed Ticket in the Requester's browser: read-only, and a direct POST still answers 409 (AC-118, BR-108, C-109) (1.3s)
+  ✓   38 [desktop] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (1.5s)
+  ✓   35 [desktop] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82) (1.6s)
+(node:29644) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:15596) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   37 [desktop] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83) (1.8s)
+  ✓   40 [desktop] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94) (1.5s)
+  ✓   33 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:522:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-15 the resolution round trip: Requester reports it, status is unchanged, staff see it and resolve, and it clears (AC-55, AC-59) (2.0s)
+(node:25672) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21716) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   42 [desktop] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91) (1.9s)
+(node:26860) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:11724) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   26 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) (3.7s)
+(node:14684) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   43 [tablet] › e2e\lab-03\authentication.spec.ts:71:5 › Login busy state: Signing in…, button and fields disabled while the real request is in flight (FR-01) (1.4s)
+  ✓   45 [tablet] › e2e\lab-03\authentication.spec.ts:89:5 › Login safe failure: a network failure shows the INTERNAL_ERROR banner with Retry, nothing leaked (BR-89) (1.2s)
+  ✓   47 [tablet] › e2e\lab-03\authentication.spec.ts:211:5 › E2E-01 a Requester signs in at the root, lands on My Tickets, and the shell shows their name and Role badge (AC-01) (1.0s)
+  -   52 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:71:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109)
+  -   53 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:102:7 › IT Staff Ticket Detail flow › E2E-10 the lost claim race, then Reassign to another eligible user (FR-44, AC-71, AC-72, FR-45)
+  -   54 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:173:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81)
+  -   55 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:133:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80)
+(node:31848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -   56 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:194:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107)
+  ✓   44 [tablet] › e2e\lab-03\authentication.spec.ts:47:5 › E2E-02 Login: validation, a wrong password gets the generic message, an inactive account its own (AC-05, AC-08) (1.9s)
+  -   58 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:241:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89)
+  ✓   49 [tablet] › e2e\lab-03\authentication.spec.ts:238:5 › E2E-06 after signing in, localStorage and sessionStorage hold no identity in the real browser (AC-34, FR-11) (897ms)
+(node:50940) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   51 [tablet] › e2e\lab-03\authentication.spec.ts:252:5 › a role reaching another role's address sees the Forbidden state inside the shell (FR-24, ui-spec 20.1) (801ms)
+  -   59 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:268:7 › IT Staff Ticket Detail flow › E2E-17 an attachment uploaded by the Requester is still listed and downloadable on the authenticated identity, and staff can download it with no upload or Remove control (FR-25, BR-91, C-103)
+  -   61 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:307:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53)
+  -   64 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:329:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68)
+  ✓   63 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:399:7 › IT Staff Ticket Detail flow › E2E-08 no-results in the browser (AC-69, FR-41) (717ms)
+  ✓   60 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:320:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68) (838ms)
+  ✓   57 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:226:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97) (1.0s)
+  ✓   67 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:406:7 › IT Staff Ticket Detail flow › queue-<vp>-empty: the true Empty state, no filter active (AC-69, FR-41, L2 C-28) (743ms)
+  ✓   48 [tablet] › e2e\lab-03\authentication.spec.ts:140:5 › E2E-04 the shell shows who is signed in; after Log Out a bookmarked URL, Back and the old cookie are all refused (AC-17, FR-07) (2.4s)
+  ✓   69 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:455:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile (381ms)
+  ✓   70 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:467:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108) (517ms)
+  -   75 [tablet] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table
+  ✓   68 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:430:7 › IT Staff Ticket Detail flow › queue-<vp>-loading and queue-<vp>-failure: the busy state and a safe failure on the Queue (FR-68, BR-89) (1.3s)
+  -   76 [tablet] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83)
+  ✓   46 [tablet] › e2e\lab-03\authentication.spec.ts:100:5 › E2E-03 the first-login account meets only Change Password, cannot leave it by URL, changes it, and goes on (AC-02, AC-86) (3.6s)
+  ✓   50 [tablet] › e2e\lab-03\authentication.spec.ts:220:5 › E2E-05 each role signs in and sees exactly its own destinations, landing on its own screen (AC-31..AC-33) (3.0s)
+  ✓   73 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:557:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-26 a Closed Ticket in the Requester's browser: read-only, and a direct POST still answers 409 (AC-118, BR-108, C-109) (1.1s)
+  ✓   62 [tablet] › e2e\lab-03\authentication.spec.ts:260:5 › RESP-07 at 390 px the toggler opens a panel with exactly the role's destinations, the name, the Role badge and Log Out (ui-spec 9.1) (2.0s)
+  ✓   71 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:486:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-14/E2E-16 an Internal Note and the owner's email never reach the Requester (AC-54, AC-04, AC-115, BR-100) (1.6s)
+  ✓   78 [tablet] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92) (989ms)
+  ✓   80 [tablet] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (469ms)
+  ✓   74 [tablet] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82) (1.8s)
+  ✓   77 [tablet] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (1.5s)
+(node:50320) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   66 [tablet] › e2e\lab-03\authentication.spec.ts:287:5 › RESP-08 tabbing Login, the shell and the Forbidden state reaches every control, each named with a visible focus ring (AC-106) (2.7s)
+  ✓   72 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:522:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-15 the resolution round trip: Requester reports it, status is unchanged, staff see it and resolve, and it clears (AC-55, AC-59) (2.3s)
+(node:44812) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   79 [tablet] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94) (1.3s)
+(node:23956) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27260) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:47512) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:50216) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17080) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:48488) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:39060) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   81 [tablet] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91) (2.2s)
+  ✓   83 [mobile] › e2e\lab-03\authentication.spec.ts:71:5 › Login busy state: Signing in…, button and fields disabled while the real request is in flight (FR-01) (974ms)
+  ✓   85 [mobile] › e2e\lab-03\authentication.spec.ts:89:5 › Login safe failure: a network failure shows the INTERNAL_ERROR banner with Retry, nothing leaked (BR-89) (837ms)
+  ✓   65 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) (4.8s)
+  -   92 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:71:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109)
+  ✓   82 [mobile] › e2e\lab-03\authentication.spec.ts:47:5 › E2E-02 Login: validation, a wrong password gets the generic message, an inactive account its own (AC-05, AC-08) (1.7s)
+  -   93 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:133:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80)
+  -   94 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:173:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81)
+  ✓   87 [mobile] › e2e\lab-03\authentication.spec.ts:211:5 › E2E-01 a Requester signs in at the root, lands on My Tickets, and the shell shows their name and Role badge (AC-01) (977ms)
+  -   95 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:194:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107)
+  -   97 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:268:7 › IT Staff Ticket Detail flow › E2E-17 an attachment uploaded by the Requester is still listed and downloadable on the authenticated identity, and staff can download it with no upload or Remove control (FR-25, BR-91, C-103)
+  ✓   89 [mobile] › e2e\lab-03\authentication.spec.ts:238:5 › E2E-06 after signing in, localStorage and sessionStorage hold no identity in the real browser (AC-34, FR-11) (799ms)
+  -   98 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:241:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89)
+  -   99 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:307:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53)
+  ✓   90 [mobile] › e2e\lab-03\authentication.spec.ts:252:5 › a role reaching another role's address sees the Forbidden state inside the shell (FR-24, ui-spec 20.1) (778ms)
+(node:38016) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:49968) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   96 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:226:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97) (782ms)
+  ✓  100 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:320:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68) (831ms)
+  ✓   86 [mobile] › e2e\lab-03\authentication.spec.ts:140:5 › E2E-04 the shell shows who is signed in; after Log Out a bookmarked URL, Back and the old cookie are all refused (AC-17, FR-07) (2.1s)
+  ✓  103 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:399:7 › IT Staff Ticket Detail flow › E2E-08 no-results in the browser (AC-69, FR-41) (729ms)
+  -  105 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:102:7 › IT Staff Ticket Detail flow › E2E-10 the lost claim race, then Reassign to another eligible user (FR-44, AC-71, AC-72, FR-45)
+  -  108 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:467:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108)
+  ✓  106 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:406:7 › IT Staff Ticket Detail flow › queue-<vp>-empty: the true Empty state, no filter active (AC-69, FR-41, L2 C-28) (596ms)
+  ✓  101 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:329:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68) (1.2s)
+  -  113 [mobile] › e2e\lab-03\user-administration.spec.ts:46:7 › User Management - list and navigation › E2E-19 the Administrator user list renders the full LS 8.5 list (AC-82)
+  ✓   91 [mobile] › e2e\lab-03\authentication.spec.ts:287:5 › RESP-08 tabbing Login, the shell and the Forbidden state reaches every control, each named with a visible focus ring (AC-106) (2.3s)
+  ✓  109 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:455:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile (433ms)
+  -  115 [mobile] › e2e\lab-03\user-administration.spec.ts:81:7 › User Management - list and navigation › E2E-20 create a user and use it: an @e2e.test account signs in and meets Change Password (AC-85, AC-86, C-83)
+  -  117 [mobile] › e2e\lab-03\user-administration.spec.ts:116:7 › User Management - list and navigation › E2E-22 the Administrator's own Status control is disabled with its explanation (AC-92)
+  -  118 [mobile] › e2e\lab-03\user-administration.spec.ts:127:7 › User Management - list and navigation › E2E-23 with one active Administrator, a self role change is refused with the banner (AC-93, AC-94)
+  ✓  114 [mobile] › e2e\lab-03\user-administration.spec.ts:71:7 › User Management - list and navigation › RESP-05 at 390px the user list renders cards and no table (784ms)
+  ✓   88 [mobile] › e2e\lab-03\authentication.spec.ts:220:5 › E2E-05 each role signs in and sees exactly its own destinations, landing on its own screen (AC-31..AC-33) (3.3s)
+  ✓  107 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:430:7 › IT Staff Ticket Detail flow › queue-<vp>-loading and queue-<vp>-failure: the busy state and a safe failure on the Queue (FR-68, BR-89) (1.4s)
+  ✓  119 [mobile] › e2e\lab-03\user-administration.spec.ts:169:7 › User Management - list and navigation › E2E-24 a non-Administrator sees the forbidden state and fetches no user data (AC-96) (479ms)
+  -  120 [mobile] › e2e\lab-03\user-administration.spec.ts:181:7 › User Management - list and navigation › E2E-25 edit and reset: the four fields save, and a new initial password ends the user's session (AC-89, AC-91)
+  ✓  110 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:486:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-14/E2E-16 an Internal Note and the owner's email never reach the Requester (AC-54, AC-04, AC-115, BR-100) (1.2s)
+  ✓  112 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:557:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-26 a Closed Ticket in the Requester's browser: read-only, and a direct POST still answers 409 (AC-118, BR-108, C-109) (1.3s)
+  ✓   84 [mobile] › e2e\lab-03\authentication.spec.ts:100:5 › E2E-03 the first-login account meets only Change Password, cannot leave it by URL, changes it, and goes on (AC-02, AC-86) (4.2s)
+  ✓  116 [mobile] › e2e\lab-03\user-administration.spec.ts:101:7 › User Management - list and navigation › E2E-21 a duplicate email is rejected at the Email Address field (AC-87) (1.3s)
+  ✓  111 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:522:7 › Requester visibility, the resolution round trip, and a closed Ticket › E2E-15 the resolution round trip: Requester reports it, status is unchanged, staff see it and resolve, and it clears (AC-55, AC-59) (1.7s)
+  ✓  104 [mobile] › e2e\lab-03\authentication.spec.ts:260:5 › RESP-07 at 390 px the toggler opens a panel with exactly the role's destinations, the name, the Role badge and Log Out (ui-spec 9.1) (2.2s)
+  ✓  102 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and opening a Ticket (LS 14 Part 6) (4.2s)
+
+  28 skipped
+  92 passed (19.2s)

@@ -1,0 +1,247 @@
+Command: git log --graph --oneline --all
+Date: 2026-10-05
+Commit: fc29ca4310bc21e69c0d35df3645f56496bcf078 (main)
+
+*   fc29ca4 Merge pull request #55 from Tammathorn/lab3-staging
+|\  
+| *   235dcdc Merge pull request #54 from Tammathorn/feature/lab3-9-release-docs
+| |\  
+| | * ec07bcf docs: record PAKATO's approvals and the merged stack, add GitHub captures (#45)
+| | * 257bd0d docs: final My Reflection (#45)
+| | * 2ed7030 docs: add draft reflection and record reviews of PAKATO123's PRs (#45)
+| | * 61e222e docs: add pre-review dry-run integration evidence (#45)
+| | * 0fe04ea docs: record PR #54 now that it exists (#45)
+| | * 9e13ae9 docs: fix stale P6-07 note - IT Staff Ticket Detail is no longer a placeholder (#45)
+| | * f0f20e8 docs: add report-lab03.md, Answer Part 1 through Part 9 (#45)
+| | * 5b5b534 docs: mark P1-09/10/11, P3-01, P4-01 captured (#45)
+| | * 59e01b4 docs: add reviewer.md, the Lab 3 peer review record (#45)
+| | * c77c237 docs: finalize ai-use.md with Phase 2/3 and seven key prompts (#45)
+| | * 9d26d69 docs: finish the Lab 3 README section (#45)
+| | * e8173df docs: fill tests.md section 2's Final column from real runs (#45)
+| * | e664ba7 Merge pull request #53 from Tammathorn/feature/lab3-8-e2e-visual
+| |\| 
+| | * 43b737c fix: capture queue-<vp>-empty at all three viewports (audit finding)
+| | * f65cdba docs: record Issue #44 terminal evidence, correct E2E-08/RESP-09 rows
+| | * 250d5d6 docs: regenerate the final Part 6 and Part 9 screenshot sets (#44)
+| | * f69a459 test: close Part 1 e2e gaps - E2E-17 requester side, staff-queue RESP-09
+| * | 2a1afbb Merge pull request #52 from Tammathorn/feature/lab3-7-user-admin
+| |\| 
+| | * dc1d105 docs: capture the #43 green server, client and e2e runs
+| | * 68449bb docs: record C-115, correct the E2E-23 row, mark Part 8 captured
+| | * a498390 docs: capture Part 8 screenshots and the #43 server red run
+| | * 4a57983 test: e2e user administration, three viewports (#43, C-115)
+| | * ecbbc3b feat: User Management screen (ui-spec.md section 17, #43)
+| | * 61474e8 test: User Management screen, written first (#43)
+| | * 3806d14 feat: Administrator user management API (api-spec.md section 9, #43)
+| | * 711c68b test: Administrator user management API, written first (#43)
+| * | 6df8f97 Merge pull request #51 from Tammathorn/feature/lab3-6-staff-ticket-ops
+| |\| 
+| | * fe6ab26 docs: capture green server and client runs after the C-114 fix
+| | * 46a12c1 docs: record C-114 and the new API-124/UI-53 rows
+| | * 30a8970 fix: add isActive to the Requester Ticket DTO's owner (C-114)
+| | * 9d3d1ad test: assert the owner's isActive on the Requester Ticket DTO (C-114)
+| | * 53449c0 docs: capture the board with #42 moved to PR Review
+| | * 762d5c1 docs: capture Issue #6 evidence and mark Part 7 rows captured
+| | * e1580d3 test: e2e coverage for IT Staff Ticket Detail (tests.md 2.12, E2E-07..E2E-26)
+| | * 57a2a5e fix: repair Lab 2 fixtures after the Ticket owner/comments contract widened
+| | * 476afc7 feat: IT Staff Ticket Detail (ui-spec 16) and Requester additions (ui-spec 14)
+| | * 6c30520 test: plan the IT Staff Ticket Detail screen and extend Requester Ticket Detail
+| | * eb0ea72 docs: capture the API-122 audit-follow-up green run
+| | * 2db9fa3 docs: state the ATTACHMENT_REMOVED/TICKET_CLOSED exception in C-109
+| | * 3e5b40f test: pin ATTACHMENT_REMOVED ahead of TICKET_CLOSED on a terminal Ticket (C-109)
+| | * f80c099 docs: capture the green run after the C-109/C-113 ordering fix
+| | * f865f76 docs: record C-113 and state where C-109's terminal-state check sits
+| | * 684edc7 fix: TICKET_CLOSED precedes body validation; malformed path id is INVALID_QUERY_PARAM
+| | * 9d6e55c test: assert the owner-decided refusal order and malformed path id code (C-109, C-113)
+| | * 0403c50 docs: capture the #42 API red and green runs; P7-15 captured
+| | * a073388 feat: Requester "Problem Appears Resolved" flag and the Closed/Cancelled lock on attachments
+| | * 050e884 feat: Public Comments and Internal Notes, append-only, in two tables
+| | * af3a69c feat: IT Staff Ticket Detail, claim, owner, IT Priority, status and assignable users
+| | * 51d0853 test: staff ticket detail, comments and notes, and the #42 SEC rows, written first
+| * | 73aad9c Merge pull request #50 from Tammathorn/feature/lab3-5-staff-queue
+| |\| 
+| | *   0b297cb Merge branch 'feature/lab3-4-authz-regression' into feature/lab3-5-staff-queue
+| | |\  
+| | * | a382cd0 docs: capture the board with #41 in PR Review
+| | * | 726cb12 fix: audit findings on the queue - stuck Clear filters, empty-vs-no-results, query-parsing 500s
+| | * | 6624bed feat: the Ticket Queue screen (ui-spec.md 15), StaffTicketQueue
+| | * | cecb3a5 docs: C-111, no All-statuses option on the queue's Current Status filter
+| | * | f146df0 feat: the Ticket Queue API, GET /api/staff/tickets (api-spec.md 8.1)
+| * | |   4e19a59 Merge pull request #49 from Tammathorn/feature/lab3-4-authz-regression
+| |\ \ \  
+| | | |/  
+| | |/|   
+| | * |   d211203 Merge branch 'feature/lab3-3-authentication' into feature/lab3-4-authz-regression
+| | |\ \  
+| | | |/  
+| | |/|   
+| | * | 3c4cd8d docs: close out #40 evidence, fix tests.md 4.2/4.3 agreement, add attachment 410 to api-spec
+| | * | 693c35a docs: record the #40 green runs, the Lab 2 inventory after, and the role shell captures
+| | * | 07f7784 test: sign the Lab 2 E2E specs in with storageState per role, retire selection-screenshots, add role navigation E2E
+| | * | 1a72442 fix: render Forbidden for a 403 FORBIDDEN_ROLE and Change Password for the gate code
+| | * | b50bec5 test: a 403 from the API renders Forbidden or Change Password, red; tighten UI-10
+| | * | 2bffd4d fix: check the session before an unparseable body and harden the route inventory
+| | * | bbbf30d docs: record the #40 red client run
+| | * | 7eca6a6 feat: remove the Requester selector and add role navigation, per-role landing and the Forbidden screen
+| | * | 0551246 test: adapt the Lab 2 client tests to the AuthContext wrapper, retire RequesterSelection, add role navigation tests, red
+| | * | da97516 docs: record the #40 red server run and the Lab 2 inventory before
+| | * | 3473c29 feat: put every ticket route behind the role chain and take identity only from the session
+| | * | 8042636 test: write the authorization tests and API-14 first, red
+| | * | 13f139f test: adapt the Lab 2 server tests to signed-in agents and 404s, retire API-11/12/13
+| * | |   b569cd6 Merge pull request #48 from Tammathorn/feature/lab3-3-authentication
+| |\ \ \  
+| | | |/  
+| | |/|   
+| | * | 4177f56 docs: C-110 review schedule through #45, C-112 identity from the login response
+| | |/  
+| | * 98f4d4d docs: record C-110, stacked PRs while review is batched
+| | * 3885565 docs: capture the board with #39 in PR Review
+| | * c45bf1f docs: capture the Part 5 authentication evidence and the green runs
+| | * ff485a3 docs: record the temporary first-login fixture and its replacement in tests.md
+| | * f1ce003 test: sign the Lab 2 E2E specs in and wait for the re-sorted list
+| | * 7b5dae5 test: add the authentication E2E spec with the Part 5 captures
+| | * 24083ff fix: stop tsc emitting into server/, pin the dev port and tighten the auth screens' ARIA
+| | * 6584139 test: adapt the Lab 2 client tests to sign in
+| | * 9d94a19 feat: add AuthContext, Login, Change Password, the shell identity and the /api proxy
+| | * e5c97dd test: wait for the sign-in check and target the identity name in the Login tests
+| | * 6bc0fbe docs: record the red Login and Change Password run
+| | * d6cc5c1 fix: answer Express 4xx errors with the 400 envelope and tighten the auth audit cases
+| | * 83c837c test: write the Login and Change Password UI tests first, red
+| | * 1897d2a docs: record the red authentication API run
+| | * ce9bc61 feat: add scrypt verification, sessions, the auth chain and the auth endpoints
+| | * de47608 test: write the authentication API tests first, red
+| | * 1809bab docs: keep evidence.md statuses to three values and fix row ownership
+| | * b8b8282 docs: capture PR #46, PR #47 and the board in PR Review
+| | * a1488aa docs: map every Part 1-9 requirement to its evidence in evidence.md
+| | * 39838cd docs: add the Lab 3 evidence rules to CLAUDE.md
+| * | f45ad9c Merge pull request #47 from Tammathorn/feature/lab3-2-data-migration
+| |\| 
+| | * db9208e fix: repair three mojibake bytes and tighten the empty-persona guard
+| | * 4b9cc32 docs: record the dev database migration and seed
+| | * 1c688b5 fix: keep one active Requester without Tickets in the seed
+| | * ca0ff2a docs: document the seeded accounts and the test database
+| | * 8b1758d docs: record the C-83 migration rehearsal, MIG-21 and MIG-22
+| | * fa1c47c test: adapt the Lab 2 assertions C-67, C-70 and C-71 change
+| | * 81a594d feat: seed all three roles with tickets, comments and notes
+| | * 64dbeb3 feat: rename RequesterUser to User and add the Lab 3 schema
+| | * c83ec27 test: point Vitest at toktickit_test and plan the migration tests
+| * | 090c7c8 Merge pull request #46 from Tammathorn/feature/lab3-1-contract
+|/| | 
+| |/  
+| * bb27eb3 docs: make Closed and Cancelled tickets read-only (C-109, PR #46 review)
+| * a3a8e15 test: apply the five approved test merges, 278 to 273
+| * a81ff2f docs: log prompts 1.5 to 1.7 and the four decisions
+| * cf4d39b docs: add the Lab 3 test plan and close C-105 to C-108
+| * f29cfc7 docs: add the Lab 3 UI specification
+| * b730b07 docs: add the Lab 3 API contract
+| * d1df4a5 docs: repair the AI-use log
+| * 9e5ab71 docs: open the Lab 3 AI use log
+| * 0c6d1cc docs: stop pinning the decision range in CLAUDE.md
+| * c281d50 docs: add the Lab 3 specification and close its gaps (C-93..C-104)
+| * fbfa6e0 docs: rewrite CLAUDE.md for Lab 3
+| * be7ae9b docs: record the Phase 1 codebase analysis
+| * c5e6eaf docs: restore the Lab 3 decision reasons
+| * 88ac142 docs: add the Lab 3 decision log, C-53 to C-92
+| * e5a27ae docs: record the Lab 3 Issue numbers
+| * c025c94 docs: add the Lab 3 plan and ignore rules
+|/  
+| * f94ec5b On main: lab2 report local edits
+|/| 
+| * 8c20f90 index on main: e4f3bf4 Merge pull request #36 from Tammathorn/lab2-staging
+|/  
+*   e4f3bf4 Merge pull request #36 from Tammathorn/lab2-staging
+|\  
+| *   01a62bb Merge pull request #35 from Tammathorn/feature/13-report-figure-reduction
+| |\  
+| | * bba0b49 docs: drop duplicate figures from the report, name the dropped captures in the prose
+| |/  
+* | 8ea4299 Merge pull request #34 from Tammathorn/lab2-staging
+|\| 
+| *   59cd29d Merge pull request #33 from Tammathorn/feature/12-evidence-renders
+| |\  
+| | * 2d8508b docs: render the last four evidence slots - suites on main, VIS-01, server tests listing, .env.example
+| |/  
+* | ef2c910 Merge pull request #32 from Tammathorn/lab2-staging
+|\| 
+| *   2bd0b5f Merge pull request #31 from Tammathorn/feature/11-evidence-dod
+| |\  
+| | * 4147d9c docs: name PR #31 in the report
+| | * 96d659d docs: add the tests.md and ai-use.md captures, fill the report slots, tick the verified Definition of Done items
+| |/  
+* | ec9a1ec Merge pull request #29 from Tammathorn/lab2-staging
+|\| 
+| *   65bc7e5 Merge pull request #30 from Tammathorn/feature/10-evidence-final
+| |\  
+| | * 1f642e9 docs: add the Lab 2 report draft with image placeholders
+| | * 9d1fcff docs: rename the hand-captured evidence by report part, drop superseded captures, update evidence.md
+| |/  
+| *   abd7257 Merge pull request #27 from Tammathorn/feature/9-evidence
+| |\  
+| | * afde4d3 docs: add the report evidence map and Part 1 / Part 6 evidence captures
+| |/  
+|/|   
+* | d48cbd2 Merge pull request #26 from Tammathorn/lab2-staging
+|\| 
+| *   8e79eda Merge pull request #25 from Tammathorn/feature/8-release-docs
+| |\  
+| | * 692acea docs: add the peer review record, finish ai-use.md, update README, record the final run (Issue #17)
+| |/  
+| *   42716ba Merge pull request #24 from Tammathorn/feature/7-e2e-visual
+| |\  
+| | * 2ed6643 test: add the E2E Requester flow, responsive checks and the completed VIS-01 checklist (Issue #16)
+| |/  
+| *   fd92a23 Merge pull request #23 from Tammathorn/feature/6-ticket-detail
+| |\  
+| | * 0262960 docs: settle the disposition check order as C-52 and fix api-spec 1.4
+| | * 69c28c3 feat: add Ticket Detail attachments and the attachment lifecycle (Issue #15)
+| |/  
+| *   64b5d1f Merge pull request #22 from Tammathorn/feature/5-my-tickets
+| |\  
+| | * 82b831d feat: add My Tickets list with search, filters, sort and pagination (Issue #14)
+| * | a154f04 Merge pull request #21 from Tammathorn/feature/4-create-ticket
+| |\| 
+| | * c700da7 fix: catalogue the system-generated-field message; screenshot spec uses a dedicated Requester
+| | * 32577e6 feat: add Create Ticket API and UI with attachment upload (Issue #13)
+| |/  
+| *   ffe40a1 Merge pull request #20 from Tammathorn/feature/3-requester-context
+| |\  
+| | * b8d0d16 docs: record C-51, the in-repo History-API router
+| | * ad51a03 feat: add Development Requester context and Selection screen (Issue #12)
+| * | 7834fd7 Merge pull request #19 from Tammathorn/feature/2-data-model
+| |\| 
+| | * 8fb986a docs: replace git prohibition with working agreement in CLAUDE.md
+| | * f357cc0 feat: add Lab 2 data model, migration, and idempotent seed (Issue #11)
+| | * c2610e6 docs(lab-02): draft ai-use.md and update handoff to rev. 3
+| |/  
+| * 0d7f6b7 Merge pull request #18 from Tammathorn/feature/1-sprint-spec
+|/| 
+| * b837387 docs: require pre-commit working-tree inspection
+| * b8b0c6a docs(lab-02): add the four contract documents and decisions C-42..C-49
+| * db17890 docs(lab-02): record approved decisions C-01..C-41 and rewrite CLAUDE.md for Lab 2
+| * 501cdd6 chore(lab-02): scaffold labsheet section 12 folders and Playwright at repo root
+|/  
+* 8504514 Update tests.md
+* 12dac8b Update reviewer.md
+* 35f7b48 Update reviewer.md
+* aa597a8 docs: add peer review record and AI use reflection
+* edc1210 docs: add peer review record and AI use reflection
+*   16b83b6 Merge pull request #9 from Tammathorn/lab1-staging
+|\  
+| *   8053fd3 Merge branch 'feature/4-category-list' into lab1-staging
+| |\  
+| | * 22233c1 docs: record Lab 1 test inventory and passing output
+| * | f8ec403 Merge pull request #8 from Tammathorn/feature/4-category-list
+| |\| 
+| | * 6b36489 feat: add /api/categories endpoint and category list UI
+| * | a5d245e Merge pull request #7 from Tammathorn/feature/3-category-seed
+| |\| 
+| | * dfe8cb0 feat: add Category model, migration, and idempotent seed
+| * | 99f66df Merge pull request #6 from Tammathorn/feature/2-health-check
+| |\| 
+| | * 039ed7f feat: add /api/health endpoint and system status UI
+| |/  
+| * 6f4f297 Merge pull request ISSUE 1 onto stage from Tammathorn/feature/1-project-foundation
+|/| 
+| * 35f0b91 docs: add setup instructions and project constraints for Lab 1 foundation
+|/  
+* 6c50df9 Initial commit: Lab 1 starter scaffold

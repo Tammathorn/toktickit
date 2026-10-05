@@ -1,0 +1,1 @@
+GET /api/auth/me with the pre-logout tt_session cookie -> 401 {"error":{"code":"AUTH_REQUIRED","message":"Your session has ended. Please sign in again."}}

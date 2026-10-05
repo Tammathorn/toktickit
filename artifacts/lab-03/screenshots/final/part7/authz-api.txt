@@ -1,0 +1,10 @@
+Command: Playwright APIRequestContext against the running app (lab3-staging f523f49 code), database toktickit_evidence freshly dropped, migrated and seeded
+Date: 2026-10-05 15:40 UTC
+
+GET /api/staff/tickets as Requester (anucha.p) -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+GET /api/tickets/5/internal-notes as Requester (anucha.p) -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+POST /api/tickets/5/internal-notes as Requester (anucha.p) -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+PATCH /api/staff/tickets/5/status as Requester (anucha.p) -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+PATCH /api/staff/tickets/5/it-priority as Requester (anucha.p) -> 403 {"error":{"code":"FORBIDDEN_ROLE","message":"You do not have access to that page."}}
+GET /api/tickets/3 as Requester (anucha.p) -> 404 {"error":{"code":"TICKET_NOT_FOUND","message":"That ticket does not exist."}}
+GET /api/tickets/5 as Requester (own ticket) -> 200 keys: id, ticketNumber, requester, category, relatedSystem, summary, description, requestedPriority, itPriority, currentStatus, owner, requesterResolvedAt, createdAt, updatedAt, attachments, publicComments

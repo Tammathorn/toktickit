@@ -1,0 +1,9 @@
+Command: cd server && npx vitest run
+Date: 2026-10-05 13:43 UTC
+Commit: fc29ca4310bc21e69c0d35df3645f56496bcf078 (main, after merge of PR #55)
+Database: toktickit_test (vitest global-setup)
+Summary only (per-test lines omitted):
+
+ Test Files  15 passed (15)
+      Tests  297 passed (297)
+   Duration  33.50s (transform 371ms, setup 0ms, collect 3.15s, tests 23.76s, environment 2ms, prepare 937ms)
