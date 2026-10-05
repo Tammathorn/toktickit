@@ -46,7 +46,7 @@ response the API would have sent, and every such capture says so in its row.
 | P1-02 | Final GitHub Project board with every Issue in Done | GitHub capture, board | `screenshots/github/<date>-board-all-done.png` | #45 | pending |
 | P1-03 | Board mid-sprint with cards in PR Review | GitHub capture, board | `screenshots/github/2026-10-02-board-pr-review.png` | #37, #38 | captured |
 | P1-04 | Board mid-sprint with a card in Fixing. Captured by whichever Issue first moves to Fixing | GitHub capture, board | `screenshots/github/<date>-board-fixing.png` | #37 to #45 | pending |
-| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png`; #40 to PR Review, `screenshots/github/2026-10-04-board-40-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
+| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png`; #40 to PR Review, `screenshots/github/2026-10-04-board-40-pr-review.png`; #41 to PR Review, `screenshots/github/2026-10-04-board-41-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
 | P1-06 | Review thread while open: PR #46, the reviewer's comment and the author's reply | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr46-review-open.png` | #37 | captured |
 | P1-07 | PR #47 open, before review | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr47-open.png` | #38 | captured |
 | P1-08 | Approval on every Issue PR. The reviewer approves; the capture follows the approval | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | pending |
@@ -106,15 +106,15 @@ and seeded database (`CLAUDE.md`).
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P6-01 | Realistic queue data, with status and priority badges | Playwright capture | `screenshots/staff-queue/queue-desktop-populated.png` | #41, final #44 | pending |
-| P6-02 | Search | Playwright capture | `screenshots/staff-queue/queue-desktop-search.png` | #41, final #44 | pending |
-| P6-03 | Filters | Playwright capture | `screenshots/staff-queue/queue-desktop-filters.png` | #41, final #44 | pending |
-| P6-04 | Sorting | Playwright capture | `screenshots/staff-queue/queue-desktop-sorted.png` | #41, final #44 | pending |
-| P6-05 | Pagination | Playwright capture | `screenshots/staff-queue/queue-desktop-page-2.png` | #41, final #44 | pending |
-| P6-06 | Assigned and unassigned ownership | Playwright capture | `screenshots/staff-queue/queue-desktop-unassigned.png`, with owned rows in `queue-desktop-populated.png` | #41, final #44 | pending |
-| P6-07 | The open-detail action | Playwright capture | `screenshots/staff-queue/queue-desktop-open-detail.png` **(extra)** | #41, final #44 | pending |
-| P6-08 | Empty, no-results and failure feedback; loading | Playwright capture | `screenshots/staff-queue/queue-desktop-empty.png`, `queue-desktop-no-results.png`, `queue-desktop-failure.png`, `queue-desktop-loading.png` | #41, final #44 | pending |
-| P6-09 | Responsive behaviour: table at desktop, six columns at tablet, cards at mobile | Playwright capture | `screenshots/staff-queue/queue-<vp>-populated.png` at all three | #41, final #44 | pending |
+| P6-01 | Realistic queue data, with status and priority badges | Playwright capture | `screenshots/staff-queue/queue-desktop-populated.png` | #41, final #44 | captured |
+| P6-02 | Search | Playwright capture | `screenshots/staff-queue/queue-desktop-search.png` | #41, final #44 | captured |
+| P6-03 | Filters | Playwright capture | `screenshots/staff-queue/queue-desktop-filters.png` | #41, final #44 | captured |
+| P6-04 | Sorting | Playwright capture | `screenshots/staff-queue/queue-desktop-sorted.png` | #41, final #44 | captured |
+| P6-05 | Pagination | Playwright capture | `screenshots/staff-queue/queue-desktop-page-2.png` | #41, final #44 | captured |
+| P6-06 | Assigned and unassigned ownership | Playwright capture | `screenshots/staff-queue/queue-desktop-unassigned.png`, with owned rows in `queue-desktop-populated.png` | #41, final #44 | captured |
+| P6-07 | The open-detail action | Playwright capture | `screenshots/staff-queue/queue-desktop-open-detail.png` **(extra)** - the row link navigates to `/queue/:id`; the screen itself is a placeholder until #42 builds IT Staff Ticket Detail | #41, final #44 | captured |
+| P6-08 | Empty, no-results and failure feedback; loading | Playwright capture | `screenshots/staff-queue/queue-desktop-empty.png`, `queue-desktop-no-results.png`, `queue-desktop-failure.png`, `queue-desktop-loading.png` | #41, final #44 | captured |
+| P6-09 | Responsive behaviour: table at desktop, six columns at tablet, cards at mobile | Playwright capture | `screenshots/staff-queue/queue-<vp>-populated.png` at all three | #41, final #44 | captured |
 
 ## Part 7 - Working IT Staff Ticket Detail UI (10)
 
@@ -130,7 +130,7 @@ and seeded database (`CLAUDE.md`).
 | P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | pending |
 | P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | pending |
 | P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | pending |
-| P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | pending |
+| P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | captured |
 | P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
 | P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
 | P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | captured |

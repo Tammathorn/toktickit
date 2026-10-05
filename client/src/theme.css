@@ -18,6 +18,8 @@
   --tk-readonly-bg: #EDF1EE;
   --tk-danger: #A4262C;
   --tk-warning: #8A5A00;
+  /* 2.4 added for Lab 3 */
+  --tk-info: #1F5C74;
 
   --tk-shadow: 0 1px 2px rgba(31, 42, 36, 0.06);
   --tk-focus-ring: 0 0 0 3px rgba(11, 122, 70, 0.35);
@@ -328,8 +330,28 @@ textarea.form-control { height: auto; resize: vertical; }
 .tk-priority-low { background-color: var(--tk-pale); color: var(--tk-text); border: 1px solid var(--tk-border); }
 .tk-priority-medium { background-color: var(--tk-surface); color: var(--tk-primary); border: 1px solid var(--tk-primary); }
 .tk-priority-high { background-color: var(--tk-danger); color: var(--tk-surface); border: 1px solid var(--tk-danger); }
+/* Current Status - all eight values, each its own treatment (ui-spec 8.2). */
 .tk-status-new { background-color: var(--tk-primary); color: var(--tk-surface); }
+.tk-status-open { background-color: var(--tk-secondary); color: var(--tk-surface); }
+.tk-status-in-progress { background-color: var(--tk-pale); color: var(--tk-primary); }
+.tk-status-waiting { background-color: var(--tk-surface); color: var(--tk-warning); border: 1px solid var(--tk-warning); }
+.tk-status-resolved { background-color: var(--tk-pale); color: var(--tk-secondary); border: 1px solid var(--tk-secondary); }
+.tk-status-closed { background-color: var(--tk-readonly-bg); color: var(--tk-text-muted); }
+.tk-status-reopened { background-color: var(--tk-surface); color: var(--tk-info); border: 1px solid var(--tk-info); }
+.tk-status-cancelled { background-color: var(--tk-readonly-bg); color: var(--tk-text-muted); text-decoration: line-through; }
+/* Kept for anything still passing an unrecognised value. */
 .tk-status-other { background-color: var(--tk-readonly-bg); color: var(--tk-text); }
+
+/* The resolution marker (ui-spec 8.5) - never a status, so never square-cornered
+   like one without its own border, and never in the status column. */
+.tk-resolved-marker {
+  background-color: var(--tk-surface);
+  color: var(--tk-info);
+  border: 1px solid var(--tk-info);
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+}
 
 /* ---- My Tickets (section 12) ------------------------------------------ */
 
@@ -523,3 +545,11 @@ textarea.form-control { height: auto; resize: vertical; }
 
 .tk-forbidden { display: flex; justify-content: center; padding: 2rem 0; }
 .tk-forbidden-card { width: 100%; max-width: 34rem; text-align: center; }
+
+/* ---- Lab 3: IT Staff Ticket Queue (ui-spec section 15) ----------------- */
+
+/* The owner column carries the most meaning (15.2): the pale ground goes on
+   the cell, not the row, so hover (also pale) does not erase it. */
+.tk-owner-cell-pale { background-color: var(--tk-pale); }
+.tk-owner-unassigned { color: var(--tk-text-muted); font-style: italic; }
+.tk-owner-inactive { color: var(--tk-text-muted); font-style: italic; }

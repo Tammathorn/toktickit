@@ -6,6 +6,7 @@ import { clientOrigin, originCheck } from "./middleware/auth.js";
 import { authRouter } from "./routes/auth.js";
 import { ticketsRouter } from "./routes/tickets.js";
 import { attachmentsRouter } from "./routes/attachments.js";
+import { staffRouter } from "./routes/staff.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the routes that
 // need the DB, so routes like /api/health stay free of database side effects.
 
@@ -89,6 +90,8 @@ app.use(authRouter);
 // Lab 2 Ticket and Attachment endpoints (Issues #13-#15).
 app.use(ticketsRouter);
 app.use(attachmentsRouter);
+// Lab 3 (#41) - the IT Staff Ticket Queue.
+app.use(staffRouter);
 
 // The one error handler, last. Express's own would answer with an HTML page
 // quoting the error - for a body express.json cannot parse, a page quoting the

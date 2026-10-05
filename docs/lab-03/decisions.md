@@ -163,6 +163,12 @@ terminal status.
 |---|---|---|---|---|---|
 | C-112 | How the client learns who signed in | Setup item 4 (#48) | **The client takes its identity from the `POST /api/auth/login` response**, not from a follow-up `GET /api/auth/me` call. `GET /api/auth/me` is still called once, at page load, to recover identity from the session cookie after a refresh. `ui-spec.md` 10 is corrected to match: a successful Login holds the login response directly rather than fetching the current user again. | The login response and `/api/auth/me` already return the same six keys (`api-spec.md` 10.1), so a client that discards the login response and immediately re-asks the server for the identity it was just given spends a second round trip for nothing. One fewer request, on the one path every session takes | Narrows `ui-spec.md` 10's "the client fetches the current user" step |
 
+### Raised during implementation
+
+| ID | Topic | Raised by | Decision | Reason | Supersedes |
+|---|---|---|---|---|---|
+| C-111 | The queue's Current Status filter | Implementation of #41 | **No `All statuses` option.** The Current Status select offers exactly nine options: the default `Open tickets` (the parameter omitted, BR-72's exclusion applies) and each of the eight statuses individually. `ui-spec.md` 15.1 is corrected to match - its `All statuses` option is removed from the table and from the option count. | `api-spec.md` 8.1 gives `currentStatus` exactly one value from the eight-member enum, or omitted, which always means the BR-72 default; there is no query that returns every status unfiltered, so an `All statuses` option could not be served without inventing new API behavior. No new behavior is needed: Closed and Cancelled stay reachable by selecting them individually, and a *queue* exists to show unfinished work, not a full Ticket archive. | Narrows `ui-spec.md` 15.1's Current Status filter row |
+
 ---
 
 ## Carried from Lab 2

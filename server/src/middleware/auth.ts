@@ -117,3 +117,7 @@ export function requireRole(...roles: UserRole[]): RequestHandler {
 // reads every role may make, whose ownership rule the route applies itself.
 export const requesterOnly: readonly RequestHandler[] = [...protect, requireRole("REQUESTER")];
 export const anyRole: readonly RequestHandler[] = [...protect, requireRole("REQUESTER", "IT_STAFF", "ADMINISTRATOR")];
+// Staff routes: the Ticket Queue and staff Ticket operations (C-101). A
+// Requester is refused 403 FORBIDDEN_ROLE before any query parameter is
+// parsed or any resource is loaded (C-63, C-65).
+export const staffOnly: readonly RequestHandler[] = [...protect, requireRole("IT_STAFF", "ADMINISTRATOR")];
