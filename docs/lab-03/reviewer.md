@@ -16,25 +16,20 @@ written from memory. Timestamps are UTC as GitHub records them.
 
 ## 1. Summary
 
-| PR | Branch | Issue | Review received | Approval status | Merged |
-|---|---|---|---|---|---|
-| [#46](https://github.com/Tammathorn/toktickit/pull/46) | `feature/lab3-1-contract` -> `lab3-staging` | #37 | One comment by @PAKATO123 on the terminal-Ticket gap (C-109) | Comment answered in substance (commit `bb27eb3`); **not formally re-approved** - no GitHub review state exists on this PR | Not merged - open, per C-110 |
-| [#47](https://github.com/Tammathorn/toktickit/pull/47) | `feature/lab3-2-data-migration` -> `feature/lab3-1-contract` | #38 | None | Awaiting the batched review | Not merged - open |
-| [#48](https://github.com/Tammathorn/toktickit/pull/48) | `feature/lab3-3-authentication` -> `feature/lab3-2-data-migration` | #39 | None | Awaiting the batched review | Not merged - open |
-| [#49](https://github.com/Tammathorn/toktickit/pull/49) | `feature/lab3-4-authz-regression` -> `feature/lab3-3-authentication` | #40 | None | Awaiting the batched review | Not merged - open |
-| [#50](https://github.com/Tammathorn/toktickit/pull/50) | `feature/lab3-5-staff-queue` -> `feature/lab3-4-authz-regression` | #41 | None | Awaiting the batched review | Not merged - open |
-| [#51](https://github.com/Tammathorn/toktickit/pull/51) | `feature/lab3-6-staff-ticket-ops` -> `feature/lab3-5-staff-queue` | #42 | None | Awaiting the batched review | Not merged - open |
-| [#52](https://github.com/Tammathorn/toktickit/pull/52) | `feature/lab3-7-user-admin` -> `feature/lab3-6-staff-ticket-ops` | #43 | None | Awaiting the batched review | Not merged - open |
-| [#53](https://github.com/Tammathorn/toktickit/pull/53) | `feature/lab3-8-e2e-visual` -> `feature/lab3-7-user-admin` | #44 | None | Awaiting the batched review | Not merged - open |
-| [#54](https://github.com/Tammathorn/toktickit/pull/54) | `feature/lab3-9-release-docs` -> `feature/lab3-8-e2e-visual` | #45 | None | Awaiting the batched review | Not merged - open |
-| Release | `lab3-staging` -> `main` | - | Not yet opened - C-110: opens only after every feature PR has merged | - | - |
+| PR | Issue | Review received (PAKATO123) | Approval status | Merged |
+|---|---|---|---|---|
+| [#46](https://github.com/Tammathorn/toktickit/pull/46) | #37 | One comment 2026-09-27 15:05:56 (C-109), answered; then `APPROVED` 2026-10-05 12:53:10 with a comment on `CLAUDE.md` | Approved | 2026-10-05 13:14:46 UTC (`090c7c8`) |
+| [#47](https://github.com/Tammathorn/toktickit/pull/47) | #38 | Comment "Approved, cannot judge yet without seeing the future implementation"; `APPROVED` 2026-10-05 11:25:58 | Approved | 2026-10-05 13:15:42 UTC (`f45ad9c`) |
+| [#48](https://github.com/Tammathorn/toktickit/pull/48) | #39 | `APPROVED` 2026-10-05 11:28:25 - "Pretty comprehensive series of screenshots, Approved" | Approved | 2026-10-05 13:17:35 UTC (`b569cd6`) |
+| [#49](https://github.com/Tammathorn/toktickit/pull/49) | #40 | `APPROVED` 2026-10-05 11:41:37 - "Approved, but you probably should put agents.ts in this" | Approved | 2026-10-05 13:18:08 UTC (`4e19a59`) |
+| [#50](https://github.com/Tammathorn/toktickit/pull/50) | #41 | `APPROVED` 2026-10-05 11:44:18 - "Approved but you should probably elaborate on what green staff queue.txt and red staff queue.txt is" | Approved | 2026-10-05 13:18:49 UTC (`73aad9c`) |
+| [#51](https://github.com/Tammathorn/toktickit/pull/51) | #42 | `APPROVED` 2026-10-05 11:46:26 - "Approved the implementation but there seriously need to be elaboration on each evidence inside evidence/issue-6 on what do the names mean" | Approved | 2026-10-05 13:19:23 UTC (`6df8f97`) |
+| [#52](https://github.com/Tammathorn/toktickit/pull/52) | #43 | `APPROVED` 2026-10-05 11:47:20 - "Approved, same problem on doccumentation like previous branch" | Approved | 2026-10-05 13:19:54 UTC (`2a1afbb`) |
+| [#53](https://github.com/Tammathorn/toktickit/pull/53) | #44 | `APPROVED` 2026-10-05 11:48:10 - "Approved, but paging on same of the pages can definitely be better to be user friendly" | Approved | 2026-10-05 13:20:33 UTC (`e664ba7`) |
+| [#54](https://github.com/Tammathorn/toktickit/pull/54) | #45 | `APPROVED` 2026-10-05 11:49:27 - "Approved, no problem aside from those already mentioned" | Approved | With the release-docs push; see PR page |
+| Release | - | - | - | Opened after #54; see the PR list |
 
-Per decision **C-110**, the reviewer's own schedule batches all nine feature PRs to the end
-of the stack rather than reviewing mid-stack: "PAKATO reviews all nine feature PRs at the
-end of the batch, not one partway through." One comment has arrived so far, on the first
-PR in the stack, before the batching decision was made explicit. No formal GitHub review
-(approve / request changes / comment-as-review) exists on any PR in this repository as of
-this writing - every row above is read directly from `gh pr view`, not inferred.
+The nine feature PRs were stacked per decision **C-110**, each into the branch directly below it, and #46 into `lab3-staging`. PAKATO reviewed them as one batch, 2026-10-05 11:24-12:53 UTC, after all nine existed; the only earlier comment was the one on #46 (2026-09-27). Each PR was then retargeted to `lab3-staging` and merged, in stack order, with a merge commit (`gh pr merge N --merge`). Before each merge the PR's commit count against `lab3-staging` was checked equal to its own commits above the previous branch. Review states, comment bodies and times in this record are read from `gh api` (`pulls/N/reviews`, `issues/N/comments`, `pulls/N/comments`); there are no inline review comments on any of #46-#54.
 
 ---
 
@@ -58,12 +53,11 @@ this writing - every row above is read directly from `gh pr view`, not inferred.
 > You should maybe clarify if the users are still allowed to write comments to a ticket
 > still after the ticket is closed.
 
-**My response** - 2026-09-27, in the PR conversation:
+**My response** - 2026-09-28 07:55:06 UTC, in the PR conversation (the comment body begins with a quoted copy of the comment above it):
 
-> Thanks, good catch. I've settled it as C-109: Closed and Cancelled tickets are read-only
-> for everyone. No comments, notes, attachment changes, or owner/priority/status changes
-> (409). Reading still works. Since C-98 makes both statuses terminal, the Requester opens
-> a new ticket instead. Resolved can still take comments because it can be reopened.
+> > I recommend clarifying one edge case Comments on Terminal Tickets, The status transition matrix strictly defines CLOSED and CANCELLED as terminal states. but Business Rule 68 broadly allows the owning Requester, IT Staff, and Administrator to post Public Comments on a Ticket without mentioning status constraints. You should maybe clarify if the users are still allowed to write comments to a ticket still after the ticket is closed.
+>
+> Thanks, good catch. I've settled it as C-109: Closed and Cancelled tickets are read-only for everyone. No comments, notes, attachment changes, or owner/priority/status changes (409). Reading still works. Since C-98 makes both statuses terminal, the Requester opens a new ticket instead. Resolved can still take comments because it can be reopened.
 >
 > Fixed in bb27eb3. Could you approve if this answers it?
 
@@ -74,9 +68,15 @@ terminal-write refusal to six cells of the `specification.md` 5.2 matrix and six
 screens, and added AC-118 with five planned tests. `docs/lab-03/ai-use.md` section 2.11
 records this exchange in full.
 
-**Approval status** - no formal GitHub review followed the reply. The comment was
-answered in substance (new decision row, new BR, new AC, propagated through four
-documents); I am not recording it as approved, because it was not.
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 12:53:10 UTC:
+
+> I think CLAUDE.md should be included within either docs/lab-xx instead of changing every lab or not at all and list it under gitignore?
+>
+> But other than that approved
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:14:46 UTC into `lab3-staging` as `090c7c8`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #47 - Issue #38: User migration, schema and seed
 
@@ -86,7 +86,19 @@ documents); I am not recording it as approved, because it was not.
   rename with roles; the seed extended to all three roles with Tickets, comments and notes;
   Lab 2 assertions adapted for C-67/C-70/C-71; the C-83 migration rehearsal recorded; a kept
   Requester with zero Tickets; a mojibake-byte and empty-persona fix.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Comment received** - @PAKATO123, 2026-10-05 11:24:57 UTC:
+
+> Approved, cannot judge yet without seeing the future implementation
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:25:58 UTC:
+
+> _(empty review body)_
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:15:42 UTC into `lab3-staging` as `f45ad9c`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #48 - Issue #39: Authentication - login, sessions, the password-change gate
 
@@ -97,7 +109,15 @@ documents); I am not recording it as approved, because it was not.
   recorded first; Login and Change Password UI with their red run recorded first; the
   authentication E2E spec with the Part 5 captures; C-110 (stacked PRs while review is
   batched) and C-112 (the client takes identity from the login response) recorded.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:28:25 UTC:
+
+> Pretty comprehensive series of screenshots, Approved
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:17:35 UTC into `lab3-staging` as `b569cd6`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #49 - Issue #40: Authorization and Requester regression
 
@@ -108,7 +128,15 @@ documents); I am not recording it as approved, because it was not.
   authorization tests written first, red, then green; the Lab 2 server and client suites
   adapted to signed-in agents with the retirements `tests.md` records; a 403 renders
   Forbidden or Change Password depending on the gate.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:41:37 UTC:
+
+> Approved, but you probably should put agents.ts in this
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:18:08 UTC into `lab3-staging` as `4e19a59`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #50 - Issue #41: IT Staff Ticket Queue
 
@@ -118,7 +146,15 @@ documents); I am not recording it as approved, because it was not.
   screen (`ui-spec.md` 15); C-111 (no "All statuses" option); an audit's own findings on
   the queue fixed in the same PR - a stuck Clear Filters control, the empty-versus-no-results
   distinction, and 500s from unparsed query values.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:44:18 UTC:
+
+> Approved but you should probably elaborate on what green staff queue.txt and red staff queue.txt is
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:18:49 UTC into `lab3-staging` as `73aad9c`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #51 - Issue #42: IT Staff Ticket Detail UI and Requester additions
 
@@ -132,7 +168,15 @@ documents); I am not recording it as approved, because it was not.
   Requester Ticket DTO's `owner` gains `isActive`, closing a gap between `api-spec.md` and
   `ui-spec.md` that neither document had named) were raised and resolved during this
   Issue's implementation, each by asking rather than guessing - `ai-use.md` section 4.3.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:46:26 UTC:
+
+> Approved the implementation but there seriously need to be elaboration on each evidence inside evidence/issue-6 on what do the names mean
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:19:23 UTC into `lab3-staging` as `6df8f97`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #52 - Issue #43: Administrator User Management
 
@@ -145,7 +189,15 @@ documents); I am not recording it as approved, because it was not.
   other e2e spec's session depends on) was raised by this session's own review of a first
   attempt that had corrupted that shared session, and resolved by the self-demotion design
   `ai-use.md` section 4.3 quotes in full.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:47:20 UTC:
+
+> Approved, same problem on doccumentation like previous branch
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:19:54 UTC into `lab3-staging` as `2a1afbb`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #53 - Issue #44: E2E and responsive/visual evidence
 
@@ -159,7 +211,15 @@ documents); I am not recording it as approved, because it was not.
   (`queue-<vp>-empty.png` marked "not reproducible" when the adjacent test in the same file
   already mocks the same response) - fixed without a decision round, since there was no
   genuine conflict, only an unapplied technique (`ai-use.md` section 4.4).
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:48:10 UTC:
+
+> Approved, but paging on same of the pages can definitely be better to be user friendly
+
+**My reply:** none on GitHub.
+
+**Merged:** 2026-10-05 13:20:33 UTC into `lab3-staging` as `e664ba7`, after retargeting from its stack base to `lab3-staging`.
 
 ### PR #54 - Issue #45: Release documentation
 
@@ -167,14 +227,19 @@ documents); I am not recording it as approved, because it was not.
 - **Branch:** `feature/lab3-9-release-docs` -> `feature/lab3-8-e2e-visual`
 - **Contents:** this record; `tests.md` section 2's `Final` column; the Lab 3 `README.md`
   section; `ai-use.md` finalized; `artifacts/lab-03/report-lab03.md`.
-- **Comments given / received:** none. **Approval status:** awaiting the batched review.
-  With this PR open, all nine feature PRs now exist and PAKATO's batched review can begin.
+- **Review and comments:** see below. **Approval status:** approved by @PAKATO123.
+
+**Review received** - @PAKATO123, `APPROVED`, 2026-10-05 11:49:27 UTC:
+
+> Approved, no problem aside from those already mentioned
+
+**My reply:** none on GitHub.
+
+**Merged:** by its own merge commit into `lab3-staging` after this record is pushed; the merge time is on the PR page, not in this file.
 
 ### Release PR - `lab3-staging` -> `main`
 
-- **Status:** not opened. Decision C-110: it opens only after every one of the nine feature
-  PRs above has merged into `lab3-staging`, which has not happened - none of #46-54 has
-  merged as of this writing.
+- **Status:** opened after #46-#54 merged into `lab3-staging` (C-110); its link is on the PR list, not recorded here because it did not exist when this file was written.
 
 ---
 
@@ -213,17 +278,16 @@ Two entries are not what a quick read of the table would suggest:
 
 ## 4. Honest assessment
 
-- **The batching decision (C-110) is the reviewer's own, not mine, and it has a real
-  consequence for this record.** Eight of the nine feature PRs currently show no review at
-  all, by design - PAKATO reviews once, at the end, across all nine. That is different from
-  Lab 2's record, where seven of eight PRs went unreviewed because the schedule ran out;
-  here, nothing has gone unreviewed yet, because the review has not started.
-- **The one comment that did arrive, on the first PR, was worth having.** It found the same
-  shape of gap Lab 2's C-11 comment found - two documents that were each internally
-  consistent and never mentioned each other - and it is recorded the same way: verbatim,
-  with my reply verbatim, and the decision it produced (C-109) traced to the commit that
-  implemented it.
-- **What this record cannot yet say.** Whether the batched review, once it happens, finds
-  anything the nine Issues' own audits missed - the way PAKATO's single Lab 2 comment and
-  single Lab 3 comment each found something four and thirteen AI audit passes respectively
-  had not. This section is written before that review, honestly, rather than guessed at.
+- **PAKATO's reviews were approvals, several with a request in the approval text.** All nine
+  PRs carry `APPROVED`. Four approvals ask for something: `CLAUDE.md` placement (#46),
+  `agents.ts` in #49, explaining the `green`/`red staff queue` evidence files (#50), and
+  explaining the names in `evidence/issue-6` (#51); #52 says the documentation problem is the
+  same, and #53 says paging could be more user friendly. I have not replied to any of these on
+  GitHub; the PRs were approved as they stood, so I am not recording any of them as resolved.
+- **The one comment before the batch, on #46, was worth having.** It found a gap two
+  internally consistent documents never mentioned, and it is recorded with my reply and the
+  decision it produced (C-109), traced to commit `bb27eb3`. I asked him to approve if the reply
+  answered it; his formal approval of #46 came in the batch, 2026-10-05 12:53:10 UTC.
+- **What the batch could not do.** #47's comment says it "cannot judge yet without seeing the
+  future implementation". Because the nine PRs were reviewed at once, each approval was given
+  against the stack as it stood, not against the finished product.
