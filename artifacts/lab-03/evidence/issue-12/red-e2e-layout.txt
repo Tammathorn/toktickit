@@ -1,0 +1,120 @@
+Command: npx playwright test e2e/lab-03/visual-evidence.spec.ts --project=desktop --project=tablet --project=mobile
+Date: 2026-10-05 17:55 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence, tests written, fixes not yet made)
+
+
+Running 12 tests using 9 workers
+
+(node:46508) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:7952) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:42408) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓   3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (211ms)
+  ✓   1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (232ms)
+  ✓   2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (214ms)
+(node:43648) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:27028) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2288) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21948) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:51760) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:43900) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:17848) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:2152) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:13608) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  -   7 [tablet] › e2e\lab-03\visual-evidence.spec.ts:36:9 › Visual checklist defects (Issue #12) › IT Staff › RESP-11 at 1280 px the Queue's nine columns all fit the card: Current Status, Ticket Owner and Last Updated are visible (ui-spec 15.2, 21)
+  -   4 [desktop] › e2e\lab-03\visual-evidence.spec.ts:53:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9)
+  -   6 [desktop] › e2e\lab-03\visual-evidence.spec.ts:76:9 › Visual checklist defects (Issue #12) › Requester › RESP-13 at 834 px every My Tickets row shows its IT Priority badge (C-116, FR-31)
+  -   8 [mobile] › e2e\lab-03\visual-evidence.spec.ts:36:9 › Visual checklist defects (Issue #12) › IT Staff › RESP-11 at 1280 px the Queue's nine columns all fit the card: Current Status, Ticket Owner and Last Updated are visible (ui-spec 15.2, 21)
+  -  11 [mobile] › e2e\lab-03\visual-evidence.spec.ts:76:9 › Visual checklist defects (Issue #12) › Requester › RESP-13 at 834 px every My Tickets row shows its IT Priority badge (C-116, FR-31)
+  -  12 [mobile] › e2e\lab-03\visual-evidence.spec.ts:53:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9)
+  ✘   5 [desktop] › e2e\lab-03\visual-evidence.spec.ts:36:9 › Visual checklist defects (Issue #12) › IT Staff › RESP-11 at 1280 px the Queue's nine columns all fit the card: Current Status, Ticket Owner and Last Updated are visible (ui-spec 15.2, 21) (750ms)
+  ✘  10 [tablet] › e2e\lab-03\visual-evidence.spec.ts:53:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) (683ms)
+  ✘   9 [tablet] › e2e\lab-03\visual-evidence.spec.ts:76:9 › Visual checklist defects (Issue #12) › Requester › RESP-13 at 834 px every My Tickets row shows its IT Priority badge (C-116, FR-31) (5.6s)
+
+
+  1) [desktop] › e2e\lab-03\visual-evidence.spec.ts:36:9 › Visual checklist defects (Issue #12) › IT Staff › RESP-11 at 1280 px the Queue's nine columns all fit the card: Current Status, Ticket Owner and Last Updated are visible (ui-spec 15.2, 21) 
+
+    Error: table width within the card
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 1114
+    Received:    1588
+
+      40 |       await expect(card.locator("tbody tr").first()).toBeVisible();
+      41 |       const fit = await tableFitsCard(page);
+    > 42 |       expect(fit.table, "table width within the card").toBeLessThanOrEqual(fit.card);
+         |                                                        ^
+      43 |       await expectInsideCard(card, card.locator("thead th"));
+      44 |       for (const name of ["Current Status", "Ticket Owner", "Last Updated"]) {
+      45 |         await expect(card.getByRole("columnheader", { name })).toBeInViewport();
+        at C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:42:56
+
+    Error Context: test-results\lab-03-visual-evidence-Vis-07c04-re-visible-ui-spec-15-2-21--desktop\error-context.md
+
+  2) [tablet] › e2e\lab-03\visual-evidence.spec.ts:53:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) 
+
+    Error: table width within the card
+
+    expect(received).toBeLessThanOrEqual(expected)
+
+    Expected: <= 694
+    Received:    748
+
+      57 |       await expect(card.locator("tbody tr").first()).toBeVisible();
+      58 |       const fit = await tableFitsCard(page);
+    > 59 |       expect(fit.table, "table width within the card").toBeLessThanOrEqual(fit.card);
+         |                                                        ^
+      60 |       await expectInsideCard(card, card.locator("thead th"));
+      61 |       await expectInsideCard(card, card.getByRole("button", { name: /^Edit / }));
+      62 |
+        at C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:59:56
+
+    Error Context: test-results\lab-03-visual-evidence-Vis-aee8f-on-one-line-ui-spec-17-1-9--tablet\error-context.md
+
+  3) [tablet] › e2e\lab-03\visual-evidence.spec.ts:76:9 › Visual checklist defects (Issue #12) › Requester › RESP-13 at 834 px every My Tickets row shows its IT Priority badge (C-116, FR-31) 
+
+    Error: row 1
+
+    expect(locator).toBeVisible() failed
+
+    Locator:  locator('.tk-table-card tbody tr').first().getByText(/^IT (Low|Medium|High)$/)
+    Expected: visible
+    Received: hidden
+    Timeout:  5000ms
+
+    Call log:
+      - row 1 with timeout 5000ms
+      - waiting for locator('.tk-table-card tbody tr').first().getByText(/^IT (Low|Medium|High)$/)
+        14 × locator resolved to <span class="tk-badge tk-badge-pill tk-priority-medium">IT Medium</span>
+           - unexpected value "hidden"
+
+
+      81 |       const n = await rows.count();
+      82 |       for (let i = 0; i < n; i++) {
+    > 83 |         await expect(rows.nth(i).getByText(/^IT (Low|Medium|High)$/), `row ${i + 1}`).toBeVisible();
+         |                                                                                       ^
+      84 |       }
+      85 |     });
+      86 |   });
+        at C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:83:87
+
+    Error Context: test-results\lab-03-visual-evidence-Vis-45d9d-Priority-badge-C-116-FR-31--tablet\error-context.md
+
+  3 failed
+    [desktop] › e2e\lab-03\visual-evidence.spec.ts:36:9 › Visual checklist defects (Issue #12) › IT Staff › RESP-11 at 1280 px the Queue's nine columns all fit the card: Current Status, Ticket Owner and Last Updated are visible (ui-spec 15.2, 21) 
+    [tablet] › e2e\lab-03\visual-evidence.spec.ts:53:9 › Visual checklist defects (Issue #12) › Administrator › RESP-12 at 834 px User Management shows its Edit column inside the card, and the header identity stays on one line (ui-spec 17.1, 9) 
+    [tablet] › e2e\lab-03\visual-evidence.spec.ts:76:9 › Visual checklist defects (Issue #12) › Requester › RESP-13 at 834 px every My Tickets row shows its IT Priority badge (C-116, FR-31) 
+  6 skipped
+  3 passed (7.3s)

@@ -1,0 +1,66 @@
+{
+  "screen": "staff-detail",
+  "viewport": "tablet",
+  "url": "/queue/104",
+  "focusableVisible": 11,
+  "reached": 11,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Ticket Queue",
+      "ring": "box-shadow rgba(13, 110, 253, 0.25) 0px 0px 0px 4px"
+    },
+    {
+      "element": "button",
+      "name": "Log Out",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Claim",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#owner-select",
+      "name": "Assign to…",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#it-priority-select",
+      "name": "IT Priority",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Save Changes",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#status-select",
+      "name": "Current Status",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "textarea#comment-body",
+      "name": "Add a comment",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "textarea#note-body",
+      "name": "Add an internal note",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "a",
+      "name": "Back to the Ticket Queue",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type FormEvent, type ReactNode } from "react";
+import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
 import {
   ApiError,
   createUser,
@@ -179,12 +179,15 @@ export default function UserManagement() {
 
         {ready && ready.length === 0 && !active && (
           <div className="card tk-card tk-empty text-center">
+            <DocumentIcon />
             <h2 className="tk-section-title">No users yet</h2>
+            <p>There are no user accounts yet. Use Create User to add the first one.</p>
           </div>
         )}
 
         {ready && ready.length === 0 && active && (
           <div className="card tk-card tk-empty text-center">
+            <MagnifierIcon />
             <h2 className="tk-section-title">No matches</h2>
             <p>No users match your search or filter.</p>
             <button type="button" className="btn btn-secondary align-self-center" onClick={clearFilters}>Clear filters</button>
@@ -239,7 +242,7 @@ function NameCell({ user, currentUserId }: { user: AdminUser; currentUserId: num
 function UsersTable({ users, currentUserId, onEdit }: { users: AdminUser[]; currentUserId: number; onEdit: (u: AdminUser) => void }) {
   return (
     <div className="card tk-card tk-table-card">
-      <table className="table tk-table mb-0">
+      <table className="table tk-table tk-users-table mb-0">
         <thead>
           <tr>
             <th scope="col">Name</th>
@@ -310,15 +313,59 @@ function UsersSkeleton({ wide }: { wide: boolean }) {
 // own fields, validation and submit.
 // ---------------------------------------------------------------------------
 
-function PanelShell({ titleId, title, children }: { titleId: string; title: string; children: ReactNode }) {
+function PanelShell({
+  titleId,
+  title,
+  onClose,
+  busy,
+  children,
+}: {
+  titleId: string;
+  title: string;
+  onClose: () => void;
+  busy: boolean;
+  children: ReactNode;
+}) {
   const headingRef = useRef<HTMLHeadingElement>(null);
+  const dialogRef = useRef<HTMLDivElement>(null);
+  // ui-spec 22 (checklist A11y row 4): a modal traps focus and restores it on
+  // close - the same contract ConfirmDialog keeps. The opener is remembered on
+  // open and refocused when the panel unmounts.
   useEffect(() => {
+    const opener = document.activeElement as HTMLElement | null;
     headingRef.current?.focus();
+    return () => opener?.focus();
   }, []);
+
+  function trapFocus(event: KeyboardEvent<HTMLDivElement>) {
+    if (event.key === "Escape") {
+      event.preventDefault();
+      if (!busy) onClose();
+      return;
+    }
+    if (event.key !== "Tab") return;
+    const items = Array.from(
+      dialogRef.current?.querySelectorAll<HTMLElement>(
+        "input:not([disabled]), select:not([disabled]), textarea:not([disabled]), button:not([disabled]), a[href]",
+      ) ?? [],
+    );
+    if (items.length === 0) return;
+    const first = items[0];
+    const last = items[items.length - 1];
+    const active = document.activeElement;
+    if (event.shiftKey && (active === first || active === headingRef.current)) {
+      event.preventDefault();
+      last.focus();
+    } else if (!event.shiftKey && active === last) {
+      event.preventDefault();
+      first.focus();
+    }
+  }
+
   return (
     <>
       <div className="modal-backdrop show" />
-      <div className="modal d-block" role="dialog" aria-modal="true" aria-labelledby={titleId}>
+      <div className="modal d-block" role="dialog" aria-modal="true" aria-labelledby={titleId} ref={dialogRef} onKeyDown={trapFocus}>
         <div className="modal-dialog modal-dialog-centered">
           <div className="modal-content tk-dialog">
             <div className="modal-header">
@@ -386,7 +433,7 @@ function CreatePanel({ onCancel, onSaved }: { onCancel: () => void; onSaved: () 
   }
 
   return (
-    <PanelShell titleId="create-user-title" title="Create User">
+    <PanelShell titleId="create-user-title" title="Create User" onClose={onCancel} busy={saving}>
       <form noValidate onSubmit={handleSubmit}>
         <div className="modal-body">
           {failed && (
@@ -526,7 +573,7 @@ function EditPanel({
   }
 
   return (
-    <PanelShell titleId="edit-user-title" title="Edit User">
+    <PanelShell titleId="edit-user-title" title="Edit User" onClose={onCancel} busy={saving}>
       <form noValidate onSubmit={handleSubmit}>
         <div className="modal-body">
           {banner && (
@@ -639,7 +686,7 @@ function SetPasswordPanel({ user, onCancel, onSaved }: { user: AdminUser; onCanc
   }
 
   return (
-    <PanelShell titleId="set-password-title" title={`Set a new initial password for ${user.name}`}>
+    <PanelShell titleId="set-password-title" title={`Set a new initial password for ${user.name}`} onClose={onCancel} busy={saving}>
       <form noValidate onSubmit={handleSubmit}>
         <div className="modal-body">
           {failed && (
@@ -672,5 +719,24 @@ function SetPasswordPanel({ user, onCancel, onSaved }: { user: AdminUser; onCanc
         </div>
       </form>
     </PanelShell>
+  );
+}
+
+// ui-spec 20.1 - Empty carries an outline document icon, No results an
+// outline magnifier, so the two states differ at a glance (C-121). The same
+// glyphs My Tickets and the Queue use.
+function DocumentIcon() {
+  return (
+    <svg className="tk-empty-icon" viewBox="0 0 24 24" width="40" height="40" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <path d="M7 3h7l5 5v13H7z" /><path d="M14 3v5h5" /><path d="M9 13h6M9 17h6" />
+    </svg>
+  );
+}
+
+function MagnifierIcon() {
+  return (
+    <svg className="tk-empty-icon" viewBox="0 0 24 24" width="40" height="40" aria-hidden="true" fill="none" stroke="currentColor" strokeWidth="1.5">
+      <circle cx="10.5" cy="10.5" r="6.5" /><path d="M15.5 15.5 21 21" />
+    </svg>
   );
 }

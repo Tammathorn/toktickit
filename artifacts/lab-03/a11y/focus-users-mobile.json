@@ -1,0 +1,131 @@
+{
+  "screen": "users",
+  "viewport": "mobile",
+  "url": "/users",
+  "focusableVisible": 24,
+  "reached": 24,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "a",
+      "name": "TokTickIT",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Toggle navigation",
+      "ring": "box-shadow rgba(255, 255, 255, 0.55) 0px 0px 0px 4px"
+    },
+    {
+      "element": "button",
+      "name": "Create User",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#users-search",
+      "name": "Search",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "select#users-role",
+      "name": "Role",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Anucha Prasert",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Araya Methee",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Decha Intharat",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Duplicate Check",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Duplicate Check",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit E2E Created User",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit E2E Edit Target Renamed",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit E2E Edit Target Renamed",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Existing E2E User",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Existing E2E User",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Existing E2E User",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Fonthip Charoen",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Kanya Somsri",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Nattapong Wong",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Panida Srisawat",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Prasit Boonmee",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Siriporn Chaiyo",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Somkid Rattana",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Edit Wichai Tanaka",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

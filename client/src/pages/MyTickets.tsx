@@ -380,7 +380,12 @@ function TicketRow({ ticket: t, onOpen }: { ticket: TicketListRow; onOpen: () =>
       <td className="d-none d-lg-table-cell"><PriorityBadge value={t.requestedPriority} /></td>
       {/* FR-31, C-71: IT Priority is never null, so its badge always renders. */}
       <td className="d-none d-lg-table-cell"><PriorityBadge value={t.itPriority} it /></td>
-      <td><StatusBadge value={t.currentStatus} /></td>
+      <td>
+        <StatusBadge value={t.currentStatus} />
+        {/* C-116: at md the IT Priority column is dropped, so its badge rides in
+            this cell; from lg it has its own column and this copy is hidden. */}
+        <span className="d-lg-none ms-1"><PriorityBadge value={t.itPriority} it /></span>
+      </td>
       <td className="tk-nowrap">{formatDisplayTimestamp(t.updatedAt)}</td>
     </tr>
   );

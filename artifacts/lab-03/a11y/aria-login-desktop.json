@@ -1,0 +1,16 @@
+{
+  "screen": "login",
+  "viewport": "desktop",
+  "url": "/",
+  "unnamedInteractive": [],
+  "ariaSnapshot": [
+    "- main:",
+    "  - paragraph: TokTickIT",
+    "  - heading \"Sign In\" [level=1]",
+    "  - text: Email Address (required)",
+    "  - textbox \"Email Address (required)\"",
+    "  - text: Password (required)",
+    "  - textbox \"Password (required)\"",
+    "  - button \"Sign In\""
+  ]
+}

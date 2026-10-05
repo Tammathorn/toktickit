@@ -1,0 +1,518 @@
+Command: cd client && npx vitest run tests/lab-03/UiDefects.test.tsx -t UI-59
+Date: 2026-10-05 18:09 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence; User Management modal trap written as a test, not yet implemented)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-03/UiDefects.test.tsx (7 tests | 1 failed | 6 skipped) 197ms
+   × Visual-checklist defects (Issue #12) > UI-59 the User Management panels are real modals: Tab wraps inside, Escape closes, focus returns to the opener (ui-spec 22, checklist A11y row 4) 196ms
+     → Tab past the last control wraps to the first: expected <body><div>…(2)</div></body> to be <input id="cu-name" …(2)></input> // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-59 the User Management panels are real modals: Tab wraps inside, Escape closes, focus returns to the opener (ui-spec 22, checklist A11y row 4)
+AssertionError: Tab past the last control wraps to the first: expected <body><div>…(2)</div></body> to be <input id="cu-name" …(2)></input> // Object.is equality
+
+- Expected
++ Received
+
++ <body>
++   <div>
++     <header
++       class="tk-header"
++     >
++       <nav
++         aria-label="Main navigation"
++         class="navbar navbar-expand-md"
++         data-bs-theme="dark"
++       >
++         <div
++           class="container"
++         >
++           <a
++             class="navbar-brand tk-brand"
++             href="/queue"
++           >
++             TokTickIT
++           </a>
++           <button
++             aria-controls="tk-nav-panel"
++             aria-expanded="false"
++             aria-label="Toggle navigation"
++             class="navbar-toggler"
++             type="button"
++           >
++             <span
++               aria-hidden="true"
++               class="navbar-toggler-icon"
++             />
++           </button>
++           <div
++             class="collapse navbar-collapse"
++             id="tk-nav-panel"
++           >
++             <ul
++               class="navbar-nav mx-auto"
++             >
++               <li
++                 class="nav-item"
++               >
++                 <a
++                   class="nav-link tk-nav-link"
++                   href="/queue"
++                 >
++                   Ticket Queue
++                 </a>
++               </li>
++               <li
++                 class="nav-item"
++               >
++                 <a
++                   aria-current="page"
++                   class="nav-link tk-nav-link tk-nav-link-active"
++                   href="/users"
++                 >
++                   User Management
++                 </a>
++               </li>
++             </ul>
++             <div
++               class="tk-identity tk-identity-shell"
++             >
++               <span
++                 class="tk-identity-name"
++               >
++                 Panida Srisawat
++               </span>
++               <span
++                 class="tk-badge tk-badge-square tk-badge-role tk-role-administrator"
++               >
++                 Administrator
++               </span>
++               <button
++                 class="btn tk-btn-tertiary tk-btn-on-primary"
++                 type="button"
++               >
++                 Log Out
++               </button>
++             </div>
++           </div>
++         </div>
++       </nav>
++     </header>
++     <main
++       class="container tk-main"
++     >
++       <section
++         aria-labelledby="users-title"
++       >
++         <div
++           class="d-flex justify-content-between align-items-start flex-wrap gap-2 mb-3"
++         >
++           <h1
++             class="tk-title mb-0"
++             id="users-title"
++           >
++             User Management
++           </h1>
++           <button
++             class="btn btn-primary"
++             type="button"
++           >
++             Create User
++           </button>
++         </div>
++         <div
++           aria-label="Search and filter users"
++           class="card tk-card tk-toolbar mb-3"
++           role="search"
++         >
++           <div
++             class="row g-3"
++           >
++             <div
++               class="col-12 col-md-6"
++             >
++               <label
++                 class="form-label tk-label"
++                 for="users-search"
++               >
++                 Search
++               </label>
++               <input
++                 class="form-control"
++                 id="users-search"
++                 placeholder="Name or email address"
++                 type="search"
++                 value=""
++               />
++             </div>
++             <div
++               class="col-12 col-md-4"
++             >
++               <label
++                 class="form-label tk-label"
++                 for="users-role"
++               >
++                 Role
++               </label>
++               <select
++                 class="form-select"
++                 id="users-role"
++               >
++                 <option
++                   value=""
++                 >
++                   All roles
++                 </option>
++                 <option
++                   value="REQUESTER"
++                 >
++                   Requester
++                 </option>
++                 <option
++                   value="IT_STAFF"
++                 >
++                   IT Staff
++                 </option>
++                 <option
++                   value="ADMINISTRATOR"
++                 >
++                   Administrator
++                 </option>
++               </select>
++             </div>
++           </div>
++         </div>
++         <div
++           aria-label="Users"
++           aria-live="polite"
++           class="tk-list-region"
++           role="region"
++         >
++           <div
++             class="card tk-card tk-table-card"
++           >
++             <table
++               class="table tk-table tk-users-table mb-0"
++             >
++               <thead>
++                 <tr>
++                   <th
++                     scope="col"
++                   >
++                     Name
++                   </th>
++                   <th
++                     scope="col"
++                   >
++                     Email
++                   </th>
++                   <th
++                     scope="col"
++                   >
++                     Role
++                   </th>
++                   <th
++                     scope="col"
++                   >
++                     Status
++                   </th>
++                   <th
++                     scope="col"
++                   >
++                     Edit
++                   </th>
++                 </tr>
++               </thead>
++               <tbody>
++                 <tr
++                   class="tk-row"
++                 >
++                   <td>
++                     Panida Srisawat
++                      
++                     <span
++                       class="tk-muted"
++                     >
++                       (you)
++                     </span>
++                   </td>
++                   <td>
++                     panida.s@example.test
++                   </td>
++                   <td>
++                     <span
++                       class="tk-badge tk-badge-square tk-badge-role tk-role-administrator"
++                     >
++                       Administrator
++                     </span>
++                   </td>
++                   <td>
++                     <span
++                       class="tk-status-active"
++                     >
++                       Active
++                     </span>
++                   </td>
++                   <td>
++                     <button
++                       aria-label="Edit Panida Srisawat"
++                       class="btn btn-link tk-link-button"
++                       type="button"
++                     >
++                       Edit
++                     </button>
++                   </td>
++                 </tr>
++               </tbody>
++             </table>
++           </div>
++         </div>
++         <div
++           class="modal-backdrop show"
++         />
++         <div
++           aria-labelledby="create-user-title"
++           aria-modal="true"
++           class="modal d-block"
++           role="dialog"
++         >
++           <div
++             class="modal-dialog modal-dialog-centered"
++           >
++             <div
++               class="modal-content tk-dialog"
++             >
++               <div
++                 class="modal-header"
++               >
++                 <h2
++                   class="tk-section-title mb-0"
++                   id="create-user-title"
++                   tabindex="-1"
++                 >
++                   Create User
++                 </h2>
++               </div>
++               <form
++                 novalidate=""
++               >
++                 <div
++                   class="modal-body"
++                 >
++                   <div
++                     class="mb-3"
++                   >
++                     <label
++                       class="form-label tk-label"
++                       for="cu-name"
++                     >
++                       Name
++                        
++                       <span
++                         aria-hidden="true"
++                         class="tk-required"
++                       >
++                         *
++                       </span>
++                       <span
++                         class="visually-hidden"
++                       >
++                          (required)
++                       </span>
++                     </label>
+                      <input
+                        class="form-control"
+                        id="cu-name"
++                       value=""
++                     />
++                   </div>
++                   <div
++                     class="mb-3"
++                   >
++                     <label
++                       class="form-label tk-label"
++                       for="cu-email"
++                     >
++                       Email Address
++                        
++                       <span
++                         aria-hidden="true"
++                         class="tk-required"
++                       >
++                         *
++                       </span>
++                       <span
++                         class="visually-hidden"
++                       >
++                          (required)
++                       </span>
++                     </label>
++                     <input
++                       class="form-control"
++                       id="cu-email"
++                       type="email"
++                       value=""
++                     />
++                   </div>
++                   <div
++                     class="mb-3"
++                   >
++                     <label
++                       class="form-label tk-label"
++                       for="cu-role"
++                     >
++                       Role
++                        
++                       <span
++                         aria-hidden="true"
++                         class="tk-required"
++                       >
++                         *
++                       </span>
++                       <span
++                         class="visually-hidden"
++                       >
++                          (required)
++                       </span>
++                     </label>
++                     <select
++                       class="form-select"
++                       id="cu-role"
++                     >
++                       <option
++                         value="REQUESTER"
++                       >
++                         Requester
++                       </option>
++                       <option
++                         value="IT_STAFF"
++                       >
++                         IT Staff
++                       </option>
++                       <option
++                         value="ADMINISTRATOR"
++                       >
++                         Administrator
++                       </option>
++                     </select>
++                   </div>
++                   <div
++                     class="mb-3"
++                   >
++                     <label
++                       class="form-label tk-label"
++                       for="cu-status"
++                     >
++                       Status
++                        
++                       <span
++                         aria-hidden="true"
++                         class="tk-required"
++                       >
++                         *
++                       </span>
++                       <span
++                         class="visually-hidden"
++                       >
++                          (required)
++                       </span>
++                     </label>
++                     <select
++                       class="form-select"
++                       id="cu-status"
++                     >
++                       <option
++                         value="active"
++                       >
++                         Active
++                       </option>
++                       <option
++                         value="inactive"
++                       >
++                         Inactive
++                       </option>
++                     </select>
++                   </div>
++                   <div
++                     class="mb-1"
++                   >
++                     <label
++                       class="form-label tk-label"
++                       for="cu-password"
++                     >
++                       Initial Password
++                        
++                       <span
++                         aria-hidden="true"
++                         class="tk-required"
++                       >
++                         *
++                       </span>
++                       <span
++                         class="visually-hidden"
++                       >
++                          (required)
++                       </span>
++                     </label>
++                     <input
++                       autocomplete="new-password"
++                       class="form-control"
++                       id="cu-password"
++                       type="password"
+                        value=""
+                      />
++                   </div>
++                   <p
++                     class="tk-muted mt-1"
++                   >
++                     Password must be 8 to 128 characters and contain an upper-case letter, a lower-case letter, a digit and a special character.
++                   </p>
++                   <p
++                     class="tk-muted"
++                   >
++                     The user must change this password when they first sign in.
++                   </p>
++                 </div>
++                 <div
++                   class="modal-footer"
++                 >
++                   <button
++                     class="btn btn-secondary"
++                     type="button"
++                   >
++                     Cancel
++                   </button>
++                   <button
++                     class="btn btn-primary"
++                     type="submit"
++                   >
++                     Create User
++                   </button>
++                 </div>
++               </form>
++             </div>
++           </div>
++         </div>
++       </section>
++     </main>
++   </div>
++ </body>
+
+ ❯ tests/lab-03/UiDefects.test.tsx:185:84
+    183|     last.focus();
+    184|     await user.tab();
+    185|     expect(document.activeElement, "Tab past the last control wraps to…
+       |                                                                                    ^
+    186|     await user.tab({ shift: true });
+    187|     expect(document.activeElement, "Shift+Tab before the first wraps t…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 6 skipped (7)
+   Start at  01:09:38
+   Duration  1.53s (transform 241ms, setup 86ms, collect 466ms, tests 197ms, environment 422ms, prepare 149ms)
+

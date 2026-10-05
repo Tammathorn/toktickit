@@ -1,0 +1,26 @@
+{
+  "screen": "login",
+  "viewport": "desktop",
+  "url": "/",
+  "focusableVisible": 3,
+  "reached": 3,
+  "completedCycle": true,
+  "withoutRing": 0,
+  "stops": [
+    {
+      "element": "input#login-email",
+      "name": "Email Address * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "input#login-password",
+      "name": "Password * (required)",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    },
+    {
+      "element": "button",
+      "name": "Sign In",
+      "ring": "box-shadow rgba(11, 122, 70, 0.35) 0px 0px 0px 3px"
+    }
+  ]
+}

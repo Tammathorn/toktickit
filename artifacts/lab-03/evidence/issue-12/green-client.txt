@@ -1,0 +1,103 @@
+Command: cd client && npx vitest run   (the whole client suite: Lab 1, Lab 2 and Lab 3)
+Date: 2026-10-05 18:43 UTC
+Commit: a6ab4844a6af8805a35a68cd7cded00fef4c9cdb (feature/lab3-12-ui-evidence, every fix in the working tree, uncommitted)
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (3 tests) 187ms
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (12 tests) 1119ms
+   ✓ Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 359ms
+stderr | tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56)
+Warning: An update to RouterProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:90:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:90:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 1837ms
+   ✓ My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 762ms
+   ✓ My Tickets > debounces the search box into the request and resets to page 1 461ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx (19 tests) 1963ms
+   ✓ IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 443ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 2028ms
+   ✓ Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1354ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx (13 tests) 2036ms
+   ✓ IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 914ms
+   ✓ IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56) 582ms
+ ✓ tests/lab-03/UiDefects.test.tsx (9 tests) 2520ms
+   ✓ Visual-checklist defects (Issue #12) > UI-57 IT Staff Ticket Detail confirms each write with the ui-spec 20.1 success panel - pale, check icon, sentence, polite (C-119) 955ms
+   ✓ Visual-checklist defects (Issue #12) > UI-58 Requester Ticket Detail confirms a posted comment with the success panel (C-119) 622ms
+   ✓ Visual-checklist defects (Issue #12) > UI-61 User Management's Empty and No results states carry the ui-spec 20.1 icon and body, and differ from each other (17.3, C-121) 400ms
+ ✓ tests/lab-03/UserManagement.test.tsx (15 tests) 3661ms
+   ✓ User Management > UI-40 search and the role filter each issue a request carrying their parameter (AC-83, AC-84) 576ms
+   ✓ User Management > UI-42 a duplicate email on create renders at the Email Address field, not as a banner (AC-87, FR-62) 887ms
+   ✓ User Management > creating a user shows Creating… then the success panel and refetches the list (BR-16) 993ms
+   ✓ User Management > empty and no-results states are distinguished by whether a filter is active (L2 C-28) 431ms
+ ✓ tests/lab-03/Login.test.tsx (18 tests) 4354ms
+   ✓ Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 765ms
+   ✓ Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 781ms
+   ✓ Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 744ms
+   ✓ Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 811ms
+   ✓ Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 753ms
+ ✓ tests/lab-03/ChangePassword.test.tsx (9 tests) 10991ms
+   ✓ Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 828ms
+   ✓ Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3572ms
+   ✓ Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2381ms
+   ✓ Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1250ms
+   ✓ Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 404ms
+   ✓ Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2369ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 11626ms
+   ✓ Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 640ms
+   ✓ Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2502ms
+   ✓ Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 1981ms
+   ✓ Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2123ms
+   ✓ Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 2001ms
+   ✓ Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 2001ms
+
+ Test Files  11 passed (11)
+      Tests  128 passed (128)
+   Start at  01:43:16
+   Duration  13.54s (transform 825ms, setup 1.49s, collect 6.25s, tests 42.32s, environment 8.17s, prepare 1.91s)
+

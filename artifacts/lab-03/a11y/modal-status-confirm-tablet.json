@@ -1,0 +1,10 @@
+{
+  "dialog": "status-confirm",
+  "viewport": "tablet",
+  "controls": 2,
+  "tabFromLastWrapsToFirst": true,
+  "shiftTabFromFirstWrapsToLast": true,
+  "focusLeftDialogWhileTabbing": false,
+  "escapeClosed": true,
+  "focusRestoredToOpener": true
+}

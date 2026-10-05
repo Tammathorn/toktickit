@@ -22,6 +22,8 @@ import { PriorityBadge, ResolvedMarker, RoleBadge, StatusBadge, STATUS_LABELS, t
 import { PublicCommentsCard, InternalNotesCard } from "../components/Communications.js";
 import ConfirmDialog from "../components/ConfirmDialog.js";
 import Forbidden from "../components/Forbidden.js";
+import NotFound from "../components/NotFound.js";
+import SuccessPanel from "../components/SuccessPanel.js";
 
 // IT Staff Ticket Detail - ui-spec.md section 16, LS 8.4. Four cards: Card 1
 // (read-only Ticket information), Card 2 (Ticket Operations - the only
@@ -103,6 +105,8 @@ export default function StaffTicketDetail({ id }: { id: number }) {
   const [reloadToken, setReloadToken] = useState(0);
   const [ticket, setTicket] = useState<StaffTicket | null>(null);
   const [assignableUsers, setAssignableUsers] = useState<AssignableUser[]>([]);
+  // C-119: the ui-spec 20.1 success panel after each write on this screen.
+  const [success, setSuccess] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -157,12 +161,14 @@ export default function StaffTicketDetail({ id }: { id: number }) {
   }
 
   if (load.kind === "forbidden") return <Forbidden />;
+  // ui-spec 20.1: a 404 is the Not found state, not the failure panel.
+  if (load.kind === "refused") return <NotFound what={`There is no ticket with the ID ${id}.`} backTo={backTo} backLabel="Back to the Ticket Queue" />;
 
-  if (load.kind === "refused" || load.kind === "error" || !ticket) {
+  if (load.kind === "error" || !ticket) {
     return (
       <section aria-label="Ticket detail">
         <div className="tk-panel tk-panel-danger" role="alert" aria-live="assertive">
-          <p>{load.kind === "refused" ? load.message : messageForCode("INTERNAL_ERROR")}</p>
+          <p>{messageForCode("INTERNAL_ERROR")}</p>
           <div className="d-flex flex-wrap gap-2">
             {load.kind === "error" && (
               <button type="button" className="btn btn-secondary" onClick={() => setReloadToken((n) => n + 1)}>Retry</button>
@@ -179,6 +185,7 @@ export default function StaffTicketDetail({ id }: { id: number }) {
 
   return (
     <section aria-labelledby="staff-detail-title">
+      {success && <SuccessPanel message={success} />}
       <div className="row g-3 mb-3">
         <div className="col-12 col-lg-7">
           <InfoCard ticket={t} />
@@ -188,7 +195,10 @@ export default function StaffTicketDetail({ id }: { id: number }) {
             ticket={t}
             isTerminal={isTerminal}
             assignableUsers={assignableUsers}
-            onUpdated={setTicket}
+            onUpdated={(next, message) => {
+              setTicket(next);
+              setSuccess(message);
+            }}
             onRefetch={() => fetchStaffTicket(t.id).then(setTicket, () => {})}
           />
         </div>
@@ -200,13 +210,19 @@ export default function StaffTicketDetail({ id }: { id: number }) {
         ticketId={t.id}
         entries={t.publicComments}
         locked={isTerminal}
-        onPosted={(entry: Entry) => setTicket((cur) => (cur ? { ...cur, publicComments: [entry, ...cur.publicComments] } : cur))}
+        onPosted={(entry: Entry) => {
+          setTicket((cur) => (cur ? { ...cur, publicComments: [entry, ...cur.publicComments] } : cur));
+          setSuccess("Comment posted.");
+        }}
       />
       <InternalNotesCard
         ticketId={t.id}
         entries={t.internalNotes}
         locked={isTerminal}
-        onPosted={(entry: Entry) => setTicket((cur) => (cur ? { ...cur, internalNotes: [entry, ...cur.internalNotes] } : cur))}
+        onPosted={(entry: Entry) => {
+          setTicket((cur) => (cur ? { ...cur, internalNotes: [entry, ...cur.internalNotes] } : cur));
+          setSuccess("Internal note added.");
+        }}
       />
       {/* ui-spec 16.4, C-109: the terminal line, once, below both sections. */}
       {isTerminal && <p className="tk-muted mt-3">{terminalMessage(t.currentStatus)}</p>}
@@ -256,7 +272,7 @@ function OperationsCard({
   ticket: StaffTicket;
   isTerminal: boolean;
   assignableUsers: AssignableUser[];
-  onUpdated: (t: StaffTicket) => void;
+  onUpdated: (t: StaffTicket, message: string) => void;
   onRefetch: () => void;
 }) {
   const [ownerSelect, setOwnerSelect] = useState("");
@@ -285,7 +301,7 @@ function OperationsCard({
     setOwnerBusy("claim");
     setOwnerConflict(null);
     try {
-      onUpdated(await claimTicket(t.id));
+      onUpdated(await claimTicket(t.id), "Ticket claimed.");
     } catch (err) {
       if (err instanceof ApiError && err.code === "ALREADY_OWNED") onRefetch();
       handleWriteError(err, setOwnerConflict);
@@ -299,7 +315,7 @@ function OperationsCard({
     setOwnerBusy("save");
     setOwnerConflict(null);
     try {
-      onUpdated(await setTicketOwner(t.id, Number(ownerSelect)));
+      onUpdated(await setTicketOwner(t.id, Number(ownerSelect)), "Owner changed.");
       setOwnerSelect("");
     } catch (err) {
       handleWriteError(err, setOwnerConflict);
@@ -312,7 +328,7 @@ function OperationsCard({
     setOwnerBusy("unassign");
     setOwnerConflict(null);
     try {
-      onUpdated(await setTicketOwner(t.id, null));
+      onUpdated(await setTicketOwner(t.id, null), "Owner changed.");
     } catch (err) {
       handleWriteError(err, setOwnerConflict);
     } finally {
@@ -324,7 +340,7 @@ function OperationsCard({
     setPriorityBusy(true);
     setPriorityError(null);
     try {
-      onUpdated(await setItPriority(t.id, priorityValue));
+      onUpdated(await setItPriority(t.id, priorityValue), "IT Priority saved.");
     } catch (err) {
       handleWriteError(err, setPriorityError);
     } finally {
@@ -336,7 +352,7 @@ function OperationsCard({
     setStatusBusy(true);
     setStatusConflict(null);
     try {
-      onUpdated(await setTicketStatus(t.id, target));
+      onUpdated(await setTicketStatus(t.id, target), `Status changed to ${STATUS_LABELS[target]}.`);
     } catch (err) {
       handleWriteError(err, setStatusConflict);
     } finally {
@@ -369,7 +385,8 @@ function OperationsCard({
           <p className="tk-label mb-1">IT Priority</p>
           <PriorityBadge value={t.itPriority} it />
         </div>
-        <p className="tk-muted mb-0">{terminalMessage(t.currentStatus)}</p>
+        {/* C-117: the terminal line is not repeated here - it renders once,
+            below the comment/note lists (16.4). */}
       </div>
     );
   }
