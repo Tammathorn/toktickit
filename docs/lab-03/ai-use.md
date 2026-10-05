@@ -215,7 +215,7 @@ reset `L2 C-37` forbids, until C-86 repoints it in Issue 2.
 
 ---
 
-### 2.6 Prompt 1.4 - the specification
+### 2.6 Prompt 1.4 - the specification **(key prompt)**
 
 Sent verbatim, opening:
 
@@ -339,7 +339,7 @@ agent will offer to *write down* a hole rather than fix it unless told which it 
 
 ---
 
-### 2.9 Prompts 1.5 to 1.7, run unattended
+### 2.9 Prompts 1.5 to 1.7, run unattended **(key prompt)**
 
 Sent verbatim, opening:
 
@@ -393,7 +393,7 @@ The subagent audit found it; no assertion would have. That is the argument for t
 
 ---
 
-### 2.10 The four decisions the drafts refused to make
+### 2.10 The four decisions the drafts refused to make **(key prompt)**
 
 `api-spec.md` section 12 and `ui-spec.md` section 25 each declared what they needed and could
 not find, with options and a recommendation, and resolved none of it. I answered all four.
@@ -440,7 +440,7 @@ silently overwritten.
 
 ---
 
-### 2.11 Peer review of PR #46 - the first defect a person found
+### 2.11 Peer review of PR #46 - the first defect a person found **(key prompt)**
 
 My reviewer, PAKATO, commented on the PR:
 
@@ -530,7 +530,151 @@ question nobody had asked. The single most productive instruction in the whole p
 each document to *declare what it needed and could not find* rather than fill the gap - that
 is what turned four silent inventions into four decisions with reasons attached.
 
-## 4. My Reflection
+## 4. Phase 2/3 prompt log - Issues #38-45, implementation
 
-Written at release, when the sprint has finished and there is evidence to reflect on rather
-than intentions.
+Issues #38-41 (data migration, authentication, authorization and regression, the staff
+queue) were implemented in earlier sessions whose own prompt-and-result detail is not
+available to the session that wrote this section - rather than reconstruct it from the
+commits alone, this section covers only the prompts this session actually received and
+can quote first-hand: the autopilot that ran Issues #42-45, and the decision points it
+escalated rather than invented.
+
+### 4.1 The autopilot prompt - Issues #42 through #45 **(key prompt)**
+
+Sent once, verbatim, opening:
+
+> Read CLAUDE.md first; follow its Token budget section and Evidence rules.
+>
+> AUTOPILOT: finish every remaining feature PR - #42, #43, #44, #45 - stacked per C-110.
+> Nothing merges into lab3-staging. PAKATO reviews everything at the end.
+>
+> How to run it, to keep this session small:
+> - You are the coordinator. Do each Issue below in its own fresh general-purpose
+>   subagent, one at a time, in order. [...]
+> - After each worker returns, spawn a separate audit subagent scoped to that Issue's
+>   diff [...] If it finds defects, spawn a worker to fix them, then move on.
+> - If a worker needs a decision the contract does not cover, stop everything and ask me.
+> - If interrupted, on restart check git log, the PRs and the board, and resume from the
+>   first Issue whose PR is not open.
+>
+> [per-Issue contract citations and scope for #42 (staff ticket ops), #43 (user admin),
+> #44 (e2e/visual and the evidence database), #45 (this document, the README, the
+> tests.md Final column, reviewer.md, report-lab03.md) - full text in the session that
+> received this prompt, not reproduced here]
+>
+> FINAL REPORT, at most 25 lines: the four PR links, test counts, pending evidence rows,
+> and up to 8 factual bullets for my reflection [...]
+
+**Result.** PRs #51 (#42), #52 (#43), #53 (#44), and this Issue's PR for #45 - all four
+stacked per C-110, each audited, nothing merged into `lab3-staging`.
+
+**What went wrong.** Two of the four worker subagents stalled mid-task (no progress for
+600s) and had to be resumed by inspecting the branch's uncommitted working tree directly
+rather than restarting from nothing - the #43 worker stalled with the server implementation
+done but a type error and two real test bugs unresolved (see 4.3); the #45 worker stalled
+partway through filling `tests.md`'s `Final` column, with nothing committed. Both resumptions
+found the stalled work genuinely usable, not corrupted, which is the only reason resuming
+rather than restarting was worth trying.
+
+### 4.2 A code-reading mistake, caught by checking the database it actually queried
+
+While investigating a server test failure (`DB-06`, a Lab 2 regression that appeared only
+when the full suite ran), I wrote throwaway Node scripts to inspect "the" database for
+orphaned rows, got zero results, and concluded the failure was a transient artifact of the
+test run itself. It was not: the scripts used `new PrismaClient()` with no `datasources`
+override, which reads `server/.env`'s `DATABASE_URL` - the **dev** database, `toktickit`,
+never the test database, `toktickit_test`, that the failing suite actually ran against.
+
+**What went wrong.** A wrong-database read produced a clean negative that looked like
+confirmation. Pointing the same script explicitly at `toktickit_test` found the real rows
+at once: two `users-admin.api.test.ts` fixtures left behind by an earlier failed run,
+because that one test's cleanup ran as plain trailing code rather than `try/finally` -
+fixed in the same commit the orphans were found and removed in.
+
+### 4.3 Decision exchanges - three questions escalated rather than invented **(key prompt)**
+
+Each raised by a worker's own report or by this session's own review of a worker's diff,
+each resolved by asking rather than guessing, in the same shape as Phase 1's 2.6 and 2.10:
+
+**C-113 (the refusal order on a terminal Ticket) and C-114 (the Requester owner DTO's
+missing `isActive`).** The #42 worker flagged that the contract never states whether
+`TICKET_CLOSED` (C-109) precedes or follows body validation, and separately that
+`ui-spec.md` 14.1 asks the Requester screen to render an owner `(inactive)` qualifier the
+DTO (`api-spec.md` 10.2) has no field for. Asked as two questions in one round; answered:
+
+> On a staff write to a Closed/Cancelled ticket with a malformed body, which refusal wins?
+> [...] Option 1: ownership -> TICKET_CLOSED 409 -> body 400 -> the operation's own
+> 409/422. Swap the order and its tests. Also write the step into api-spec 1.4's check
+> order and add one line to C-109 saying where it sits [...]
+>
+> [... and, on the DTO gap:] Add isActive to the DTO (Recommended).
+
+**Result.** C-113 and C-114 recorded; the refusal order swapped in four route handlers and
+pinned by a new test (API-121); the DTO, its client type, and `TicketDetail.tsx` all gained
+`isActive`, with a mirrored test (UI-53) for the Requester screen's own `(inactive)` marker.
+A follow-up audit of the same diff found one more interaction the fix had not stated an
+order for (`ATTACHMENT_REMOVED` versus `TICKET_CLOSED` on a removed Attachment whose Ticket
+later closed); asked and answered the same way, with the user's own reasoning for why -
+"the resource is gone" precedes "the resource may not be changed", matching the existing
+Lab 2 precedent for `disposition` - and recorded as a line in C-109 rather than a new row.
+
+**C-115 (how to test "exactly one active Administrator" without breaking every other e2e
+spec).** An audit of the #43 diff found this session's own first attempt at the
+`LAST_ADMINISTRATOR` e2e test had deactivated the seeded Administrator account to force the
+precondition - which revoked her session and corrupted the `STATE.administrator`
+storageState file every other spec in the parallel Playwright run depends on, observed
+directly as cascading 403s across unrelated tests. Asked what the right design was;
+answered:
+
+> None of these. Use the sole-Administrator self-demotion path, which mutates nothing: [...]
+> panida.s opens her own record, changes her role to IT Staff, saves, and gets the 409
+> LAST_ADMINISTRATOR feedback. The refusal changes no row and revokes no session, so it is
+> safe in the parallel run and needs no restore. [...] Before acting, the test asserts
+> through the API that exactly one active Administrator exists. [...] No e2e test may
+> create an active Administrator [...] Deactivating another Administrator and the
+> two-Administrators race stay covered at API level [...]
+
+**Result.** C-115 recorded with that reasoning; E2E-23 rewritten to the self-demotion path;
+the account restored and its session recaptured (`npx playwright test --project=setup`)
+before any other spec ran again.
+
+**What went wrong, across all three.** Each time, a worker (or this session's own first
+pass) reached for the technically-direct way to reproduce a scenario - swap an order
+without checking if the swap itself has edge cases, add a field without checking the two
+documents that jointly needed it agreed, force a global precondition by mutating the one
+account every other test depends on - and each time the *actual* answer required knowing
+something the contract did not yet state. The pattern from Phase 1 holds in Phase 2: an
+agent will resolve silently what it was told to escalate, unless the instruction to
+escalate is followed exactly and the question is asked plainly enough to answer in one
+round.
+
+### 4.4 An audit found what a prior Issue's own workers had written without authorization **(key prompt)**
+
+The #44 audit found that `tests.md` and `evidence.md` carved an unauthorized exception into
+the contract - `queue-<vp>-empty.png` "stays desktop-only... not reproducible without
+corrupting other Issues' fixtures" - with no decision row behind it, and the claim itself
+was wrong: the very next test in the same spec file already mocks the same endpoint via
+`page.route()` for the loading and failure captures, fully decoupled from any real database
+state. Fixed directly, without a decision round, since there was no genuine conflict to
+resolve - only an unapplied technique. The carve-out is gone; `queue-<vp>-empty.png` is
+captured at all three viewports the same way its neighbors already were.
+
+## 5. My Reflection
+
+**The specification agent helped most when it disagreed with me.** It found gaps my plan
+missed, such as hard-coded status lists and tests the IT Priority backfill would break.
+Its typical failure was inventing rules: a reopenable Closed ticket, then an extra route
+into Change Password in the very next prompt. A separate audit subagent caught both;
+no test could have.
+
+**Peer review found what the AI audits missed.** PAKATO asked whether a Closed ticket
+can take comments. Each document was internally consistent, so there was no
+contradiction to detect, only a missing question. It became C-109.
+
+**I could not trust the coding agent's own report.** Tests first and audits caught real
+bugs, including a login error page that echoed the password. But the agent silently
+skipped one item of a four-item prompt, and an early E2E test deactivated the seeded
+Administrator and broke other specs. "Verify by evidence" still mattered most.
+
+**Next time** I would keep PR stacks to two or three and ask for review as each opens,
+and write long prompts as numbered checklists checked against the repository.
