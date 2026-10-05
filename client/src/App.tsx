@@ -12,6 +12,7 @@ import CreateTicket from "./pages/CreateTicket.js";
 import TicketDetail from "./pages/TicketDetail.js";
 import StaffTicketQueue from "./pages/StaffTicketQueue.js";
 import StaffTicketDetail from "./pages/StaffTicketDetail.js";
+import UserManagement from "./pages/UserManagement.js";
 import SystemCheck from "./pages/SystemCheck.js";
 
 // Route table and guards (ui-spec.md 1, 9; C-85). /system-check is the Lab 1
@@ -46,14 +47,6 @@ function GoToLanding({ role }: { role: UserRole }) {
   return null;
 }
 
-// IT Staff Ticket Detail (#42) and User Management (#43) are built in their
-// own Issues. Until then their routes exist, with their role rules, so the
-// Queue's row link, the navigation, the landing screen and the Forbidden
-// state can all be built and tested now.
-function ScreenTitle({ title }: { title: string }) {
-  return <h1 className="tk-title">{title}</h1>;
-}
-
 function Screen() {
   const { path } = useRouter();
   const { state } = useAuth();
@@ -74,7 +67,7 @@ function Screen() {
   else if (found.destination === "ticketDetail") screen = <TicketDetail id={found.ticketId!} />;
   else if (found.destination === "queue") screen = <StaffTicketQueue />;
   else if (found.destination === "staffTicketDetail") screen = <StaffTicketDetail id={found.ticketId!} />;
-  else screen = <ScreenTitle title="User Management" />;
+  else screen = <UserManagement />;
 
   // Keyed by user, so a different person signing in starts every screen afresh
   // and nothing of the last user's data survives in memory (BR-14).

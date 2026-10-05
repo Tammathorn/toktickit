@@ -1,0 +1,80 @@
+Command: (cd server && npx vitest run tests/lab-03/users-admin.api.test.ts tests/lab-03/authorization.api.test.ts --reporter=verbose)
+Date:    2026-10-05 10:10:31 +0700
+Commit:  68449bb4d9271f21fa32d27eef9387695d745d4b (feature/lab3-7-user-admin)
+Tree:    clean - P8-12 direct API evidence
+----------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > Administrator user management is Administrator-only (BR-39, #43) > SEC-11 IT Staff and Requester -> every user-administration route -> 403, no user data (AC-96, BR-39)
+ ✓ tests/lab-03/authorization.api.test.ts > Administrator user management is Administrator-only (BR-39, #43) > SEC-23 no response body on any path carries a password, a passwordHash or a session token (BR-88, FR-70, AC-06)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-90 every user appears with name, email, role, isActive and mustChangePassword (AC-82, FR-56)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-92 search matches a name fragment and an email fragment, case-insensitively (AC-83, FR-57)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-93 the role filter returns only users holding that role (AC-84, FR-58) 549ms
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-94 ?page and ?pageSize do not paginate; the full list is returned (BR-84, FR-66, AC-98)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-95 inactive users are listed too - Status is a column, not a filter (FR-56)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-117 the list is name ascending then id, and ?sort= changes nothing (BR-106, C-107)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-96 creates a user: 201, the given fields stored, mustChangePassword true (AC-85, BR-75, BR-16)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-97 the created user signs in with the initial password, mustChangePassword true, and every other route is gated 403 (AC-86, BR-16)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-98 a weak initial password is refused with the shared BR-12 message (BR-12, BR-14, C-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-99 a duplicate email -> 409 EMAIL_TAKEN at the email field (AC-87, BR-77, FR-62)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-100 an address differing only in case is still a duplicate (AC-88, BR-77, BR-06)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-102 name bounds: 0 and 101 chars refused, 1 and 100 accepted, padding trimmed (AC-113, BR-99, C-94)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-103 email bounds and format: 254 accepted, 255 refused, no @ refused, padding and case normalised (AC-114, BR-99, C-94)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > role out of set -> 400 and exactly one role is accepted, never an array (BR-35, BR-75)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-113 there is no DELETE /api/users/:id (BR-81, FR-66, AC-98)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-115 GET /api/requesters is removed (BR-93, C-62)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-101 editing to another user's address is 409; editing to one's own current address succeeds (AC-87)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-104 name, email, role and isActive are all saved; createdAt, mustChangePassword and the hash are unchanged (AC-89, BR-76, FR-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-105 extra fields (passwordHash, mustChangePassword, id, createdAt) are not editable (BR-76, FR-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-106 a role change revokes that user's sessions - their next request is 401 (AC-90, BR-83, BR-24) 320ms
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-107 setting a new initial password revokes sessions, flags mustChangePassword, and the next login requires a change (AC-91, BR-78, C-79) 396ms
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-108 self-deactivation -> 422 SELF_DEACTIVATION, stays active (AC-92, BR-79, C-81)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-109 the last active Administrator cannot be deactivated -> 409 LAST_ADMINISTRATOR, stays active (AC-93, BR-80, C-80)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-110 the last active Administrator's role cannot be changed away -> 409, twice over (AC-94, BR-80, BR-82)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-112 self role change is permitted while another active Administrator exists (BR-82, C-81)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-111 the last-Administrator race: two active Administrators deactivate each other concurrently - exactly one succeeds (AC-95, BR-80, C-80) 902ms
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > the malformed-path-id convention: a non-numeric id is 400 INVALID_QUERY_PARAM, not VALIDATION_FAILED (C-113)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an unknown id is 404 USER_NOT_FOUND
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an empty body is 400, a no-op is a client defect (api-spec.md 9.3)
+ ✓ tests/lab-03/users-admin.api.test.ts > Deactivation retains data; no secrets ever (API-114, BR-29) > API-114 a deactivated user's Tickets, Attachments, comments and notes still exist and are reachable by staff 569ms
+
+ Test Files  2 passed (2)
+      Tests  58 passed (58)
+   Start at  10:10:34
+   Duration  17.29s (transform 378ms, setup 0ms, collect 1.28s, tests 10.91s, environment 1ms, prepare 271ms)
+

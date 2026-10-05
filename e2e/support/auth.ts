@@ -3,8 +3,6 @@ import path from "node:path";
 import { expect, request as playwrightRequest, type APIRequestContext, type Page } from "@playwright/test";
 import { API_URL } from "../../playwright.config";
 import { FIRST_LOGIN_ACCOUNT, SEED_PASSWORDS } from "../../server/src/seed/graded-seed";
-import { hashPassword } from "../../server/src/lib/password";
-import { getPrisma } from "../../server/src/prisma";
 
 // Sign-in helpers for the Playwright specs (Lab 3, #39, #40). The passwords are
 // the seed's own constants, imported rather than copied, so a spec can never
@@ -62,24 +60,34 @@ export async function apiAs(account: Account): Promise<APIRequestContext> {
 }
 
 // ---------------------------------------------------------------------------
-// TEMPORARY FIXTURE - replaced in #43 by the Administrator set-initial-password
-// action (handoff Issue 8; tests.md section 2.12, E2E-03).
-//
-// The forced first-password change consumes the seeded first-login account:
-// once changed, it no longer needs a change. Until the Administrator action
-// exists, this puts that ONE account back into the state the seed creates it
-// in - the seed's own password, mustChangePassword true. It finds the account
-// by its email, fails loudly if the account does not exist, and updates no
-// other row (not even that account's sessions).
+// E2E-03's fixture, through the real Administrator action (#43; tests.md
+// section 2.12). The forced first-password change consumes the seeded
+// first-login account: once changed, it no longer needs a change. This puts
+// that ONE account back into the state the seed creates it in - the seed's
+// own password, mustChangePassword true - by calling the same
+// POST /api/users/:id/initial-password route an Administrator uses (api-spec
+// 9.4), not by writing the database directly. It signs in as the seeded
+// Administrator, looks the account up by its email, fails loudly if it does
+// not exist, and touches no other row.
 // ---------------------------------------------------------------------------
 export async function resetFirstLoginAccount(): Promise<void> {
-  const prisma = getPrisma();
-  const result = await prisma.user.updateMany({
-    where: { email: FIRST_LOGIN_ACCOUNT.email },
-    data: { passwordHash: hashPassword(FIRST_LOGIN_ACCOUNT.password), mustChangePassword: true },
-  });
-  if (result.count !== 1) {
-    throw new Error(`The seeded first-login account ${FIRST_LOGIN_ACCOUNT.email} does not exist - run the graded seed.`);
+  const admin = await apiAs(ADMINISTRATOR);
+  try {
+    const list = await admin.get(`/api/users?search=${encodeURIComponent(FIRST_LOGIN_ACCOUNT.email)}`);
+    if (list.status() !== 200) {
+      throw new Error(`Looking up the seeded first-login account failed with ${list.status()}.`);
+    }
+    const rows = (await list.json()) as Array<{ id: number; email: string }>;
+    const row = rows.find((r) => r.email === FIRST_LOGIN_ACCOUNT.email);
+    if (!row) {
+      throw new Error(`The seeded first-login account ${FIRST_LOGIN_ACCOUNT.email} does not exist - run the graded seed.`);
+    }
+    const reset = await admin.post(`/api/users/${row.id}/initial-password`, { data: { initialPassword: FIRST_LOGIN_ACCOUNT.password } });
+    if (reset.status() !== 200) {
+      throw new Error(`Resetting the seeded first-login account failed with ${reset.status()}.`);
+    }
+  } finally {
+    await admin.dispose();
   }
 }
 
