@@ -896,33 +896,34 @@ seed - so the server suite never touches dev data (C-83).
 
 ## 7. Final Results
 
-Section 2's own per-row `Final` column is filled from the real runs at the top of each stacked
-feature branch (commit cited per row). The suite-level totals below are from the release: **local
-runs on `main` @ `347e25e989d74e3d12cf9df13bfd93f62ec5bbf4`**, the merge commit of PR #59
-(`lab3-staging` into `main`), on 2026-10-05 at about 16:12 UTC. **The repository has no CI** - there
-is no `.github/` directory and no GitHub Actions workflow or run - so these are local runs, the same
-as Lab 2, and no Actions page exists to cite. The container `toktickit-db` was already running (it
-was not restarted); `prisma migrate deploy` reported no pending migrations, and `prisma:seed` and
-`prisma/seed-demo.ts` were run (both idempotent; the demo seed created 0 new Tickets). The server
-suite ran against `toktickit_test`; Playwright ran against the development database with the API on
-`:3000` and the client on `:5173`. The full terminal output, with the command, date and commit
-hash at the top of each file, is in `artifacts/lab-03/test-output/`.
+Section 2's own per-row `Final` column is filled from the real runs at the top of each feature
+branch (commit cited per row). The suite-level totals below are from the release: **local runs on
+`main` @ `afac6dc8c948a8185ba38fd9ee0257e01dbb7adc`**, the merge commit of PR #61 (`lab3-staging`
+into `main`, carrying #60, Issue #12), on 2026-10-05 between 18:46 and 18:48 UTC. **The repository has no
+CI** - there is no `.github/` directory and no GitHub Actions workflow or run - so these are local
+runs, the same as Lab 2, and no Actions page exists to cite. The server suite ran against
+`toktickit_test`. Playwright ran against `toktickit_evidence`, dropped, recreated, migrated and
+seeded (graded seed plus `seed-demo.ts`) immediately before, with the API on `:3000` and the
+Playwright process both pointed at it, and the client on `:5173`. The full terminal output, with
+the command, date and commit hash at the top of each file, is in `artifacts/lab-03/test-output/`.
 
 | Suite | Command | Lab 2 | Expected Lab 3 | Actual | Result |
 |---|---|---|---|---|---|
 | Server | `cd server && npm test` | 86 | 83 + Lab 3 additions | 297 passed, 15 files | Pass - `test-output/main-server.txt` |
-| Client | `cd client && npm test` | 48 | 38 + Lab 3 additions | 119 passed, 10 files | Pass - `test-output/main-client.txt` |
-| Playwright, Lab 3 specs | `npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile` | - | - | 92 passed, 28 skipped, 0 failed | Pass - `test-output/main-e2e.txt` |
-| Playwright, whole suite | `npm run test:e2e` | 126 (42 x 3) | 108 + Lab 3 additions | 200 passed, 28 skipped, 0 failed | Pass - `test-output/main-e2e-full.txt` |
+| Client | `cd client && npm test` | 48 | 38 + Lab 3 additions | 128 passed, 11 files | Pass - `test-output/main-client.txt` |
+| Playwright, Lab 3 specs | `npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile` | - | - | 170 passed, 34 skipped, 0 failed | Pass - `test-output/main-e2e.txt` |
+| Playwright, whole suite | `npm run test:e2e` | 126 (42 x 3) | 108 + Lab 3 additions | 278 passed, 34 skipped, 0 failed | Pass - `test-output/main-e2e-full.txt` |
 
-**Notes on the counts.** E2E-07 passes at desktop, tablet and mobile; it was the three failures on
-`main` at `fc29ca4` (after #55), fixed by #56 and #57 and merged to `main` by #59. The Playwright
-whole-suite figure is the Lab 2 specs' 108 plus the Lab 3 specs' 92, which includes the three role
-sign-ins of the `setup` project. The 28 skipped are the viewport-gated `test.skip` calls in the
-specs (the desktop-only functional flows and evidence captures, and the single-viewport RESP checks)
-- none is a disabled test, and none was added to make a run pass. The server and client figures
-equal the run on `lab3-staging` at `f523f49` (`artifacts/lab-03/evidence/staging/`); the client is
-one test above the 118 on `main` at `fc29ca4`, the regression test #57 added for E2E-07's cause.
+**Notes on the counts.** Against the previous release (`main` @ `347e25e`, #59: 297 / 119 / 92
+and 200, 28 skipped), Issue #12 adds: client +9 (UI-54..61 and STYLE-13 in
+`client/tests/lab-03/UiDefects.test.tsx`; UI-30 and STYLE-06 are rewritten, not added); Lab 3
+Playwright +78 (`e2e/lab-03/visual-evidence.spec.ts`: 25 tests that run at all three widths, 75,
+plus RESP-11, RESP-12 and RESP-13, each at its one width, 3). The 6 new skips are those three RESP
+tests at the two widths they do not apply to; the 34 skipped in all are the viewport-gated
+`test.skip` calls in the specs - none is a disabled test, and none was added to make a run pass.
+The whole-suite figure is the Lab 2 specs' 108 plus the Lab 3 specs' 170, which includes the three
+role sign-ins of the `setup` project. E2E-07 passes at desktop, tablet and mobile. The server
+suite is unchanged: Issue #12 touched no server file.
 
 **The evidence is passing terminal output**, pasted here, not a claim that the tests pass
 (`CLAUDE.md`). Every count change against the Lab 2 figures must match section 4.3, and MIG-23

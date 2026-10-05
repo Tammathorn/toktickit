@@ -28,6 +28,8 @@ written from memory. Timestamps are UTC as GitHub records them.
 | [#53](https://github.com/Tammathorn/toktickit/pull/53) | #44 | `APPROVED` 2026-10-05 11:48:10 - "Approved, but paging on same of the pages can definitely be better to be user friendly" | Approved | 2026-10-05 13:20:33 UTC (`e664ba7`) |
 | [#54](https://github.com/Tammathorn/toktickit/pull/54) | #45 | `APPROVED` 2026-10-05 11:49:27 - "Approved, no problem aside from those already mentioned" | Approved | With the release-docs push; see PR page |
 | Release | - | - | - | Opened after #54; see the PR list |
+| [#60](https://github.com/Tammathorn/toktickit/pull/60) | Issue #12 (visual checklist) | None - **self-merged after the review period; not peer-reviewed** | Not reviewed | 2026-10-05 18:45:46 UTC (`12437b7`), into `lab3-staging` |
+| [#61](https://github.com/Tammathorn/toktickit/pull/61) | Release of #60 | None - **self-merged after the review period; not peer-reviewed** | Not reviewed | 2026-10-05 18:46:03 UTC (`afac6dc`), into `main` |
 
 The nine feature PRs were stacked per decision **C-110**, each into the branch directly below it, and #46 into `lab3-staging`. PAKATO reviewed them as one batch, 2026-10-05 11:24-12:53 UTC, after all nine existed; the only earlier comment was the one on #46 (2026-09-27). Each PR was then retargeted to `lab3-staging` and merged, in stack order, with a merge commit (`gh pr merge N --merge`). Before each merge the PR's commit count against `lab3-staging` was checked equal to its own commits above the previous branch. Review states, comment bodies and times in this record are read from `gh api` (`pulls/N/reviews`, `issues/N/comments`, `pulls/N/comments`); there are no inline review comments on any of #46-#54.
 
@@ -240,6 +242,19 @@ records this exchange in full.
 ### Release PR - `lab3-staging` -> `main`
 
 - **Status:** opened after #46-#54 merged into `lab3-staging` (C-110); its link is on the PR list, not recorded here because it did not exist when this file was written.
+
+### PR #60 - Issue #12: the visual checklist to 42/42
+
+- **Link:** <https://github.com/Tammathorn/toktickit/pull/60>
+- **Branch:** `feature/lab3-12-ui-evidence` -> `lab3-staging` (fast-forwarded to `main` at `a6ab484` first) · **Merged:** 2026-10-05 18:45:46 UTC, merge commit `12437b7`
+- **Contents** (2 commits): the five visual-checklist UI defects and four state gaps fixed test-first; decisions C-116..C-121; `e2e/lab-03/visual-evidence.spec.ts`; the re-judged `ui-spec.md` section 24 and its evidence.
+- **Review:** none. **Self-merged after the review period; not peer-reviewed.** No reviewer was requested, and nobody was asked to review it.
+
+### PR #61 - Release of #60, `lab3-staging` into `main`
+
+- **Link:** <https://github.com/Tammathorn/toktickit/pull/61>
+- **Merged:** 2026-10-05 18:46:03 UTC, merge commit `afac6dc`, the same method as #55 and #59
+- **Review:** none. **Self-merged after the review period; not peer-reviewed.** No reviewer was requested.
 
 ---
 
