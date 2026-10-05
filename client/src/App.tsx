@@ -11,6 +11,7 @@ import MyTickets from "./pages/MyTickets.js";
 import CreateTicket from "./pages/CreateTicket.js";
 import TicketDetail from "./pages/TicketDetail.js";
 import StaffTicketQueue from "./pages/StaffTicketQueue.js";
+import StaffTicketDetail from "./pages/StaffTicketDetail.js";
 import SystemCheck from "./pages/SystemCheck.js";
 
 // Route table and guards (ui-spec.md 1, 9; C-85). /system-check is the Lab 1
@@ -72,7 +73,7 @@ function Screen() {
   else if (found.destination === "createTicket") screen = <CreateTicket />;
   else if (found.destination === "ticketDetail") screen = <TicketDetail id={found.ticketId!} />;
   else if (found.destination === "queue") screen = <StaffTicketQueue />;
-  else if (found.destination === "staffTicketDetail") screen = <ScreenTitle title="Ticket Detail" />;
+  else if (found.destination === "staffTicketDetail") screen = <StaffTicketDetail id={found.ticketId!} />;
   else screen = <ScreenTitle title="User Management" />;
 
   // Keyed by user, so a different person signing in starts every screen afresh

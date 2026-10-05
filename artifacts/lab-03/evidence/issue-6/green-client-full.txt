@@ -1,0 +1,117 @@
+Command: (cd client && npx vitest run --reporter=verbose)
+Date:    2026-10-04 22:39:52 +0700
+Commit:  eb0ea727dfd09695ee5afc6b308e18725eab9f0b (feature/lab3-6-staff-ticket-ops)
+Tree:    dirty - full client suite after Issue #6 (Staff Ticket Detail UI + Requester Ticket Detail additions), pre-commit
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > renders the TokTickIT heading
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows Online and the seeded categories on success
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows an Offline error message when the API is unavailable
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-01 renders Email Address and Password, both required, and one Sign In button (FR-01)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-09 shows the signed-in user's name and Role badge at the top, and no shell (AC-22, FR-15)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-10 the BR-12 rule is stated before anything is typed (FR-16)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-21 shows a loading state until the list request settles (AC-52)
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-11 populates Category and Related System from the API and nothing else (AC-13)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-16 renders all nine FR-39 columns at desktop width (ui-spec 15.2)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-25 the read-only group renders Requester, Category, Related System, Requested Priority and the dates with no input among them (FR-43)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-02 submitting empty shows both catalogue messages below their fields and sends nothing (FR-01)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > renders the owner's rows with the pagination summary and calls the API with no requester of its own
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-24 renders the Ticket information read-only with no edit, note or status control (AC-53, rewritten per C-76)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-17 an owned row shows the owner's name; an unassigned row shows Unassigned on a pale cell (FR-40)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.1 renders a Ticket Owner row, Unassigned when there is none (BR-100)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-26 adds a permitted file to the active group without leaving the screen (AC-32)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-26 Claim renders only when the Ticket is unassigned (FR-44)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-18 a row whose owner is inactive renders Name (inactive) (AC-75, FR-46)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-19 the resolution marker renders for a resolved-by-requester Ticket, and is not in the status column (AC-60, FR-40)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-20 shows the empty state with no filter active, and the distinct no-matches state with a filter active (FR-41, AC-69)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-27 the lost claim race renders the conflict inline, refreshes the view, and Claim is gone (FR-44, AC-71)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > a page past the last one shows No matches with Clear filters, not the Empty state (audit #2)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 lists Public Comments newest first, with an empty state and a composer with a live counter (BR-67, FR-53)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 shows the empty state with the composer still present (BR-27)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-28 Assign/Reassign offers only the users GET /api/staff/assignable-users returns (FR-45, BR-104, C-105)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-29 the status select offers exactly the matrix's permitted targets from each current status (ui-spec 16.2, specification 5.1)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders (BR-58, C-98)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-21 shows a loading skeleton with aria-busy, then a safe failure panel with Retry that keeps the toolbar (FR-41)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-22 an INVALID_QUERY_PARAM fields message renders beside its own control, and Clear filters replaces Retry (FR-42, AC-68)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-31 Resolved, Closed and Cancelled each open a confirmation and send no request until confirmed; Cancel sends nothing (AC-80, BR-57)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 391ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 690ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > the Cancelled confirmation reads Keep the ticket, never Cancel beside Cancel Ticket (BR-58)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 747ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 866ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a confirmed Resolved move sends the request and the view updates (AC-80)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 877ms
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-18 shows the empty state with a Create Ticket action when nothing is owned and no filter is active (AC-49)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-19 shows the distinct no-results state with Clear filters when a filter excludes everything (AC-50)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.3 the resolution confirmation: Cancel sends nothing, confirming sets the marker and swaps the action for a reported line (FR-30, BR-59, BR-61)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.4 a Closed Ticket is read-only: no composer, no upload, no Remove, and the terminal line renders once (BR-108, C-109)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-25 renders Ticket Date and Last Updated as DD MMM YYYY HH:mm in Asia/Bangkok (AC-60)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-07 renders the Current Status badge and the IT Priority badge beside it (FR-31, C-71)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-09 gives every interactive control a non-empty accessible name (AC-56)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > offers Back to My Tickets and a headed Attachments card with the active count
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-20 shows a safe failure panel with Retry and keeps the toolbar (AC-51)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a status move needing an owner, with none, renders the OWNER_REQUIRED message inline beside the status control (C-93)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-22 opens the Ticket's detail route from the row (AC-62)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-32 the resolution callout renders when the flag is set, and is not presented as a status (FR-50, AC-59)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-33 Public Comments and Internal Notes render distinctly: different headings, the standing label, and separation between the composers (FR-55, AC-107)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-23 shows Clear filters only once a search or filter is active, and it returns to the default list (FR-35)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 939ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-24 a 403 from the API renders the Forbidden state, not a blank screen (FR-24, AC-97)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > STYLE-03 each of the eight statuses renders its own treatment and title-case text, never the raw enum (ui-spec 8.2)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > STYLE-04 every row renders an IT Priority badge, never absent (FR-31, BR-49)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1368ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-29 keeps a removed attachment's metadata and reason visible with no Preview and no Download (AC-34)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 416ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 762ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-30 shows the unavailable state on a 410 for a row believed active, with Refresh (C-46)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-35 the live character counter tracks the body length and turns danger past 2000 (FR-53)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-36 no comment and no note renders an edit or delete affordance (FR-51, BR-63)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-37 staff attachments are read-only: Preview and Download render, no upload and no Remove control renders (C-103, FR-49)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > debounces the search box into the request and resets to page 1 460ms
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-06 renders priority badges as pills and status badges square, each with title-case text (AC-58)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-08 marks the active navigation item with the active class and aria-current
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > renders a loading skeleton, then a safe failure panel with Retry (ui-spec 20.1)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a 403 FORBIDDEN_ROLE from the API renders the Forbidden state, not a blank screen (FR-24, C-63)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a missing Ticket renders the not-found refusal, never revealing existence (C-65)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-31 renders the 6.1 message naming the file for 415 and 413, with Retry and Discard (AC-24, AC-25)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > STYLE-03 (hierarchy) renders Preview and Download as tertiary and Remove as destructive (ui-spec 7)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > downloads an active attachment through the API and reports it (AC-30)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 738ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2310ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 819ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-07 offers no forgot-password, create-account, remember-me, SSO or social sign-in (LS 4.2)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 729ms
+ ✓ tests/lab-03/Login.test.tsx > Login > STYLE-12 the screen and the page title spell TokTickIT, and TikTockIT appears nowhere in the client (L2 C-41)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-49 the shell shows name, Role badge and Log Out, and 'Development Requester' and 'Change Requester' exist nowhere in the client (AC-30, FR-09, BR-94)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-50 navigation is derived from the role: Requester, IT Staff and Administrator each see exactly their destinations (AC-31..AC-33, BR-36)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > each role lands on its own screen: a Requester on My Tickets, IT Staff and Administrator on the Ticket Queue (ui-spec 9.1)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a destination the role may not use renders the Forbidden state inside the shell and fetches nothing for it (FR-24, BR-40)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a 403 FORBIDDEN_ROLE from a screen's own request renders the Forbidden state, not a failure (ui-spec 20.1, FR-24)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a 403 PASSWORD_CHANGE_REQUIRED from any request shows Change Password, not a banner (ui-spec 6.2, BR-19)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-51 a 401 from a screen's own request discards the user and shows Login with the session-ended message (AC-35, BR-34)
+ ✓ tests/lab-03/Login.test.tsx > theme > STYLE-01 the theme carries the four fixed Zen Green values unchanged (ui-spec 2.1)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3471ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 2123ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2353ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-14 a gated user sees Change Password at My Tickets, the Ticket Queue and User Management alike (FR-14, BR-20)
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2164ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-16 / STYLE-04 renders Requester and Ticket Date read-only, not disabled (AC-61)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1236ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 396ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 1896ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-01 / STYLE-02 places each message under its control and marks every required label
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-04 (shading) gives read-only and editable controls different surfaces in the theme (ui-spec 4)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2389ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1986ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-10 defines the Zen Green tokens on :root
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > marks a file the client can already tell is invalid, before any request (AC-24, ui-spec 14.1)
+
+ Test Files  9 passed (9)
+      Tests  102 passed (102)
+   Start at  22:39:38
+   Duration  13.31s (transform 631ms, setup 1.14s, collect 4.75s, tests 35.53s, environment 5.82s, prepare 1.35s)
+

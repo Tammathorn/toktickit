@@ -3,25 +3,26 @@ import request from "supertest";
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
-import type { Express } from "express";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR } from "../../src/lib/uploads.js";
 import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
+import { routesOf } from "../support/routes.js";
 
 // Lab 3 security and authorization - tests.md section 2.3, the rows Issue #40
 // owns: SEC-01, SEC-02, SEC-08..SEC-10, SEC-14, SEC-15, SEC-19..SEC-22,
 // SEC-24 and SEC-25. SEC-03 (the queue) arrives here with its route in #41.
 //
-// The rest arrive with the routes they test: SEC-04..SEC-07, SEC-13,
-// SEC-16..SEC-18, SEC-26 and SEC-27 (notes, staff operations, the resolution
-// flag, comments, assignable users) in #42; SEC-11 and SEC-23 (whose success
-// path is GET /api/users) in #43.
+// #42 adds SEC-04..SEC-07, SEC-13, SEC-16..SEC-18, SEC-26 and SEC-27 with
+// the routes they test (notes, staff operations, the resolution flag,
+// comments, assignable users). SEC-11 and SEC-23 (whose success path is
+// GET /api/users) arrive in #43.
 //
-// Every user, Ticket and Attachment here is created by this file and removed in
-// afterAll; the seeded accounts are never signed in as.
+// Every user, Ticket, Attachment, Public Comment and Internal Note here is
+// created by this file and removed in afterAll; the seeded accounts are never
+// signed in as.
 
 const prisma = getPrisma();
 const TAG = "[authz-test]";
@@ -49,6 +50,8 @@ let ticketA: { id: number; ticketNumber: string; summary: string };
 let ticketB: { id: number };
 let activeAttachment: number;
 let removedAttachment: number;
+// A note on Requester A's own Ticket, whose text must never reach A (SEC-04).
+const SECRET_NOTE = `${TAG} INTERNAL-ONLY: the vendor contract lapses next week`;
 
 async function newTicket(requesterId: number, summary: string) {
   const category = await prisma.category.findFirstOrThrow({ where: { isActive: true } });
@@ -86,6 +89,7 @@ beforeAll(async () => {
   activeAttachment = up1.body.id;
   removedAttachment = up2.body.id;
   await a.agent.delete(`/api/attachments/${removedAttachment}`).send({ removalReason: "Removed for SEC-10." });
+  await prisma.internalNote.create({ data: { ticketId: ticketA.id, authorId: staff.id, body: SECRET_NOTE } });
 });
 
 afterAll(async () => {
@@ -96,6 +100,9 @@ afterAll(async () => {
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
   await prisma.attachment.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
+  const mine = { OR: [{ ticket: { requesterId: { in: ids } } }, { authorId: { in: ids } }] };
+  await prisma.publicComment.deleteMany({ where: mine });
+  await prisma.internalNote.deleteMany({ where: mine });
   await prisma.ticket.deleteMany({ where: { requesterId: { in: ids } } });
   await removeUsers(prisma, ids);
 });
@@ -103,42 +110,6 @@ afterAll(async () => {
 // ---------------------------------------------------------------------------
 // The route inventory - the test CLAUDE.md names (SEC-01)
 // ---------------------------------------------------------------------------
-
-type Route = { method: string; path: string };
-
-type Layer = {
-  route?: { path: string; methods: Record<string, boolean> };
-  name?: string;
-  regexp?: { fast_slash?: boolean };
-  handle?: { stack?: Layer[]; _router?: { stack: Layer[] } };
-};
-
-// Every route registered on the app, found by walking Express's own router
-// rather than from a list somebody has to remember to update. It descends into
-// routers and mounted sub-apps. A router, sub-app or handler mounted under a
-// path prefix is reported as `unwalked` rather than skipped, so the day one is
-// added this test fails until the walker is taught the prefix - it can never
-// pass by not seeing a route.
-function routesOf(express: Express): { routes: Route[]; unwalked: string[] } {
-  const routes: Route[] = [];
-  const unwalked: string[] = [];
-  const walk = (stack: Layer[]) => {
-    for (const layer of stack) {
-      if (layer.route) {
-        for (const method of Object.keys(layer.route.methods)) {
-          // router.all() registers "_all": probe it as a GET.
-          routes.push({ method: method === "_all" ? "GET" : method.toUpperCase(), path: layer.route.path });
-        }
-        continue;
-      }
-      const nested = layer.handle?.stack ?? layer.handle?._router?.stack;
-      if (!layer.regexp?.fast_slash) unwalked.push(`${layer.name ?? "handler"} mounted under a path prefix`);
-      else if (nested) walk(nested);
-    }
-  };
-  walk((express as unknown as { _router: { stack: Layer[] } })._router.stack);
-  return { routes, unwalked };
-}
 
 describe("the route inventory", () => {
   it("SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)", async () => {
@@ -267,6 +238,158 @@ describe("role restrictions", () => {
     expect(res.body.data).toBeUndefined();
     expect(res.body.meta).toBeUndefined();
     expect(JSON.stringify(res.body)).not.toContain(ticketA.ticketNumber);
+  });
+});
+
+// ---------------------------------------------------------------------------
+// #42 - Internal Notes, staff ticket operations, the resolution flag and the
+// assignable-users list. Every bold 403 of specification.md 5.2 is raised by
+// the role step, before the Ticket is loaded or the id parsed (C-63, C-65).
+// ---------------------------------------------------------------------------
+const STATUSES = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CLOSED", "REOPENED", "CANCELLED"] as const;
+
+describe("Internal Notes are staff-only (BR-70)", () => {
+  it("SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)", async () => {
+    const res = await a.agent.get(`/api/tickets/${ticketA.id}/internal-notes`);
+    expect(res.status).toBe(403);
+    expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", message: expect.any(String) } });
+    expect(res.text).not.toContain("INTERNAL-ONLY");
+    expect(res.text).not.toMatch(/count|total|notes/i);
+    // The note is really there: a staff caller reads it.
+    const staffView = await staff.agent.get(`/api/tickets/${ticketA.id}/internal-notes`);
+    expect(staffView.status).toBe(200);
+    expect(staffView.text).toContain("INTERNAL-ONLY");
+  });
+
+  it("SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)", async () => {
+    const real = await a.agent.get(`/api/tickets/${ticketA.id}/internal-notes`);
+    const missing = await a.agent.get("/api/tickets/999999/internal-notes");
+    expect(missing.status).toBe(403);
+    expect(missing.text).toBe(real.text);
+    const realPost = await a.agent.post(`/api/tickets/${ticketA.id}/internal-notes`).send({ body: "x" });
+    const missingPost = await a.agent.post("/api/tickets/999999/internal-notes").send({ body: "x" });
+    expect(missingPost.status).toBe(403);
+    expect(missingPost.text).toBe(realPost.text);
+  });
+
+  it("SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)", async () => {
+    const real = await a.agent.get(`/api/tickets/${ticketA.id}/internal-notes`);
+    const malformed = await a.agent.get("/api/tickets/abc/internal-notes");
+    expect(malformed.status).toBe(403);
+    expect(malformed.text).toBe(real.text);
+  });
+
+  it("SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)", async () => {
+    const before = await prisma.internalNote.count();
+    const res = await a.agent.post(`/api/tickets/${ticketA.id}/internal-notes`).send({ body: `${TAG} a Requester trying to write a note` });
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    expect(await prisma.internalNote.count()).toBe(before);
+  });
+
+  it("SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)", async () => {
+    const res = await a.agent.get(`/api/tickets/${ticketA.id}`);
+    expect(res.status).toBe(200);
+    expect(Array.isArray(res.body.publicComments)).toBe(true);
+    expect(Object.keys(res.body).sort()).toEqual(
+      ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description", "requestedPriority",
+        "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt", "attachments",
+        "publicComments"].sort(),
+    );
+    // Over every key at every depth, not a guessed name.
+    const keys: string[] = [];
+    const collect = (value: unknown) => {
+      if (Array.isArray(value)) value.forEach(collect);
+      else if (value && typeof value === "object") {
+        for (const [k, v] of Object.entries(value)) {
+          keys.push(k);
+          collect(v);
+        }
+      }
+    };
+    collect(res.body);
+    expect(keys.filter((k) => /note|internal/i.test(k))).toEqual([]);
+    expect(res.text).not.toContain("INTERNAL-ONLY");
+  });
+});
+
+describe("staff ticket operations are refused to a Requester (C-63, C-65)", () => {
+  it("SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)", async () => {
+    for (const target of STATUSES) {
+      const res = await a.agent.patch(`/api/staff/tickets/${ticketA.id}/status`).send({ currentStatus: target });
+      expect(res.status, target).toBe(403);
+      expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    }
+    expect((await prisma.ticket.findUniqueOrThrow({ where: { id: ticketA.id } })).currentStatus).toBe("NEW");
+  });
+
+  it("SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)", async () => {
+    const before = (await prisma.ticket.findUniqueOrThrow({ where: { id: ticketA.id } })).itPriority;
+    const res = await a.agent.patch(`/api/staff/tickets/${ticketA.id}/it-priority`).send({ itPriority: before === "HIGH" ? "LOW" : "HIGH" });
+    expect(res.status).toBe(403);
+    expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    expect((await prisma.ticket.findUniqueOrThrow({ where: { id: ticketA.id } })).itPriority).toBe(before);
+  });
+
+  it("Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)", async () => {
+    const routes: [string, (id: string) => request.Test][] = [
+      ["GET detail", (id) => a.agent.get(`/api/staff/tickets/${id}`)],
+      ["POST claim", (id) => a.agent.post(`/api/staff/tickets/${id}/claim`)],
+      ["PATCH owner", (id) => a.agent.patch(`/api/staff/tickets/${id}/owner`).send({ ownerId: staff.id })],
+      ["PATCH it-priority", (id) => a.agent.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority: "HIGH" })],
+      ["PATCH status", (id) => a.agent.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus: "OPEN" })],
+      ["GET notes", (id) => a.agent.get(`/api/tickets/${id}/internal-notes`)],
+      ["POST notes", (id) => a.agent.post(`/api/tickets/${id}/internal-notes`).send({ body: "x" })],
+    ];
+    const before = await prisma.ticket.findUniqueOrThrow({ where: { id: ticketA.id } });
+    for (const [name, call] of routes) {
+      const real = await call(String(ticketA.id));
+      expect(real.status, name).toBe(403);
+      expect(real.body).toEqual({ error: { code: "FORBIDDEN_ROLE", message: expect.any(String) } });
+      expect((await call("999999")).text, `${name} missing`).toBe(real.text);
+      expect((await call("abc")).text, `${name} malformed`).toBe(real.text);
+    }
+    const after = await prisma.ticket.findUniqueOrThrow({ where: { id: ticketA.id } });
+    expect(after).toEqual(before);
+  });
+
+  it("SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)", async () => {
+    const res = await a.agent.get("/api/staff/assignable-users");
+    expect(res.status).toBe(403);
+    expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", message: expect.any(String) } });
+    expect(res.text).not.toMatch(/"name"|"id"/);
+    for (const caller of [staff, admin]) {
+      const ok = await caller.agent.get("/api/staff/assignable-users");
+      expect(ok.status).toBe(200);
+      expect(Array.isArray(ok.body)).toBe(true);
+    }
+  });
+
+  it("SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)", async () => {
+    await prisma.ticket.update({ where: { id: ticketB.id }, data: { currentStatus: "OPEN" } });
+    for (const caller of [staff, admin]) {
+      const res = await caller.agent.post(`/api/tickets/${ticketB.id}/requester-resolved`);
+      expect(res.status).toBe(403);
+      expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    }
+    expect((await prisma.ticket.findUniqueOrThrow({ where: { id: ticketB.id } })).requesterResolvedAt).toBeNull();
+  });
+
+  it("SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)", async () => {
+    const t = await newTicket(a.id, "the Administrator works this one");
+    const results: [string, number, number][] = [];
+    const record = (name: string, expected: number, res: { status: number }) => results.push([name, expected, res.status]);
+    record("queue", 200, await admin.agent.get("/api/staff/tickets"));
+    record("detail", 200, await admin.agent.get(`/api/staff/tickets/${t.id}`));
+    record("claim", 200, await admin.agent.post(`/api/staff/tickets/${t.id}/claim`));
+    record("owner", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/owner`).send({ ownerId: staff.id }));
+    record("it-priority", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ itPriority: "HIGH" }));
+    record("status", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/status`).send({ currentStatus: "OPEN" }));
+    record("comment", 201, await admin.agent.post(`/api/tickets/${t.id}/public-comments`).send({ body: "An Administrator reply." }));
+    record("note", 201, await admin.agent.post(`/api/tickets/${t.id}/internal-notes`).send({ body: "An Administrator note." }));
+    expect(results.filter(([, expected, got]) => expected !== got)).toEqual([]);
+    const after = await prisma.ticket.findUniqueOrThrow({ where: { id: t.id } });
+    expect(after).toMatchObject({ ownerId: staff.id, itPriority: "HIGH", currentStatus: "OPEN" });
   });
 });
 

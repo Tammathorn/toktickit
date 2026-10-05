@@ -20,6 +20,8 @@
   --tk-warning: #8A5A00;
   /* 2.4 added for Lab 3 */
   --tk-info: #1F5C74;
+  --tk-internal-bg: #F3F1E7;
+  --tk-internal-border: #C9B98A;
 
   --tk-shadow: 0 1px 2px rgba(31, 42, 36, 0.06);
   --tk-focus-ring: 0 0 0 3px rgba(11, 122, 70, 0.35);
@@ -553,3 +555,57 @@ textarea.form-control { height: auto; resize: vertical; }
 .tk-owner-cell-pale { background-color: var(--tk-pale); }
 .tk-owner-unassigned { color: var(--tk-text-muted); font-style: italic; }
 .tk-owner-inactive { color: var(--tk-text-muted); font-style: italic; }
+
+/* ---- Lab 3: IT Staff Ticket Detail (ui-spec section 16) --------------- */
+
+/* Card 2, Ticket Operations - a visibly different group from the read-only
+   card, in greyscale too: a border rather than only a fill (section 4, 16.2). */
+.tk-ops-card { border: 1px solid var(--tk-secondary); }
+.tk-ops-group { margin-bottom: 1.5rem; }
+.tk-ops-group:last-child { margin-bottom: 0; }
+.tk-ops-group .btn { white-space: nowrap; flex-shrink: 0; }
+.tk-ops-group .form-select { min-width: 0; }
+.tk-conflict {
+  display: block;
+  margin-top: 0.5rem;
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--tk-danger);
+}
+/* The resolution callout - informational, neither success nor failure
+   (ui-spec 2.4): --tk-pale would read as success and pre-empt BR-61. */
+.tk-callout-info { border-color: var(--tk-info); color: var(--tk-info); }
+
+/* ---- Lab 3: Public Comments and Internal Notes (ui-spec section 19) --- */
+
+.tk-entry-list { display: flex; flex-direction: column; gap: 0.75rem; margin: 0 0 1rem; }
+.tk-entry {
+  padding: 0.75rem 1rem;
+  border: 1px solid var(--tk-border);
+  border-radius: 0.375rem;
+  background-color: var(--tk-surface);
+}
+.tk-entry-note { border-color: var(--tk-internal-border); }
+/* An entry authored by the Requester themselves (ui-spec 14.2). */
+.tk-entry-own { border-left: 4px solid var(--tk-secondary); }
+.tk-entry-meta { font-size: 0.8125rem; color: var(--tk-text-muted); margin-bottom: 0.25rem; }
+.tk-comment-icon { color: var(--tk-secondary); }
+
+/* The Internal Notes panel - warm ivory, bordered on all four sides, so the
+   two sections differ by ground, border, icon and label, surviving a
+   greyscale conversion (AC-107). */
+.tk-internal-panel {
+  background-color: var(--tk-internal-bg);
+  border: 1px solid var(--tk-internal-border);
+  border-radius: 0.5rem;
+  padding: 1.5rem;
+}
+@media (max-width: 767.98px) { .tk-internal-panel { padding: 1rem; } }
+.tk-internal-icon { color: var(--tk-warning); }
+/* --tk-internal-border's text-safe pair: the tan border alone fails contrast
+   as text, and section 2.4 adds no fourth token, so the label borrows the
+   warning hue already paired with this warm palette and already AA (5.4:1). */
+.tk-internal-standing-label { color: var(--tk-warning); font-weight: 600; }
+
+.tk-char-counter { margin-top: 0.25rem; font-size: 0.8125rem; color: var(--tk-text-muted); }
+.tk-char-counter-danger { color: var(--tk-danger); }

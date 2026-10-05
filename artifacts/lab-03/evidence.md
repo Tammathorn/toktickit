@@ -46,7 +46,7 @@ response the API would have sent, and every such capture says so in its row.
 | P1-02 | Final GitHub Project board with every Issue in Done | GitHub capture, board | `screenshots/github/<date>-board-all-done.png` | #45 | pending |
 | P1-03 | Board mid-sprint with cards in PR Review | GitHub capture, board | `screenshots/github/2026-10-02-board-pr-review.png` | #37, #38 | captured |
 | P1-04 | Board mid-sprint with a card in Fixing. Captured by whichever Issue first moves to Fixing | GitHub capture, board | `screenshots/github/<date>-board-fixing.png` | #37 to #45 | pending |
-| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png`; #40 to PR Review, `screenshots/github/2026-10-04-board-40-pr-review.png`; #41 to PR Review, `screenshots/github/2026-10-04-board-41-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
+| P1-05 | Board each time a card moves to PR Review, Fixing or Done. Captured so far: #39 to PR Review, `screenshots/github/2026-10-04-board-39-pr-review.png`; #40 to PR Review, `screenshots/github/2026-10-04-board-40-pr-review.png`; #41 to PR Review, `screenshots/github/2026-10-04-board-41-pr-review.png`; #42 to PR Review, `screenshots/github/2026-10-04-board-42-pr-review.png` | GitHub capture, board | `screenshots/github/<date>-board-<state>.png` | every Issue | pending |
 | P1-06 | Review thread while open: PR #46, the reviewer's comment and the author's reply | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr46-review-open.png` | #37 | captured |
 | P1-07 | PR #47 open, before review | GitHub capture, PR conversation | `screenshots/github/2026-10-02-pr47-open.png` | #38 | captured |
 | P1-08 | Approval on every Issue PR. The reviewer approves; the capture follows the approval | GitHub capture, PR conversation | `screenshots/github/<date>-pr<N>-approved.png` | every Issue | pending |
@@ -71,7 +71,7 @@ response the API would have sent, and every such capture says so in its row.
 | P3-04 | Migration rehearsal before and after counts, zero-drift diff | Terminal output | `migration/rehearsal-before.txt`, `rehearsal-deploy.txt`, `rehearsal-after.txt`, `rehearsal-drift.txt`, `rehearsal-seed.txt`, `rehearsal-summary.md` | #38 | captured |
 | P3-05 | Dev database before and after the migration | Terminal output | `migration/dev-before-counts.txt`, `migration/dev-after-counts.txt` | #38 | captured |
 | P3-06 | Authentication red run, then green. The server and client tests were committed and run red before the code existed; the E2E spec was written after the screens, so its evidence is the green run only | Terminal output | `evidence/issue-3/red-server-auth.txt`, `evidence/issue-3/red-client-auth.txt`, `evidence/issue-3/green-server.txt`, `evidence/issue-3/green-client.txt`, `evidence/issue-3/green-e2e.txt` | #39 | captured |
-| P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt` | #40 to #44 | pending |
+| P3-07 | Red and green runs for each later Issue | Terminal output | `evidence/issue-<N>/red-*.txt`, `green-*.txt`. #42 API half: `evidence/issue-6/red-staff-ticket-ops.txt`, `green-staff-ticket-detail.txt`, `green-comments-notes.txt`, `green-server.txt`, `green-client.txt`; its client red and green follow with the screen | #40 to #44 | pending |
 | P3-08 | Regression: Lab 2 test counts per file, before and after, every drop matching a `tests.md` section 4.3 retirement row | Terminal output | `evidence/issue-4/lab2-inventory-before.txt`, `evidence/issue-4/lab2-inventory-after.txt` | #40 | captured |
 
 ## Part 4 - AI Use with Reflection (5)
@@ -120,21 +120,21 @@ and seeded database (`CLAUDE.md`).
 
 | Row | Requirement | Evidence type | File | Issue | Status |
 |---|---|---|---|---|---|
-| P7-01 | Claim, on an unassigned Ticket, and the owned result | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-unassigned.png`, `detail-desktop-owned.png` | #42 | pending |
-| P7-02 | The lost claim race | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-claim-conflict.png` | #42 | pending |
-| P7-03 | Reassign | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-reassigned.png` **(extra)** | #42 | pending |
-| P7-04 | IT Priority | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-it-priority.png` | #42 | pending |
-| P7-05 | Permitted status changes and the Resolved/Closed/Cancelled confirmation | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-menu.png`, `detail-desktop-status-confirm.png` | #42 | pending |
-| P7-06 | A refused status change | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-refused.png` | #42 | pending |
-| P7-07 | Public Comments and Internal Notes, visibly distinct, in one frame | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-comments-and-notes.png` | #42 | pending |
-| P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | pending |
-| P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | pending |
-| P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | pending |
+| P7-01 | Claim, on an unassigned Ticket, and the owned result | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-unassigned.png`, `detail-desktop-owned.png` | #42 | captured |
+| P7-02 | The lost claim race | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-claim-conflict.png` | #42 | captured |
+| P7-03 | Reassign | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-reassigned.png` **(extra)** | #42 | captured |
+| P7-04 | IT Priority | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-it-priority.png` | #42 | captured |
+| P7-05 | Permitted status changes and the Resolved/Closed/Cancelled confirmation | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-menu.png`, `detail-desktop-status-confirm.png` | #42 | captured |
+| P7-06 | A refused status change | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-status-refused.png` | #42 | captured |
+| P7-07 | Public Comments and Internal Notes, visibly distinct, in one frame | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-comments-and-notes.png` | #42 | captured |
+| P7-08 | Attachment continuity on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-attachments.png` **(extra)** | #42 | captured |
+| P7-09 | Requester resolution indication, seen by staff | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-requester-resolved.png` | #42 | captured |
+| P7-10 | Inactive owner marker; terminal Ticket read-only | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-inactive-owner.png`, `detail-desktop-terminal.png` | #42 | captured |
 | P7-11 | Role restrictions in the browser: a Requester refused the queue. The forbidden state arrives in #40; the queue it refuses exists from #41 | Playwright capture | `screenshots/staff-queue/queue-desktop-forbidden.png` | #41 | captured |
-| P7-12 | Validation: an empty comment refused | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | pending |
-| P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | pending |
+| P7-12 | Validation: the composer's own character-limit feedback (the counter turns danger, Post Comment stays disabled) | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-empty-comment.png` **(extra)** | #42 | captured |
+| P7-13 | Safe failure on staff detail | Playwright capture | `screenshots/staff-ticket-detail/detail-desktop-failure.png` **(extra)** | #42 | captured |
 | P7-14 | Direct API authorization evidence: the SEC suite, route inventory included | Terminal output | `evidence/issue-4/green-authorization.txt` | #40 | captured |
-| P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` | #42 | pending |
+| P7-15 | Direct API: `Requester GET /api/tickets/:id/internal-notes -> 403, no note content` | Terminal output | `evidence/issue-6/green-comments-notes.txt` - SEC-04..SEC-07 and the comments-notes suite; the red run before the routes existed is `evidence/issue-6/red-staff-ticket-ops.txt` | #42 | captured |
 
 ## Part 8 - Working Administrator User Management UI (5)
 

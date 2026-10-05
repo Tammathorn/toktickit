@@ -9,6 +9,8 @@ import { loadTicketDto } from "../lib/ticket-dto.js";
 import { parseListQuery, listWhere, listOrderBy, type ListQuery } from "../lib/list-query.js";
 import { uploadSingleFile, unlinkQuietly, UnsupportedFileTypeError } from "../lib/uploads.js";
 import { toAttachmentDto } from "./attachments.js";
+import { loadVisibleTicket, sendTicketClosed, sendTicketNotFound } from "../lib/ticket-access.js";
+import { isTerminal, RESOLUTION_FLAG_STATUSES } from "../lib/status-transitions.js";
 
 export const ticketsRouter = Router();
 
@@ -20,10 +22,6 @@ const MAX_ACTIVE_ATTACHMENTS = 5;
 // query or a body is ignored (C-64, BR-31). Another Requester's Ticket answers
 // 404, the same body as a missing one (C-65), so the answer never says the
 // Ticket exists.
-
-function sendTicketNotFound(res: Response): void {
-  sendError(res, 404, "TICKET_NOT_FOUND", "That ticket does not exist.");
-}
 
 // ---------------------------------------------------------------------------
 // POST /api/tickets — api-spec.md 4.1. Requester only (C-101). The Ticket is
@@ -136,36 +134,15 @@ ticketsRouter.get("/api/tickets/:id", ...requesterOnly, async (req: Request, res
 });
 
 // ---------------------------------------------------------------------------
-// Steps 4 to 6 for the attachment routes: parse the id, load the Ticket, and
-// apply ownership - which binds a Requester only. IT Staff and Administrator
-// read any Ticket's Attachments (C-103); their writes were already refused by
-// the role step. Sends the refusal itself and returns null so the caller stops.
-// ---------------------------------------------------------------------------
-async function loadVisibleTicket(req: Request, res: Response): Promise<number | null> {
-  const id = /^\d+$/.test(req.params.id) ? Number(req.params.id) : null;
-  if (id === null || id <= 0) {
-    sendError(res, 400, "VALIDATION_FAILED", "Ticket id must be a positive integer.", { id: "Ticket id must be a positive integer." });
-    return null;
-  }
-  const ticket = await getPrisma().ticket.findUnique({ where: { id }, select: { id: true, requesterId: true } });
-  const { user } = authOf(res);
-  if (!ticket || (user.role === "REQUESTER" && ticket.requesterId !== user.id)) {
-    sendTicketNotFound(res);
-    return null;
-  }
-  return ticket.id;
-}
-
-// ---------------------------------------------------------------------------
 // GET /api/tickets/:id/attachments — api-spec.md 5.1. Every role: the owning
 // Requester, and any IT Staff or Administrator (C-103). Active and removed
 // alike, ascending id; the removed ones keep their metadata and reason (BR-50).
 // ---------------------------------------------------------------------------
 ticketsRouter.get("/api/tickets/:id/attachments", ...anyRole, async (req: Request, res: Response) => {
   try {
-    const ticketId = await loadVisibleTicket(req, res);
-    if (ticketId === null) return;
-    const rows = await getPrisma().attachment.findMany({ where: { ticketId }, orderBy: { id: "asc" } });
+    const ticket = await loadVisibleTicket(req, res);
+    if (!ticket) return;
+    const rows = await getPrisma().attachment.findMany({ where: { ticketId: ticket.id }, orderBy: { id: "asc" } });
     res.status(200).json(rows.map(toAttachmentDto));
   } catch {
     sendInternalError(res);
@@ -177,16 +154,23 @@ ticketsRouter.get("/api/tickets/:id/attachments", ...anyRole, async (req: Reques
 // only; staff are refused 403 by the role step (C-103). The caller and the
 // Ticket are checked BEFORE the multipart body is parsed, so a refused caller
 // never gets a file onto disk; the only post-write refusal is the five-slot
-// rule, and that unlinks first (BR-41).
+// rule, and that unlinks first (BR-41). A Closed or Cancelled Ticket is
+// refused 409 TICKET_CLOSED at the same point - after ownership, so a
+// non-owner still gets 404 - and therefore before any file is written
+// (BR-108, C-109).
 // ---------------------------------------------------------------------------
 ticketsRouter.post(
   "/api/tickets/:id/attachments",
   ...requesterOnly,
   async (req: Request, res: Response, next) => {
     try {
-      const ticketId = await loadVisibleTicket(req, res);
-      if (ticketId === null) return;
-      res.locals.ticketId = ticketId;
+      const ticket = await loadVisibleTicket(req, res);
+      if (!ticket) return;
+      if (isTerminal(ticket.currentStatus)) {
+        sendTicketClosed(res);
+        return;
+      }
+      res.locals.ticketId = ticket.id;
       next();
     } catch {
       sendInternalError(res);
@@ -262,3 +246,33 @@ ticketsRouter.post(
     }
   },
 );
+
+// ---------------------------------------------------------------------------
+// POST /api/tickets/:id/requester-resolved - api-spec.md 4.4, C-76. The
+// "Problem Appears Resolved" indication: a timestamp, never a status, so
+// Current Status is not touched (BR-59) and no Public Comment is posted
+// (BR-61). Requester only; staff are refused 403 by the role step. A non-owner
+// gets 404 before the status is consulted, so the 409 never reveals that
+// another Requester's Ticket exists. No body is read: the server's clock is
+// the timestamp (BR-65). Repeating it overwrites the timestamp.
+// ---------------------------------------------------------------------------
+ticketsRouter.post("/api/tickets/:id/requester-resolved", ...requesterOnly, async (req: Request, res: Response) => {
+  const prisma = getPrisma();
+  try {
+    const ticket = await loadVisibleTicket(req, res);
+    if (!ticket) return;
+    // One conditional update, so a status change landing between the read and
+    // the write cannot leave the flag set on a status that forbids it.
+    const { count } = await prisma.ticket.updateMany({
+      where: { id: ticket.id, requesterId: authOf(res).user.id, currentStatus: { in: [...RESOLUTION_FLAG_STATUSES] } },
+      data: { requesterResolvedAt: new Date() },
+    });
+    if (count === 0) {
+      sendError(res, 409, "RESOLUTION_NOT_PERMITTED_IN_STATUS", "You can only report this while the ticket is open or in progress.");
+      return;
+    }
+    res.status(200).json(await loadTicketDto(prisma, ticket.id));
+  } catch {
+    sendInternalError(res);
+  }
+});

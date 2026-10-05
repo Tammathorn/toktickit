@@ -201,6 +201,15 @@ export interface AttachmentMeta {
   removalReason: string | null;
 }
 
+// api-spec.md 10.7 - one row shape for both Public Comments and Internal
+// Notes. The author carries id, name and role, never an email (BR-100).
+export interface Entry {
+  id: number;
+  body: string;
+  author: { id: number; name: string; role: UserRole };
+  createdAt: string;
+}
+
 // api-spec.md 10.2. No requesterId key: the session is the identity (C-64).
 export interface Ticket {
   id: number;
@@ -214,9 +223,15 @@ export interface Ticket {
   // Never null since C-71: set from Requested Priority on create and backfilled.
   itPriority: RequestedPriority;
   currentStatus: TicketStatus;
+  // api-spec.md 10.2 - name only, never an email address (BR-100, C-95, AC-115).
+  owner: { name: string; isActive: boolean } | null;
+  // The C-76 flag - a timestamp, never a status (BR-59).
+  requesterResolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
   attachments: AttachmentMeta[];
+  publicComments: Entry[];
+  // No Internal Note key exists here, under any name (api-spec.md 10.2, FR-29).
 }
 
 // No identity field at all: the Ticket belongs to the signed-in user (C-64).
@@ -282,7 +297,9 @@ export function uploadAttachment(
 // My Tickets (api-spec.md 3.2) and one owned Ticket (3.3).
 // ---------------------------------------------------------------------------
 
-export type TicketListRow = Omit<Ticket, "requester" | "description" | "attachments">;
+// api-spec.md 10.3 - the 10.2 shape minus description, attachments,
+// publicComments, owner and requester.
+export type TicketListRow = Omit<Ticket, "requester" | "description" | "attachments" | "publicComments" | "owner">;
 
 export interface TicketListMeta {
   page: number;
@@ -417,4 +434,107 @@ export interface AssignableUser {
 
 export async function fetchAssignableUsers(): Promise<AssignableUser[]> {
   return getJson("/api/staff/assignable-users");
+}
+
+// ---------------------------------------------------------------------------
+// IT Staff Ticket Detail and its operations - api-spec.md 8.2 to 8.6 (#42).
+// ---------------------------------------------------------------------------
+
+export interface StaffTicketOwner {
+  id: number;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+// api-spec.md 10.5 - the 10.2 shape plus the Requester's email, the owner's
+// id/role/isActive, and the Internal Notes.
+export interface StaffTicket {
+  id: number;
+  ticketNumber: string;
+  requester: { id: number; name: string; email: string };
+  category: Category;
+  relatedSystem: RelatedSystem;
+  summary: string;
+  description: string;
+  requestedPriority: RequestedPriority;
+  itPriority: RequestedPriority;
+  currentStatus: TicketStatus;
+  owner: StaffTicketOwner | null;
+  requesterResolvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  attachments: AttachmentMeta[];
+  publicComments: Entry[];
+  internalNotes: Entry[];
+}
+
+async function postJson<T>(path: string, body?: unknown): Promise<T> {
+  const res = await send(path, {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+async function patchJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await send(path, { method: "PATCH", headers: JSON_HEADERS, body: JSON.stringify(body) });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+export function fetchStaffTicket(id: number): Promise<StaffTicket> {
+  return getJson(`/api/staff/tickets/${id}`);
+}
+
+// POST /api/staff/tickets/:id/claim - api-spec.md 8.3.
+export function claimTicket(id: number): Promise<StaffTicket> {
+  return postJson(`/api/staff/tickets/${id}/claim`);
+}
+
+// PATCH /api/staff/tickets/:id/owner - api-spec.md 8.4. null unassigns.
+export function setTicketOwner(id: number, ownerId: number | null): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/owner`, { ownerId });
+}
+
+// PATCH /api/staff/tickets/:id/it-priority - api-spec.md 8.5.
+export function setItPriority(id: number, itPriority: RequestedPriority): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/it-priority`, { itPriority });
+}
+
+// PATCH /api/staff/tickets/:id/status - api-spec.md 8.6.
+export function setTicketStatus(id: number, currentStatus: TicketStatus): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/status`, { currentStatus });
+}
+
+// ---------------------------------------------------------------------------
+// Public Comments (api-spec.md 6) and Internal Notes (api-spec.md 7). Both
+// mounted on /api/tickets/:id/... - the Requester and IT Staff/Administrator
+// each reach the routes their role permits (C-63); the client sends no role
+// of its own.
+// ---------------------------------------------------------------------------
+
+export function fetchPublicComments(ticketId: number): Promise<Entry[]> {
+  return getJson(`/api/tickets/${ticketId}/public-comments`);
+}
+
+export function postPublicComment(ticketId: number, body: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/public-comments`, { body });
+}
+
+// IT Staff and Administrator only - a Requester never calls this (FR-29).
+export function fetchInternalNotes(ticketId: number): Promise<Entry[]> {
+  return getJson(`/api/tickets/${ticketId}/internal-notes`);
+}
+
+export function postInternalNote(ticketId: number, body: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/internal-notes`, { body });
+}
+
+// POST /api/tickets/:id/requester-resolved - api-spec.md 4.4, C-76. Requester
+// only. Returns the Requester Ticket DTO; status is untouched (BR-59).
+export function postRequesterResolved(ticketId: number): Promise<Ticket> {
+  return postJson(`/api/tickets/${ticketId}/requester-resolved`);
 }

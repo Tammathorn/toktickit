@@ -16,6 +16,12 @@ export const MESSAGES = {
   relatedSystemInvalid: "Select an active Related System from the list.",
   requestedPriorityInvalid: "Requested Priority must be Low, Medium or High.",
   removalReason: "A removal reason is required.",
+  // Lab 3 (ui-spec.md 6.1), #42.
+  commentBody: "A comment cannot be empty and must be 2000 characters or fewer.",
+  noteBody: "A note cannot be empty and must be 2000 characters or fewer.",
+  itPriority: "IT Priority must be Low, Medium or High.",
+  currentStatus: "That is not a valid status.",
+  ownerId: "Choose an active IT Staff or Administrator user.",
   // api-spec.md 3.1: a system-generated field supplied in the body.
   systemGenerated: (name: string) => `${name} is system generated and cannot be supplied.`,
 } as const;
@@ -45,6 +51,12 @@ function isMissing(value: unknown): boolean {
 
 export function isPositiveInt(value: unknown): value is number {
   return typeof value === "number" && Number.isInteger(value) && value > 0;
+}
+
+// A path id: digits only, positive, and small enough for an int4 column, so
+// an oversized id is a 400 rather than a database error.
+export function parsePathId(raw: string): number | null {
+  return /^\d{1,9}$/.test(raw) && Number(raw) > 0 ? Number(raw) : null;
 }
 
 // Accepts the JSON number the client sends, or a numeric string (a form value
