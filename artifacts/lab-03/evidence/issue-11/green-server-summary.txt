@@ -1,0 +1,8 @@
+Command: cd server && npx vitest run
+Date: 2026-10-05 14:27 UTC
+Commit: 235dcdce3987edd9b85f82e308a4a70d58838a80 + uncommitted fix (feature/lab3-11-queue-search-fix)
+Summary only (per-test lines omitted):
+
+Database: toktickit_test (vitest global-setup)
+ Test Files  15 passed (15)
+      Tests  297 passed (297)

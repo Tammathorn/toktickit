@@ -1,0 +1,11 @@
+Command: DATABASE_URL=<toktickit_evidence> npx playwright test e2e/lab-03 --project=desktop --project=tablet --project=mobile --workers=1 --reporter=list
+Date: 2026-10-05 14:28 UTC
+Commit: 235dcdce3987edd9b85f82e308a4a70d58838a80 + uncommitted fix (feature/lab3-11-queue-search-fix)
+Database: toktickit_evidence, dropped, recreated, migrate deploy + prisma:seed immediately before the run
+Summary and E2E-07 lines only:
+
+  ✓   26 [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, an
+  ✓   65 [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and
+  ✓  104 [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:344:7 › IT Staff Ticket Detail flow › E2E-07 the queue journey: search, each filter, sort, page size, and
+  28 skipped
+  92 passed (1.2m)

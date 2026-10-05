@@ -238,6 +238,23 @@ describe("IT Staff Ticket Queue", () => {
     await waitFor(() => expect(fetchQueue).toHaveBeenLastCalledWith(expect.objectContaining({ search: "laptop", page: 1 })));
   });
 
+  it("clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56)", async () => {
+    const fetchQueue = vi.spyOn(api, "fetchQueue").mockResolvedValue(page(ROWS));
+    const user = userEvent.setup();
+    renderQueue("/queue?search=laptop");
+    await screen.findByText("TKT-2026-000041");
+
+    await user.clear(screen.getByLabelText("Search"));
+    await user.selectOptions(screen.getByLabelText("Current Status"), "OPEN");
+    // Let the 300 ms search timer fire after the filter change.
+    await new Promise((resolve) => setTimeout(resolve, 450));
+
+    await waitFor(() => expect(fetchQueue).toHaveBeenLastCalledWith(expect.objectContaining({ currentStatus: "OPEN" })));
+    expect(window.location.search).toContain("currentStatus=OPEN");
+    expect(window.location.search).not.toContain("search=");
+    expect(screen.getByLabelText("Current Status")).toHaveValue("OPEN");
+  });
+
   it("UI-24 a 403 from the API renders the Forbidden state, not a blank screen (FR-24, AC-97)", async () => {
     vi.spyOn(api, "fetchQueue").mockRejectedValue(new api.ApiError(403, "FORBIDDEN_ROLE", "You do not have access to that page."));
     renderQueue();
