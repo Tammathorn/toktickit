@@ -1,0 +1,53 @@
+Command: cd client && npm test
+Date: 2026-10-05
+Dry-run commit: 0fe04ea922d26e40f1805f933dd7c7ddb4f28b75 (throwaway branch dryrun/lab3-integration, merged lab3-1..lab3-9 onto lab3-staging)
+
+
+> toktickit-client@1.0.0 test
+> vitest run
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (3 tests) 169ms
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (12 tests) 1121ms
+   ✓ Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 393ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx (12 tests) 1463ms
+   ✓ IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 870ms
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 1860ms
+   ✓ My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 836ms
+   ✓ My Tickets > debounces the search box into the request and resets to page 1 468ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx (19 tests) 1960ms
+   ✓ IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 435ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 2008ms
+   ✓ Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1294ms
+ ✓ tests/lab-03/UserManagement.test.tsx (15 tests) 3711ms
+   ✓ User Management > UI-40 search and the role filter each issue a request carrying their parameter (AC-83, AC-84) 569ms
+   ✓ User Management > UI-42 a duplicate email on create renders at the Email Address field, not as a banner (AC-87, FR-62) 900ms
+   ✓ User Management > creating a user shows Creating… then the success panel and refetches the list (BR-16) 908ms
+   ✓ User Management > empty and no-results states are distinguished by whether a filter is active (L2 C-28) 457ms
+ ✓ tests/lab-03/Login.test.tsx (18 tests) 4310ms
+   ✓ Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 793ms
+   ✓ Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 789ms
+   ✓ Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 666ms
+   ✓ Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 797ms
+   ✓ Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 777ms
+ ✓ tests/lab-03/ChangePassword.test.tsx (9 tests) 10826ms
+   ✓ Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 856ms
+   ✓ Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3567ms
+   ✓ Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2329ms
+   ✓ Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1215ms
+   ✓ Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2383ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 11425ms
+   ✓ Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 673ms
+   ✓ Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2493ms
+   ✓ Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 1982ms
+   ✓ Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2072ms
+   ✓ Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 1863ms
+   ✓ Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1958ms
+
+ Test Files  10 passed (10)
+      Tests  118 passed (118)
+   Start at  15:53:45
+   Duration  13.69s (transform 686ms, setup 2.16s, collect 6.14s, tests 38.85s, environment 9.48s, prepare 1.74s)
+

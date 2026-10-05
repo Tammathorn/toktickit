@@ -1,0 +1,50 @@
+Proof beyond tests (handoff Issue 3, LS 14 Part 5): the Set-Cookie flags, /api/auth/me 200 with
+the cookie, logout, and /api/auth/me 401 with the SAME cookie afterwards.
+Account: anucha.p@example.ac.th, the seeded local-development Requester (README). The request
+body is read from a file outside the repository, so no password appears below.
+Every session token is replaced by <64-hex token redacted>; CLAUDE.md keeps tokens out of
+tracked files even after logout has invalidated them.
+Date:    2026-10-04 16:21:19 +0700
+Commit:  f1ce0031e16a8ba1a32ad3e1d5a60d2b5703f582 (feature/lab3-3-authentication)
+======================================================================
+
+$ curl -i -X POST http://localhost:3000/api/auth/login -H 'Content-Type: application/json' --data @login.json
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: http://localhost:5173
+Vary: Origin
+Set-Cookie: tt_session=<64-hex token redacted>; HttpOnly; SameSite=Strict; Path=/
+Content-Type: application/json; charset=utf-8
+Content-Length: 127
+
+{"id":1,"name":"Anucha Prasert","email":"anucha.p@example.ac.th","role":"REQUESTER","isActive":true,"mustChangePassword":false}
+
+
+$ curl -i http://localhost:3000/api/auth/me -H 'Cookie: tt_session=<64-hex token redacted>'
+HTTP/1.1 200 OK
+X-Powered-By: Express
+Access-Control-Allow-Origin: http://localhost:5173
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Content-Length: 127
+
+{"id":1,"name":"Anucha Prasert","email":"anucha.p@example.ac.th","role":"REQUESTER","isActive":true,"mustChangePassword":false}
+
+$ curl -i -X POST http://localhost:3000/api/auth/logout -H 'Cookie: tt_session=<64-hex token redacted>'
+HTTP/1.1 204 No Content
+X-Powered-By: Express
+Access-Control-Allow-Origin: http://localhost:5173
+Vary: Origin
+Set-Cookie: tt_session=; Max-Age=0; HttpOnly; SameSite=Strict; Path=/
+
+
+
+$ curl -i http://localhost:3000/api/auth/me -H 'Cookie: tt_session=<64-hex token redacted>'     # the same cookie, after logout
+HTTP/1.1 401 Unauthorized
+X-Powered-By: Express
+Access-Control-Allow-Origin: http://localhost:5173
+Vary: Origin
+Content-Type: application/json; charset=utf-8
+Content-Length: 92
+
+{"error":{"code":"AUTH_REQUIRED","message":"Your session has ended. Please sign in again."}}

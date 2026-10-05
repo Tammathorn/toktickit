@@ -17,7 +17,21 @@ export const MESSAGES = {
   removalReason: "A removal reason is required.",
   // api-spec.md 3.1: a system-generated field supplied in the body.
   systemGenerated: (name: string) => `${name} is system generated and cannot be supplied.`,
+  // ui-spec.md 6.1, Lab 3 - IT Staff Ticket Detail and the two composers.
+  commentBody: "A comment cannot be empty and must be 2000 characters or fewer.",
+  noteBody: "A note cannot be empty and must be 2000 characters or fewer.",
+  itPriority: "IT Priority must be Low, Medium or High.",
+  currentStatus: "That is not a valid status.",
+  ownerId: "Choose an active IT Staff or Administrator user.",
+  // ui-spec.md 6.1, Lab 3 Administrator user management (#43). BR-99, BR-75, FR-59.
+  nameBounds: "Name is required and must be between 1 and 100 characters.",
+  emailBounds: "Email Address is required and must be a valid address of at most 254 characters.",
+  roleRequired: "Role is required.",
+  roleInvalid: "Role must be Requester, IT Staff or Administrator.",
+  statusRequired: "Status is required.",
 } as const;
+
+export const ENTRY_BODY_MAX = 2000;
 
 export const SUMMARY_MIN = 5;
 export const SUMMARY_MAX = 120;
@@ -98,20 +112,24 @@ export function messageForCode(code: string, filename?: string): string {
       return fileTooLargeMessage(filename ?? "That file");
     case "ATTACHMENT_LIMIT_REACHED":
       return "This ticket already has five active attachments. Remove one before adding another.";
-    case "TICKET_FORBIDDEN":
-    case "ATTACHMENT_FORBIDDEN":
-      return "You do not have access to that item.";
-    case "REQUESTER_INACTIVE":
-      return "That Development Requester is no longer active. Choose another.";
-    case "REQUESTER_NOT_FOUND":
-      return "That Development Requester no longer exists. Choose another.";
+    // Lab 3 (#40): TICKET_FORBIDDEN, ATTACHMENT_FORBIDDEN and the two
+    // selector-era codes are deleted with their messages (ui-spec 6.2, C-64,
+    // C-65). A non-owner now receives the 404 below.
     case "TICKET_NOT_FOUND":
     case "ATTACHMENT_NOT_FOUND":
+    case "USER_NOT_FOUND":
       return "That item does not exist.";
     case "ATTACHMENT_REMOVED":
       return "That attachment was removed and can no longer be downloaded.";
     case "INVALID_QUERY_PARAM":
       return "Some search or filter values in the address are not valid. Clear filters to return to the default list.";
+    // Lab 3 Administrator user management (ui-spec.md 6.2, #43).
+    case "EMAIL_TAKEN":
+      return "That email address is already in use.";
+    case "LAST_ADMINISTRATOR":
+      return "There must always be at least one active Administrator.";
+    case "SELF_DEACTIVATION":
+      return "You cannot deactivate your own account.";
     default:
       return INTERNAL_ERROR_MESSAGE;
   }

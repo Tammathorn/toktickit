@@ -1,6 +1,6 @@
 import { test, expect, type Page } from "@playwright/test";
 import path from "node:path";
-import { API_URL } from "../../playwright.config";
+import { STATE } from "../support/auth";
 
 // Create Ticket - screenshot evidence for LS 14 Part 6: the six states
 // ui-spec.md section 11 fixes, at the three C-10 viewports, written to
@@ -11,15 +11,17 @@ import { API_URL } from "../../playwright.config";
 // fulfils it with the api-spec.md 1.1 INTERNAL_ERROR envelope.
 //
 // The success capture creates one real Ticket per viewport. It does so as the
-// LAST active Development Requester, which the demo seed never touches: the
-// seed assigns Part 7's fixture to the first three active Requesters (A with
-// 14 Tickets, B with 3, C with none), so rows created here can never drift
-// those counts. The graded seed guarantees at least four active Requesters.
+// dedicated E2E Requester, which the demo seed never touches: the seed assigns
+// Part 7's fixture to the first three active Requesters (A with 14 Tickets, B
+// with 3, C with none), so rows created here can never drift those counts.
+//
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the stored selection of that
+// Requester becomes that Requester's signed-in storageState; nothing else in
+// this file changes.
 //
 // Requires the manual start sequence in docs/lab-02/tests.md section 5.
 
 const SHOT_DIR = path.resolve(__dirname, "../../artifacts/lab-02/screenshots/create-ticket");
-const STORAGE_KEY = "toktickit.requesterId";
 const TICKETS_ROUTE = "**/api/tickets";
 
 const SUMMARY = "Laptop battery drains quickly";
@@ -48,20 +50,9 @@ async function fillValid(page: Page) {
   await page.getByLabel("Description", { exact: false }).fill(DESCRIPTION);
 }
 
-test.beforeEach(async ({ page, request }) => {
-  // Select the screenshot Requester before the app boots, the same way the
-  // Selection screen would have stored it (C-32). See the note above on why
-  // it is the last active Requester and never one of the demo seed's three.
-  const res = await request.get(`${API_URL}/api/requesters`);
-  expect(res.ok()).toBeTruthy();
-  const requesters: Array<{ id: number }> = await res.json();
-  expect(requesters.length, "the graded seed provides at least four active Requesters").toBeGreaterThanOrEqual(4);
-  const screenshotRequester = requesters[requesters.length - 1];
-  await page.addInitScript(
-    ([key, id]) => window.localStorage.setItem(key, String(id)),
-    [STORAGE_KEY, screenshotRequester.id] as const,
-  );
-});
+// The screenshot Requester is signed in before the app boots - the dedicated
+// E2E Requester's session, written by e2e/auth.setup.ts.
+test.use({ storageState: STATE.requester });
 
 test.describe("Create Ticket", () => {
   test("initial: reference data loaded, Medium preset, Submit enabled", async ({ page }) => {

@@ -24,3 +24,7 @@ export function useMediaQuery(query: string): boolean {
 
 // Bootstrap's md breakpoint - the LS 8.7 tablet/mobile boundary (ui-spec 1).
 export const MD_AND_UP = "(min-width: 768px)";
+// Bootstrap's lg breakpoint - the ui-spec 15.2/15.3 desktop/tablet boundary
+// for the Ticket Queue, where C-108 drops three columns rather than hiding
+// them with CSS, so they are absent from the DOM at tablet width (RESP-04).
+export const LG_AND_UP = "(min-width: 992px)";

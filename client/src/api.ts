@@ -1,4 +1,7 @@
-const API_URL = import.meta.env.VITE_API_URL ?? "http://localhost:3000";
+// C-56 - same-origin via the Vite proxy. The fallback is "", not a
+// cross-origin default, because an unset VITE_API_URL must still mean "call
+// same-origin /api paths", not "fall back to a different host".
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 
 export interface Category {
   id: number;
@@ -43,11 +46,40 @@ export class ApiError extends Error {
   }
 }
 
+// Lab 3, BR-34 - any 401 AUTH_REQUIRED means the session is gone, whichever
+// screen's request met it. AuthContext subscribes here and swaps the screen for
+// Login. Only AUTH_REQUIRED counts: a 401 INVALID_CREDENTIALS from login is a
+// wrong password, not a lost session.
+//
+// A 403 PASSWORD_CHANGE_REQUIRED from any request means a change is owed - an
+// Administrator set a new initial password behind this session, say. It has no
+// banner (ui-spec 6.2): AuthContext re-reads the user and the gate shows
+// Change Password instead.
+type Listener = () => void;
+const sessionLostListeners = new Set<Listener>();
+const passwordChangeListeners = new Set<Listener>();
+
+export function onSessionLost(listener: Listener): () => void {
+  sessionLostListeners.add(listener);
+  return () => sessionLostListeners.delete(listener);
+}
+
+export function onPasswordChangeRequired(listener: Listener): () => void {
+  passwordChangeListeners.add(listener);
+  return () => passwordChangeListeners.delete(listener);
+}
+
+function reportIfSessionLost(error: ApiError): ApiError {
+  if (error.status === 401 && error.code === "AUTH_REQUIRED") sessionLostListeners.forEach((listener) => listener());
+  if (error.status === 403 && error.code === "PASSWORD_CHANGE_REQUIRED") passwordChangeListeners.forEach((listener) => listener());
+  return error;
+}
+
 async function toApiError(res: Response): Promise<ApiError> {
   try {
     const body = await res.json();
     if (body?.error?.code) {
-      return new ApiError(res.status, body.error.code, body.error.message, body.error.fields);
+      return reportIfSessionLost(new ApiError(res.status, body.error.code, body.error.message, body.error.fields));
     }
   } catch {
     // non-JSON body: fall through to the generic error
@@ -55,23 +87,71 @@ async function toApiError(res: Response): Promise<ApiError> {
   return new ApiError(res.status, "INTERNAL_ERROR", "Request failed");
 }
 
-async function getJson<T>(path: string): Promise<T> {
-  const res = await fetch(`${API_URL}${path}`);
+// A fetch that never rejects with a bare TypeError: a network failure becomes
+// the same INTERNAL_ERROR a 500 does, so a screen has one failure state to show.
+async function send(path: string, init?: RequestInit): Promise<Response> {
+  try {
+    return await fetch(`${API_URL}${path}`, init);
+  } catch {
+    throw new ApiError(0, "INTERNAL_ERROR", "Network error");
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Lab 3 authentication (api-spec.md 2.4, 3.1-3.3). The session lives in the
+// HttpOnly tt_session cookie, which script cannot read; the client learns who
+// it is only from these responses and keeps that in memory (FR-11, BR-25).
+// ---------------------------------------------------------------------------
+
+export type UserRole = "REQUESTER" | "IT_STAFF" | "ADMINISTRATOR";
+
+// api-spec.md 10.1 - exactly the six keys the server returns.
+export interface AuthUser {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  mustChangePassword: boolean;
+}
+
+const JSON_HEADERS = { "Content-Type": "application/json" };
+
+export async function login(email: string, password: string): Promise<AuthUser> {
+  const res = await send("/api/auth/login", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify({ email, password }) });
   if (!res.ok) throw await toApiError(res);
   return res.json();
 }
 
-// A Development Requester as api-spec.md 2.3 returns it. No credential field
-// exists on this shape (BR-65): it is a testing identity, not a login.
-export interface Requester {
-  id: number;
-  name: string;
-  email: string;
+// null when there is no valid session: at start-up that is the normal
+// signed-out case, not a lost session, so it raises no session-ended notice.
+export async function fetchCurrentUser(): Promise<AuthUser | null> {
+  const res = await send("/api/auth/me");
+  if (res.status === 401) return null;
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
 }
 
-// GET /api/requesters — active Requesters only, ascending id (BR-11).
-export async function fetchRequesters(): Promise<Requester[]> {
-  const res = await fetch(`${API_URL}/api/requesters`);
+// 204, or 401 when the session had already ended - either way it is over.
+export async function logout(): Promise<void> {
+  const res = await send("/api/auth/logout", { method: "POST" });
+  if (!res.ok && res.status !== 401) throw await toApiError(res);
+}
+
+export interface PasswordChange {
+  currentPassword: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export async function changePassword(input: PasswordChange): Promise<AuthUser> {
+  const res = await send("/api/auth/change-password", { method: "POST", headers: JSON_HEADERS, body: JSON.stringify(input) });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+async function getJson<T>(path: string): Promise<T> {
+  const res = await fetch(`${API_URL}${path}`);
   if (!res.ok) throw await toApiError(res);
   return res.json();
 }
@@ -98,7 +178,16 @@ export function fetchRelatedSystems(): Promise<RelatedSystem[]> {
 // ---------------------------------------------------------------------------
 
 export type RequestedPriority = "LOW" | "MEDIUM" | "HIGH";
-export type TicketStatus = "NEW" | "IN_PROGRESS" | "RESOLVED" | "CLOSED" | "CANCELLED";
+// C-70 - all eight statuses, in the TicketStatus declaration order.
+export type TicketStatus =
+  | "NEW"
+  | "OPEN"
+  | "IN_PROGRESS"
+  | "WAITING_FOR_REQUESTER"
+  | "RESOLVED"
+  | "CLOSED"
+  | "REOPENED"
+  | "CANCELLED";
 
 export interface AttachmentMeta {
   id: number;
@@ -112,25 +201,41 @@ export interface AttachmentMeta {
   removalReason: string | null;
 }
 
+// api-spec.md 10.7 - one row shape for both Public Comments and Internal
+// Notes. The author carries id, name and role, never an email (BR-100).
+export interface Entry {
+  id: number;
+  body: string;
+  author: { id: number; name: string; role: UserRole };
+  createdAt: string;
+}
+
+// api-spec.md 10.2. No requesterId key: the session is the identity (C-64).
 export interface Ticket {
   id: number;
   ticketNumber: string;
-  requesterId: number;
   requester: { id: number; name: string };
   category: Category;
   relatedSystem: RelatedSystem;
   summary: string;
   description: string;
   requestedPriority: RequestedPriority;
-  itPriority: RequestedPriority | null;
+  // Never null since C-71: set from Requested Priority on create and backfilled.
+  itPriority: RequestedPriority;
   currentStatus: TicketStatus;
+  // api-spec.md 10.2 - name only, never an email address (BR-100, C-95, AC-115).
+  owner: { name: string; isActive: boolean } | null;
+  // The C-76 flag - a timestamp, never a status (BR-59).
+  requesterResolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
   attachments: AttachmentMeta[];
+  publicComments: Entry[];
+  // No Internal Note key exists here, under any name (api-spec.md 10.2, FR-29).
 }
 
+// No identity field at all: the Ticket belongs to the signed-in user (C-64).
 export interface NewTicketInput {
-  requesterId: number;
   categoryId: number;
   relatedSystemId: number;
   summary: string;
@@ -138,9 +243,8 @@ export interface NewTicketInput {
   requestedPriority: RequestedPriority;
 }
 
-// POST /api/tickets - the one endpoint carrying requesterId in the body (C-12).
-// The Ticket Number in the 201 body is assigned inside the creation transaction
-// (C-49); no second request is needed.
+// POST /api/tickets - api-spec.md 4.1. The Ticket Number in the 201 body is
+// assigned inside the creation transaction (C-49); no second request is needed.
 export async function createTicket(input: NewTicketInput): Promise<Ticket> {
   const res = await fetch(`${API_URL}/api/tickets`, {
     method: "POST",
@@ -157,7 +261,6 @@ export async function createTicket(input: NewTicketInput): Promise<Ticket> {
 // determinate progress bar (ui-spec 14.2) and fetch exposes no upload progress.
 export function uploadAttachment(
   ticketId: number,
-  requesterId: number,
   file: File,
   onProgress?: (percent: number) => void,
 ): Promise<AttachmentMeta> {
@@ -165,7 +268,7 @@ export function uploadAttachment(
   form.append("file", file, file.name);
   return new Promise((resolve, reject) => {
     const xhr = new XMLHttpRequest();
-    xhr.open("POST", `${API_URL}/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+    xhr.open("POST", `${API_URL}/api/tickets/${ticketId}/attachments`);
     xhr.responseType = "text";
     xhr.upload.onprogress = (event) => {
       if (onProgress && event.lengthComputable) onProgress(Math.round((event.loaded / event.total) * 100));
@@ -184,7 +287,7 @@ export function uploadAttachment(
         return;
       }
       const error = (body as { error?: { code?: string; message?: string; fields?: Record<string, string> } } | null)?.error;
-      reject(new ApiError(xhr.status, error?.code ?? "INTERNAL_ERROR", error?.message ?? "Request failed", error?.fields));
+      reject(reportIfSessionLost(new ApiError(xhr.status, error?.code ?? "INTERNAL_ERROR", error?.message ?? "Request failed", error?.fields)));
     };
     xhr.send(form);
   });
@@ -194,7 +297,9 @@ export function uploadAttachment(
 // My Tickets (api-spec.md 3.2) and one owned Ticket (3.3).
 // ---------------------------------------------------------------------------
 
-export type TicketListRow = Omit<Ticket, "requesterId" | "requester" | "description" | "attachments">;
+// api-spec.md 10.3 - the 10.2 shape minus description, attachments,
+// publicComments, owner and requester.
+export type TicketListRow = Omit<Ticket, "requester" | "description" | "attachments" | "publicComments" | "owner">;
 
 export interface TicketListMeta {
   page: number;
@@ -221,16 +326,17 @@ export interface TicketListQuery {
   pageSize?: number;
 }
 
-export function fetchTickets(requesterId: number, query: TicketListQuery): Promise<TicketListPage> {
-  const params = new URLSearchParams({ requesterId: String(requesterId) });
+// GET /api/tickets - scoped by the server to the signed-in Requester (BR-43).
+export function fetchTickets(query: TicketListQuery): Promise<TicketListPage> {
+  const params = new URLSearchParams();
   for (const [key, value] of Object.entries(query)) {
     if (value !== undefined && value !== "") params.set(key, String(value));
   }
   return getJson(`/api/tickets?${params.toString()}`);
 }
 
-export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
-  return getJson(`/api/tickets/${id}?requesterId=${requesterId}`);
+export function fetchTicket(id: number): Promise<Ticket> {
+  return getJson(`/api/tickets/${id}`);
 }
 
 // ---------------------------------------------------------------------------
@@ -238,30 +344,263 @@ export function fetchTicket(id: number, requesterId: number): Promise<Ticket> {
 // ---------------------------------------------------------------------------
 
 // GET /api/tickets/:id/attachments - active and removed alike, ascending id.
-export function fetchAttachments(ticketId: number, requesterId: number): Promise<AttachmentMeta[]> {
-  return getJson(`/api/tickets/${ticketId}/attachments?requesterId=${requesterId}`);
+export function fetchAttachments(ticketId: number): Promise<AttachmentMeta[]> {
+  return getJson(`/api/tickets/${ticketId}/attachments`);
 }
 
 // GET /api/attachments/:id/download - the one ownership-checked route for both
 // download and preview (BR-49, BR-54). The bytes come back as a Blob; a 410
 // or 500 surfaces as an ApiError so the row can show the unavailable state (C-46).
-export async function downloadAttachment(
-  id: number,
-  requesterId: number,
-  disposition: "attachment" | "inline",
-): Promise<Blob> {
-  const res = await fetch(`${API_URL}/api/attachments/${id}/download?requesterId=${requesterId}&disposition=${disposition}`);
+export async function downloadAttachment(id: number, disposition: "attachment" | "inline"): Promise<Blob> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}/download?disposition=${disposition}`);
   if (!res.ok) throw await toApiError(res);
   return res.blob();
 }
 
 // DELETE /api/attachments/:id - soft removal with a required reason (BR-46, BR-47).
-export async function removeAttachment(id: number, requesterId: number, removalReason: string): Promise<AttachmentMeta> {
-  const res = await fetch(`${API_URL}/api/attachments/${id}?requesterId=${requesterId}`, {
+export async function removeAttachment(id: number, removalReason: string): Promise<AttachmentMeta> {
+  const res = await fetch(`${API_URL}/api/attachments/${id}`, {
     method: "DELETE",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ removalReason }),
   });
   if (!res.ok) throw await toApiError(res);
   return res.json();
+}
+
+// ---------------------------------------------------------------------------
+// The Ticket Queue (api-spec.md 8.1). IT Staff and Administrator only; not
+// scoped to any Requester (BR-74), so the row carries no requester key.
+// ---------------------------------------------------------------------------
+
+export interface QueueOwner {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
+// api-spec.md 10.4 - exactly the nine FR-39 columns plus the two markers.
+export interface QueueRow {
+  id: number;
+  ticketNumber: string;
+  summary: string;
+  category: Category;
+  requestedPriority: RequestedPriority;
+  itPriority: RequestedPriority;
+  currentStatus: TicketStatus;
+  owner: QueueOwner | null;
+  requesterResolvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface QueuePage {
+  data: QueueRow[];
+  meta: TicketListMeta;
+}
+
+// The C-78 query, as strings straight from the address bar. Empty values are
+// not sent, so the BR-72 server defaults apply.
+export interface QueueListQuery {
+  search?: string;
+  currentStatus?: string;
+  itPriority?: string;
+  /** "me", "unassigned", or a user id as a string. */
+  owner?: string;
+  categoryId?: string;
+  sort?: string;
+  page?: number;
+  pageSize?: number;
+}
+
+export function fetchQueue(query: QueueListQuery): Promise<QueuePage> {
+  const params = new URLSearchParams();
+  for (const [key, value] of Object.entries(query)) {
+    if (value !== undefined && value !== "") params.set(key, String(value));
+  }
+  return getJson(`/api/staff/tickets?${params.toString()}`);
+}
+
+// GET /api/staff/assignable-users (api-spec.md 8.7, C-105) - active IT Staff
+// and Administrator users, for the Ticket Owner filter's named-user options.
+// Not yet implemented server-side (that lands with #42's staff routes), so a
+// failure here is swallowed and the filter falls back to its three static
+// options rather than showing an error for a toolbar control.
+export interface AssignableUser {
+  id: number;
+  name: string;
+  role: UserRole;
+}
+
+export async function fetchAssignableUsers(): Promise<AssignableUser[]> {
+  return getJson("/api/staff/assignable-users");
+}
+
+// ---------------------------------------------------------------------------
+// IT Staff Ticket Detail and its operations - api-spec.md 8.2 to 8.6 (#42).
+// ---------------------------------------------------------------------------
+
+export interface StaffTicketOwner {
+  id: number;
+  name: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+// api-spec.md 10.5 - the 10.2 shape plus the Requester's email, the owner's
+// id/role/isActive, and the Internal Notes.
+export interface StaffTicket {
+  id: number;
+  ticketNumber: string;
+  requester: { id: number; name: string; email: string };
+  category: Category;
+  relatedSystem: RelatedSystem;
+  summary: string;
+  description: string;
+  requestedPriority: RequestedPriority;
+  itPriority: RequestedPriority;
+  currentStatus: TicketStatus;
+  owner: StaffTicketOwner | null;
+  requesterResolvedAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  attachments: AttachmentMeta[];
+  publicComments: Entry[];
+  internalNotes: Entry[];
+}
+
+async function postJson<T>(path: string, body?: unknown): Promise<T> {
+  const res = await send(path, {
+    method: "POST",
+    headers: JSON_HEADERS,
+    body: body === undefined ? undefined : JSON.stringify(body),
+  });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+async function patchJson<T>(path: string, body: unknown): Promise<T> {
+  const res = await send(path, { method: "PATCH", headers: JSON_HEADERS, body: JSON.stringify(body) });
+  if (!res.ok) throw await toApiError(res);
+  return res.json();
+}
+
+export function fetchStaffTicket(id: number): Promise<StaffTicket> {
+  return getJson(`/api/staff/tickets/${id}`);
+}
+
+// POST /api/staff/tickets/:id/claim - api-spec.md 8.3.
+export function claimTicket(id: number): Promise<StaffTicket> {
+  return postJson(`/api/staff/tickets/${id}/claim`);
+}
+
+// PATCH /api/staff/tickets/:id/owner - api-spec.md 8.4. null unassigns.
+export function setTicketOwner(id: number, ownerId: number | null): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/owner`, { ownerId });
+}
+
+// PATCH /api/staff/tickets/:id/it-priority - api-spec.md 8.5.
+export function setItPriority(id: number, itPriority: RequestedPriority): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/it-priority`, { itPriority });
+}
+
+// PATCH /api/staff/tickets/:id/status - api-spec.md 8.6.
+export function setTicketStatus(id: number, currentStatus: TicketStatus): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/status`, { currentStatus });
+}
+
+// ---------------------------------------------------------------------------
+// Public Comments (api-spec.md 6) and Internal Notes (api-spec.md 7). Both
+// mounted on /api/tickets/:id/... - the Requester and IT Staff/Administrator
+// each reach the routes their role permits (C-63); the client sends no role
+// of its own.
+// ---------------------------------------------------------------------------
+
+export function fetchPublicComments(ticketId: number): Promise<Entry[]> {
+  return getJson(`/api/tickets/${ticketId}/public-comments`);
+}
+
+export function postPublicComment(ticketId: number, body: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/public-comments`, { body });
+}
+
+// IT Staff and Administrator only - a Requester never calls this (FR-29).
+export function fetchInternalNotes(ticketId: number): Promise<Entry[]> {
+  return getJson(`/api/tickets/${ticketId}/internal-notes`);
+}
+
+export function postInternalNote(ticketId: number, body: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/internal-notes`, { body });
+}
+
+// POST /api/tickets/:id/requester-resolved - api-spec.md 4.4, C-76. Requester
+// only. Returns the Requester Ticket DTO; status is untouched (BR-59).
+export function postRequesterResolved(ticketId: number): Promise<Ticket> {
+  return postJson(`/api/tickets/${ticketId}/requester-resolved`);
+}
+
+// ---------------------------------------------------------------------------
+// Administrator user management - api-spec.md section 9, ui-spec.md section
+// 17 (#43). Administrator only; every call below is refused 403 FORBIDDEN_ROLE
+// to any other role, before any user data is fetched (AC-96, AC-97).
+// ---------------------------------------------------------------------------
+
+// api-spec.md 9.1 row shape - the six AuthUser keys plus createdAt/updatedAt.
+// Never a passwordHash, never anything derived from one (BR-88, FR-70).
+export interface AdminUser {
+  id: number;
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  mustChangePassword: boolean;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface UserListQuery {
+  search?: string;
+  role?: string;
+}
+
+// GET /api/users - a bare array, no pagination envelope (BR-84). Name
+// ascending then id, fixed by the server (C-107); `sort` is never sent.
+export function fetchUsers(query: UserListQuery): Promise<AdminUser[]> {
+  const params = new URLSearchParams();
+  if (query.search) params.set("search", query.search);
+  if (query.role) params.set("role", query.role);
+  const qs = params.toString();
+  return getJson(`/api/users${qs ? `?${qs}` : ""}`);
+}
+
+export interface NewUserInput {
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+  initialPassword: string;
+}
+
+// POST /api/users - api-spec.md 9.2. mustChangePassword is always true on the
+// response; there is no way to opt out (BR-16).
+export function createUser(input: NewUserInput): Promise<AdminUser> {
+  return postJson("/api/users", input);
+}
+
+export interface EditUserInput {
+  name: string;
+  email: string;
+  role: UserRole;
+  isActive: boolean;
+}
+
+// PATCH /api/users/:id - api-spec.md 9.3. Exactly four fields, no password.
+export function updateUser(id: number, input: EditUserInput): Promise<AdminUser> {
+  return patchJson(`/api/users/${id}`, input);
+}
+
+// POST /api/users/:id/initial-password - api-spec.md 9.4. The only
+// account-recovery path in the lab (BR-78); ends every session of that user.
+export function setInitialPassword(id: number, initialPassword: string): Promise<AdminUser> {
+  return postJson(`/api/users/${id}/initial-password`, { initialPassword });
 }

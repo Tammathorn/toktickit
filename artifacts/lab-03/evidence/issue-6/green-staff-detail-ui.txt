@@ -1,0 +1,45 @@
+Command: (cd client && npx vitest run tests/lab-03/StaffTicketDetail.test.tsx tests/lab-02/RequesterTicketDetail.test.tsx --reporter=verbose)
+Date:    2026-10-04 22:39:29 +0700
+Commit:  eb0ea727dfd09695ee5afc6b308e18725eab9f0b (feature/lab3-6-staff-ticket-ops)
+Tree:    dirty - Issue #6 (Staff Ticket Detail UI + Requester Ticket Detail additions) implemented, pre-commit
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-24 renders the Ticket information read-only with no edit, note or status control (AC-53, rewritten per C-76)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-25 the read-only group renders Requester, Category, Related System, Requested Priority and the dates with no input among them (FR-43)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.1 renders a Ticket Owner row, Unassigned when there is none (BR-100)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-26 Claim renders only when the Ticket is unassigned (FR-44)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-27 the lost claim race renders the conflict inline, refreshes the view, and Claim is gone (FR-44, AC-71)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 lists Public Comments newest first, with an empty state and a composer with a live counter (BR-67, FR-53)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 shows the empty state with the composer still present (BR-27)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-28 Assign/Reassign offers only the users GET /api/staff/assignable-users returns (FR-45, BR-104, C-105)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-29 the status select offers exactly the matrix's permitted targets from each current status (ui-spec 16.2, specification 5.1)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders (BR-58, C-98)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-31 Resolved, Closed and Cancelled each open a confirmation and send no request until confirmed; Cancel sends nothing (AC-80, BR-57)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 374ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > the Cancelled confirmation reads Keep the ticket, never Cancel beside Cancel Ticket (BR-58)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a confirmed Resolved move sends the request and the view updates (AC-80)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.3 the resolution confirmation: Cancel sends nothing, confirming sets the marker and swaps the action for a reported line (FR-30, BR-59, BR-61)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.4 a Closed Ticket is read-only: no composer, no upload, no Remove, and the terminal line renders once (BR-108, C-109)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-25 renders Ticket Date and Last Updated as DD MMM YYYY HH:mm in Asia/Bangkok (AC-60)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-07 renders the Current Status badge and the IT Priority badge beside it (FR-31, C-71)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-09 gives every interactive control a non-empty accessible name (AC-56)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > offers Back to My Tickets and a headed Attachments card with the active count
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a status move needing an owner, with none, renders the OWNER_REQUIRED message inline beside the status control (C-93)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-32 the resolution callout renders when the flag is set, and is not presented as a status (FR-50, AC-59)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-33 Public Comments and Internal Notes render distinctly: different headings, the standing label, and separation between the composers (FR-55, AC-107)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 464ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-35 the live character counter tracks the body length and turns danger past 2000 (FR-53)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-36 no comment and no note renders an edit or delete affordance (FR-51, BR-63)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-37 staff attachments are read-only: Preview and Download render, no upload and no Remove control renders (C-103, FR-49)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > renders a loading skeleton, then a safe failure panel with Retry (ui-spec 20.1)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a 403 FORBIDDEN_ROLE from the API renders the Forbidden state, not a blank screen (FR-24, C-63)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a missing Ticket renders the not-found refusal, never revealing existence (C-65)
+
+ Test Files  2 passed (2)
+      Tests  30 passed (30)
+   Start at  22:39:25
+   Duration  3.49s (transform 273ms, setup 215ms, collect 996ms, tests 3.05s, environment 1.05s, prepare 276ms)
+

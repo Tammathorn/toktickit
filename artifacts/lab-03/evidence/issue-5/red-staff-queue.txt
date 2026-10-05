@@ -1,0 +1,418 @@
+Command: (cd server && npx vitest run tests/lab-03/staff-queue.api.test.ts tests/lab-03/authorization.api.test.ts --reporter=verbose)
+Date:    2026-10-04 17:35:20 +0700
+Commit:  3c4cd8d4eef6646b0c6c2ef67e2ea89326b3f646 (feature/lab3-5-staff-queue, staffRouter mount commented out to show the red baseline)
+Tree:    route disabled for this capture only, restored immediately after
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-29 the default view excludes Closed and Cancelled, and orders IT Priority high to low then oldest first (AC-61, BR-72, FR-38)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-30 supplying currentStatus=CLOSED returns Closed tickets, proving the exclusion is a default and not permanent (BR-72)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-31 search by Ticket Number: an exact number returns exactly that Ticket, a shared prefix returns the group (AC-62, BR-71, FR-34)
+   → Target cannot be null or undefined.
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-32 search by Ticket Summary: a case-insensitive substring matches, and Description is never searched (AC-62, BR-71)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-33 owner filter unassigned: every returned Ticket has owner null (AC-63, BR-71, FR-35)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-34 owner filter me: scoped to the calling staff user, and a different caller sees a different set (AC-64, BR-71)
+   → Cannot read properties of undefined (reading 'map')
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-35 owner filter by a named user id: every returned Ticket is owned by that user (BR-71, FR-35)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-36 two filters together: currentStatus and itPriority combine conjunctively (AC-65, BR-71)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-37 category filter: only Tickets in that category are returned (BR-71, FR-35)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-38 all five sort fields, both directions, give the asserted order (AC-66, BR-71, FR-36)
+   → Cannot read properties of undefined (reading 'map')
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-39 itPriority:desc gives HIGH, MEDIUM, LOW - declaration order, not alphabetical (BR-71, api-spec 8.1)
+   → Cannot read properties of undefined (reading 'map')
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-40 page sizes 10, 25 and 50 give 200; 11 gives 400 naming pageSize (AC-67, BR-72)
+   → pageSize=10: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-41 paging boundaries: a partial last page, and one page beyond returns an empty array with 200, not an error (BR-72, L2 C-43)
+   → Target cannot be null or undefined.
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-42 an unknown sort field gives 400 INVALID_QUERY_PARAM naming sort, before any query reaches the database (AC-68, BR-73, FR-42)
+   → expected 404 to be 400 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-43 three bad parameters at once give three field entries, not one generic message (BR-73)
+   → expected 404 to be 400 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-44 all eight TicketStatus values are accepted as a filter (BR-71, C-70)
+   → NEW: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-45 a Ticket carrying requesterResolvedAt returns it non-null in its queue row (AC-60, BR-62, FR-40)
+   → Target cannot be null or undefined.
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-46 a Ticket owned by a deactivated user returns owner.isActive false and keeps that owner (AC-75, BR-30, FR-46)
+   → Target cannot be null or undefined.
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-47 the queue is not Requester-scoped: Tickets from more than one Requester appear together (BR-74, api-spec 10.4)
+   → Cannot read properties of undefined (reading 'map')
+ × tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-48 the queue row carries exactly the api-spec 10.4 keys, and no requester key (api-spec 10.4, FR-39)
+   → Target cannot be null or undefined.
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ × tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+   → expected 404 to be 403 // Object.is equality
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 21 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:265:24
+    263|   it("SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (…
+    264|     const res = await a.agent.get("/api/staff/tickets");
+    265|     expect(res.status).toBe(403);
+       |                        ^
+    266|     expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", messag…
+    267|     expect(res.body.data).toBeUndefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-29 the default view excludes Closed and Cancelled, and orders IT Priority high to low then oldest first (AC-61, BR-72, FR-38)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:170:30
+    168|   it("API-29 the default view excludes Closed and Cancelled, and order…
+    169|     const statusRes = await queue(staffX.agent, { search: "QSTATUS", p…
+    170|     expect(statusRes.status).toBe(200);
+       |                              ^
+    171|     const statusIds = statusRes.body.data.map((r: { id: number }) => r…
+    172|     expect(statusIds).not.toContain(fixtures.status_CLOSED.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-30 supplying currentStatus=CLOSED returns Closed tickets, proving the exclusion is a default and not permanent (BR-72)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:184:24
+    182|   it("API-30 supplying currentStatus=CLOSED returns Closed tickets, pr…
+    183|     const res = await queue(staffX.agent, { search: "QSTATUS", current…
+    184|     expect(res.status).toBe(200);
+       |                        ^
+    185|     expect(res.body.data).toHaveLength(1);
+    186|     expect(res.body.data[0].id).toBe(fixtures.status_CLOSED.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-31 search by Ticket Number: an exact number returns exactly that Ticket, a shared prefix returns the group (AC-62, BR-71, FR-34)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-03/staff-queue.api.test.ts:192:29
+    190|     const full = fixtures.numberA.ticketNumber!;
+    191|     const exact = await queue(staffX.agent, { search: full });
+    192|     expect(exact.body.data).toHaveLength(1);
+       |                             ^
+    193|     expect(exact.body.data[0].id).toBe(fixtures.numberA.id);
+    194| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-32 search by Ticket Summary: a case-insensitive substring matches, and Description is never searched (AC-62, BR-71)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:207:26
+    205|   it("API-32 search by Ticket Summary: a case-insensitive substring ma…
+    206|     const lower = await queue(staffX.agent, { search: "zephyr" });
+    207|     expect(lower.status).toBe(200);
+       |                          ^
+    208|     expect(lower.body.data.map((r: { id: number }) => r.id)).toContain…
+    209|     const descriptionOnly = await queue(staffX.agent, { search: "NEVER…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-33 owner filter unassigned: every returned Ticket has owner null (AC-63, BR-71, FR-35)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:215:24
+    213|   it("API-33 owner filter unassigned: every returned Ticket has owner …
+    214|     const res = await queue(staffX.agent, { search: "QOWNER", owner: "…
+    215|     expect(res.status).toBe(200);
+       |                        ^
+    216|     const ids = res.body.data.map((r: { id: number }) => r.id);
+    217|     expect(ids).toEqual([fixtures.unassigned.id]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-34 owner filter me: scoped to the calling staff user, and a different caller sees a different set (AC-64, BR-71)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ tests/lab-03/staff-queue.api.test.ts:223:26
+    221|   it("API-34 owner filter me: scoped to the calling staff user, and a …
+    222|     const asX = await queue(staffX.agent, { search: "QOWNER", owner: "…
+    223|     expect(asX.body.data.map((r: { id: number }) => r.id).sort()).toEq…
+       |                          ^
+    224| 
+    225|     const asY = await queue(staffY.agent, { search: "QOWNER", owner: "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-35 owner filter by a named user id: every returned Ticket is owned by that user (BR-71, FR-35)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:231:24
+    229|   it("API-35 owner filter by a named user id: every returned Ticket is…
+    230|     const res = await queue(staffX.agent, { search: "QOWNER", owner: s…
+    231|     expect(res.status).toBe(200);
+       |                        ^
+    232|     expect(res.body.data.map((r: { id: number }) => r.id)).toEqual([fi…
+    233|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-36 two filters together: currentStatus and itPriority combine conjunctively (AC-65, BR-71)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:237:24
+    235|   it("API-36 two filters together: currentStatus and itPriority combin…
+    236|     const res = await queue(staffX.agent, { search: "QCOMBO", currentS…
+    237|     expect(res.status).toBe(200);
+       |                        ^
+    238|     expect(res.body.data.map((r: { id: number }) => r.id)).toEqual([fi…
+    239|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-37 category filter: only Tickets in that category are returned (BR-71, FR-35)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:243:24
+    241|   it("API-37 category filter: only Tickets in that category are return…
+    242|     const res = await queue(staffX.agent, { search: "QCATEGORY", categ…
+    243|     expect(res.status).toBe(200);
+       |                        ^
+    244|     expect(res.body.data.map((r: { id: number }) => r.id)).toEqual([fi…
+    245|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-38 all five sort fields, both directions, give the asserted order (AC-66, BR-71, FR-36)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ order tests/lab-03/staff-queue.api.test.ts:250:28
+    248|     const order = async (sort: string) => {
+    249|       const res = await queue(staffX.agent, { search: "QSORT", sort });
+    250|       return res.body.data.map((r: { id: number }) => r.id);
+       |                            ^
+    251|     };
+    252|     const [s1, s2, s3] = [fixtures.s1.id, fixtures.s2.id, fixtures.s3.…
+ ❯ tests/lab-03/staff-queue.api.test.ts:253:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-39 itPriority:desc gives HIGH, MEDIUM, LOW - declaration order, not alphabetical (BR-71, api-spec 8.1)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ tests/lab-03/staff-queue.api.test.ts:268:38
+    266|   it("API-39 itPriority:desc gives HIGH, MEDIUM, LOW - declaration ord…
+    267|     const res = await queue(staffX.agent, { search: "QSORT", sort: "it…
+    268|     const priorities = res.body.data.map((r: { itPriority: string }) =…
+       |                                      ^
+    269|     expect(priorities).toEqual(["HIGH", "MEDIUM", "LOW"]);
+    270|     expect(priorities).not.toEqual(["MEDIUM", "LOW", "HIGH"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-40 page sizes 10, 25 and 50 give 200; 11 gives 400 naming pageSize (AC-67, BR-72)
+AssertionError: pageSize=10: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:276:46
+    274|     for (const size of [10, 25, 50]) {
+    275|       const res = await queue(staffX.agent, { search: "QPAGE", pageSiz…
+    276|       expect(res.status, `pageSize=${size}`).toBe(200);
+       |                                              ^
+    277|     }
+    278|     const bad = await queue(staffX.agent, { pageSize: 11 });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-41 paging boundaries: a partial last page, and one page beyond returns an empty array with 200, not an error (BR-72, L2 C-43)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-03/staff-queue.api.test.ts:285:29
+    283|   it("API-41 paging boundaries: a partial last page, and one page beyo…
+    284|     const page1 = await queue(staffX.agent, { search: "QPAGE", pageSiz…
+    285|     expect(page1.body.data).toHaveLength(10);
+       |                             ^
+    286|     expect(page1.body.meta.total).toBe(13);
+    287|     expect(page1.body.meta.totalPages).toBe(2);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-42 an unknown sort field gives 400 INVALID_QUERY_PARAM naming sort, before any query reaches the database (AC-68, BR-73, FR-42)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:300:24
+    298|   it("API-42 an unknown sort field gives 400 INVALID_QUERY_PARAM namin…
+    299|     const res = await queue(staffX.agent, { sort: "description:asc" });
+    300|     expect(res.status).toBe(400);
+       |                        ^
+    301|     expect(res.body.error.code).toBe("INVALID_QUERY_PARAM");
+    302|     expect(res.body.error.fields.sort).toEqual(expect.any(String));
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-43 three bad parameters at once give three field entries, not one generic message (BR-73)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:307:24
+    305|   it("API-43 three bad parameters at once give three field entries, no…
+    306|     const res = await queue(staffX.agent, { sort: "nope", pageSize: 7,…
+    307|     expect(res.status).toBe(400);
+       |                        ^
+    308|     expect(Object.keys(res.body.error.fields).sort()).toEqual(["itPrio…
+    309|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-44 all eight TicketStatus values are accepted as a filter (BR-71, C-70)
+AssertionError: NEW: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-queue.api.test.ts:314:34
+    312|     for (const status of ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_R…
+    313|       const res = await queue(staffX.agent, { search: "QSTATUS", curre…
+    314|       expect(res.status, status).toBe(200);
+       |                                  ^
+    315|       expect(res.body.data).toHaveLength(1);
+    316|       expect(res.body.data[0].currentStatus).toBe(status);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-45 a Ticket carrying requesterResolvedAt returns it non-null in its queue row (AC-60, BR-62, FR-40)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-03/staff-queue.api.test.ts:322:27
+    320|   it("API-45 a Ticket carrying requesterResolvedAt returns it non-null…
+    321|     const res = await queue(staffX.agent, { search: "QRESOLVED", curre…
+    322|     expect(res.body.data).toHaveLength(1);
+       |                           ^
+    323|     expect(res.body.data[0].requesterResolvedAt).not.toBeNull();
+    324|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-46 a Ticket owned by a deactivated user returns owner.isActive false and keeps that owner (AC-75, BR-30, FR-46)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-03/staff-queue.api.test.ts:328:27
+    326|   it("API-46 a Ticket owned by a deactivated user returns owner.isActi…
+    327|     const res = await queue(staffX.agent, { search: "QINACTIVE" });
+    328|     expect(res.body.data).toHaveLength(1);
+       |                           ^
+    329|     expect(res.body.data[0].owner).toEqual({ id: inactiveStaff.id, nam…
+    330|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-47 the queue is not Requester-scoped: Tickets from more than one Requester appear together (BR-74, api-spec 10.4)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ tests/lab-03/staff-queue.api.test.ts:334:26
+    332|   it("API-47 the queue is not Requester-scoped: Tickets from more than…
+    333|     const res = await queue(staffX.agent, { search: "QCROSS" });
+    334|     expect(res.body.data.map((r: { id: number }) => r.id)).toContain(f…
+       |                          ^
+    335|     const asAdmin = await queue(admin.agent, { search: "QCROSS" });
+    336|     expect(asAdmin.body.data.map((r: { id: number }) => r.id)).toConta…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/21]⎯
+
+ FAIL  tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-48 the queue row carries exactly the api-spec 10.4 keys, and no requester key (api-spec 10.4, FR-39)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-03/staff-queue.api.test.ts:341:27
+    339|   it("API-48 the queue row carries exactly the api-spec 10.4 keys, and…
+    340|     const res = await queue(staffX.agent, { search: "QOWNER", owner: "…
+    341|     expect(res.body.data).toHaveLength(1);
+       |                           ^
+    342|     expect(Object.keys(res.body.data[0]).sort()).toEqual(
+    343|       ["category", "createdAt", "currentStatus", "id", "itPriority", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/21]⎯
+
+ Test Files  2 failed (2)
+      Tests  21 failed | 14 passed (35)
+   Start at  17:35:25
+   Duration  16.45s (transform 416ms, setup 0ms, collect 1.70s, tests 7.63s, environment 1ms, prepare 436ms)
+

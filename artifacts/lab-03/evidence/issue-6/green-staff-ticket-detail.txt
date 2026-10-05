@@ -1,0 +1,59 @@
+Command: (cd server && npx vitest run tests/lab-03/staff-ticket-detail.api.test.ts tests/lab-02/ticket-detail.api.test.ts --reporter=verbose)
+Date:    2026-10-04 20:00:02 +0700
+Commit:  a073388c47f1a51a68749b55fe02c6d1c11c5714 (feature/lab3-6-staff-ticket-ops)
+Tree:    clean - implementation committed
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > the status transition matrix > UNIT-12 every one of the 64 cells of specification.md 5.1 matches the transition function (BR-55)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > API-49 the staff DTO carries requester with email, owner, publicComments and internalNotes (FR-43)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400, to a staff caller (api-spec.md 8.2)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-50 claiming an unassigned Ticket makes the caller its owner (AC-70, BR-46)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-51 claiming a Ticket already owned -> 409 ALREADY_OWNED naming the owner; the owner does not change (AC-71, BR-46)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-52 two simultaneous claims: exactly one 200, the other 409, and the Ticket has exactly one owner (BR-46, C-75)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-53 claiming does not change status: a NEW Ticket claimed stays NEW (C-102)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-54 assigning to an active IT Staff user and to an active Administrator both succeed (AC-72, BR-47, C-66)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-55 a Requester, an inactive user and an unknown id each -> 422 ASSIGNEE_NOT_ELIGIBLE; the owner does not change (AC-73, BR-48)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-56 a Ticket in NEW or OPEN unassigns with 200 and appears under the unassigned filter (AC-74, BR-47)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-57 ownerId null on a Ticket in IN_PROGRESS, WAITING_FOR_REQUESTER and RESOLVED each -> 409 OWNER_REQUIRED; owner and status unchanged (AC-111, BR-97, C-104)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-58 reassigning a Ticket being worked on to another eligible user succeeds (AC-111, C-104)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-59 the release path: IN_PROGRESS moved to OPEN then unassigned, both succeed, and it appears under unassigned (AC-117, BR-97)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-60 an absent ownerId is not an unassign: an empty body -> 400 and the owner is unchanged (api-spec.md 8.4)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/it-priority > API-61 each of LOW, MEDIUM and HIGH is stored and returned; an out-of-set value is 400 (AC-76, FR-47)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-62 an unassigned Ticket moved to IN_PROGRESS, WAITING_FOR_REQUESTER or RESOLVED -> 409 OWNER_REQUIRED, status unchanged; after a claim each succeeds (AC-109, BR-97, C-93)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-64 all 64 cells of section 5.1 over HTTP on an owned Ticket: Y succeeds, - is 409 INVALID_STATUS_TRANSITION with the status unchanged (AC-77, BR-55) 555ms
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-66 each of the eight statuses targeting itself -> 400 SAME_STATUS, not 409 and not a silent 200 (AC-78, BR-56, C-77)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-67 from CLOSED and from CANCELLED each of the seven other targets -> 409, status unchanged (AC-81, BR-58, C-98)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-68 RESOLVED -> REOPENED succeeds; REOPENED requested from every other status -> 409 (AC-112, BR-98, C-98)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-69 an unassigned CLOSED Ticket asked for IN_PROGRESS -> INVALID_STATUS_TRANSITION, not OWNER_REQUIRED (api-spec.md 8.6)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-70 moving to Resolved, Closed and Cancelled each clears requesterResolvedAt, and no Public Comment is created (AC-59, BR-61, C-76)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-71 a move to IN_PROGRESS or WAITING_FOR_REQUESTER leaves requesterResolvedAt set (BR-61)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > an out-of-set or absent currentStatus -> 400 VALIDATION_FAILED (api-spec.md 8.6 step 1)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > the queue is shared work > API-72 a staff user who does not own the Ticket sets IT Priority, comments, writes a note and makes a permitted status change (AC-110, BR-96, C-93)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-73 the owning Requester in Open, In Progress, Waiting for Requester and Reopened succeeds, Current Status unchanged (AC-55, BR-59, BR-60)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-74 New, Resolved, Closed and Cancelled each -> 409 RESOLUTION_NOT_PERMITTED_IN_STATUS (AC-56, BR-60)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-75 a Requester who does not own the Ticket -> 404, identical to a missing Ticket (AC-57, BR-42)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/assignable-users > API-116 returns active IT Staff and Administrator users only, each exactly { id, name, role }, never an email (BR-104, C-105)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-119 claim, an owner change and an IT Priority change each -> 409 TICKET_CLOSED with nothing changed; a status change still answers INVALID_STATUS_TRANSITION (AC-118, BR-108, C-109)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-120 an upload and a soft removal each -> 409 TICKET_CLOSED, no row created, no file written, no row modified; metadata and download still 200 (AC-118, BR-108, C-109)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-26 answers a missing Ticket with 404 TICKET_NOT_FOUND (AC-40)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-27 refuses another Requester's Ticket with 404 and no Ticket field (AC-38, C-65)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-28 carries publicComments, owner and requesterResolvedAt, and no note, actions-taken or status-transition key, not even as null (AC-53, AC-47)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > API-29 returns active and removed attachments, distinguished by isRemoved, reason on the removed one (AC-38)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > refuses another Requester with 404 TICKET_NOT_FOUND, identical to an unknown Ticket (C-65)
+
+ Test Files  2 passed (2)
+      Tests  36 passed (36)
+   Start at  20:00:04
+   Duration  7.76s (transform 186ms, setup 0ms, collect 655ms, tests 4.25s, environment 0ms, prepare 145ms)
+

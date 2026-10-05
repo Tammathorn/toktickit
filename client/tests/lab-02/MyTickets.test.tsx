@@ -3,17 +3,19 @@ import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
+import { REQUESTER_A, REQUESTER_B, signInAs } from "../support/auth.js";
 
 // UI-10, UI-18..UI-23, STYLE-06 and STYLE-08 from tests.md (sections 2.3 and
 // 2.4). The API module is mocked at its boundary. The list is reached through
-// <App /> at /tickets with a stored selection, so the guard, the shell and the
-// Requester switch (BR-14) are exercised as the user would.
+// <App /> at /tickets as a signed-in Requester, so the guard, the shell and a
+// change of user (BR-14) are exercised as the user would.
+//
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext wrapper
+// replaces the stored selection; UI-10's "switch" is now signing out and in as
+// another Requester, the same data-isolation property; the line-217 assertion
+// is rewritten, not deleted - the IT Priority badge now renders with the
+// backfilled value (C-71, FR-31).
 
-const REQUESTERS = [
-  { id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" },
-  { id: 2, name: "Kanya Somsri", email: "kanya.s@example.ac.th" },
-];
 const CATEGORIES = [
   { id: 1, name: "Account and Access" },
   { id: 2, name: "Hardware" },
@@ -28,11 +30,13 @@ function row(id: number, summary: string, extra: Partial<api.TicketListRow> = {}
     category: CATEGORIES[1],
     relatedSystem: SYSTEMS[0],
     requestedPriority: "MEDIUM",
-    itPriority: null,
     currentStatus: "NEW",
+    requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T04:12:33.041Z",
     ...extra,
+    // C-71: IT Priority starts as a copy of Requested Priority and is never null.
+    itPriority: extra.itPriority ?? extra.requestedPriority ?? "MEDIUM",
   };
 }
 
@@ -47,13 +51,11 @@ const A_ROWS = [row(41, "Laptop battery drains quickly", { requestedPriority: "H
 const B_ROWS = [row(77, "Projector remote missing")];
 
 function mockBase() {
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue(REQUESTERS);
   vi.spyOn(api, "fetchCategories").mockResolvedValue(CATEGORIES);
   vi.spyOn(api, "fetchRelatedSystems").mockResolvedValue(SYSTEMS);
 }
 
-function renderList(path = "/tickets", requesterId = 1) {
-  window.localStorage.setItem(STORAGE_KEY, String(requesterId));
+function renderList(path = "/tickets") {
   window.history.pushState({}, "", path);
   render(<App />);
 }
@@ -61,6 +63,9 @@ function renderList(path = "/tickets", requesterId = 1) {
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
+  // Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext test
+  // wrapper signs Requester A in; there is no selector and nothing in storage.
+  signInAs(REQUESTER_A);
   mockBase();
 });
 afterEach(() => vi.restoreAllMocks());
@@ -82,34 +87,40 @@ describe("My Tickets", () => {
     expect(screen.getByRole("region", { name: "Ticket list" })).not.toHaveAttribute("aria-busy", "true");
   });
 
-  it("renders the owner's rows with the pagination summary and calls the API with the stored requester", async () => {
+  it("renders the owner's rows with the pagination summary and calls the API with no requester of its own", async () => {
     const fetchTickets = vi.spyOn(api, "fetchTickets").mockResolvedValue(page(A_ROWS));
     renderList();
 
     expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
     expect(screen.getByText("TKT-2026-000042")).toBeInTheDocument();
     expect(screen.getByText("Showing 1 to 2 of 2 tickets")).toBeInTheDocument();
-    expect(fetchTickets).toHaveBeenCalledWith(1, expect.objectContaining({ page: 1, pageSize: 10, sort: "createdAt:desc" }));
+    expect(fetchTickets).toHaveBeenCalledWith(expect.objectContaining({ page: 1, pageSize: 10, sort: "createdAt:desc" }));
+    expect(fetchTickets.mock.calls[0][0]).not.toHaveProperty("requesterId");
     expect(screen.getByRole("button", { name: "Previous" })).toBeDisabled();
     expect(screen.getByRole("button", { name: "Next" })).toBeDisabled();
   });
 
-  it("UI-10 clears A's rows and fetches B's on a Requester switch (AC-11, BR-14)", async () => {
-    const fetchTickets = vi
-      .spyOn(api, "fetchTickets")
-      .mockImplementation(async (requesterId) => (requesterId === 1 ? page(A_ROWS) : page(B_ROWS)));
+  it("UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14)", async () => {
+    const fetchTickets = vi.spyOn(api, "fetchTickets").mockResolvedValueOnce(page(A_ROWS)).mockResolvedValue(page(B_ROWS));
+    vi.spyOn(api, "logout").mockResolvedValue();
+    const login = vi.spyOn(api, "login").mockResolvedValue(REQUESTER_B);
     const user = userEvent.setup();
     renderList();
     expect(await screen.findByText("TKT-2026-000041")).toBeInTheDocument();
 
-    await user.click(screen.getByRole("button", { name: "Change Requester" }));
-    await user.selectOptions(await screen.findByRole("combobox", { name: "Development Requester" }), "2");
-    await user.click(screen.getByRole("button", { name: "Continue" }));
+    await user.click(screen.getByRole("button", { name: "Log Out" }));
+    // A's rows are gone the moment A signs out, before anyone else signs in.
+    expect(screen.queryByText("TKT-2026-000041")).not.toBeInTheDocument();
+    await user.type(await screen.findByLabelText(/Email Address/), REQUESTER_B.email);
+    await user.type(screen.getByLabelText(/^Password/), "Requester#2026");
+    await user.click(screen.getByRole("button", { name: "Sign In" }));
 
     expect(await screen.findByText("TKT-2026-000077")).toBeInTheDocument();
     expect(screen.queryByText("TKT-2026-000041")).not.toBeInTheDocument();
     expect(screen.queryByText("TKT-2026-000042")).not.toBeInTheDocument();
-    expect(fetchTickets).toHaveBeenLastCalledWith(2, expect.anything());
+    expect(fetchTickets).toHaveBeenCalledTimes(2);
+    expect(login).toHaveBeenCalledWith(REQUESTER_B.email, "Requester#2026");
+    expect(within(screen.getByRole("banner")).getByText(REQUESTER_B.name)).toBeInTheDocument();
   });
 
   it("UI-18 shows the empty state with a Create Ticket action when nothing is owned and no filter is active (AC-49)", async () => {
@@ -160,9 +171,10 @@ describe("My Tickets", () => {
     vi.spyOn(api, "fetchTickets").mockResolvedValue(page(A_ROWS));
     vi.spyOn(api, "fetchTicket").mockResolvedValue({
       ...A_ROWS[1],
-      requesterId: 1,
-      requester: { id: 1, name: "Anucha Prasert" },
+        requester: { id: 1, name: "Anucha Prasert" },
       description: "The VPN session drops on the hour, every hour.",
+      owner: null,
+      publicComments: [],
       attachments: [],
     });
     const user = userEvent.setup();
@@ -182,7 +194,7 @@ describe("My Tickets", () => {
 
     await user.selectOptions(screen.getByLabelText("Category"), "2");
     expect(await screen.findByRole("button", { name: "Clear filters" })).toBeInTheDocument();
-    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(1, expect.objectContaining({ categoryId: "2" })));
+    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(expect.objectContaining({ categoryId: "2" })));
     expect(window.location.search).toContain("categoryId=2");
 
     await user.click(screen.getByRole("button", { name: "Clear filters" }));
@@ -197,7 +209,7 @@ describe("My Tickets", () => {
     await screen.findByText("TKT-2026-000041");
 
     await user.type(screen.getByLabelText("Search"), "laptop");
-    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(1, expect.objectContaining({ search: "laptop", page: 1 })));
+    await waitFor(() => expect(fetchTickets).toHaveBeenLastCalledWith(expect.objectContaining({ search: "laptop", page: 1 })));
   });
 
   it("STYLE-06 renders priority badges as pills and status badges square, each with title-case text (AC-58)", async () => {
@@ -214,8 +226,11 @@ describe("My Tickets", () => {
     expect(status).toHaveClass("tk-badge", "tk-badge-square", "tk-status-new");
     expect(within(table).queryByText("NEW")).not.toBeInTheDocument();
     expect(within(table).queryByText("HIGH")).not.toBeInTheDocument();
-    // IT Priority is null throughout Lab 2: no IT badge anywhere
-    expect(screen.queryByText(/^IT /)).not.toBeInTheDocument();
+    // Rewritten for C-71 (tests.md 4.2): IT Priority is never null now, so its
+    // badge renders on every row, carrying the backfilled value as a pill.
+    const itHigh = within(table).getAllByText("IT High")[0];
+    expect(itHigh).toHaveClass("tk-badge", "tk-badge-pill", "tk-priority-high");
+    expect(within(table).getAllByText(/^IT (Low|Medium|High)$/)).toHaveLength(A_ROWS.length);
   });
 
   it("STYLE-08 marks the active navigation item with the active class and aria-current", async () => {

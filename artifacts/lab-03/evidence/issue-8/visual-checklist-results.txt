@@ -1,0 +1,38 @@
+Issue #44 Part 3 - visual checklist, measured (e2e/_tmp-visual-audit.spec.ts, run against the freshly migrated + graded-seeded toktickit_evidence database)
+Screens: Login, Change Password, My Tickets, Create Ticket, Requester Ticket Detail, Ticket Queue, Staff Ticket Detail, User Management
+Viewports: desktop 1280x800, tablet 834x1112, mobile 390x844
+
+Login @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=9 noRing=0
+Login @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Login @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=3 minTouch=44px clipped=0 overlaps=0
+Change Password @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=10 noRing=0
+Change Password @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Change Password @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=4 minTouch=44px clipped=0 overlaps=0
+My Tickets @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=12 noRing=0
+My Tickets @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+My Tickets @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=7 minTouch=44px clipped=0 overlaps=0
+Create Ticket @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=12 noRing=0
+Create Ticket @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Create Ticket @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=13 minTouch=44px clipped=0 overlaps=0
+Requester Ticket Detail @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=11 noRing=0
+Requester Ticket Detail @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Requester Ticket Detail @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=2 minTouch=44px clipped=0 overlaps=0
+Ticket Queue @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=12 noRing=0
+Ticket Queue @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Ticket Queue @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=8 minTouch=44px clipped=0 overlaps=0
+Staff Ticket Detail @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=11 noRing=0
+Staff Ticket Detail @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+Staff Ticket Detail @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=2 minTouch=44px clipped=0 overlaps=0
+User Management @ desktop: scrollWidth=1280 innerWidth=1280 overflow=false clipped=0 overlaps=0 focusHops=12 noRing=0
+User Management @ tablet: scrollWidth=834 innerWidth=834 overflow=false clipped=0 overlaps=0
+User Management @ mobile: scrollWidth=390 innerWidth=390 overflow=false touchTargets=5 minTouch=44px clipped=0 overlaps=0
+
+Findings:
+- No horizontal overflow on any of the 8 screens at any of the 3 widths (scrollWidth <= innerWidth throughout).
+- Every measured touch target at 390px is >= 44px on its smaller dimension (minTouchTarget 44 everywhere a control existed).
+- No unintended overlap between any two interactive elements on any screen/viewport.
+- Focus-ring sample (12 Tab hops on desktop, settled after each transition): every focused element carried a visible outline or box-shadow ring - 0 no-ring hits.
+- Bootstrap .visually-hidden screen-reader-only spans are excluded from the clipping check by design (they clip to 1x1px deliberately, per the sr-only technique) - 0 real clipping hits after that exclusion.
+- No product-decision conflict found: ui-spec.md Zen Green tokens and the actual computed styles agree everywhere sampled.
+
+Conclusion: 0 real failures found across the eight screens x three viewports. No CSS/component fix was needed.

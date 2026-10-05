@@ -2,26 +2,32 @@ import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
-import { seedGraded, REQUESTERS } from "../../src/seed/graded-seed.js";
+import { seedGraded } from "../../src/seed/graded-seed.js";
 import { TICKET_NUMBER_PATTERN } from "../../src/lib/ticket-number.js";
 import { MESSAGES } from "../../src/lib/validation.js";
+import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
 
 // Planned rows from tests.md section 2.2 that live in this file:
-// API-01..API-12 and API-14 (Create Ticket, Issue #13), API-11 (Issue #12) and
-// API-44 (Lab 1 regression). Every Ticket created here carries the TEST_TAG in
-// its summary so afterAll can remove exactly those rows.
+// API-01..API-10 and API-14 (Create Ticket, Issue #13) and API-44 (Lab 1
+// regression). Every Ticket created here carries the TEST_TAG in its summary
+// so afterAll can remove exactly those rows.
+//
+// Lab 3 (#40), per docs/lab-03/tests.md section 4.2: requests go through a
+// signed-in agent and the body no longer carries requesterId (C-64). Two rows
+// retire against the replacements tests.md section 4.3 names:
+//   API-11 (GET /api/requesters, a deleted route)   -> API-95, users-admin.api.test.ts
+//   API-12 (REQUESTER_INACTIVE, a deleted code)      -> API-08, lab-03/auth.api.test.ts
 
 const prisma = getPrisma();
 const TEST_TAG = "[api-test]";
 
 let requesterId: number;
-let inactiveRequesterId: number;
+let requester: Agent;
 let categoryId: number;
 let relatedSystemId: number;
 
 function validBody(overrides: Record<string, unknown> = {}) {
   return {
-    requesterId,
     categoryId,
     relatedSystemId,
     summary: `${TEST_TAG} Laptop battery drains quickly`,
@@ -32,21 +38,22 @@ function validBody(overrides: Record<string, unknown> = {}) {
 }
 
 function post(body: unknown) {
-  return request(app).post("/api/tickets").send(body as object);
+  return requester.post("/api/tickets").send(body as object);
 }
 
 beforeAll(async () => {
   await seedGraded(prisma);
-  const active = await prisma.requesterUser.findFirstOrThrow({ where: { isActive: true } });
-  const inactive = await prisma.requesterUser.findFirstOrThrow({ where: { isActive: false } });
-  requesterId = active.id;
-  inactiveRequesterId = inactive.id;
+  const signedIn = await signedInUser(prisma, "create-test");
+  requesterId = signedIn.id;
+  requester = signedIn.agent;
   categoryId = (await prisma.category.findFirstOrThrow({ where: { isActive: true } })).id;
   relatedSystemId = (await prisma.relatedSystem.findFirstOrThrow({ where: { isActive: true } })).id;
 });
 
 afterAll(async () => {
   await prisma.ticket.deleteMany({ where: { summary: { startsWith: TEST_TAG } } });
+  await prisma.ticket.deleteMany({ where: { requesterId } });
+  await removeUsers(prisma, [requesterId]);
 });
 
 describe("POST /api/tickets", () => {
@@ -61,9 +68,10 @@ describe("POST /api/tickets", () => {
     expect(res.body.ticketNumber).toMatch(TICKET_NUMBER_PATTERN);
     expect(await prisma.ticket.count({ where: { summary } })).toBe(before + 1);
 
-    // api-spec.md 3.1 response shape
+    // api-spec.md 4.1 / 10.2 response shape. Lab 3: the Requester is the
+    // signed-in user, and requesterId is no longer a key of the DTO.
+    expect(res.body).not.toHaveProperty("requesterId");
     expect(res.body).toMatchObject({
-      requesterId,
       requester: { id: requesterId, name: expect.any(String) },
       category: { id: categoryId, name: expect.any(String) },
       relatedSystem: { id: relatedSystemId, name: expect.any(String) },
@@ -85,11 +93,15 @@ describe("POST /api/tickets", () => {
     expect(a.body.ticketNumber).not.toBe(b.body.ticketNumber);
   });
 
-  it("API-03 applies the defaults: currentStatus NEW, itPriority null (AC-16)", async () => {
-    const res = await post(validBody());
+  // C-71 inverts this assertion: itPriority is no longer null but starts as a
+  // copy of Requested Priority, for a new Ticket exactly as for the Tickets the
+  // Lab 3 migration backfilled (AC-45).
+  it("API-03 applies the defaults: currentStatus NEW, itPriority copied from Requested Priority (AC-16, AC-45)", async () => {
+    const body = validBody();
+    const res = await post(body);
     expect(res.status).toBe(201);
     expect(res.body.currentStatus).toBe("NEW");
-    expect(res.body.itPriority).toBeNull();
+    expect(res.body.itPriority).toBe(body.requestedPriority);
   });
 
   it("API-04 rejects a 4-character and a 121-character Ticket Summary with the BR-31 message (AC-18)", async () => {
@@ -177,20 +189,6 @@ describe("POST /api/tickets", () => {
     expect(res.body.error.fields.ticketNumber).toBe("ticketNumber is system generated and cannot be supplied.");
   });
 
-  it("API-12 refuses an inactive Requester with 403 REQUESTER_INACTIVE, and an unknown one with 404 (AC-63, AC-65)", async () => {
-    const inactive = await post(validBody({ requesterId: inactiveRequesterId }));
-    expect(inactive.status).toBe(403);
-    expect(inactive.body.error.code).toBe("REQUESTER_INACTIVE");
-
-    const unknown = await post(validBody({ requesterId: 999999 }));
-    expect(unknown.status).toBe(404);
-    expect(unknown.body.error.code).toBe("REQUESTER_NOT_FOUND");
-
-    const missing = await post(validBody({ requesterId: undefined }));
-    expect(missing.status).toBe(400);
-    expect(missing.body.error.code).toBe("REQUESTER_REQUIRED");
-  });
-
   it("API-14 reports an unexpected failure safely as 500 INTERNAL_ERROR (AC-66, BR-38)", async () => {
     const spy = vi
       .spyOn(prisma, "$transaction")
@@ -226,19 +224,6 @@ describe("Reference data", () => {
       await prisma.category.delete({ where: { id: cat.id } });
       await prisma.relatedSystem.delete({ where: { id: sys.id } });
     }
-  });
-
-  it("API-11 lists active Requesters only, as {id, name, email} in id order (AC-04, BR-11)", async () => {
-    const res = await request(app).get("/api/requesters");
-    expect(res.status).toBe(200);
-    const names = res.body.map((r: { name: string }) => r.name);
-    for (const r of REQUESTERS) {
-      if (r.isActive) expect(names).toContain(r.name);
-      else expect(names).not.toContain(r.name);
-    }
-    for (const row of res.body) expect(Object.keys(row).sort()).toEqual(["email", "id", "name"]);
-    const ids = res.body.map((r: { id: number }) => r.id);
-    expect(ids).toEqual([...ids].sort((a, b) => a - b));
   });
 
   it("API-44 keeps the Lab 1 contract intact (C-05)", async () => {

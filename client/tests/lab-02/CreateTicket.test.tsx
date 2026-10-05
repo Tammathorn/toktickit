@@ -5,15 +5,18 @@ import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
+import { REQUESTER_A, signInAs } from "../support/auth.js";
 import { MESSAGES } from "../../src/validation.js";
 
 // UI-11..UI-17 and STYLE-01..STYLE-05, STYLE-10 from tests.md (sections 2.3
 // and 2.4). The API module is mocked at its boundary; nothing here touches
-// the network. The form is reached through <App /> at /tickets/new with a
-// stored selection, so the Requester guard and the shell are exercised too.
+// the network. The form is reached through <App /> at /tickets/new as a
+// signed-in Requester, so the guard and the shell are exercised too.
+//
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext wrapper
+// replaces the stored selection. The shell's tertiary action checked by
+// STYLE-03 is Log Out now that Change Requester is gone (ui-spec 7).
 
-const REQUESTERS = [{ id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" }];
 const CATEGORIES = [
   { id: 1, name: "Account and Access" },
   { id: 2, name: "Hardware" },
@@ -26,28 +29,28 @@ const SYSTEMS = [
 const CREATED = {
   id: 42,
   ticketNumber: "TKT-2026-000042",
-  requesterId: 1,
   requester: { id: 1, name: "Anucha Prasert" },
   category: { id: 2, name: "Hardware" },
   relatedSystem: { id: 6, name: "Printer" },
   summary: "Laptop battery drains quickly",
   description: "The battery drops from full to twenty percent within an hour of light use.",
   requestedPriority: "MEDIUM" as const,
-  itPriority: null,
+  itPriority: "MEDIUM" as const,
   currentStatus: "NEW" as const,
+  owner: null,
+  requesterResolvedAt: null,
   createdAt: "2026-09-05T04:12:33.000Z",
   updatedAt: "2026-09-05T04:12:33.041Z",
   attachments: [],
+  publicComments: [],
 };
 
 function mockReferenceData() {
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue(REQUESTERS);
   vi.spyOn(api, "fetchCategories").mockResolvedValue(CATEGORIES);
   vi.spyOn(api, "fetchRelatedSystems").mockResolvedValue(SYSTEMS);
 }
 
 async function renderForm() {
-  window.localStorage.setItem(STORAGE_KEY, "1");
   window.history.pushState({}, "", "/tickets/new");
   render(<App />);
   // reference data settled: the Category select is enabled
@@ -68,6 +71,9 @@ async function fillValid(user: ReturnType<typeof userEvent.setup>) {
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
+  // Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext test
+  // wrapper signs Requester A in; there is no selector and nothing in storage.
+  signInAs(REQUESTER_A);
   mockReferenceData();
 });
 afterEach(() => vi.restoreAllMocks());
@@ -277,7 +283,7 @@ describe("Create Ticket", () => {
     expect(primaries).toHaveLength(1);
     expect(primaries[0]).toHaveTextContent("Submit Ticket");
     expect(screen.getByRole("link", { name: "Cancel" })).toHaveClass("btn-secondary");
-    expect(screen.getByRole("button", { name: "Change Requester" })).toHaveClass("tk-btn-tertiary");
+    expect(screen.getByRole("button", { name: "Log Out" })).toHaveClass("tk-btn-tertiary");
 
     await fillValid(user);
     await user.click(screen.getByRole("button", { name: "Submit Ticket" }));

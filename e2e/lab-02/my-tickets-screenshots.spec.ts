@@ -1,6 +1,7 @@
 import { test, expect, type Page, type APIRequestContext } from "@playwright/test";
 import path from "node:path";
 import { API_URL } from "../../playwright.config";
+import { REQUESTER_A, REQUESTER_B, REQUESTER_C, apiAs, signIn, type Account } from "../support/auth";
 
 // My Tickets - screenshot evidence for LS 14 Part 7 at the three C-10
 // viewports, written to artifacts/lab-02/screenshots/my-tickets/list-<vp>-<state>.png.
@@ -10,13 +11,18 @@ import { API_URL } from "../../playwright.config";
 // capture is read-only; nothing here creates or changes data. Loading and
 // failure are produced by intercepting GET /api/tickets at the network layer.
 //
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: selecting a Requester is now
+// signing in as that Requester; "switched" signs A out and B in; the direct
+// API refusal in "forbidden" is 404, not 403 (C-65), and the screen shows the
+// not-found message. Direct API reads are made as the signed-in Requester and
+// carry no ?requesterId=.
+//
 // Requires the manual start sequence in docs/lab-02/tests.md section 5.
 
 const SHOT_DIR = path.resolve(__dirname, "../../artifacts/lab-02/screenshots/my-tickets");
-const STORAGE_KEY = "toktickit.requesterId";
 const LIST_ROUTE = /\/api\/tickets(\?.*)?$/;
 
-type Requester = { id: number; name: string };
+type Requester = { account: Account; name: string };
 type ListRow = { id: number; ticketNumber: string };
 
 function shot(page: Page, state: string) {
@@ -24,22 +30,27 @@ function shot(page: Page, state: string) {
   return page.screenshot({ path: path.join(SHOT_DIR, `list-${vp}-${state}.png`), fullPage: true });
 }
 
-async function demoRequesters(request: APIRequestContext): Promise<[Requester, Requester, Requester]> {
-  const res = await request.get(`${API_URL}/api/requesters`);
-  expect(res.ok()).toBeTruthy();
-  const all: Requester[] = await res.json();
-  expect(all.length, "demo seed needs three active Requesters").toBeGreaterThanOrEqual(3);
-  return [all[0], all[1], all[2]];
+// The demo seed's three Requesters, A, B and C, in its order (C-22).
+async function demoRequesters(_request: APIRequestContext): Promise<[Requester, Requester, Requester]> {
+  return [
+    { account: REQUESTER_A, name: "Anucha Prasert" },
+    { account: REQUESTER_B, name: "Kanya Somsri" },
+    { account: REQUESTER_C, name: "Nattapong Wong" },
+  ];
 }
 
-async function listFor(request: APIRequestContext, requesterId: number, qs = ""): Promise<{ data: ListRow[]; meta: { total: number; totalPages: number } }> {
-  const res = await request.get(`${API_URL}/api/tickets?requesterId=${requesterId}${qs}`);
+// What the API returns to that Requester, signed in, for the same query.
+async function listFor(who: Requester, qs = ""): Promise<{ data: ListRow[]; meta: { total: number; totalPages: number } }> {
+  const api = await apiAs(who.account);
+  const res = await api.get(`/api/tickets?${qs.replace(/^&/, "")}`);
   expect(res.ok()).toBeTruthy();
-  return res.json();
+  const body = await res.json();
+  await api.dispose();
+  return body;
 }
 
-async function selectRequester(page: Page, id: number) {
-  await page.addInitScript(([key, value]) => window.localStorage.setItem(key, String(value)), [STORAGE_KEY, id] as const);
+async function selectRequester(page: Page, who: Requester) {
+  await signIn(page, who.account);
 }
 
 // Rows are a table at md and above and cards below (ui-spec 12.3); either way
@@ -59,8 +70,8 @@ async function showRequesterName(page: Page) {
 test.describe("My Tickets", () => {
   test("populated: Requester A's first page, newest first", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    const expected = await listFor(request, a.id);
-    await selectRequester(page, a.id);
+    const expected = await listFor(a);
+    await selectRequester(page, a);
     await page.goto("/tickets");
 
     await expect(rows(page)).toHaveCount(expected.data.length);
@@ -70,18 +81,19 @@ test.describe("My Tickets", () => {
     await shot(page, "populated");
   });
 
-  test("switched: after changing A to B, A's Tickets are gone and B's are listed", async ({ page, request }) => {
+  test("switched: after A signs out and B signs in, A's Tickets are gone and B's are listed", async ({ page, request }) => {
     const [a, b] = await demoRequesters(request);
-    const aList = await listFor(request, a.id);
-    const bList = await listFor(request, b.id);
-    await selectRequester(page, a.id);
+    const aList = await listFor(a);
+    const bList = await listFor(b);
+    await selectRequester(page, a);
     await page.goto("/tickets");
     await expect(page.getByText(aList.data[0].ticketNumber)).toBeVisible();
 
     await showRequesterName(page);
-    await page.getByRole("button", { name: "Change Requester" }).click();
-    await page.getByLabel("Development Requester").selectOption(String(b.id));
-    await page.getByRole("button", { name: "Continue" }).click();
+    await page.getByRole("banner").getByRole("button", { name: "Log Out" }).click();
+    await page.getByLabel(/Email Address/).fill(b.account.email);
+    await page.getByLabel(/^Password/).fill(b.account.password);
+    await page.getByRole("button", { name: "Sign In" }).click();
 
     await expect(page.getByRole("banner")).toContainText(b.name);
     await expect(rows(page)).toHaveCount(bList.data.length);
@@ -92,9 +104,9 @@ test.describe("My Tickets", () => {
 
   test("search: the search box narrows the list and Clear filters appears", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    const expected = await listFor(request, a.id, "&search=laptop");
+    const expected = await listFor(a, "&search=laptop");
     expect(expected.meta.total).toBeGreaterThan(0);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.goto("/tickets");
     await expect(rows(page).first()).toBeVisible();
 
@@ -109,9 +121,9 @@ test.describe("My Tickets", () => {
     const [a] = await demoRequesters(request);
     const categories: { id: number; name: string }[] = await (await request.get(`${API_URL}/api/categories`)).json();
     const cat = categories[1];
-    const expected = await listFor(request, a.id, `&categoryId=${cat.id}&currentStatus=NEW`);
+    const expected = await listFor(a, `&categoryId=${cat.id}&currentStatus=NEW`);
     expect(expected.meta.total).toBeGreaterThan(0);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.goto("/tickets");
     await expect(rows(page).first()).toBeVisible();
 
@@ -125,8 +137,8 @@ test.describe("My Tickets", () => {
 
   test("sorted: Ticket Number ascending", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    const expected = await listFor(request, a.id, "&sort=ticketNumber:asc");
-    await selectRequester(page, a.id);
+    const expected = await listFor(a, "&sort=ticketNumber:asc");
+    await selectRequester(page, a);
     await page.goto("/tickets");
     await expect(rows(page).first()).toBeVisible();
 
@@ -134,17 +146,21 @@ test.describe("My Tickets", () => {
     await expect(page).toHaveURL(/sort=ticketNumber%3Aasc/);
     // the number text alone: the row link at md+ carries just the number, the
     // mobile card link carries the whole card, so read the number element
-    const numbers = await page.locator(".tk-row-link, .tk-ticket-card-number").allTextContents();
-    expect(numbers).toEqual(expected.data.map((r) => r.ticketNumber));
+    // Lab 3 (#39): the URL changes before the re-sorted list arrives, so the
+    // rows are read once they have re-rendered rather than at that instant -
+    // the same assertion, without the race that failed 2 runs in 24.
+    const numberCells = page.locator(".tk-row-link, .tk-ticket-card-number");
+    await expect.poll(() => numberCells.allTextContents()).toEqual(expected.data.map((r) => r.ticketNumber));
+    const numbers = await numberCells.allTextContents();
     expect(numbers).toEqual([...numbers].sort());
     await shot(page, "sorted");
   });
 
   test("page-2: the second page of Requester A's list", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    const expected = await listFor(request, a.id, "&page=2");
+    const expected = await listFor(a, "&page=2");
     expect(expected.meta.totalPages).toBeGreaterThanOrEqual(2);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.goto("/tickets");
     await expect(rows(page).first()).toBeVisible();
 
@@ -158,7 +174,7 @@ test.describe("My Tickets", () => {
 
   test("loading: skeleton while the list request is in flight", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.route(LIST_ROUTE, async (route) => {
       await new Promise((resolve) => setTimeout(resolve, 4000));
       await route.continue();
@@ -171,9 +187,9 @@ test.describe("My Tickets", () => {
 
   test("empty: Requester C owns nothing", async ({ page, request }) => {
     const [, , c] = await demoRequesters(request);
-    const list = await listFor(request, c.id);
+    const list = await listFor(c);
     expect(list.meta.total, "the demo seed leaves the third Requester without Tickets").toBe(0);
-    await selectRequester(page, c.id);
+    await selectRequester(page, c);
     await page.goto("/tickets");
 
     await expect(page.getByRole("heading", { name: "No tickets yet" })).toBeVisible();
@@ -183,7 +199,7 @@ test.describe("My Tickets", () => {
 
   test("no-results: a search that excludes every Ticket", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.goto("/tickets?search=zzzz-no-such-ticket");
 
     await expect(page.getByRole("heading", { name: "No matches" })).toBeVisible();
@@ -194,7 +210,7 @@ test.describe("My Tickets", () => {
 
   test("failure: safe panel with Retry, toolbar kept", async ({ page, request }) => {
     const [a] = await demoRequesters(request);
-    await selectRequester(page, a.id);
+    await selectRequester(page, a);
     await page.route(LIST_ROUTE, (route) => route.abort("connectionrefused"));
     await page.goto("/tickets");
 
@@ -205,19 +221,21 @@ test.describe("My Tickets", () => {
     await shot(page, "failure");
   });
 
-  test("forbidden: Requester B opening one of A's Tickets is refused with 403", async ({ page, request }) => {
+  test("forbidden: Requester B opening one of A's Tickets is refused with 404 (C-65)", async ({ page, request }) => {
     const [a, b] = await demoRequesters(request);
-    const aList = await listFor(request, a.id);
+    const aList = await listFor(a);
     const target = aList.data[0];
 
-    const direct = await request.get(`${API_URL}/api/tickets/${target.id}?requesterId=${b.id}`);
-    expect(direct.status()).toBe(403);
-    expect((await direct.json()).error.code).toBe("TICKET_FORBIDDEN");
+    const asB = await apiAs(b.account);
+    const direct = await asB.get(`/api/tickets/${target.id}`);
+    expect(direct.status()).toBe(404);
+    expect((await direct.json()).error.code).toBe("TICKET_NOT_FOUND");
+    await asB.dispose();
 
-    await selectRequester(page, b.id);
+    await selectRequester(page, b);
     await page.goto(`/tickets/${target.id}`);
     const alert = page.getByRole("alert");
-    await expect(alert).toContainText("You do not have access to that item.");
+    await expect(alert).toContainText("That item does not exist.");
     await expect(page.getByText(target.ticketNumber)).toHaveCount(0);
     await expect(alert.getByRole("link", { name: "Back to My Tickets" })).toBeVisible();
     await shot(page, "forbidden");

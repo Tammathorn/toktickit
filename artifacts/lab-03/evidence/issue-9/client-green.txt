@@ -1,0 +1,68 @@
+Command: cd client && npx vitest run
+Date: 2026-10-05 04:10 UTC
+Commit: 43b737cfae4d25d0764a498819032a4ba02cc011 (feature/lab3-9-release-docs, branched from feature/lab3-8-e2e-visual)
+Purpose: Issue #45 Final-column evidence - full client suite (Lab 1 + Lab 2 + Lab 3) at the current stacked commit.
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (3 tests) 243ms
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (12 tests) 2657ms
+   ✓ Requester Ticket Detail > UI-24 renders the Ticket information read-only with no edit, note or status control (AC-53, rewritten per C-76) 615ms
+   ✓ Requester Ticket Detail > ui-spec 14.2 lists Public Comments newest first, with an empty state and a composer with a live counter (BR-67, FR-53) 311ms
+   ✓ Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 417ms
+   ✓ Requester Ticket Detail > ui-spec 14.3 the resolution confirmation: Cancel sends nothing, confirming sets the marker and swaps the action for a reported line (FR-30, BR-59, BR-61) 456ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 3400ms
+   ✓ Attachment section > UI-26 adds a permitted file to the active group without leaving the screen (AC-32) 785ms
+   ✓ Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1825ms
+   ✓ Attachment section > UI-31 renders the 6.1 message naming the file for 415 and 413, with Retry and Discard (AC-24, AC-25) 304ms
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 3569ms
+   ✓ My Tickets > UI-21 shows a loading state until the list request settles (AC-52) 566ms
+   ✓ My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 1266ms
+   ✓ My Tickets > UI-23 shows Clear filters only once a search or filter is active, and it returns to the default list (FR-35) 332ms
+   ✓ My Tickets > debounces the search box into the request and resets to page 1 483ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx (12 tests) 3580ms
+   ✓ IT Staff Ticket Queue > UI-16 renders all nine FR-39 columns at desktop width (ui-spec 15.2) 561ms
+   ✓ IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 1391ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx (19 tests) 4192ms
+   ✓ IT Staff Ticket Detail > UI-25 the read-only group renders Requester, Category, Related System, Requested Priority and the dates with no input among them (FR-43) 602ms
+   ✓ IT Staff Ticket Detail > UI-26 Claim renders only when the Ticket is unassigned (FR-44) 505ms
+   ✓ IT Staff Ticket Detail > UI-27 the lost claim race renders the conflict inline, refreshes the view, and Claim is gone (FR-44, AC-71) 304ms
+   ✓ IT Staff Ticket Detail > UI-31 Resolved, Closed and Cancelled each open a confirmation and send no request until confirmed; Cancel sends nothing (AC-80, BR-57) 368ms
+   ✓ IT Staff Ticket Detail > a confirmed Resolved move sends the request and the view updates (AC-80) 404ms
+   ✓ IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 450ms
+ ✓ tests/lab-03/UserManagement.test.tsx (15 tests) 5386ms
+   ✓ User Management > UI-38 the list renders Name, Email, Role, Status and Edit for every user (AC-82, FR-56) 557ms
+   ✓ User Management > UI-40 search and the role filter each issue a request carrying their parameter (AC-83, AC-84) 983ms
+   ✓ User Management > UI-42 a duplicate email on create renders at the Email Address field, not as a banner (AC-87, FR-62) 997ms
+   ✓ User Management > creating a user shows Creating… then the success panel and refetches the list (BR-16) 1024ms
+   ✓ User Management > empty and no-results states are distinguished by whether a filter is active (L2 C-28) 448ms
+ ✓ tests/lab-03/Login.test.tsx (18 tests) 5694ms
+   ✓ Login > UI-01 renders Email Address and Password, both required, and one Sign In button (FR-01) 390ms
+   ✓ Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 1179ms
+   ✓ Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 805ms
+   ✓ Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 742ms
+   ✓ Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 806ms
+   ✓ Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 763ms
+ ✓ tests/lab-03/ChangePassword.test.tsx (9 tests) 11753ms
+   ✓ Change Password > UI-09 shows the signed-in user's name and Role badge at the top, and no shell (AC-22, FR-15) 410ms
+   ✓ Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 1225ms
+   ✓ Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3745ms
+   ✓ Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2288ms
+   ✓ Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1067ms
+   ✓ Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 381ms
+   ✓ Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2405ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 13147ms
+   ✓ Create Ticket > UI-11 populates Category and Related System from the API and nothing else (AC-13) 665ms
+   ✓ Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 1173ms
+   ✓ Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2759ms
+   ✓ Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 2003ms
+   ✓ Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2164ms
+   ✓ Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 2044ms
+   ✓ Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1927ms
+
+ Test Files  10 passed (10)
+      Tests  118 passed (118)
+   Start at  11:12:55
+   Duration  16.76s (transform 1.55s, setup 1.98s, collect 14.44s, tests 53.62s, environment 10.81s, prepare 2.50s)
+

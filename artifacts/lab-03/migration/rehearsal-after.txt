@@ -1,0 +1,71 @@
+TokTickIT Lab 3 - migration rehearsal (C-83), AFTER
+Database: toktickit_rehearsal, after npx prisma migrate deploy
+Captured: 2026-10-01 08:22:52Z UTC
+
+--- applied migrations ---
+                migration_name                |          finished_at          
+----------------------------------------------+-------------------------------
+ 20260816153850_init                          | 2026-08-16 15:38:50.887394+00
+ 20260908120000_lab02_data_model              | 2026-09-08 10:43:01.571017+00
+ 20261001080726_lab03_ticket_status_values    | 2026-10-01 08:22:30.964411+00
+ 20261001080813_lab03_user_rename_and_roles   | 2026-10-01 08:22:30.977762+00
+ 20261001080916_lab03_ticket_workflow_fields  | 2026-10-01 08:22:31.01289+00
+ 20261001080958_lab03_sessions_comments_notes | 2026-10-01 08:22:31.061839+00
+(6 rows)
+
+--- row counts per table (RequesterUser is now User - C-67) ---
+     table_name      | count 
+---------------------+-------
+ Attachment          |   368
+ Category            |     4
+ InternalNote (new)  |     0
+ PublicComment (new) |     0
+ RelatedSystem       |     7
+ Session (new)       |     0
+ Ticket              |   286
+ User                |     5
+(8 rows)
+
+--- no RequesterUser table remains, and the User table is the renamed one ---
+ table_name 
+------------
+ User
+(1 row)
+
+--- tickets per Requester email: ids, emails and counts must be identical to BEFORE ---
+ id |           email           | isActive |   role    | hash_is_null | mustChangePassword | tickets 
+----+---------------------------+----------+-----------+--------------+--------------------+---------
+  1 | anucha.p@example.ac.th    | t        | REQUESTER | t            | t                  |      14
+  2 | kanya.s@example.ac.th     | t        | REQUESTER | t            | t                  |       3
+  3 | nattapong.w@example.ac.th | t        | REQUESTER | t            | t                  |       0
+  4 | siriporn.c@example.ac.th  | t        | REQUESTER | t            | t                  |     269
+  5 | prasit.b@example.ac.th    | f        | REQUESTER | t            | t                  |       0
+(5 rows)
+
+--- itPriority after the backfill (C-71): non-null everywhere and equal to requestedPriority ---
+ tickets | it_priority_null | copied_from_requested | differing 
+---------+------------------+-----------------------+-----------
+     286 |                0 |                   286 |         0
+(1 row)
+
+--- MIG-22: the same pre-migration Tickets, now carrying IT Priority, same Requester ---
+ id |  ticketNumber   | requesterId | requestedPriority | itPriority | currentStatus | ownerId | requesterResolvedAt 
+----+-----------------+-------------+-------------------+------------+---------------+---------+---------------------
+  1 | TKT-2026-000001 |           1 | HIGH              | HIGH       | NEW           |         | 
+  2 | TKT-2026-000002 |           1 | HIGH              | HIGH       | NEW           |         | 
+  3 | TKT-2026-000003 |           1 | HIGH              | HIGH       | NEW           |         | 
+(3 rows)
+
+--- the eight TicketStatus values, in declared order (C-70) ---
+ enumsortorder |       enumlabel       
+---------------+-----------------------
+             1 | NEW
+           1.5 | OPEN
+             2 | IN_PROGRESS
+           2.5 | WAITING_FOR_REQUESTER
+             3 | RESOLVED
+             4 | CLOSED
+           4.5 | REOPENED
+             5 | CANCELLED
+(8 rows)
+

@@ -38,12 +38,14 @@ let pendingKey = 0;
 
 export default function AttachmentSection({
   ticketId,
-  requesterId,
   initial,
+  locked = false,
 }: {
   ticketId: number;
-  requesterId: number;
   initial: AttachmentMeta[];
+  /** ui-spec.md 14.4, C-109 - a Closed or Cancelled Ticket: no upload control
+   * and no Remove action render. Preview and Download stay available. */
+  locked?: boolean;
 }) {
   const [rows, setRows] = useState<Row[]>(() => initial.map(fromMeta));
   const [refreshing, setRefreshing] = useState(false);
@@ -59,7 +61,7 @@ export default function AttachmentSection({
   async function refresh() {
     setRefreshing(true);
     try {
-      const list = await fetchAttachments(ticketId, requesterId);
+      const list = await fetchAttachments(ticketId);
       setRows((current) => [...list.map(fromMeta), ...current.filter((r) => r.kind === "uploading" || r.kind === "invalid")]);
     } catch {
       // keep what is on screen; the user can try again
@@ -71,7 +73,7 @@ export default function AttachmentSection({
   async function send(key: string, file: File) {
     patch(key, { kind: "uploading", key, file, progress: 0 });
     try {
-      const meta = await uploadAttachment(ticketId, requesterId, file, (p) => {
+      const meta = await uploadAttachment(ticketId, file, (p) => {
         setRows((current) => current.map((r) => (r.key === key && r.kind === "uploading" ? { ...r, progress: p } : r)));
       });
       patch(key, { kind: "active", key, meta });
@@ -98,7 +100,7 @@ export default function AttachmentSection({
 
   async function open(row: Extract<Row, { kind: "active" }>, disposition: "attachment" | "inline") {
     try {
-      const blob = await downloadAttachment(row.meta.id, requesterId, disposition);
+      const blob = await downloadAttachment(row.meta.id, disposition);
       const url = URL.createObjectURL(blob);
       if (disposition === "attachment") {
         const a = document.createElement("a");
@@ -137,7 +139,7 @@ export default function AttachmentSection({
   async function confirmRemoval(row: Row, reason: string): Promise<string | null> {
     if (row.kind !== "active") return null;
     try {
-      const meta = await removeAttachment(row.meta.id, requesterId, reason);
+      const meta = await removeAttachment(row.meta.id, reason);
       patch(row.key, { kind: "removed", key: row.key, meta });
       if (preview?.key === row.key) closePreview();
       return null;
@@ -161,24 +163,26 @@ export default function AttachmentSection({
         <span className="tk-muted" aria-live="polite">{`${activeCount} of ${MAX_ACTIVE} active`}</span>
       </div>
 
-      <div className="mb-3">
-        <label htmlFor="add-attachment" className="form-label tk-label">Add attachment</label>
-        <input
-          id="add-attachment"
-          type="file"
-          className="form-control"
-          multiple
-          accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
-          disabled={slotsFull}
-          aria-describedby="add-attachment-help"
-          onChange={handleFiles}
-        />
-        <div id="add-attachment-help" className="tk-muted">
-          {slotsFull
-            ? "This ticket already has five active attachments. Remove one before adding another."
-            : "JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket."}
+      {!locked && (
+        <div className="mb-3">
+          <label htmlFor="add-attachment" className="form-label tk-label">Add attachment</label>
+          <input
+            id="add-attachment"
+            type="file"
+            className="form-control"
+            multiple
+            accept=".jpg,.jpeg,.png,.webp,.pdf,image/jpeg,image/png,image/webp,application/pdf"
+            disabled={slotsFull}
+            aria-describedby="add-attachment-help"
+            onChange={handleFiles}
+          />
+          <div id="add-attachment-help" className="tk-muted">
+            {slotsFull
+              ? "This ticket already has five active attachments. Remove one before adding another."
+              : "JPG, PNG, WEBP or PDF, up to 5 MB each, at most five per ticket."}
+          </div>
         </div>
-      </div>
+      )}
 
       <h3 className="tk-label" id="active-attachments-title">Active</h3>
       {active.length === 0 ? (
@@ -207,9 +211,11 @@ export default function AttachmentSection({
                     <button type="button" className="btn btn-sm tk-btn-tertiary" aria-label={`Download ${row.meta.originalFilename}`} onClick={() => open(row, "attachment")}>
                       Download
                     </button>
-                    <button type="button" className="btn btn-sm btn-danger" aria-label={`Remove ${row.meta.originalFilename}`} onClick={() => setDialogFor(row)}>
-                      Remove
-                    </button>
+                    {!locked && (
+                      <button type="button" className="btn btn-sm btn-danger" aria-label={`Remove ${row.meta.originalFilename}`} onClick={() => setDialogFor(row)}>
+                        Remove
+                      </button>
+                    )}
                   </div>
                   {preview?.key === row.key && (
                     <figure className="tk-attachment-preview">

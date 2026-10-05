@@ -1,9 +1,9 @@
 // Prisma schema — datasource and generator are pre-wired.
 // Your DATABASE_URL lives in server/.env (copy it from .env.example).
 //
-// Lab 2 models follow docs/lab-02/specification.md section 7 exactly.
+// Lab 3 models follow docs/lab-03/specification.md section 7 exactly.
 // Prisma's default table naming is accepted throughout: no @@map, no @map.
-// Never run `prisma migrate reset` — it destroys the Lab 1 seed data (C-37).
+// Never run `prisma migrate reset` — it destroys the seed data (L2 C-37).
 
 generator client {
   provider = "prisma-client-js"
@@ -15,9 +15,11 @@ datasource db {
 }
 
 // ---------------------------------------------------------------------------
-// Enums — C-23 and C-21.
-// TicketStatus carries values unreachable in Lab 2 so the status filter is a
-// real control and Lab 3 needs no enum migration (BR-09).
+// Enums — L2 C-23, C-69, C-70.
+// TicketStatus carries eight values in Lab 3, all of them reachable. OPEN,
+// WAITING_FOR_REQUESTER and REOPENED are added by their own migration, before
+// the migration that uses them: PostgreSQL cannot use a new enum value in the
+// transaction that adds it (C-70).
 // ---------------------------------------------------------------------------
 enum RequestedPriority {
   LOW
@@ -27,10 +29,19 @@ enum RequestedPriority {
 
 enum TicketStatus {
   NEW
+  OPEN
   IN_PROGRESS
+  WAITING_FOR_REQUESTER
   RESOLVED
   CLOSED
+  REOPENED
   CANCELLED
+}
+
+enum UserRole {
+  REQUESTER
+  IT_STAFF
+  ADMINISTRATOR
 }
 
 // ---------------------------------------------------------------------------
@@ -61,21 +72,52 @@ model RelatedSystem {
 }
 
 // ---------------------------------------------------------------------------
-// Lab 2 — the Development Requester. Model name per C-31; labelled
-// "Development Requester" in the UI.
+// Lab 3 — the User, renamed in place from the Lab 2 RequesterUser (C-67).
+// The rename is an ALTER TABLE, so every id, and therefore every
+// Ticket.requesterId, survives untouched.
 //
-// This is NOT authentication. No password, hash, session, token or role field
-// exists, and none is added (BR-65). Lab 3 attaches authentication to this
-// model without touching Ticket.requesterId (LC-02).
+// passwordHash is nullable on purpose: the migration cannot compute a scrypt
+// hash, so every migrated row arrives with NULL and mustChangePassword true.
+// A NULL hash can never authenticate and returns the same generic 401 as a
+// wrong password (C-72, BR-17). Format and comparison are C-53's.
 // ---------------------------------------------------------------------------
-model RequesterUser {
-  id        Int      @id @default(autoincrement())
-  name      String
-  email     String   @unique
-  isActive  Boolean  @default(true)
-  createdAt DateTime @default(now())
+model User {
+  id                 Int      @id @default(autoincrement())
+  name               String
+  email              String   @unique
+  isActive           Boolean  @default(true)
+  createdAt          DateTime @default(now())
+  role               UserRole @default(REQUESTER)
+  passwordHash       String?
+  mustChangePassword Boolean  @default(true)
+  updatedAt          DateTime @updatedAt
 
-  tickets Ticket[]
+  tickets       Ticket[]        @relation("TicketRequester")
+  ownedTickets  Ticket[]        @relation("TicketOwner")
+  sessions      Session[]
+  publicComments PublicComment[]
+  internalNotes InternalNote[]
+}
+
+// ---------------------------------------------------------------------------
+// Lab 3 — the Session (C-54, C-55). The 32-byte token travels in the
+// tt_session cookie; only its SHA-256 is stored here, so a leaked database
+// row cannot be replayed as a session. expiresAt is createdAt + 8 hours,
+// absolute, with no sliding renewal; a row found expired by a lookup is
+// deleted there and then (C-96).
+// ---------------------------------------------------------------------------
+model Session {
+  id        Int      @id @default(autoincrement())
+  tokenHash String   @unique
+  userId    Int
+  createdAt DateTime @default(now())
+  expiresAt DateTime
+
+  user User @relation(fields: [userId], references: [id])
+
+  // Deactivation, a role change and a new initial password each end all of a
+  // user's sessions (BR-24): that is a delete by userId.
+  @@index([userId])
 }
 
 // ---------------------------------------------------------------------------
@@ -87,34 +129,48 @@ model RequesterUser {
 // that transaction. PostgreSQL permits repeated nulls under a unique
 // constraint, so nullable and @unique do not conflict.
 //
-// Both foreign keys take Prisma's default onDelete for a required relation,
-// Restrict, and neither overrides it: Lab 2 contains no delete path at all.
+// Lab 3 adds the workflow columns: itPriority becomes NOT NULL, backfilled
+// from requestedPriority and set from it on create (C-71); ownerId is the
+// zero-or-one Ticket Owner (BR-45); requesterResolvedAt is the C-76 flag, a
+// timestamp rather than a status, so BR-05 keeps status changes with IT Staff.
 // ---------------------------------------------------------------------------
 model Ticket {
-  id                Int               @id @default(autoincrement())
-  ticketNumber      String?           @unique
-  requesterId       Int
-  categoryId        Int
-  relatedSystemId   Int
-  summary           String
-  description       String            @db.Text
-  requestedPriority RequestedPriority @default(MEDIUM)
-  itPriority        RequestedPriority?
-  currentStatus     TicketStatus      @default(NEW)
-  createdAt         DateTime          @default(now())
-  updatedAt         DateTime          @updatedAt
+  id                  Int               @id @default(autoincrement())
+  ticketNumber        String?           @unique
+  requesterId         Int
+  categoryId          Int
+  relatedSystemId     Int
+  ownerId             Int?
+  summary             String
+  description         String            @db.Text
+  requestedPriority   RequestedPriority @default(MEDIUM)
+  itPriority          RequestedPriority
+  currentStatus       TicketStatus      @default(NEW)
+  requesterResolvedAt DateTime?
+  createdAt           DateTime          @default(now())
+  updatedAt           DateTime          @updatedAt
 
-  requester     RequesterUser @relation(fields: [requesterId], references: [id])
-  category      Category      @relation(fields: [categoryId], references: [id])
-  relatedSystem RelatedSystem @relation(fields: [relatedSystemId], references: [id])
-  attachments   Attachment[]
+  requester      User            @relation("TicketRequester", fields: [requesterId], references: [id])
+  owner          User?           @relation("TicketOwner", fields: [ownerId], references: [id])
+  category       Category        @relation(fields: [categoryId], references: [id])
+  relatedSystem  RelatedSystem   @relation(fields: [relatedSystemId], references: [id])
+  attachments    Attachment[]
+  publicComments PublicComment[]
+  internalNotes  InternalNote[]
 
   // Every My Tickets query is scoped to one Requester before anything else
-  // happens (BR-22), so every index is led by requesterId.
+  // happens (BR-22), so each Lab 2 index is led by requesterId. They are kept:
+  // My Tickets still issues exactly the query they were chosen for.
   @@index([requesterId, createdAt(sort: Desc)])
   @@index([requesterId, currentStatus])
   @@index([requesterId, categoryId])
   @@index([requesterId, relatedSystemId])
+  // The queue has no requester scope at all, so none of the four serves it.
+  // Every queue query starts from a status set (BR-72), so currentStatus leads
+  // each of these three.
+  @@index([currentStatus, itPriority, createdAt])
+  @@index([currentStatus, ownerId])
+  @@index([currentStatus, categoryId])
 }
 
 // ---------------------------------------------------------------------------
@@ -141,4 +197,40 @@ model Attachment {
   // Ticket Detail always reads a Ticket's attachments split by removal state
   // (BR-50), and the five-active check (BR-44) counts on exactly this pair.
   @@index([ticketId, isRemoved])
+}
+
+// ---------------------------------------------------------------------------
+// Lab 3 — Public Comments and Internal Notes, two tables rather than one
+// table with a visibility flag (C-73): a notes query structurally cannot leak
+// into the comments endpoint.
+//
+// Neither carries updatedAt, deletedAt or an edit path. Append-only is
+// enforced by the absence of the column as much as by the absence of a route.
+// ---------------------------------------------------------------------------
+model PublicComment {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int
+  authorId  Int
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  author User   @relation(fields: [authorId], references: [id])
+
+  // Read per Ticket, newest first (BR-67).
+  @@index([ticketId, createdAt])
+}
+
+model InternalNote {
+  id        Int      @id @default(autoincrement())
+  ticketId  Int
+  authorId  Int
+  body      String   @db.Text
+  createdAt DateTime @default(now())
+
+  ticket Ticket @relation(fields: [ticketId], references: [id])
+  author User   @relation(fields: [authorId], references: [id])
+
+  // Read per Ticket, newest first (BR-67).
+  @@index([ticketId, createdAt])
 }

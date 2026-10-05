@@ -12,7 +12,7 @@ import {
   type Ticket,
 } from "../api.js";
 import { Link } from "../router.js";
-import { useRequester } from "../requester/RequesterContext.js";
+import { useCurrentUser } from "../auth/AuthContext.js";
 import { formatBytes, formatDisplayTimestamp } from "../format.js";
 import {
   DESCRIPTION_MAX,
@@ -67,8 +67,9 @@ function RequiredMark() {
 }
 
 export default function CreateTicket() {
-  const { selected } = useRequester();
-  const requesterId = selected!.id;
+  // ui-spec 13: the Requester is the signed-in user, shown read-only; the
+  // request carries no identity field (C-64).
+  const user = useCurrentUser();
 
   const [categories, setCategories] = useState<Category[]>([]);
   const [systems, setSystems] = useState<RelatedSystem[]>([]);
@@ -133,7 +134,7 @@ export default function CreateTicket() {
 
   async function runUpload(ticket: Ticket, entry: PendingFile): Promise<UploadOutcome> {
     try {
-      const meta = await uploadAttachment(ticket.id, requesterId, entry.file);
+      const meta = await uploadAttachment(ticket.id, entry.file);
       return { key: entry.key, file: entry.file, status: "uploaded", meta };
     } catch (err) {
       const message =
@@ -175,7 +176,6 @@ export default function CreateTicket() {
     setBanner(null);
     try {
       const ticket = await createTicket({
-        requesterId,
         categoryId: Number(values.categoryId),
         relatedSystemId: Number(values.relatedSystemId),
         summary: values.summary.trim(),
@@ -318,7 +318,7 @@ export default function CreateTicket() {
         </div>
         <div className="col-12 col-md-6 col-lg-4">
           <label htmlFor="ticket-requester" className="form-label tk-label">Requester</label>
-          <input id="ticket-requester" className="form-control tk-readonly" value={selected!.name} readOnly />
+          <input id="ticket-requester" className="form-control tk-readonly" value={user.name} readOnly />
         </div>
       </div>
 

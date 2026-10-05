@@ -3,13 +3,16 @@ import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
-import { STORAGE_KEY } from "../../src/requester/RequesterContext.js";
+import { REQUESTER_A, signInAs } from "../support/auth.js";
 
 // UI-26..UI-31 from tests.md: the attachment lifecycle on Ticket Detail
 // (ui-spec 14.2, 14.3). The API module is mocked at its boundary; every
 // assertion is about what the Requester sees and which requests are made.
+//
+// Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext wrapper
+// replaces the stored selection, and the API calls carry no requester
+// argument - the session is the identity (C-64).
 
-const REQUESTERS = [{ id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" }];
 
 const ACTIVE: api.AttachmentMeta = {
   id: 7, originalFilename: "battery-report.pdf", mimeType: "application/pdf", sizeBytes: 184320,
@@ -25,24 +28,25 @@ function ticket(attachments: api.AttachmentMeta[]): api.Ticket {
   return {
     id: 42,
     ticketNumber: "TKT-2026-000042",
-    requesterId: 1,
     requester: { id: 1, name: "Anucha Prasert" },
     category: { id: 2, name: "Hardware" },
     relatedSystem: { id: 6, name: "Printer" },
     summary: "Laptop battery drains quickly",
     description: "The battery drops from full to twenty percent within an hour of light use.",
     requestedPriority: "MEDIUM",
-    itPriority: null,
+    itPriority: "MEDIUM",
     currentStatus: "NEW",
+    owner: null,
+    requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T05:02:44.000Z",
     attachments,
+    publicComments: [],
   };
 }
 
 async function renderDetail(attachments: api.AttachmentMeta[] = [ACTIVE, REMOVED]) {
   vi.spyOn(api, "fetchTicket").mockResolvedValue(ticket(attachments));
-  window.localStorage.setItem(STORAGE_KEY, "1");
   window.history.pushState({}, "", "/tickets/42");
   render(<App />);
   await screen.findByRole("heading", { level: 1, name: /TKT-2026-000042/ });
@@ -54,7 +58,9 @@ const removedGroup = () => screen.getByRole("list", { name: "Removed attachments
 beforeEach(() => {
   window.localStorage.clear();
   window.history.replaceState({}, "", "/");
-  vi.spyOn(api, "fetchRequesters").mockResolvedValue(REQUESTERS);
+  // Lab 3 (#40), docs/lab-03/tests.md section 4.2: the AuthContext test
+  // wrapper signs Requester A in; there is no selector and nothing in storage.
+  signInAs(REQUESTER_A);
 });
 afterEach(() => vi.restoreAllMocks());
 
@@ -74,7 +80,7 @@ describe("Attachment section", () => {
     expect(within(activeGroup()).getByText("new-photo.png")).toBeInTheDocument();
     expect(upload).toHaveBeenCalledTimes(1);
     expect(upload.mock.calls[0][0]).toBe(42);
-    expect(upload.mock.calls[0][1]).toBe(1);
+    expect(upload.mock.calls[0][1]).toBeInstanceOf(File);
     expect(screen.getByText("2 of 5 active")).toBeInTheDocument();
     expect(window.location.pathname).toBe("/tickets/42");
   });
@@ -114,7 +120,7 @@ describe("Attachment section", () => {
     await user.click(within(dialog2).getByRole("button", { name: "Remove" }));
 
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
-    expect(remove).toHaveBeenCalledWith(7, 1, "Superseded by a newer report.");
+    expect(remove).toHaveBeenCalledWith(7, "Superseded by a newer report.");
     expect(within(removedGroup()).getByText("battery-report.pdf")).toBeInTheDocument();
     expect(within(removedGroup()).getByText(/Reason: Superseded by a newer report\./)).toBeInTheDocument();
     // the active group is now empty and says so
@@ -150,7 +156,7 @@ describe("Attachment section", () => {
     expect(within(row).getByRole("button", { name: "Remove battery-report.pdf" })).toBeDisabled();
 
     await user.click(within(row).getByRole("button", { name: "Refresh" }));
-    expect(refetch).toHaveBeenCalledWith(42, 1);
+    expect(refetch).toHaveBeenCalledWith(42);
     await waitFor(() => expect(within(removedGroup()).getAllByRole("listitem")).toHaveLength(2));
     expect(screen.getByText("0 of 5 active")).toBeInTheDocument();
   });
@@ -194,8 +200,11 @@ describe("Attachment section", () => {
     expect(within(row).getByRole("button", { name: "Download battery-report.pdf" })).toHaveClass("tk-btn-tertiary");
     expect(within(row).getByRole("button", { name: "Remove battery-report.pdf" })).toHaveClass("btn-danger");
     expect(screen.getByRole("link", { name: "Back to My Tickets" })).toHaveClass("btn-secondary");
-    // no primary action on the detail: it is read-only apart from the attachment lifecycle
-    expect(document.querySelectorAll("main .btn-primary")).toHaveLength(0);
+    // the attachment lifecycle itself stays read-only apart from Remove - no
+    // primary action inside this card. ui-spec 14.2 (Lab 3, #42) now gives
+    // the screen one primary action overall, Post Comment, so the Lab 2
+    // "no primary button on the detail" assertion is narrowed to this card.
+    expect(screen.getByRole("region", { name: /^Attachments/ }).querySelectorAll(".btn-primary")).toHaveLength(0);
   });
 
   it("downloads an active attachment through the API and reports it (AC-30)", async () => {
@@ -216,7 +225,7 @@ describe("Attachment section", () => {
     const row = within(activeGroup()).getByRole("listitem");
 
     await user.click(within(row).getByRole("button", { name: "Download battery-report.pdf" }));
-    expect(download).toHaveBeenCalledWith(7, 1, "attachment");
+    expect(download).toHaveBeenCalledWith(7, "attachment");
     expect(await within(row).findByText(/Downloaded battery-report\.pdf/)).toBeInTheDocument();
     expect(click).toHaveBeenCalledTimes(1);
   });

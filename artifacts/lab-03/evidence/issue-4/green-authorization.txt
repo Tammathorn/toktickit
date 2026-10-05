@@ -1,0 +1,37 @@
+Command: (cd server && npx vitest run tests/lab-03/authorization.api.test.ts --reporter=verbose)
+Date:    2026-10-04 16:59:53 +0700
+Commit:  07f7784be3a3d1ee8ec34b2932d885ccde13de4f (feature/lab3-4-authz-regression)
+Tree:    clean
+----------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+
+ Test Files  1 passed (1)
+      Tests  14 passed (14)
+   Start at  16:59:54
+   Duration  4.48s (transform 157ms, setup 0ms, collect 408ms, tests 1.44s, environment 0ms, prepare 78ms)
+
+Exit code: 0

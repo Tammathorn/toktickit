@@ -1,0 +1,53 @@
+Command: (npx playwright test e2e/lab-03/staff-ticket-flow.spec.ts --reporter=line)
+Date:    2026-10-04 22:53:13 +0700
+Commit:  eb0ea727dfd09695ee5afc6b308e18725eab9f0b (feature/lab3-6-staff-ticket-ops)
+Tree:    dirty - Issue #6 e2e spec, all three C-90 viewport projects, pre-commit
+----------------------------------------------------------------------
+
+
+Running 42 tests using 11 workers
+
+[1/42] [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session
+[2/42] [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session
+[3/42] [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session
+[4/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:224:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89)
+[5/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:210:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97)
+[6/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:86:7 › IT Staff Ticket Detail flow › E2E-27 the lost claim race, then reassign (FR-44, AC-71, AC-72, FR-45)
+[7/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:178:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107)
+[8/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:58:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109)
+[9/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:157:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81)
+[10/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:251:7 › IT Staff Ticket Detail flow › an attachment uploaded by the Requester is downloadable by staff, with no upload or Remove control (FR-25, BR-91, C-103)
+[11/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:117:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80)
+[12/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:286:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68)
+[13/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:273:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53)
+[14/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:295:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68)
+[15/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:314:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile
+[16/42] [desktop] › e2e\lab-03\staff-ticket-flow.spec.ts:326:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108)
+[17/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:58:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109)
+[18/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:86:7 › IT Staff Ticket Detail flow › E2E-27 the lost claim race, then reassign (FR-44, AC-71, AC-72, FR-45)
+[19/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:117:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80)
+[20/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:157:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81)
+[21/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:210:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97)
+[22/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:178:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107)
+[23/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:273:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53)
+[24/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:224:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89)
+[25/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:286:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68)
+[26/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:314:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile
+[27/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:326:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108)
+[28/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:251:7 › IT Staff Ticket Detail flow › an attachment uploaded by the Requester is downloadable by staff, with no upload or Remove control (FR-25, BR-91, C-103)
+[29/42] [tablet] › e2e\lab-03\staff-ticket-flow.spec.ts:295:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68)
+[30/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:58:7 › IT Staff Ticket Detail flow › E2E-09 claim then work: an unassigned Ticket refuses In Progress, is claimed, then accepts it (AC-70, AC-109)
+[31/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:117:7 › IT Staff Ticket Detail flow › E2E-11 IT Priority and a confirmed status change to Resolved, then Closed (AC-76, AC-77, AC-80)
+[32/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:86:7 › IT Staff Ticket Detail flow › E2E-27 the lost claim race, then reassign (FR-44, AC-71, AC-72, FR-45)
+[33/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:157:7 › IT Staff Ticket Detail flow › E2E-12 a refused status change: a Closed Ticket offers no status control, and a direct API attempt returns 409 (AC-81)
+[34/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:224:7 › IT Staff Ticket Detail flow › the inactive-owner marker, and a safe failure with Retry (AC-75, BR-89)
+[35/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:210:7 › IT Staff Ticket Detail flow › E2E-18 role restriction in the browser: a Requester sees Forbidden at the Queue and User Management URLs, and the direct API refuses 403 (AC-36, AC-97)
+[36/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:178:7 › IT Staff Ticket Detail flow › E2E-13 a Public Comment and an Internal Note render in one frame, visibly distinct (AC-53, AC-107)
+[37/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:251:7 › IT Staff Ticket Detail flow › an attachment uploaded by the Requester is downloadable by staff, with no upload or Remove control (FR-25, BR-91, C-103)
+[38/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:314:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-02/RESP-03 the Queue renders a table with all nine columns at desktop, and cards (no table) on mobile
+[39/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:273:7 › IT Staff Ticket Detail flow › the composer's own validation feedback: the counter turns danger past 2000 and Post Comment stays disabled (FR-53)
+[40/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:326:7 › IT Staff Ticket Queue - responsive (ui-spec 15.2-15.4) › RESP-04 the Queue's tablet table renders exactly six named columns, the other three absent from the DOM (C-108)
+[41/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:286:7 › IT Staff Ticket Detail flow › RESP-01 no horizontal page scroll on IT Staff Ticket Detail (AC-106, FR-68)
+[42/42] [mobile] › e2e\lab-03\staff-ticket-flow.spec.ts:295:7 › IT Staff Ticket Detail flow › RESP-06 every control on IT Staff Ticket Detail is at least 44 px tall at 390 px (FR-68)
+  22 skipped
+  20 passed (6.9s)

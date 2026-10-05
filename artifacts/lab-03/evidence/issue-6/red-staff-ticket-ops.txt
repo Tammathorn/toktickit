@@ -1,0 +1,1315 @@
+Command: (cd server && npx vitest run tests/lab-03/staff-ticket-detail.api.test.ts tests/lab-03/comments-notes.api.test.ts tests/lab-03/authorization.api.test.ts tests/lab-02/ticket-detail.api.test.ts --reporter=verbose)
+Date:    2026-10-04 19:54:41 +0700
+Commit:  51d0853166ff40abd2151cf7e9461bfa8db16fb4 (feature/lab3-6-staff-ticket-ops, tests committed before any implementation)
+Tree:    clean - the routes these tests call do not exist yet
+----------------------------------------------------------------------
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ × tests/lab-03/staff-ticket-detail.api.test.ts > the status transition matrix > UNIT-12 every one of the 64 cells of specification.md 5.1 matches the transition function (BR-55)
+   → Failed to load url ../../src/lib/status-transitions.js (resolved id: ../../src/lib/status-transitions.js) in C:/Downloads/Lab1_Starter_Scaffold/toktickit/server/tests/lab-03/staff-ticket-detail.api.test.ts. Does the file exist?
+ × tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > API-49 the staff DTO carries requester with email, owner, publicComments and internalNotes (FR-43)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400, to a staff caller (api-spec.md 8.2)
+   → Cannot read properties of undefined (reading 'code')
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-50 claiming an unassigned Ticket makes the caller its owner (AC-70, BR-46)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-51 claiming a Ticket already owned -> 409 ALREADY_OWNED naming the owner; the owner does not change (AC-71, BR-46)
+   → expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-52 two simultaneous claims: exactly one 200, the other 409, and the Ticket has exactly one owner (BR-46, C-75)
+   → expected [ 404, 404 ] to deeply equal [ 200, 409 ]
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-53 claiming does not change status: a NEW Ticket claimed stays NEW (C-102)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-54 assigning to an active IT Staff user and to an active Administrator both succeed (AC-72, BR-47, C-66)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-55 a Requester, an inactive user and an unknown id each -> 422 ASSIGNEE_NOT_ELIGIBLE; the owner does not change (AC-73, BR-48)
+   → Requester: expected 404 to be 422 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-56 a Ticket in NEW or OPEN unassigns with 200 and appears under the unassigned filter (AC-74, BR-47)
+   → NEW: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-57 ownerId null on a Ticket in IN_PROGRESS, WAITING_FOR_REQUESTER and RESOLVED each -> 409 OWNER_REQUIRED; owner and status unchanged (AC-111, BR-97, C-104)
+   → IN_PROGRESS: expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-58 reassigning a Ticket being worked on to another eligible user succeeds (AC-111, C-104)
+   → IN_PROGRESS: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-59 the release path: IN_PROGRESS moved to OPEN then unassigned, both succeed, and it appears under unassigned (AC-117, BR-97)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-60 an absent ownerId is not an unassign: an empty body -> 400 and the owner is unchanged (api-spec.md 8.4)
+   → {}: expected 404 to be 400 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/it-priority > API-61 each of LOW, MEDIUM and HIGH is stored and returned; an out-of-set value is 400 (AC-76, FR-47)
+   → HIGH: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-62 an unassigned Ticket moved to IN_PROGRESS, WAITING_FOR_REQUESTER or RESOLVED -> 409 OWNER_REQUIRED, status unchanged; after a claim each succeeds (AC-109, BR-97, C-93)
+   → IN_PROGRESS: expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-64 all 64 cells of section 5.1 over HTTP on an owned Ticket: Y succeeds, - is 409 INVALID_STATUS_TRANSITION with the status unchanged (AC-77, BR-55) 312ms
+   → expected [ 'NEW -> NEW: 404 , now NEW', …(63) ] to deeply equal []
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-66 each of the eight statuses targeting itself -> 400 SAME_STATUS, not 409 and not a silent 200 (AC-78, BR-56, C-77)
+   → NEW: expected 404 to be 400 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-67 from CLOSED and from CANCELLED each of the seven other targets -> 409, status unchanged (AC-81, BR-58, C-98)
+   → CLOSED -> NEW: expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-68 RESOLVED -> REOPENED succeeds; REOPENED requested from every other status -> 409 (AC-112, BR-98, C-98)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-69 an unassigned CLOSED Ticket asked for IN_PROGRESS -> INVALID_STATUS_TRANSITION, not OWNER_REQUIRED (api-spec.md 8.6)
+   → expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-70 moving to Resolved, Closed and Cancelled each clears requesterResolvedAt, and no Public Comment is created (AC-59, BR-61, C-76)
+   → IN_PROGRESS -> RESOLVED: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-71 a move to IN_PROGRESS or WAITING_FOR_REQUESTER leaves requesterResolvedAt set (BR-61)
+   → OPEN -> IN_PROGRESS: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > an out-of-set or absent currentStatus -> 400 VALIDATION_FAILED (api-spec.md 8.6 step 1)
+   → undefined: expected 404 to be 400 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > the queue is shared work > API-72 a staff user who does not own the Ticket sets IT Priority, comments, writes a note and makes a permitted status change (AC-110, BR-96, C-93)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-73 the owning Requester in Open, In Progress, Waiting for Requester and Reopened succeeds, Current Status unchanged (AC-55, BR-59, BR-60)
+   → OPEN: expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-74 New, Resolved, Closed and Cancelled each -> 409 RESOLUTION_NOT_PERMITTED_IN_STATUS (AC-56, BR-60)
+   → NEW: expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-75 a Requester who does not own the Ticket -> 404, identical to a missing Ticket (AC-57, BR-42)
+   → Cannot read properties of undefined (reading 'code')
+ × tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/assignable-users > API-116 returns active IT Staff and Administrator users only, each exactly { id, name, role }, never an email (BR-104, C-105)
+   → expected 404 to be 200 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-119 claim, an owner change and an IT Priority change each -> 409 TICKET_CLOSED with nothing changed; a status change still answers INVALID_STATUS_TRANSITION (AC-118, BR-108, C-109)
+   → CLOSED claim: expected 404 to be 409 // Object.is equality
+ × tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-120 an upload and a soft removal each -> 409 TICKET_CLOSED, no row created, no file written, no row modified; metadata and download still 200 (AC-118, BR-108, C-109)
+   → CLOSED upload: expected 201 to be 409 // Object.is equality
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+ × tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)
+   → expected false to be true // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)
+   → NEW: expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)
+   → GET detail: expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)
+   → expected 404 to be 403 // Object.is equality
+ × tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)
+   → expected [ [ 'detail', 200, 404 ], …(6) ] to deeply equal []
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+ × tests/lab-03/comments-notes.api.test.ts > authorship > API-76 the owning Requester posts a comment: 201, author is the signed-in user, createdAt server-set, first in the list (AC-48, BR-65, FR-28)
+   → expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > authorship > API-77 a body carrying authorId, author and createdAt is stored with the session's user and the server's clock (BR-65, FR-52)
+   → comment: expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > content > API-79 1 and 2000 characters succeed; empty, whitespace-only and 2001 are refused with no row created - on comments and on notes (AC-49, AC-50, BR-64)
+   → comment 1: expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > content > API-80 a 2000-character body padded with spaces is accepted and stored trimmed (BR-64)
+   → expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > content > API-81 a body containing markup is stored and returned verbatim, unescaped and unaltered (AC-51)
+   → expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > content > API-82 a multi-line body round-trips with its newlines intact (AC-52, BR-66)
+   → expected undefined to be 'Step one: restart.\nStep two: sign in…' // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-83 three entries posted in order come back newest first - comments and notes (BR-67)
+   → list.body.map is not a function
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-84 the owning Requester, IT Staff and Administrator each list and post Public Comments (BR-68, BR-04)
+   → Requester: expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-85 IT Staff and Administrator each list and create Internal Notes with a server-set author and creation time (AC-53, FR-55)
+   → IT_STAFF: expected 404 to be 201 // Object.is equality
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-86 a note and a comment with identical bodies: each endpoint returns only its own (BR-69, C-73)
+   → comments.body.map is not a function
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-87 no PATCH, PUT or DELETE route exists on either collection or on any single comment or note - from the router inventory (BR-63, FR-51)
+   → expected [] to deeply equal [ …(4) ]
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-88 a Requester listing or posting a comment on another Requester's Ticket -> 404, no row created (BR-42)
+   → Cannot read properties of undefined (reading 'code')
+ × tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-89 comment and note rows carry id, body, author { id, name, role } and createdAt - and no author email (api-spec.md 10.7)
+   → actual value must be number or bigint, received "undefined"
+ × tests/lab-03/comments-notes.api.test.ts > Closed and Cancelled Tickets > API-118 posting a comment or a note -> 409 TICKET_CLOSED with no row; listing stays 200; a non-owning Requester still gets 404 (AC-118, BR-108, C-109)
+   → CLOSED comment: expected 404 to be 409 // Object.is equality
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-26 answers a missing Ticket with 404 TICKET_NOT_FOUND (AC-40)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-27 refuses another Requester's Ticket with 404 and no Ticket field (AC-38, C-65)
+ × tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-28 carries publicComments, owner and requesterResolvedAt, and no note, actions-taken or status-transition key, not even as null (AC-53, AC-47)
+   → expected [ 'attachments', 'category', …(11) ] to deeply equal [ 'attachments', 'category', …(14) ]
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > API-29 returns active and removed attachments, distinguished by isRemoved, reason on the removed one (AC-38)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > refuses another Requester with 404 TICKET_NOT_FOUND, identical to an unknown Ticket (C-65)
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 57 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-28 carries publicComments, owner and requesterResolvedAt, and no note, actions-taken or status-transition key, not even as null (AC-53, AC-47)
+AssertionError: expected [ 'attachments', 'category', …(11) ] to deeply equal [ 'attachments', 'category', …(14) ]
+
+- Expected
++ Received
+
+  Array [
+    "attachments",
+    "category",
+    "createdAt",
+    "currentStatus",
+    "description",
+    "id",
+    "itPriority",
+-   "owner",
+-   "publicComments",
+    "relatedSystem",
+    "requestedPriority",
+    "requester",
+-   "requesterResolvedAt",
+    "summary",
+    "ticketNumber",
+    "updatedAt",
+  ]
+
+ ❯ tests/lab-02/ticket-detail.api.test.ts:81:25
+     79|     expect(res.status).toBe(200);
+     80|     const keys = Object.keys(res.body);
+     81|     expect(keys.sort()).toEqual(
+       |                         ^
+     82|       ["id", "ticketNumber", "requester", "category", "relatedSystem",…
+     83|         "requestedPriority", "itPriority", "currentStatus", "owner", "…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:254:24
+    252|   it("SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no …
+    253|     const res = await a.agent.get(`/api/tickets/${ticketA.id}/internal…
+    254|     expect(res.status).toBe(403);
+       |                        ^
+    255|     expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", messag…
+    256|     expect(res.text).not.toContain("INTERNAL-ONLY");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:267:28
+    265|     const real = await a.agent.get(`/api/tickets/${ticketA.id}/interna…
+    266|     const missing = await a.agent.get("/api/tickets/999999/internal-no…
+    267|     expect(missing.status).toBe(403);
+       |                            ^
+    268|     expect(missing.text).toBe(real.text);
+    269|     const realPost = await a.agent.post(`/api/tickets/${ticketA.id}/in…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:278:30
+    276|     const real = await a.agent.get(`/api/tickets/${ticketA.id}/interna…
+    277|     const malformed = await a.agent.get("/api/tickets/abc/internal-not…
+    278|     expect(malformed.status).toBe(403);
+       |                              ^
+    279|     expect(malformed.text).toBe(real.text);
+    280|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:285:24
+    283|     const before = await prisma.internalNote.count();
+    284|     const res = await a.agent.post(`/api/tickets/${ticketA.id}/interna…
+    285|     expect(res.status).toBe(403);
+       |                        ^
+    286|     expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    287|     expect(await prisma.internalNote.count()).toBe(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-03/authorization.api.test.ts:293:52
+    291|     const res = await a.agent.get(`/api/tickets/${ticketA.id}`);
+    292|     expect(res.status).toBe(200);
+    293|     expect(Array.isArray(res.body.publicComments)).toBe(true);
+       |                                                    ^
+    294|     expect(Object.keys(res.body).sort()).toEqual(
+    295|       ["id", "ticketNumber", "requester", "category", "relatedSystem",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)
+AssertionError: NEW: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:320:34
+    318|     for (const target of STATUSES) {
+    319|       const res = await a.agent.patch(`/api/staff/tickets/${ticketA.id…
+    320|       expect(res.status, target).toBe(403);
+       |                                  ^
+    321|       expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    322|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:329:24
+    327|     const before = (await prisma.ticket.findUniqueOrThrow({ where: { i…
+    328|     const res = await a.agent.patch(`/api/staff/tickets/${ticketA.id}/…
+    329|     expect(res.status).toBe(403);
+       |                        ^
+    330|     expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    331|     expect((await prisma.ticket.findUniqueOrThrow({ where: { id: ticke…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)
+AssertionError: GET detail: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:347:33
+    345|     for (const [name, call] of routes) {
+    346|       const real = await call(String(ticketA.id));
+    347|       expect(real.status, name).toBe(403);
+       |                                 ^
+    348|       expect(real.body).toEqual({ error: { code: "FORBIDDEN_ROLE", mes…
+    349|       expect((await call("999999")).text, `${name} missing`).toBe(real…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:358:24
+    356|   it("SEC-27 Requester GET /api/staff/assignable-users -> 403, no user…
+    357|     const res = await a.agent.get("/api/staff/assignable-users");
+    358|     expect(res.status).toBe(403);
+       |                        ^
+    359|     expect(res.body).toEqual({ error: { code: "FORBIDDEN_ROLE", messag…
+    360|     expect(res.text).not.toMatch(/"name"|"id"/);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-03/authorization.api.test.ts:372:26
+    370|     for (const caller of [staff, admin]) {
+    371|       const res = await caller.agent.post(`/api/tickets/${ticketB.id}/…
+    372|       expect(res.status).toBe(403);
+       |                          ^
+    373|       expect(res.body.error.code).toBe("FORBIDDEN_ROLE");
+    374|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/57]⎯
+
+ FAIL  tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)
+AssertionError: expected [ [ 'detail', 200, 404 ], …(6) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   Array [
++     "detail",
++     200,
++     404,
++   ],
++   Array [
++     "claim",
++     200,
++     404,
++   ],
++   Array [
++     "owner",
++     200,
++     404,
++   ],
++   Array [
++     "it-priority",
++     200,
++     404,
++   ],
++   Array [
++     "status",
++     200,
++     404,
++   ],
++   Array [
++     "comment",
++     201,
++     404,
++   ],
++   Array [
++     "note",
++     201,
++     404,
++   ],
++ ]
+
+ ❯ tests/lab-03/authorization.api.test.ts:390:69
+    388|     record("comment", 201, await admin.agent.post(`/api/tickets/${t.id…
+    389|     record("note", 201, await admin.agent.post(`/api/tickets/${t.id}/i…
+    390|     expect(results.filter(([, expected, got]) => expected !== got)).to…
+       |                                                                     ^
+    391|     const after = await prisma.ticket.findUniqueOrThrow({ where: { id:…
+    392|     expect(after).toMatchObject({ ownerId: staff.id, itPriority: "HIGH…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > authorship > API-76 the owning Requester posts a comment: 201, author is the signed-in user, createdAt server-set, first in the list (AC-48, BR-65, FR-28)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:81:24
+     79|     const before = Date.now();
+     80|     const res = await reqA.agent.post(`/api/tickets/${t.id}/public-com…
+     81|     expect(res.status).toBe(201);
+       |                        ^
+     82|     expect(res.body.author).toEqual({ id: reqA.id, name: reqA.name, ro…
+     83|     expect(Date.parse(res.body.createdAt)).toBeGreaterThanOrEqual(befo…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > authorship > API-77 a body carrying authorId, author and createdAt is stored with the session's user and the server's clock (BR-65, FR-52)
+AssertionError: comment: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:103:32
+    101|         createdAt: "2000-01-01T00:00:00.000Z",
+    102|       });
+    103|       expect(res.status, kind).toBe(201);
+       |                                ^
+    104|       expect(res.body.author).toEqual({ id: staff.id, name: staff.name…
+    105|       const stored =
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > content > API-79 1 and 2000 characters succeed; empty, whitespace-only and 2001 are refused with no row created - on comments and on notes (AC-49, AC-50, BR-64)
+AssertionError: comment 1: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:124:52
+    122|       for (const ok of ["x", "y".repeat(2000)]) {
+    123|         const res = await staff.agent.post(`/api/tickets/${t.id}/${pat…
+    124|         expect(res.status, `${kind} ${ok.length}`).toBe(201);
+       |                                                    ^
+    125|         expect(res.body.body).toBe(ok);
+    126|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > content > API-80 a 2000-character body padded with spaces is accepted and stored trimmed (BR-64)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:142:26
+    140|     for (const { path } of KINDS) {
+    141|       const res = await staff.agent.post(`/api/tickets/${t.id}/${path}…
+    142|       expect(res.status).toBe(201);
+       |                          ^
+    143|       expect(res.body.body).toBe(core);
+    144|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > content > API-81 a body containing markup is stored and returned verbatim, unescaped and unaltered (AC-51)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:152:26
+    150|     for (const { path, table } of KINDS) {
+    151|       const res = await staff.agent.post(`/api/tickets/${t.id}/${path}…
+    152|       expect(res.status).toBe(201);
+       |                          ^
+    153|       expect(res.body.body).toBe(markup);
+    154|       const stored =
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > content > API-82 a multi-line body round-trips with its newlines intact (AC-52, BR-66)
+AssertionError: expected undefined to be 'Step one: restart.\nStep two: sign in…' // Object.is equality
+
+- Expected: 
+"Step one: restart.
+Step two: sign in.
+
+  Step four, indented."
+
++ Received: 
+undefined
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:167:33
+    165|     for (const { path } of KINDS) {
+    166|       const created = await staff.agent.post(`/api/tickets/${t.id}/${p…
+    167|       expect(created.body.body).toBe(lines);
+       |                                 ^
+    168|       const list = await staff.agent.get(`/api/tickets/${t.id}/${path}…
+    169|       expect(list.body[0].body).toBe(lines);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-83 three entries posted in order come back newest first - comments and notes (BR-67)
+TypeError: list.body.map is not a function
+ ❯ tests/lab-03/comments-notes.api.test.ts:186:24
+    184|       }
+    185|       const list = await staff.agent.get(`/api/tickets/${t.id}/${path}…
+    186|       expect(list.body.map((r: { id: number }) => r.id)).toEqual([...i…
+       |                        ^
+    187|       expect(list.body.map((r: { body: string }) => r.body)).toEqual([…
+    188|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-84 the owning Requester, IT Staff and Administrator each list and post Public Comments (BR-68, BR-04)
+AssertionError: Requester: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:195:32
+    193|     for (const [who, caller] of [["Requester", reqA], ["IT Staff", sta…
+    194|       const post = await caller.agent.post(`/api/tickets/${t.id}/publi…
+    195|       expect(post.status, who).toBe(201);
+       |                                ^
+    196|       const list = await caller.agent.get(`/api/tickets/${t.id}/public…
+    197|       expect(list.status, who).toBe(200);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-85 IT Staff and Administrator each list and create Internal Notes with a server-set author and creation time (AC-53, FR-55)
+AssertionError: IT_STAFF: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:207:33
+    205|       const before = Date.now();
+    206|       const post = await caller.agent.post(`/api/tickets/${t.id}/inter…
+    207|       expect(post.status, role).toBe(201);
+       |                                 ^
+    208|       expect(post.body.author).toEqual({ id: caller.id, name: caller.n…
+    209|       expect(Date.parse(post.body.createdAt)).toBeGreaterThanOrEqual(b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-86 a note and a comment with identical bodies: each endpoint returns only its own (BR-69, C-73)
+TypeError: comments.body.map is not a function
+ ❯ tests/lab-03/comments-notes.api.test.ts:223:26
+    221|     const comments = await staff.agent.get(`/api/tickets/${t.id}/publi…
+    222|     const notes = await staff.agent.get(`/api/tickets/${t.id}/internal…
+    223|     expect(comments.body.map((r: { id: number }) => r.id)).toEqual([co…
+       |                          ^
+    224|     expect(notes.body.map((r: { id: number }) => r.id)).toEqual([note.…
+    225|     // The Requester's own view of the Ticket carries the comment and …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-87 no PATCH, PUT or DELETE route exists on either collection or on any single comment or note - from the router inventory (BR-63, FR-51)
+AssertionError: expected [] to deeply equal [ …(4) ]
+
+- Expected
++ Received
+
+- Array [
+-   "GET /api/tickets/:id/internal-notes",
+-   "GET /api/tickets/:id/public-comments",
+-   "POST /api/tickets/:id/internal-notes",
+-   "POST /api/tickets/:id/public-comments",
+- ]
++ Array []
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:237:65
+    235|     expect(unwalked).toEqual([]);
+    236|     const touching = routes.filter((r) => /public-comments|internal-no…
+    237|     expect(touching.map((r) => `${r.method} ${r.path}`).sort()).toEqua…
+       |                                                                 ^
+    238|       "GET /api/tickets/:id/internal-notes",
+    239|       "GET /api/tickets/:id/public-comments",
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-88 a Requester listing or posting a comment on another Requester's Ticket -> 404, no row created (BR-42)
+TypeError: Cannot read properties of undefined (reading 'code')
+ ❯ tests/lab-03/comments-notes.api.test.ts:250:28
+    248|     const missing = await reqB.agent.get("/api/tickets/999999/public-c…
+    249|     expect(list.status).toBe(404);
+    250|     expect(list.body.error.code).toBe("TICKET_NOT_FOUND");
+       |                            ^
+    251|     expect(list.text).toBe(missing.text);
+    252|     const post = await reqB.agent.post(`/api/tickets/${t.id}/public-co…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-89 comment and note rows carry id, body, author { id, name, role } and createdAt - and no author email (api-spec.md 10.7)
+TypeError: actual value must be number or bigint, received "undefined"
+ ❯ tests/lab-03/comments-notes.api.test.ts:265:31
+    263|     for (const [caller, path] of [[reqA, "public-comments"], [staff, "…
+    264|       const res = await caller.agent.get(`/api/tickets/${t.id}/${path}…
+    265|       expect(res.body.length).toBeGreaterThan(0);
+       |                               ^
+    266|       for (const r of res.body) {
+    267|         expect(Object.keys(r).sort()).toEqual(["author", "body", "crea…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/57]⎯
+
+ FAIL  tests/lab-03/comments-notes.api.test.ts > Closed and Cancelled Tickets > API-118 posting a comment or a note -> 409 TICKET_CLOSED with no row; listing stays 200; a non-owning Requester still gets 404 (AC-118, BR-108, C-109)
+AssertionError: CLOSED comment: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/comments-notes.api.test.ts:284:49
+    282|       for (const caller of [reqA, staff]) {
+    283|         const res = await caller.agent.post(`/api/tickets/${t.id}/publ…
+    284|         expect(res.status, `${status} comment`).toBe(409);
+       |                                                 ^
+    285|         expect(res.body.error.code).toBe("TICKET_CLOSED");
+    286|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > the status transition matrix > UNIT-12 every one of the 64 cells of specification.md 5.1 matches the transition function (BR-55)
+Error: Failed to load url ../../src/lib/status-transitions.js (resolved id: ../../src/lib/status-transitions.js) in C:/Downloads/Lab1_Starter_Scaffold/toktickit/server/tests/lab-03/staff-ticket-detail.api.test.ts. Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > API-49 the staff DTO carries requester with email, owner, publicComments and internalNotes (FR-43)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:136:24
+    134| 
+    135|     const res = await detail(staffY.agent, t.id);
+    136|     expect(res.status).toBe(200);
+       |                        ^
+    137|     expect(Object.keys(res.body).sort()).toEqual(
+    138|       ["id", "ticketNumber", "requester", "category", "relatedSystem",…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400, to a staff caller (api-spec.md 8.2)
+TypeError: Cannot read properties of undefined (reading 'code')
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:160:31
+    158|     const missing = await detail(staffX.agent, 999999);
+    159|     expect(missing.status).toBe(404);
+    160|     expect(missing.body.error.code).toBe("TICKET_NOT_FOUND");
+       |                               ^
+    161|     expect((await detail(staffX.agent, "abc")).status).toBe(400);
+    162|     expect((await detail(staffX.agent, "0")).status).toBe(400);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-50 claiming an unassigned Ticket makes the caller its owner (AC-70, BR-46)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:173:24
+    171|     const t = await ticket({ currentStatus: "OPEN" });
+    172|     const res = await claim(staffX.agent, t.id);
+    173|     expect(res.status).toBe(200);
+       |                        ^
+    174|     expect(res.body.owner).toEqual({ id: staffX.id, name: staffX.name,…
+    175|     expect((await row(t.id)).ownerId).toBe(staffX.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-51 claiming a Ticket already owned -> 409 ALREADY_OWNED naming the owner; the owner does not change (AC-71, BR-46)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:181:24
+    179|     const t = await ticket({ ownerId: staffX.id, currentStatus: "OPEN"…
+    180|     const res = await claim(staffY.agent, t.id);
+    181|     expect(res.status).toBe(409);
+       |                        ^
+    182|     expect(res.body.error.code).toBe("ALREADY_OWNED");
+    183|     expect(res.body.error.message).toContain(staffX.name);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-52 two simultaneous claims: exactly one 200, the other 409, and the Ticket has exactly one owner (BR-46, C-75)
+AssertionError: expected [ 404, 404 ] to deeply equal [ 200, 409 ]
+
+- Expected
++ Received
+
+  Array [
+-   200,
+-   409,
++   404,
++   404,
+  ]
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:193:43
+    191|       const t = await ticket({ currentStatus: "NEW" });
+    192|       const [x, y] = await Promise.all([claim(staffX.agent, t.id), cla…
+    193|       expect([x.status, y.status].sort()).toEqual([200, 409]);
+       |                                           ^
+    194|       const winner = x.status === 200 ? staffX : staffY;
+    195|       const loser = x.status === 200 ? y : x;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-53 claiming does not change status: a NEW Ticket claimed stays NEW (C-102)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:205:24
+    203|     const t = await ticket();
+    204|     const res = await claim(staffX.agent, t.id);
+    205|     expect(res.status).toBe(200);
+       |                        ^
+    206|     expect(res.body.currentStatus).toBe("NEW");
+    207|     expect((await row(t.id)).currentStatus).toBe("NEW");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-54 assigning to an active IT Staff user and to an active Administrator both succeed (AC-72, BR-47, C-66)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:218:28
+    216|     const t = await ticket({ currentStatus: "OPEN" });
+    217|     const toStaff = await setOwner(staffX.agent, t.id, { ownerId: staf…
+    218|     expect(toStaff.status).toBe(200);
+       |                            ^
+    219|     expect(toStaff.body.owner).toEqual({ id: staffY.id, name: staffY.n…
+    220|     const toAdmin = await setOwner(staffX.agent, t.id, { ownerId: admi…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-55 a Requester, an inactive user and an unknown id each -> 422 ASSIGNEE_NOT_ELIGIBLE; the owner does not change (AC-73, BR-48)
+AssertionError: Requester: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:230:31
+    228|     for (const [who, ownerId] of [["Requester", reqB.id], ["inactive",…
+    229|       const res = await setOwner(staffY.agent, t.id, { ownerId });
+    230|       expect(res.status, who).toBe(422);
+       |                               ^
+    231|       expect(res.body.error.code).toBe("ASSIGNEE_NOT_ELIGIBLE");
+    232|       expect((await row(t.id)).ownerId).toBe(staffX.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-56 a Ticket in NEW or OPEN unassigns with 200 and appears under the unassigned filter (AC-74, BR-47)
+AssertionError: NEW: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:241:34
+    239|       expect(await unassignedIds(staffX.agent, t.ticketNumber!)).toEqu…
+    240|       const res = await setOwner(staffX.agent, t.id, { ownerId: null }…
+    241|       expect(res.status, status).toBe(200);
+       |                                  ^
+    242|       expect(res.body.owner).toBeNull();
+    243|       expect(await unassignedIds(staffX.agent, t.ticketNumber!)).toEqu…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-57 ownerId null on a Ticket in IN_PROGRESS, WAITING_FOR_REQUESTER and RESOLVED each -> 409 OWNER_REQUIRED; owner and status unchanged (AC-111, BR-97, C-104)
+AssertionError: IN_PROGRESS: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:251:34
+    249|       const t = await ticket({ ownerId: staffX.id, currentStatus: stat…
+    250|       const res = await setOwner(staffX.agent, t.id, { ownerId: null }…
+    251|       expect(res.status, status).toBe(409);
+       |                                  ^
+    252|       expect(res.body.error.code).toBe("OWNER_REQUIRED");
+    253|       expect(await row(t.id)).toMatchObject({ ownerId: staffX.id, curr…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-58 reassigning a Ticket being worked on to another eligible user succeeds (AC-111, C-104)
+AssertionError: IN_PROGRESS: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:261:34
+    259|       const t = await ticket({ ownerId: staffX.id, currentStatus: stat…
+    260|       const res = await setOwner(staffX.agent, t.id, { ownerId: staffY…
+    261|       expect(res.status, status).toBe(200);
+       |                                  ^
+    262|       expect(await row(t.id)).toMatchObject({ ownerId: staffY.id, curr…
+    263|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-59 the release path: IN_PROGRESS moved to OPEN then unassigned, both succeed, and it appears under unassigned (AC-117, BR-97)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:268:66
+    266|   it("API-59 the release path: IN_PROGRESS moved to OPEN then unassign…
+    267|     const t = await ticket({ ownerId: staffX.id, currentStatus: "IN_PR…
+    268|     expect((await setStatus(staffX.agent, t.id, "OPEN")).status).toBe(…
+       |                                                                  ^
+    269|     expect((await setOwner(staffX.agent, t.id, { ownerId: null })).sta…
+    270|     expect(await row(t.id)).toMatchObject({ ownerId: null, currentStat…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-60 an absent ownerId is not an unassign: an empty body -> 400 and the owner is unchanged (api-spec.md 8.4)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:278:48
+    276|     for (const body of [{}, { ownerId: "abc" }, { ownerId: 0 }, { owne…
+    277|       const res = await setOwner(staffX.agent, t.id, body);
+    278|       expect(res.status, JSON.stringify(body)).toBe(400);
+       |                                                ^
+    279|       expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    280|       expect(res.body.error.fields.ownerId).toBe("Choose an active IT …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/it-priority > API-61 each of LOW, MEDIUM and HIGH is stored and returned; an out-of-set value is 400 (AC-76, FR-47)
+AssertionError: HIGH: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:294:33
+    292|     for (const value of ["HIGH", "MEDIUM", "LOW", "LOW"] as const) {
+    293|       const res = await setPriority(staffX.agent, t.id, value);
+    294|       expect(res.status, value).toBe(200);
+       |                                 ^
+    295|       expect(res.body.itPriority).toBe(value);
+    296|       expect((await row(t.id)).itPriority).toBe(value);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-62 an unassigned Ticket moved to IN_PROGRESS, WAITING_FOR_REQUESTER or RESOLVED -> 409 OWNER_REQUIRED, status unchanged; after a claim each succeeds (AC-109, BR-97, C-93)
+AssertionError: IN_PROGRESS: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:316:38
+    314|       const t = await ticket({ currentStatus: "OPEN" });
+    315|       const refused = await setStatus(staffX.agent, t.id, target);
+    316|       expect(refused.status, target).toBe(409);
+       |                                      ^
+    317|       expect(refused.body.error.code).toBe("OWNER_REQUIRED");
+    318|       expect((await row(t.id)).currentStatus).toBe("OPEN");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-64 all 64 cells of section 5.1 over HTTP on an owned Ticket: Y succeeds, - is 409 INVALID_STATUS_TRANSITION with the status unchanged (AC-77, BR-55)
+AssertionError: expected [ 'NEW -> NEW: 404 , now NEW', …(63) ] to deeply equal []
+
+- Expected
++ Received
+
+- Array []
++ Array [
++   "NEW -> NEW: 404 , now NEW",
++   "NEW -> OPEN: 404 , now NEW",
++   "NEW -> IN_PROGRESS: 404 , now NEW",
++   "NEW -> WAITING_FOR_REQUESTER: 404 , now NEW",
++   "NEW -> RESOLVED: 404 , now NEW",
++   "NEW -> CLOSED: 404 , now NEW",
++   "NEW -> REOPENED: 404 , now NEW",
++   "NEW -> CANCELLED: 404 , now NEW",
++   "OPEN -> NEW: 404 , now OPEN",
++   "OPEN -> OPEN: 404 , now OPEN",
++   "OPEN -> IN_PROGRESS: 404 , now OPEN",
++   "OPEN -> WAITING_FOR_REQUESTER: 404 , now OPEN",
++   "OPEN -> RESOLVED: 404 , now OPEN",
++   "OPEN -> CLOSED: 404 , now OPEN",
++   "OPEN -> REOPENED: 404 , now OPEN",
++   "OPEN -> CANCELLED: 404 , now OPEN",
++   "IN_PROGRESS -> NEW: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> OPEN: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> IN_PROGRESS: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> WAITING_FOR_REQUESTER: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> RESOLVED: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> CLOSED: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> REOPENED: 404 , now IN_PROGRESS",
++   "IN_PROGRESS -> CANCELLED: 404 , now IN_PROGRESS",
++   "WAITING_FOR_REQUESTER -> NEW: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> OPEN: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> IN_PROGRESS: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> WAITING_FOR_REQUESTER: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> RESOLVED: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> CLOSED: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> REOPENED: 404 , now WAITING_FOR_REQUESTER",
++   "WAITING_FOR_REQUESTER -> CANCELLED: 404 , now WAITING_FOR_REQUESTER",
++   "RESOLVED -> NEW: 404 , now RESOLVED",
++   "RESOLVED -> OPEN: 404 , now RESOLVED",
++   "RESOLVED -> IN_PROGRESS: 404 , now RESOLVED",
++   "RESOLVED -> WAITING_FOR_REQUESTER: 404 , now RESOLVED",
++   "RESOLVED -> RESOLVED: 404 , now RESOLVED",
++   "RESOLVED -> CLOSED: 404 , now RESOLVED",
++   "RESOLVED -> REOPENED: 404 , now RESOLVED",
++   "RESOLVED -> CANCELLED: 404 , now RESOLVED",
++   "CLOSED -> NEW: 404 , now CLOSED",
++   "CLOSED -> OPEN: 404 , now CLOSED",
++   "CLOSED -> IN_PROGRESS: 404 , now CLOSED",
++   "CLOSED -> WAITING_FOR_REQUESTER: 404 , now CLOSED",
++   "CLOSED -> RESOLVED: 404 , now CLOSED",
++   "CLOSED -> CLOSED: 404 , now CLOSED",
++   "CLOSED -> REOPENED: 404 , now CLOSED",
++   "CLOSED -> CANCELLED: 404 , now CLOSED",
++   "REOPENED -> NEW: 404 , now REOPENED",
++   "REOPENED -> OPEN: 404 , now REOPENED",
++   "REOPENED -> IN_PROGRESS: 404 , now REOPENED",
++   "REOPENED -> WAITING_FOR_REQUESTER: 404 , now REOPENED",
++   "REOPENED -> RESOLVED: 404 , now REOPENED",
++   "REOPENED -> CLOSED: 404 , now REOPENED",
++   "REOPENED -> REOPENED: 404 , now REOPENED",
++   "REOPENED -> CANCELLED: 404 , now REOPENED",
++   "CANCELLED -> NEW: 404 , now CANCELLED",
++   "CANCELLED -> OPEN: 404 , now CANCELLED",
++   "CANCELLED -> IN_PROGRESS: 404 , now CANCELLED",
++   "CANCELLED -> WAITING_FOR_REQUESTER: 404 , now CANCELLED",
++   "CANCELLED -> RESOLVED: 404 , now CANCELLED",
++   "CANCELLED -> CLOSED: 404 , now CANCELLED",
++   "CANCELLED -> REOPENED: 404 , now CANCELLED",
++   "CANCELLED -> CANCELLED: 404 , now CANCELLED",
++ ]
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:342:19
+    340|       }
+    341|     }
+    342|     expect(wrong).toEqual([]);
+       |                   ^
+    343|   });
+    344| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-66 each of the eight statuses targeting itself -> 400 SAME_STATUS, not 409 and not a silent 200 (AC-78, BR-56, C-77)
+AssertionError: NEW: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:351:34
+    349|       const before = await row(t.id);
+    350|       const res = await setStatus(staffX.agent, t.id, status);
+    351|       expect(res.status, status).toBe(400);
+       |                                  ^
+    352|       expect(res.body.error.code).toBe("SAME_STATUS");
+    353|       expect((await row(t.id)).updatedAt).toEqual(before.updatedAt);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-67 from CLOSED and from CANCELLED each of the seven other targets -> 409, status unchanged (AC-81, BR-58, C-98)
+AssertionError: CLOSED -> NEW: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:363:48
+    361|         await setTicket(t.id, { currentStatus: from });
+    362|         const res = await setStatus(staffX.agent, t.id, to);
+    363|         expect(res.status, `${from} -> ${to}`).toBe(409);
+       |                                                ^
+    364|         expect(res.body.error.code).toBe("INVALID_STATUS_TRANSITION");
+    365|         expect((await row(t.id)).currentStatus).toBe(from);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-68 RESOLVED -> REOPENED succeeds; REOPENED requested from every other status -> 409 (AC-112, BR-98, C-98)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:373:23
+    371|     const t = await ticket({ ownerId: staffX.id, currentStatus: "RESOL…
+    372|     const ok = await setStatus(staffX.agent, t.id, "REOPENED");
+    373|     expect(ok.status).toBe(200);
+       |                       ^
+    374|     expect(ok.body.currentStatus).toBe("REOPENED");
+    375|     for (const from of STATUSES.filter((s) => s !== "RESOLVED" && s !=…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-69 an unassigned CLOSED Ticket asked for IN_PROGRESS -> INVALID_STATUS_TRANSITION, not OWNER_REQUIRED (api-spec.md 8.6)
+AssertionError: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:386:24
+    384|     const t = await ticket({ currentStatus: "CLOSED" });
+    385|     const res = await setStatus(staffX.agent, t.id, "IN_PROGRESS");
+    386|     expect(res.status).toBe(409);
+       |                        ^
+    387|     expect(res.body.error.code).toBe("INVALID_STATUS_TRANSITION");
+    388|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-70 moving to Resolved, Closed and Cancelled each clears requesterResolvedAt, and no Public Comment is created (AC-59, BR-61, C-76)
+AssertionError: IN_PROGRESS -> RESOLVED: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:394:46
+    392|       const t = await ticket({ ownerId: staffX.id, currentStatus: from…
+    393|       const res = await setStatus(staffX.agent, t.id, to);
+    394|       expect(res.status, `${from} -> ${to}`).toBe(200);
+       |                                              ^
+    395|       expect(res.body.requesterResolvedAt).toBeNull();
+    396|       expect((await row(t.id)).requesterResolvedAt).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-71 a move to IN_PROGRESS or WAITING_FOR_REQUESTER leaves requesterResolvedAt set (BR-61)
+AssertionError: OPEN -> IN_PROGRESS: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:406:46
+    404|       const t = await ticket({ ownerId: staffX.id, currentStatus: from…
+    405|       const res = await setStatus(staffX.agent, t.id, to);
+    406|       expect(res.status, `${from} -> ${to}`).toBe(200);
+       |                                              ^
+    407|       expect(res.body.requesterResolvedAt).toBe(flagged.toISOString());
+    408|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > an out-of-set or absent currentStatus -> 400 VALIDATION_FAILED (api-spec.md 8.6 step 1)
+AssertionError: undefined: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:415:39
+    413|     for (const bad of [undefined, "DONE", "open", 3]) {
+    414|       const res = await setStatus(staffX.agent, t.id, bad);
+    415|       expect(res.status, String(bad)).toBe(400);
+       |                                       ^
+    416|       expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    417|       expect(res.body.error.fields.currentStatus).toBe("That is not a …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > the queue is shared work > API-72 a staff user who does not own the Ticket sets IT Priority, comments, writes a note and makes a permitted status change (AC-110, BR-96, C-93)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:428:68
+    426|   it("API-72 a staff user who does not own the Ticket sets IT Priority…
+    427|     const t = await ticket({ ownerId: staffX.id, currentStatus: "IN_PR…
+    428|     expect((await setPriority(staffY.agent, t.id, "HIGH")).status).toB…
+       |                                                                    ^
+    429|     expect((await staffY.agent.post(`/api/tickets/${t.id}/public-comme…
+    430|     expect((await staffY.agent.post(`/api/tickets/${t.id}/internal-not…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-73 the owning Requester in Open, In Progress, Waiting for Requester and Reopened succeeds, Current Status unchanged (AC-55, BR-59, BR-60)
+AssertionError: OPEN: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:445:34
+    443|       const before = Date.now();
+    444|       const res = await reqA.agent.post(`/api/tickets/${t.id}/requeste…
+    445|       expect(res.status, status).toBe(200);
+       |                                  ^
+    446|       expect(res.body.currentStatus).toBe(status);
+    447|       const stored = await row(t.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-74 New, Resolved, Closed and Cancelled each -> 409 RESOLUTION_NOT_PERMITTED_IN_STATUS (AC-56, BR-60)
+AssertionError: NEW: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:463:34
+    461|       const t = await ticket({ ownerId: status === "NEW" ? undefined :…
+    462|       const res = await reqA.agent.post(`/api/tickets/${t.id}/requeste…
+    463|       expect(res.status, status).toBe(409);
+       |                                  ^
+    464|       expect(res.body.error.code).toBe("RESOLUTION_NOT_PERMITTED_IN_ST…
+    465|       expect((await row(t.id)).requesterResolvedAt).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-75 a Requester who does not own the Ticket -> 404, identical to a missing Ticket (AC-57, BR-42)
+TypeError: Cannot read properties of undefined (reading 'code')
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:474:27
+    472|     const missing = await reqB.agent.post("/api/tickets/999999/request…
+    473|     expect(res.status).toBe(404);
+    474|     expect(res.body.error.code).toBe("TICKET_NOT_FOUND");
+       |                           ^
+    475|     expect(res.text).toBe(missing.text);
+    476|     expect((await row(t.id)).requesterResolvedAt).toBeNull();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/assignable-users > API-116 returns active IT Staff and Administrator users only, each exactly { id, name, role }, never an email (BR-104, C-105)
+AssertionError: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:489:24
+    487|   it("API-116 returns active IT Staff and Administrator users only, ea…
+    488|     const res = await staffX.agent.get("/api/staff/assignable-users");
+    489|     expect(res.status).toBe(200);
+       |                        ^
+    490|     for (const u of res.body) {
+    491|       expect(Object.keys(u).sort()).toEqual(["id", "name", "role"]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-119 claim, an owner change and an IT Priority change each -> 409 TICKET_CLOSED with nothing changed; a status change still answers INVALID_STATUS_TRANSITION (AC-118, BR-108, C-109)
+AssertionError: CLOSED claim: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:517:49
+    515|       const unowned = await ticket({ currentStatus: status });
+    516|       const claimed = await claim(staffX.agent, unowned.id);
+    517|       expect(claimed.status, `${status} claim`).toBe(409);
+       |                                                 ^
+    518|       expect(claimed.body.error.code).toBe("TICKET_CLOSED");
+    519| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/57]⎯
+
+ FAIL  tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-120 an upload and a soft removal each -> 409 TICKET_CLOSED, no row created, no file written, no row modified; metadata and download still 200 (AC-118, BR-108, C-109)
+AssertionError: CLOSED upload: expected 201 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 201
+
+ ❯ tests/lab-03/staff-ticket-detail.api.test.ts:548:49
+    546|       const rowsBefore = await prisma.attachment.findMany({ where: { t…
+    547|       const upload = await reqA.agent.post(`/api/tickets/${t.id}/attac…
+    548|       expect(upload.status, `${status} upload`).toBe(409);
+       |                                                 ^
+    549|       expect(upload.body.error.code).toBe("TICKET_CLOSED");
+    550|       const removal = await reqA.agent.delete(`/api/attachments/${up.b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/57]⎯
+
+ Test Files  4 failed (4)
+      Tests  57 failed | 19 passed (76)
+   Start at  19:54:42
+   Duration  10.32s (transform 198ms, setup 0ms, collect 1.16s, tests 5.92s, environment 1ms, prepare 290ms)
+
