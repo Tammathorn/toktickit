@@ -8,6 +8,8 @@ import { PublicCommentsCard } from "../components/Communications.js";
 import ConfirmDialog from "../components/ConfirmDialog.js";
 import AttachmentSection from "../components/AttachmentSection.js";
 import Forbidden from "../components/Forbidden.js";
+import NotFound from "../components/NotFound.js";
+import SuccessPanel from "../components/SuccessPanel.js";
 
 // Requester Ticket Detail - ui-spec.md section 13, extended by section 14 for
 // Lab 3. Card 1 is the read-only Ticket information (BR-61, AC-53), now with
@@ -39,6 +41,11 @@ export default function TicketDetail({ id }: { id: number }) {
   const [load, setLoad] = useState<LoadState>({ kind: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
   const [ticket, setTicket] = useState<Ticket | null>(null);
+  // C-119: the ui-spec 20.1 success panel after a write on this screen.
+  const [success, setSuccess] = useState<string | null>(null);
+  // ui-spec 20.1 Conflict: a refused resolution report stays inline in the
+  // information card even after the refreshed view removes the action.
+  const [conflict, setConflict] = useState<string | null>(null);
 
   useEffect(() => {
     let cancelled = false;
@@ -83,12 +90,14 @@ export default function TicketDetail({ id }: { id: number }) {
   }
 
   if (load.kind === "forbidden") return <Forbidden />;
+  // ui-spec 20.1: a 404 is the Not found state, not the failure panel.
+  if (load.kind === "refused") return <NotFound what={`There is no ticket with the ID ${id} that you can see.`} backTo="/tickets" backLabel="Back to My Tickets" />;
 
-  if (load.kind === "refused" || load.kind === "error" || !ticket) {
+  if (load.kind === "error" || !ticket) {
     return (
       <section aria-label="Ticket detail">
         <div className="tk-panel tk-panel-danger" role="alert" aria-live="assertive">
-          <p>{load.kind === "refused" ? load.message : messageForCode("INTERNAL_ERROR")}</p>
+          <p>{messageForCode("INTERNAL_ERROR")}</p>
           <div className="d-flex flex-wrap gap-2">
             {load.kind === "error" && (
               <button type="button" className="btn btn-secondary" onClick={() => setReloadToken((n) => n + 1)}>Retry</button>
@@ -104,6 +113,7 @@ export default function TicketDetail({ id }: { id: number }) {
   const isTerminal = TERMINAL_STATUSES.includes(t.currentStatus);
   return (
     <section aria-labelledby="ticket-detail-title">
+      {success && <SuccessPanel message={success} />}
       <div className="card tk-card mb-3" role="region" aria-label="Ticket information">
         <div className="d-flex flex-wrap align-items-center gap-2 mb-3">
           <h1 id="ticket-detail-title" className="tk-title mb-0">{t.ticketNumber}</h1>
@@ -139,14 +149,30 @@ export default function TicketDetail({ id }: { id: number }) {
           <div className="col-12"><dt>Description</dt><dd className="tk-readonly-value tk-prewrap">{t.description}</dd></div>
         </dl>
 
-        <ResolutionAction ticket={t} onUpdated={setTicket} />
+        <ResolutionAction
+          ticket={t}
+          onUpdated={(next) => {
+            setTicket(next);
+            setConflict(null);
+            setSuccess("Reported to IT Staff.");
+          }}
+          onConflict={(message) => {
+            setConflict(message);
+            setSuccess(null);
+            fetchTicket(t.id).then(setTicket, () => {});
+          }}
+        />
+        {conflict && <p className="tk-conflict" role="alert" aria-live="assertive">{conflict}</p>}
       </div>
 
       <PublicCommentsCard
         ticketId={t.id}
         entries={t.publicComments}
         locked={isTerminal}
-        onPosted={(entry: Entry) => setTicket((cur) => (cur ? { ...cur, publicComments: [entry, ...cur.publicComments] } : cur))}
+        onPosted={(entry: Entry) => {
+          setTicket((cur) => (cur ? { ...cur, publicComments: [entry, ...cur.publicComments] } : cur));
+          setSuccess("Comment posted.");
+        }}
       />
       {/* ui-spec 14.4, C-109: the terminal line, once, below the comment list. */}
       {isTerminal && <p className="tk-muted mb-3">{terminalMessage(t.currentStatus)}</p>}
@@ -162,7 +188,15 @@ export default function TicketDetail({ id }: { id: number }) {
 // only in the RESOLUTION_FLAG_STATUSES, with a confirmation modal; after the
 // action the marker renders and the action is replaced by a muted line
 // (FR-30, BR-59, BR-61).
-function ResolutionAction({ ticket: t, onUpdated }: { ticket: Ticket; onUpdated: (t: Ticket) => void }) {
+function ResolutionAction({
+  ticket: t,
+  onUpdated,
+  onConflict,
+}: {
+  ticket: Ticket;
+  onUpdated: (t: Ticket) => void;
+  onConflict: (message: string) => void;
+}) {
   const [confirming, setConfirming] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -189,8 +223,11 @@ function ResolutionAction({ ticket: t, onUpdated }: { ticket: Ticket; onUpdated:
               onUpdated(await postRequesterResolved(t.id));
               setConfirming(false);
             } catch (err) {
-              setError(err instanceof ApiError ? err.message : messageForCode("INTERNAL_ERROR"));
               setConfirming(false);
+              // 409: the Ticket changed under the screen - report it inline
+              // and refresh the view (ui-spec 20.1 Conflict).
+              if (err instanceof ApiError && err.status === 409) onConflict(err.message);
+              else setError(err instanceof ApiError ? err.message : messageForCode("INTERNAL_ERROR"));
             }
           }}
         />

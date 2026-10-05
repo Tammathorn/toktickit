@@ -462,7 +462,7 @@ function QueueTable({
 }) {
   return (
     <div className="card tk-card tk-table-card">
-      <table className="table tk-table mb-0">
+      <table className="table tk-table tk-queue-table mb-0">
         <thead>
           <tr>
             <th scope="col">Ticket Number</th>
