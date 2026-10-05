@@ -39,7 +39,7 @@ One further ID appears in this plan and is **not** one of the eight automated le
 |---|---|---|
 | `VIS-01` | The **manual** responsive and visual checklist, completed by a person against the RESP-09 captures. It is the predicate AC-106 and AC-107 partly rest on, and it is deliberately not an automated test - `LS 8.8` asks for a comparison against a written specification, which is a judgement | Section 5, against `ui-spec.md` section 24 |
 
-`VIS-01` is excluded from the 278 count in section 2 and from the per-level table, because counting
+`VIS-01` is excluded from the 315 count in section 2 and from the per-level table, because counting
 a human checklist as a planned automated test would overstate the automation. It is listed here so
 that its appearances in section 3's traceability table resolve to something declared.
 
@@ -114,23 +114,27 @@ account for is a bug, not a cleanup (`CLAUDE.md`).
 
 ## 2. Planned Tests
 
-**278 planned tests** across the eight `LS 10` levels. Every test names a file path from section
+**315 planned tests** across the eight `LS 10` levels. Every test names a file path from section
 1.1, and every path exists in the `LS 12` tree.
 
 | Level | Prefix | Planned |
 |---|---|---|
 | Unit | `UNIT` | 12 |
-| API / integration | `API` | 116 |
+| API / integration | `API` | 117 |
 | Security / authorization | `SEC` | 26 |
 | Migration / regression | `MIG` | 24 |
-| UI component | `UI` | 52 |
-| UI style | `STYLE` | 12 |
-| Responsive | `RESP` | 10 |
-| End to end | `E2E` | 26 |
-| **Total** | | **278** |
+| UI component | `UI` | 61 |
+| UI style | `STYLE` | 13 |
+| Responsive | `RESP` | 13 |
+| End to end | `E2E` | 49 |
+| **Total** | | **315** |
+
+The counts are the rows in the tables below. Before Issue #12 they were 280, not the 278 this
+section used to state (API had 117 rows and UI 53, against 116 and 52); Issue #12 adds 35 - UI-54
+to UI-61, STYLE-13, RESP-11 to RESP-13 and E2E-27 to E2E-49.
 
 Five IDs were retired to the merges approved in section 9.1 - API-63, API-65, API-78, API-91 and
-SEC-12 - so `API` runs 01..117 and `SEC` 01..27 with those five absent. **Surviving IDs were not
+SEC-12 - so `API` runs 01..124 and `SEC` 01..27 with those five absent. API-121, API-122 and API-123 exist in `server/tests/lab-03/staff-ticket-detail.api.test.ts` and pass, but have no row in this plan - a gap from Issue #42, recorded here rather than closed. **Surviving IDs were not
 renumbered**, because every one is cited in the section 3 traceability matrix and renumbering to
 close five gaps would have rewritten a hundred references to save nothing. Two of the 24 `MIG`
 rows - MIG-21 and MIG-22 - are discharged by committed artifacts rather than by an assertion in a
@@ -434,7 +438,7 @@ module boundary.
 | UI-27 | UI | FR-44, AC-71 | The lost claim race | On 409 the conflict message renders inline in the owner group, the view refreshes, and `Claim` is gone | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-28 | UI | FR-45, BR-104, C-105 | Assign offers only eligible users | The owner select is populated from `GET /api/staff/assignable-users` and lists no Requester and no inactive user | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-29 | UI | FR-48, section 5.1 | Only permitted transitions are offered | From each current status the select offers exactly the matrix's permitted targets and no others | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
-| UI-30 | UI | BR-58, C-98, C-117 | Terminal statuses offer no control | On a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders **once**, below the lists, never in the Operations card (rewritten for C-117; it asserted two) | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client.txt` |
+| UI-30 | UI | BR-58, C-98, C-117 | Terminal statuses offer no control | On a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders **once**, below the lists, never in the Operations card (rewritten for C-117; it asserted two) | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`StaffTicketDetail.test.tsx`); red in `issue-12/red-client.txt` |
 | UI-31 | UI | AC-80, BR-57 | Confirmation before Resolved, Closed, Cancelled | Each of the three opens a modal and **sends no request until it is confirmed**; Cancel sends nothing | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-32 | UI | FR-50, AC-59 | The resolution callout | The callout renders when the flag is set and is not presented as a status | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-33 | UI | FR-55, AC-107 | Comments and notes are distinct | Both sections render with different headings, the notes panel carries its standing `Not visible to the Requester.` label, and the two composers are not adjacent without the separation | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
@@ -444,14 +448,14 @@ module boundary.
 | UI-37 | UI | C-103, FR-49 | Staff attachments are read-only | Preview and Download render; no upload control and no Remove control renders | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-52 | UI | AC-118, BR-108, C-109 | A terminal Ticket renders read-only | On a `CLOSED` and on a `CANCELLED` Ticket: no status, owner or IT Priority control renders; neither composer renders; both lists still render their entries; the line `This ticket is closed - create a new ticket if the problem returns.` renders **once**; and the Internal Notes panel keeps its border and its standing label | `client/tests/lab-03/StaffTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-53 | UI | `ui-spec.md` 14.1, C-114 | The Requester screen's inactive-owner marker | A Ticket owned by a deactivated user renders `Name (inactive)`, without saying why, mirroring UI-18 for the Staff screen | `client/tests/lab-02/RequesterTicketDetail.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
-| UI-54 | UI | FR-31, C-116 | My Tickets at `md`: the IT Priority badge in the Current Status cell | The Current Status cell holds an `md`-only (`d-lg-none`) copy of the IT Priority badge | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red first in `issue-12/red-client.txt` |
-| UI-55 | UI | `ui-spec.md` 20.1, C-65 | Requester Ticket Detail on a 404 | The Not found component: heading `That item does not exist.`, a body naming the ID, a secondary `Back to My Tickets`; not the failure panel, not Forbidden | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-not-found.txt` |
-| UI-56 | UI | `ui-spec.md` 20.1 | IT Staff Ticket Detail on a 404 | The same Not found component, linking back to the Ticket Queue | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-not-found.txt` |
-| UI-57 | UI | `ui-spec.md` 20.1, C-119 | IT Staff Ticket Detail success | Claim, a comment and a note each show the success panel - `--tk-pale`, check icon, sentence, `aria-live="polite"` | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-success.txt` |
-| UI-58 | UI | `ui-spec.md` 20.1, C-119 | Requester Ticket Detail success | A posted comment shows `Comment posted.` in the success panel | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-success.txt` |
-| UI-59 | UI | `ui-spec.md` 22 | The User Management panels are modals | Tab past the last control wraps to the first, Shift+Tab the other way, Escape closes, focus returns to `Create User` | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-modal.txt` |
-| UI-60 | UI | `ui-spec.md` 20.1, 14.3 | A refused resolution report | The 409 message stays inline (`tk-conflict`) in the information card and the view is refreshed to the status the server holds | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-conflict.txt` |
-| UI-61 | UI | `ui-spec.md` 17.3, 20.1, C-121 | User Management Empty and No results | Empty carries the document icon and its body; No results the magnifier; the two differ | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client-users-empty.txt` |
+| UI-54 | UI | FR-31, C-116 | My Tickets at `md`: the IT Priority badge in the Current Status cell | The Current Status cell holds an `md`-only (`d-lg-none`) copy of the IT Priority badge | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red first in `issue-12/red-client.txt` |
+| UI-55 | UI | `ui-spec.md` 20.1, C-65 | Requester Ticket Detail on a 404 | The Not found component: heading `That item does not exist.`, a body naming the ID, a secondary `Back to My Tickets`; not the failure panel, not Forbidden | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-not-found.txt` |
+| UI-56 | UI | `ui-spec.md` 20.1 | IT Staff Ticket Detail on a 404 | The same Not found component, linking back to the Ticket Queue | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-not-found.txt` |
+| UI-57 | UI | `ui-spec.md` 20.1, C-119 | IT Staff Ticket Detail success | Claim, a comment and a note each show the success panel - `--tk-pale`, check icon, sentence, `aria-live="polite"` | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-success.txt` |
+| UI-58 | UI | `ui-spec.md` 20.1, C-119 | Requester Ticket Detail success | A posted comment shows `Comment posted.` in the success panel | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-success.txt` |
+| UI-59 | UI | `ui-spec.md` 22 | The User Management panels are modals | Tab past the last control wraps to the first, Shift+Tab the other way, Escape closes, focus returns to `Create User` | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-modal.txt` |
+| UI-60 | UI | `ui-spec.md` 20.1, 14.3 | A refused resolution report | The 409 message stays inline (`tk-conflict`) in the information card and the view is refreshed to the status the server holds | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-conflict.txt` |
+| UI-61 | UI | `ui-spec.md` 17.3, 20.1, C-121 | User Management Empty and No results | Empty carries the document icon and its body; No results the magnifier; the two differ | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client-users-empty.txt` |
 | UI-38 | UI | AC-82, FR-56 | The user list | Name, Email, Role, Status and Edit render for every user | `client/tests/lab-03/UserManagement.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-39 | UI | AC-98, FR-66, BR-84 | The excluded controls are absent | No delete control, no checkbox column, no bulk action, no import, no export, no pagination and no sortable header renders | `client/tests/lab-03/UserManagement.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | UI-40 | UI | AC-83, AC-84 | Search and role filter | Each issues a request carrying its parameter and renders the returned rows | `client/tests/lab-03/UserManagement.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
@@ -486,7 +490,7 @@ client files (C-89).
 | STYLE-10 | UI style | `CLAUDE.md` | Success is not colour alone | Every success panel carries an icon and a sentence, not only a green ground | `client/tests/lab-03/ChangePassword.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | STYLE-11 | UI style | AC-106 group | Accessible names | Every interactive control on all five new screens has a non-empty accessible name | `client/tests/lab-03/UserManagement.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
 | STYLE-12 | UI style | `L2 C-41` | The product name | Every heading and title spells `TokTickIT`; `TikTockIT` appears nowhere | `client/tests/lab-03/Login.test.tsx` | Pass - `issue-9/client-green.txt`, commit `43b737c` |
-| STYLE-13 | UI style | `ui-spec.md` 7, 19, C-118 | Disabled levels keep their shape | A disabled primary or destructive button fills `--tk-text-muted` with `--tk-surface` text; a disabled secondary is `--tk-surface` with `--tk-text-muted` text and a `--tk-border` edge | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `issue-12/green-client.txt`; red in `issue-12/red-client.txt` |
+| STYLE-13 | UI style | `ui-spec.md` 7, 19, C-118 | Disabled levels keep their shape | A disabled primary or destructive button fills `--tk-text-muted` with `--tk-surface` text; a disabled secondary is `--tk-surface` with `--tk-text-muted` text and a `--tk-border` edge | `client/tests/lab-03/UiDefects.test.tsx` | Pass - `test-output/main-client.txt`, `main` @ `afac6dc` (`UiDefects.test.tsx`, 9 tests); red in `issue-12/red-client.txt` |
 
 ### 2.11 Responsive
 
@@ -505,9 +509,9 @@ three times, once per project.
 | RESP-08 | Responsive | AC-106 | Keyboard traversal | Tabbing each new screen reaches every interactive control, each with a visible focus ring | `e2e/lab-03/authentication.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105` |
 | RESP-09 | Responsive | AC-106, DoD | Screenshot capture | Every screenshot named in `ui-spec` section 23 is written, at all three viewports, including `queue-<vp>-empty.png` - captured with a mocked zero-row response (the same technique `queue-<vp>-loading`/`queue-<vp>-failure` already use), since neither the shared dev nor the evidence database ever holds zero Tickets (#44) | All three `e2e/lab-03/*.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105`; the `queue-<vp>-empty` capture at all three viewports was added afterward in commit `43b737c` (screenshots captured, not re-run as a fresh full-suite terminal log this Issue) |
 | RESP-10 | Responsive | AC-107 | The notes distinction survives greyscale | The comments-and-notes capture is converted to greyscale and the two panels' mean luminance still differs, with the border edge detectable | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105` |
-| RESP-11 | Responsive | `ui-spec.md` 15.2, 21 | The Queue table at 1280 px | The table is no wider than its card, and every header - Current Status, Ticket Owner and Last Updated included - ends inside it | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-layout.txt`, `issue-12/green-e2e-full.txt`; red in `issue-12/red-e2e-layout.txt` (a 1588 px table in a 1114 px card) |
-| RESP-12 | Responsive | `ui-spec.md` 17.1, 9 | User Management and the header at 834 px | The table and every Edit button fit the card; the name, the Administrator badge and Log Out stay on one line; nothing overflows the header | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt`; red in `issue-12/red-e2e-layout.txt` (748 px in 694 px) and `issue-12/red-e2e-header.txt` (Log Out on two lines) |
-| RESP-13 | Responsive | FR-31, C-116 | My Tickets at 834 px | Every row shows exactly one visible IT Priority badge | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt`; red in `issue-12/red-e2e-layout.txt` |
+| RESP-11 | Responsive | `ui-spec.md` 15.2, 21 | The Queue table at 1280 px | The table is no wider than its card, and every header - Current Status, Ticket Owner and Last Updated included - ends inside it | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc`; red in `issue-12/red-e2e-layout.txt` (a 1588 px table in a 1114 px card) |
+| RESP-12 | Responsive | `ui-spec.md` 17.1, 9 | User Management and the header at 834 px | The table and every Edit button fit the card; the name, the Administrator badge and Log Out stay on one line; nothing overflows the header | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc`; red in `issue-12/red-e2e-layout.txt` (748 px in 694 px) and `issue-12/red-e2e-header.txt` (Log Out on two lines) |
+| RESP-13 | Responsive | FR-31, C-116 | My Tickets at 834 px | Every row shows exactly one visible IT Priority badge | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc`; red in `issue-12/red-e2e-layout.txt` |
 
 RESP-10 is the assertion behind the one criterion Lab 2 had to discharge by hand. AC-107 asks
 whether two things are *visually distinct*, and a greyscale luminance comparison is a narrow but
@@ -544,29 +548,29 @@ so rather than claiming full automation.
 | E2E-24 | E2E | AC-96, `LS 14` Part 8 | A non-Administrator is forbidden | An IT Staff user opening User Management sees the forbidden state and fetches no user data | `e2e/lab-03/user-administration.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105` |
 | E2E-25 | E2E | AC-89, AC-91 | Edit and reset | A user's four fields are edited and saved; a new initial password is set and that user's session stops working | `e2e/lab-03/user-administration.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105` |
 | E2E-26 | E2E | AC-118, BR-108, C-109 | A closed Ticket in the browser | The owning Requester opens a Closed Ticket: existing comments are readable, no composer and no upload control render, and the closed-ticket line shows. A direct `POST` to the comments endpoint returns 409 `TICKET_CLOSED` | `e2e/lab-03/staff-ticket-flow.spec.ts` | Pass - `issue-8/e2e-suite-final-green.txt`, commit `dc1d105` |
-| E2E-27 | E2E | `ui-spec.md` 10, 20 | Login states | Validation, saving and failure, each asserted then captured, at all three widths | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-28 | E2E | `ui-spec.md` 18, 20, C-87 | Check System states | Loading (`Loading…`, disabled) and failure (`System Status: Offline`) | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-29 | E2E | `ui-spec.md` 11, 20 | Change Password states | Validation, saving, failure and success on the first-login account | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-30 | E2E | `ui-spec.md` 12, 20, C-116 | My Tickets states | Loading, empty (Requester C), populated with the IT Priority badge, no results, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-31 | E2E | `ui-spec.md` 13, 20 | Create Ticket states | Loading (the two selects read `Loading…`), validation, saving, failure, success | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-32 | E2E | `ui-spec.md` 14, 20, C-119 | Requester Ticket Detail states | Loading, empty, validation, saving, success, conflict (view refreshed), terminal (no composer, upload or Remove; the line once), not found, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-33 | E2E | FR-24, `ui-spec.md` 20.1 | Forbidden for IT Staff | My Tickets, Create Ticket, Requester Ticket Detail and User Management each render Forbidden | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-34 | E2E | `ui-spec.md` 15.5 | Ticket Queue states | Loading, populated, invalid query, no results, empty (mocked), failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-35 | E2E | `ui-spec.md` 16, 20, C-118, C-119 | IT Staff Ticket Detail states | Loading, empty (both disabled buttons, measured different), validation, conflict, saving, success, not found, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-36 | E2E | C-109, C-117 | Closed and Cancelled on IT Staff Ticket Detail | No composer; the terminal line exactly once | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-37 | E2E | `ui-spec.md` 8.5, AC-75 | The inactive-owner marker | `(inactive)` inline after the owner's name at all three widths | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-38 | E2E | FR-24, C-65 | Forbidden for a Requester | The Queue and IT Staff Ticket Detail render Forbidden | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-39 | E2E | `ui-spec.md` 17.3 | User Management states | Loading, populated, validation, conflict (duplicate email at its field), saving, success, no results, empty (mocked), failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-40 | E2E | `ui-spec.md` 8.2 | Every Current Status value | Each of the eight renders in the Queue as its badge, as text | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-41 | E2E | FR-40, AC-60 | The resolution marker in the Queue | `Requester says resolved` renders as a marker; the status column keeps the status | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-42 | E2E | `ui-spec.md` 22 | Login accessibility | An ARIA snapshot with no unnamed control; a full Tab cycle, every stop ringed | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-43 | E2E | `ui-spec.md` 22 | Change Password accessibility | As E2E-42 | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-44 | E2E | `ui-spec.md` 22 | Requester screens accessibility | As E2E-42, for My Tickets, Create Ticket and Requester Ticket Detail | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-45 | E2E | `ui-spec.md` 22 | Staff screens accessibility | As E2E-42, for the Queue and IT Staff Ticket Detail | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-46 | E2E | `ui-spec.md` 16.2, 22 | The status confirmation dialog | Tab and Shift+Tab wrap, focus never leaves, Escape closes, focus returns to Save Changes | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-47 | E2E | `ui-spec.md` 17, 22 | User Management accessibility and its panel | As E2E-42; the Create User panel traps and restores focus | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-48 | E2E | `ui-spec.md` 9, STYLE-08 | `aria-current` on the active nav item | Exactly one item carries `aria-current="page"`, weight 600 and the pale underline, for every role and page, at every width | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
-| E2E-49 | E2E | `ui-spec.md` 14.3, 22 | The Requester's two dialogs | The resolution confirmation and the attachment removal dialog trap and restore focus | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `issue-12/green-e2e-full.txt` |
+| E2E-27 | E2E | `ui-spec.md` 10, 20 | Login states | Validation, saving and failure, each asserted then captured, at all three widths | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-28 | E2E | `ui-spec.md` 18, 20, C-87 | Check System states | Loading (`Loading…`, disabled) and failure (`System Status: Offline`) | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-29 | E2E | `ui-spec.md` 11, 20 | Change Password states | Validation, saving, failure and success on the first-login account | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-30 | E2E | `ui-spec.md` 12, 20, C-116 | My Tickets states | Loading, empty (Requester C), populated with the IT Priority badge, no results, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-31 | E2E | `ui-spec.md` 13, 20 | Create Ticket states | Loading (the two selects read `Loading…`), validation, saving, failure, success | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-32 | E2E | `ui-spec.md` 14, 20, C-119 | Requester Ticket Detail states | Loading, empty, validation, saving, success, conflict (view refreshed), terminal (no composer, upload or Remove; the line once), not found, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-33 | E2E | FR-24, `ui-spec.md` 20.1 | Forbidden for IT Staff | My Tickets, Create Ticket, Requester Ticket Detail and User Management each render Forbidden | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-34 | E2E | `ui-spec.md` 15.5 | Ticket Queue states | Loading, populated, invalid query, no results, empty (mocked), failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-35 | E2E | `ui-spec.md` 16, 20, C-118, C-119 | IT Staff Ticket Detail states | Loading, empty (both disabled buttons, measured different), validation, conflict, saving, success, not found, failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-36 | E2E | C-109, C-117 | Closed and Cancelled on IT Staff Ticket Detail | No composer; the terminal line exactly once | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-37 | E2E | `ui-spec.md` 8.5, AC-75 | The inactive-owner marker | `(inactive)` inline after the owner's name at all three widths | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-38 | E2E | FR-24, C-65 | Forbidden for a Requester | The Queue and IT Staff Ticket Detail render Forbidden | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-39 | E2E | `ui-spec.md` 17.3 | User Management states | Loading, populated, validation, conflict (duplicate email at its field), saving, success, no results, empty (mocked), failure | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-40 | E2E | `ui-spec.md` 8.2 | Every Current Status value | Each of the eight renders in the Queue as its badge, as text | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-41 | E2E | FR-40, AC-60 | The resolution marker in the Queue | `Requester says resolved` renders as a marker; the status column keeps the status | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-42 | E2E | `ui-spec.md` 22 | Login accessibility | An ARIA snapshot with no unnamed control; a full Tab cycle, every stop ringed | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-43 | E2E | `ui-spec.md` 22 | Change Password accessibility | As E2E-42 | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-44 | E2E | `ui-spec.md` 22 | Requester screens accessibility | As E2E-42, for My Tickets, Create Ticket and Requester Ticket Detail | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-45 | E2E | `ui-spec.md` 22 | Staff screens accessibility | As E2E-42, for the Queue and IT Staff Ticket Detail | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-46 | E2E | `ui-spec.md` 16.2, 22 | The status confirmation dialog | Tab and Shift+Tab wrap, focus never leaves, Escape closes, focus returns to Save Changes | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-47 | E2E | `ui-spec.md` 17, 22 | User Management accessibility and its panel | As E2E-42; the Create User panel traps and restores focus | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-48 | E2E | `ui-spec.md` 9, STYLE-08 | `aria-current` on the active nav item | Exactly one item carries `aria-current="page"`, weight 600 and the pale underline, for every role and page, at every width | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
+| E2E-49 | E2E | `ui-spec.md` 14.3, 22 | The Requester's two dialogs | The resolution confirmation and the attachment removal dialog trap and restore focus | `e2e/lab-03/visual-evidence.spec.ts` | Pass - `test-output/main-e2e-full.txt`, `main` @ `afac6dc` |
 
 **Temporary fixture for E2E-03 (Issue #39), replaced in Issue #43.** The forced first-password
 change consumes the seeded first-login account, and the Administrator set-initial-password action
@@ -594,7 +598,7 @@ All **118** criteria, each with the planned tests that discharge it.
 
 | AC | Planned tests | AC | Planned tests |
 |---|---|---|---|
-| AC-01 | API-01, E2E-01 | AC-60 | API-45, UI-19 |
+| AC-01 | API-01, E2E-01 | AC-60 | API-45, UI-19, E2E-41 |
 | AC-02 | API-14, E2E-03 | AC-61 | API-29 |
 | AC-03 | SEC-19, SEC-20, SEC-21 | AC-62 | API-31, API-32 |
 | AC-04 | SEC-04, SEC-05, E2E-14 | AC-63 | API-33 |
@@ -602,31 +606,31 @@ All **118** criteria, each with the planned tests that discharge it.
 | AC-06 | API-06, SEC-23 | AC-65 | API-36 |
 | AC-07 | API-07 | AC-66 | API-38, API-39 |
 | AC-08 | API-08, UI-05, E2E-02 | AC-67 | API-40 |
-| AC-09 | API-09 | AC-68 | API-42, UI-22 |
-| AC-10 | API-10 | AC-69 | UI-20, E2E-08 |
+| AC-09 | API-09 | AC-68 | API-42, UI-22, E2E-34 |
+| AC-10 | API-10 | AC-69 | UI-20, E2E-08, E2E-34 |
 | AC-11 | API-11 | AC-70 | API-50, E2E-09 |
-| AC-12 | API-02 | AC-71 | API-51, UI-27 |
+| AC-12 | API-02 | AC-71 | API-51, UI-27, E2E-35 |
 | AC-13 | API-03 | AC-72 | API-54, E2E-10 |
 | AC-14 | API-04 | AC-73 | API-55 |
 | AC-15 | API-23 | AC-74 | API-56 |
-| AC-16 | API-21 | AC-75 | API-46, UI-18 |
+| AC-16 | API-21 | AC-75 | API-46, UI-18, E2E-37 |
 | AC-17 | API-22, E2E-04 | AC-76 | API-61, SEC-18, E2E-11 |
 | AC-18 | API-25 | AC-77 | API-64, UNIT-12, E2E-11 |
 | AC-19 | API-27 | AC-78 | API-66 |
 | AC-20 | API-28 | AC-79 | SEC-17 |
-| AC-21 | API-14 | AC-80 | UI-31, E2E-11 |
+| AC-21 | API-14 | AC-80 | UI-31, E2E-11, E2E-46 |
 | AC-22 | API-12, UI-09 | AC-81 | API-67, UI-30, E2E-12 |
 | AC-23 | API-17, UI-12 | AC-82 | API-90, UI-38, E2E-19 |
 | AC-24 | API-17, UI-12 | AC-83 | API-92, UI-40 |
 | AC-25 | API-18 | AC-84 | API-93, UI-40 |
 | AC-26 | API-19, UI-11 | AC-85 | API-96, E2E-20 |
 | AC-27 | API-16 | AC-86 | API-97, E2E-03, E2E-20 |
-| AC-28 | API-15, UI-13 | AC-87 | API-99, API-101, UI-42, E2E-21 |
+| AC-28 | API-15, UI-13 | AC-87 | API-99, API-101, UI-42, E2E-21, E2E-39 |
 | AC-29 | API-20 | AC-88 | API-100 |
-| AC-30 | UI-49 | AC-89 | API-104, E2E-25 |
-| AC-31 | UI-50, E2E-05 | AC-90 | API-106 |
-| AC-32 | UI-50, E2E-05 | AC-91 | API-107, UI-47, E2E-25 |
-| AC-33 | UI-50, E2E-05 | AC-92 | API-108, UI-43, E2E-22 |
+| AC-30 | UI-49, RESP-12 | AC-89 | API-104, E2E-25 |
+| AC-31 | UI-50, E2E-05, E2E-48 | AC-90 | API-106 |
+| AC-32 | UI-50, E2E-05, E2E-48 | AC-91 | API-107, UI-47, E2E-25 |
+| AC-33 | UI-50, E2E-05, E2E-48 | AC-92 | API-108, UI-43, E2E-22 |
 | AC-34 | UI-08, E2E-06 | AC-93 | API-109, UI-44, E2E-23 |
 | AC-35 | UI-51 | AC-94 | API-110, UI-44, E2E-23 |
 | AC-36 | SEC-03, UI-24, E2E-18 | AC-95 | API-111 |
@@ -639,9 +643,9 @@ All **118** criteria, each with the planned tests that discharge it.
 | AC-43 | **SEC-01** | AC-102 | **MIG-21 (artifact)** |
 | AC-44 | SEC-02 | AC-103 | SEC-22 |
 | AC-45 | MIG-07 | AC-104 | SEC-25 |
-| AC-46 | **MIG-22 (artifact)** | AC-105 | SEC-24 |
-| AC-47 | SEC-26 | AC-106 | RESP-01, RESP-06, RESP-08, **VIS-01 (manual)** |
-| AC-48 | API-76 | AC-107 | UI-33, STYLE-07, RESP-10, E2E-13 |
+| AC-46 | **MIG-22 (artifact)** | AC-105 | SEC-24, E2E-27, E2E-29, E2E-30, E2E-31, E2E-32, E2E-34, E2E-35, E2E-39 |
+| AC-47 | SEC-26 | AC-106 | RESP-01, RESP-06, RESP-08, **VIS-01 (manual)**, RESP-11, RESP-12, RESP-13, E2E-42, E2E-43, E2E-44, E2E-45, E2E-47 |
+| AC-48 | API-76 | AC-107 | UI-33, STYLE-07, RESP-10, E2E-13, STYLE-13, E2E-35 |
 | AC-49 | API-79 | AC-108 | MIG-23 |
 | AC-50 | API-79 | AC-109 | API-62, E2E-09 |
 | AC-51 | API-81, UI-34 | AC-110 | API-72 |
@@ -649,10 +653,10 @@ All **118** criteria, each with the planned tests that discharge it.
 | AC-53 | API-85, E2E-13 | AC-112 | API-68 |
 | AC-54 | E2E-14 | AC-113 | API-102 |
 | AC-55 | API-73, E2E-15 | AC-114 | API-103 |
-| AC-56 | API-74 | AC-115 | E2E-16 |
+| AC-56 | API-74, UI-60, E2E-32 | AC-115 | E2E-16 |
 | AC-57 | API-75 | AC-116 | API-24 |
 | AC-58 | SEC-16 | AC-117 | API-59 |
-| AC-59 | API-70, UI-32, E2E-15 | AC-118 | API-118, API-119, API-120, UI-52, E2E-26 |
+| AC-59 | API-70, UI-32, E2E-15 | AC-118 | API-118, API-119, API-120, UI-52, E2E-26, E2E-32, E2E-36 |
 
 **Coverage: 118 of 118.** Every criterion maps to at least one planned test.
 
@@ -670,6 +674,8 @@ criterion (`CLAUDE.md`, and the Lab 2 precedent for AC-54).
 | **AC-108** | It is a claim about two whole suites and their counts, not about one behaviour | **MIG-23**, recorded in section 7 as the final run's output, with section 4.3 accounting for every count change |
 
 **Five criteria therefore rest partly or wholly on evidence that is not a passing assertion**:
+**Issue #12's 35 tests** are mapped above where they discharge a criterion. Twelve trace to `ui-spec.md` rows and decisions rather than to an acceptance criterion, and are listed here so none is untraced: UI-54 (C-116, FR-31), UI-55 and UI-56 (section 20.1 Not found), UI-57 and UI-58 (C-119 success), UI-59 and E2E-49 (section 22 modal focus), UI-61 (C-121), E2E-28 (Check System, section 18), E2E-33 and E2E-38 (FR-24 Forbidden on the other screens), E2E-40 (section 8.2 status badges). Each is a row of `ui-spec.md` section 24's proof.
+
 AC-46 and AC-102 on committed rehearsal artifacts, AC-106 and AC-107 on the manual checklist
 alongside their automated parts, and AC-108 on the recorded suite output. That is five rows above
 and it is stated here so the traceability table cannot be read as claiming more automation than
@@ -753,7 +759,7 @@ between them, plus 3 individual server tests inside files that are otherwise ada
 `phase1-analysis.md` section 3 note that "the server count drops by nothing" was corrected in that
 file: it counted files rather than test IDs, and three server tests do retire.
 
-Lab 3 then adds its own 278 planned tests on top of these figures.
+Lab 3 then adds its own 315 planned tests on top of these figures.
 
 ---
 
@@ -958,7 +964,7 @@ A test that guesses passes against the guess and hides the fact that nobody deci
 
 ## 9. Duplication review
 
-278 planned tests is about 2.5x Lab 2's 111. Some of that growth is real - Lab 3 adds a security
+315 planned tests is about 2.8x Lab 2's 111 (278 when this review was written, before later additions). Some of that growth is real - Lab 3 adds a security
 boundary, a migration, three roles and four screens - but a plan this size earns a check for
 assertions that exist twice. This section is that check.
 
