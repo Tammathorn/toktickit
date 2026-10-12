@@ -339,7 +339,7 @@ git status                                 # AGENTS.md, tmp/, detail-*-owned.png
 
 # Safety copy of the final Lab 3 database. Keep it OUTSIDE the repo.
 docker exec toktickit-db pg_dump -U toktickit -d toktickit -Fc -f /tmp/lab3-final.dump
-docker cp toktickit-db:/tmp/lab3-final.dump C:\Downloads\lab3-final.dump
+docker cp toktickit-db:/tmp/lab3-final.dump C:\Users\Tamat\Downloads\lab3-final.dump
 
 # Databases Lab 4 uses besides dev and toktickit_test (which already exist)
 docker exec toktickit-db createdb -U toktickit toktickit_rehearsal
@@ -349,7 +349,7 @@ git checkout -b lab4-staging
 git push -u origin lab4-staging
 git checkout -b feature/lab4-1-contract
 mkdir docs\lab-04\spec
-copy C:\Downloads\SELab4.pdf docs\lab-04\spec\Lab_4_sheet.pdf   # adjust to where you saved it
+copy C:\Users\Tamat\Downloads\SELab4.pdf docs\lab-04\spec\Lab_4_sheet.pdf   # adjust to where you saved it
 ```
 
 Then:
@@ -521,7 +521,7 @@ Implement specification.md section 7 only.
 2. Write migration.db.test.ts from tests.md; show it red.
 3. Enum migration first, then the tables, columns, backfill and indexes. Create each with
    --create-only and show me the SQL before applying. No DROP anywhere.
-4. Rehearse on toktickit_rehearsal restored from C:\Downloads\lab3-final.dump: migrate
+4. Rehearse on toktickit_rehearsal restored from C:\Users\Tamat\Downloads\lab3-final.dump: migrate
    deploy, counts, backfill checks, then the recovery test (drop, restore, verify). Save it.
 5. Only then migrate dev. Prove zero drift with migrate diff --exit-code.
 6. Re-run the counts: every pre-existing count identical; lastActivityAt never null;

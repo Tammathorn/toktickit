@@ -33,3 +33,6 @@ report_lab*.pdf
 
 # Lab 4: course handout
 docs/lab-04/spec/*.pdf
+
+# local scratch output
+tmp/
