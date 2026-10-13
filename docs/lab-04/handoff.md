@@ -54,7 +54,7 @@ Read this before writing any Lab 4 code. Each row is something the agent will tr
 | `PATCH …/owner`, `PATCH …/it-priority` | No stale-update check at all | Same version check |
 | `Ticket.updatedAt` | Prisma `@updatedAt`: moves only when the Ticket row changes. A Public Comment or Attachment does **not** move it | "Recently updated" needs an activity timestamp (D-14) |
 | `Ticket` | No `resolvedAt` | "Recently resolved" cannot be computed (D-15) |
-| `GET /api/tickets` (My Tickets) | Single `currentStatus` filter; sort fields `createdAt, ticketNumber, summary, currentStatus`; **the screen keeps filters in state, not in the URL** | Drill-down from "Open tickets" needs a status group, "recently updated" needs an activity sort, and the screen must read filters from the URL |
+| `GET /api/tickets` (My Tickets) | Single `currentStatus` filter; sort fields `createdAt, ticketNumber, summary, currentStatus`. The screen already reads and writes its query through the URL (`MyTickets.tsx:63-91`) | Drill-down from "Open tickets" needs a `statusGroup` filter, and "recently updated" needs a `lastActivityAt` sort. Only those two are missing |
 | `GET /api/staff/tickets` (queue) | URL-driven filters ✓; no filter for the Requester-resolved flag | A `requesterResolved=true` filter for that dashboard card |
 | User Management screen | Role filter lives in component state | Read `?role=` from the URL if the Admin dashboard drills down to it |
 | L2 C-26 | Duplicate submission prevented in the UI only | Labsheet 8.5 adds "network retry" — a server-side guard (D-13) |
@@ -134,8 +134,9 @@ component, UI style, responsive, authorization, **workflow**, migration/regressi
 - Contract conflicts are reported, never silently resolved; each becomes a decision row.
 - Never `prisma migrate reset`. Create migrations with `--create-only`, read the SQL, apply with
   `npx prisma migrate deploy`. Prove zero drift after each one.
-- A security claim needs a test. The route-inventory test already walks the router; every new
-  route must appear in the authorization matrix or it fails.
+- A security claim needs a test. The route-inventory test already walks the router and fails
+  if a non-public route answers without a session; it does not compare routes with the
+  authorization matrix. Lab 4 adds the matrix test (#64).
 - Tests first, shown red, captured. Names that read as evidence.
 - Never fabricate evidence, review comments or states. Mocked captures are named as mocked.
 - Restart Claude Code after installing anything; always launch from the repo root.
@@ -160,6 +161,8 @@ component, UI style, responsive, authorization, **workflow**, migration/regressi
 ---
 
 ## 4. Decisions to settle in Phase 1 — with recommendations
+
+Where these differ from `docs/lab-04/decisions.md`, decisions.md wins.
 
 The labsheet leaves these open, and several of its sentences pull against each other. The
 recommendations are starting positions to argue with. Record your choices, in your own
