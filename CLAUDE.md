@@ -117,7 +117,7 @@ Comments, Internal Notes and Actions Taken are visually distinct.
 ## Product name
 
 **TokTickIT** everywhere - headings, titles, component names, test assertions, docs. The
-labsheet illustration's "TikTockIT" is a typo and is not followed.
+labsheet illustration's "TikTockIT" is a typo and is not followed (L2 C-41).
 
 ## The contract
 
@@ -189,7 +189,7 @@ public (L3 C-87, C-149). Every other route requires a session.
 
 ## Database and migrations
 
-- **Never run `prisma migrate reset`** - it destroys seed data.
+- **Never run `prisma migrate reset`** - it destroys seed data (L2 C-37).
 - Create a migration with `npx prisma migrate dev --create-only`, read the SQL, then apply it
   with `npx prisma migrate deploy` (`npm run prisma:migrate` runs deploy, L3 C-86). If Prisma
   offers a reset, answer no and stop.
