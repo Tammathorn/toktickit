@@ -4,7 +4,7 @@ TokTickIT - CPE 334 Individual Sprint 4.
 Owner: Tammathorn Kananurak (67070503489).
 
 Sources: `docs/lab-04/spec/Lab_4_sheet.pdf` (cited `LS x.y`), `docs/lab-04/decisions.md`
-(C-122..C-160, approved) and `docs/lab-04/phase1-analysis.md` (the codebase survey, cited
+(C-122..C-171, approved) and `docs/lab-04/phase1-analysis.md` (the codebase survey, cited
 `1.1 report x.y`; reference, not contract). A bare `C-nn` from C-122 up is a Lab 4 decision.
 Earlier rules are cited `L3 BR-nn`, `L3 C-nn`, `L2 C-nn`, and keep their meaning inside
 `docs/lab-03/` and `docs/lab-02/`.
@@ -145,14 +145,14 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-04 | Action fields | `description` and `result` are trimmed and 1 to 2000 characters, using the Public Comment validator. | C-134, L3 C-74 |
 | BR-05 | Action fields | `followUpNote` is 1 to 1000 characters and is required if and only if `followUpRequired` is true. A `followUpNote` sent with `followUpRequired` false is refused 400; the client clears the note when the box is unticked. | C-134 |
 | BR-06 | Action fields | `attachmentNotes` is optional, 0 to 500 characters, plain text. It names where to look; nothing is uploaded to an action. | C-134 |
-| BR-07 | Action dates | `actionAt` is entered in a `datetime-local` input read as Asia/Bangkok and sent as ISO 8601 with an offset; a value without an offset is refused 400. It must be >= the Ticket's `createdAt`, and for a `COMPLETED` action also <= server now + 5 minutes. | C-134 |
+| BR-07 | Action dates | `actionAt` is entered in a `datetime-local` input read as Asia/Bangkok and sent as ISO 8601 with an offset; a value without an offset is refused 400. It must be >= the Ticket's `createdAt`, and for a `COMPLETED` action also <= server now + 5 minutes. On complete, the final `actionAt` - the one sent with the complete, else the stored one - must meet the same upper bound, else 400 at `actionAt` asking for the time the work was done. | C-134, C-168 |
 | BR-08 | Action dates | `createdAt` (the "Action create date/time") and `finishedAt` are server time. All action times are displayed in Asia/Bangkok, and all action text is rendered as plain text with `white-space: pre-wrap`. | C-134, L2 C-39 |
 | BR-09 | Action lifecycle | An action's status is `PLANNED`, `COMPLETED` or `CANCELLED`. It is created as `PLANNED` or as `COMPLETED`, never as `CANCELLED`. | C-131 |
 | BR-10 | Action lifecycle | While `PLANNED`, an action's `description`, `actionAt`, assignee and `attachmentNotes` may be edited. No other field changes by edit. | C-133 |
-| BR-11 | Action lifecycle | Complete moves `PLANNED` to `COMPLETED`, records `result`, `followUpRequired` and `followUpNote`, and sets `performedById` to the caller and `finishedAt` to server now. The UI labels `performedById` "Completed by". | C-131, C-133 |
+| BR-11 | Action lifecycle | Complete moves `PLANNED` to `COMPLETED`, records `result`, `followUpRequired`, `followUpNote` and optionally a new `actionAt` (BR-07), and sets `performedById` to the caller and `finishedAt` to server now. The UI labels `performedById` "Completed by". | C-131, C-133, C-168 |
 | BR-12 | Action lifecycle | Cancel moves `PLANNED` to `CANCELLED` and requires a `result` stating why, labelled "Reason" in the UI. It sets `performedById` to the caller and `finishedAt` to server now; the UI labels them "Cancelled by". | C-131, C-133 |
 | BR-13 | Action lifecycle | An action created already `COMPLETED` gets `performedById` = the creator and `finishedAt` = its `createdAt`; `actionAt` stays the user's time the work happened. | C-131, C-160 |
-| BR-14 | Action lifecycle | `COMPLETED` and `CANCELLED` are final. Edit, complete and cancel on a final action are refused 409 (a conflict with the state of the resource, L3 C-100), and the action is unchanged. A correction is a new action. | C-133, L3 C-100 |
+| BR-14 | Action lifecycle | `COMPLETED` and `CANCELLED` are final. Edit, complete and cancel on an action that is not `PLANNED` are refused 409 `ACTION_NOT_PLANNED`, in the operation-refusal slot after `STALE_UPDATE` (BR-40), and the action is unchanged. A correction is a new action. | C-133, C-162 |
 | BR-15 | Append-only | Public Comments, Internal Notes, completed and cancelled actions, and status history are append-only: no route edits or deletes them. Planned actions are editable (BR-10). | C-151, L3 BR-63 |
 | BR-16 | Action lifecycle | Part 6's "status transition" is the action's own `PLANNED -> COMPLETED` or `PLANNED -> CANCELLED`. No action write changes the Ticket's status. | C-152, C-125 |
 | BR-17 | Who may write | Any active IT Staff or Administrator user may create, edit, complete and cancel actions on any Ticket they can see. A Requester calling any action write is refused 403 before the Ticket or action is loaded. | C-132, L3 C-93, L3 C-65 |
@@ -165,9 +165,9 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-24 | Ticket status gates on actions | Action writes are accepted while the Ticket is `NEW`, `OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER` or `REOPENED`. On `RESOLVED` they are refused 409 `TICKET_RESOLVED` ("Reopen it first"); on `CLOSED` or `CANCELLED`, 409 `TICKET_CLOSED`. | C-122, L3 C-109 |
 | BR-25 | Ticket workflow | The eight Ticket statuses are unchanged, and the permitted transitions are exactly the Lab 3 matrix (section 5.1), with the gate on `-> RESOLVED` and the cancel rule on `-> CANCELLED` added. | C-125, `LS 4.5` |
 | BR-26 | Ticket workflow | There are no automatic transitions: creating or completing an action never moves the Ticket, and a Requester comment never leaves Waiting for Requester. Only IT Staff and Administrator users change status. The Requester's "Problem Appears Resolved" is advisory and never itself moves the Ticket to Resolved. | C-125, `LS 4.5`, L3 BR-05, L3 BR-59 |
-| BR-27 | Ticket workflow | The staff Ticket DTO carries `allowedTransitions`, the targets the matrix permits from the current status. The UI offers exactly those; the server still enforces every rule on every request. | `CLAUDE.md` rule 3, C-125 |
+| BR-27 | Ticket workflow | The staff Ticket DTO carries `allowedTransitions`, every target the matrix permits from the current status, and `resolutionGate: { met, reasons }`. The UI offers exactly those targets; when `met` is false it shows Resolved disabled, with the reasons listed beneath. The server still enforces every rule on every request. | `CLAUDE.md` rule 3, C-125, C-171 |
 | BR-28 | Resolution gate | A move to `RESOLVED` is checked first for an owner: without one it is refused 409 `OWNER_REQUIRED`, unchanged from Lab 3, with its own code. | C-137, L3 C-93 |
-| BR-29 | Resolution gate | With an owner, a move to `RESOLVED` is refused 409 `RESOLUTION_GATE_NOT_MET` with a `reasons` array drawn from: `NO_COMPLETED_ACTION` (no `COMPLETED` action); `PLANNED_ACTIONS_OPEN` (a `PLANNED` action exists); `FOLLOW_UP_REQUIRED` (the latest `COMPLETED` action has `followUpRequired` true); `NO_ACTION_SINCE_REOPEN` (BR-31). | C-137 |
+| BR-29 | Resolution gate | With an owner, a move to `RESOLVED` is refused 409 `RESOLUTION_GATE_NOT_MET` with a `reasons` array drawn from: `NO_COMPLETED_ACTION` (no `COMPLETED` action); `PLANNED_ACTIONS_OPEN` (a `PLANNED` action exists); `FOLLOW_UP_REQUIRED` (the latest `COMPLETED` action has `followUpRequired` true); `NO_ACTION_SINCE_REOPEN` (BR-31). Every reason that applies is returned at once, in exactly that order. | C-137, C-167 |
 | BR-30 | Resolution gate | "Latest `COMPLETED` action" means latest by `finishedAt desc, id desc` - when the work was recorded as finished - not by `actionAt`. | C-137, C-160 |
 | BR-31 | Resolution gate | `NO_ACTION_SINCE_REOPEN` applies when the Ticket has been reopened and no action has a `finishedAt` after the latest status-history row into `REOPENED`. | C-137, C-141 |
 | BR-32 | Resolution gate | The backend enforces the gate on every request, whatever the client did. Legacy Resolved and Closed Tickets are never re-validated: an existing row keeps its status and may still move along the matrix. | C-137, `LS 4.5` |
@@ -176,25 +176,25 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-35 | Stale update | `Ticket` and `ActionTaken` each carry an integer `version`, starting at 0. | C-138, C-145 |
 | BR-36 | Stale update | Every Ticket PATCH (status, owner, IT Priority) and every action edit, complete and cancel sends the `version` the user saw, and the update is conditional on it. A missing `version` is 400; a mismatch is 409 `STALE_UPDATE`, and nothing changes. | C-138 |
 | BR-37 | Stale update | The Ticket `version` increases on a status, owner, IT Priority or claim change and on the Requester's flag - not on a Public Comment, Internal Note, Attachment or action write. An action's `version` increases on each edit, complete and cancel. | C-138, L3 C-76 |
-| BR-38 | Stale update | Claim sends no `version`, because it is already conditional, but it increases the Ticket `version`. | C-138, L3 C-75 |
+| BR-38 | Stale update | Claim and the Requester's "Problem Appears Resolved" send no `version`, because each is already conditional - claim on the Ticket being unowned, the flag on its status - but each increases the Ticket `version`. | C-138, C-163, L3 C-75, L3 C-76 |
 | BR-39 | Stale update | `STALE_UPDATE` uses the unchanged Lab 3 error envelope. On it the client re-fetches the Ticket, shows the fresh values and keeps the user's draft. | C-138, C-147 |
-| BR-40 | Check order | Every protected operation checks, in this fixed order: session -> password-change gate -> role -> path parameters -> resource load -> ownership -> `TICKET_CLOSED` / `TICKET_RESOLVED` -> body validation (a missing `version` is 400 here) -> `STALE_UPDATE` -> the operation's own refusals (`SAME_STATUS`, the matrix, `OWNER_REQUIRED`, the gate, `PLANNED_ACTIONS_OPEN`). | C-138, C-159, L3 C-63 |
+| BR-40 | Check order | Every protected operation except the status change checks, in this fixed order: session -> password-change gate -> role -> path parameters -> resource load -> ownership -> the `clientRequestId` replay lookup (creates only, BR-43) -> `TICKET_CLOSED` / `TICKET_RESOLVED` -> body validation (a missing `version` is 400 here) -> `STALE_UPDATE` -> the operation's own refusals (for example `ACTION_NOT_PLANNED`, `ASSIGNEE_NOT_ELIGIBLE`). The status change has its own order, BR-89. | C-138, C-159, C-162, C-164, C-166, L3 C-63 |
 | BR-41 | Check order | `TICKET_RESOLVED` takes the same slot as `TICKET_CLOSED`: after ownership, before body validation. | C-159 |
 | BR-42 | Duplicate submission | Create Ticket, Action Taken, Public Comment and Internal Note accept an optional UUID `clientRequestId`, unique per (author, `clientRequestId`). Absent means no de-duplication, so the Lab 1-3 create contracts are unchanged. | C-139 |
-| BR-43 | Duplicate submission | A repeat with a key already used by the same author returns 200 with the original row and creates nothing. A concurrent duplicate that hits the unique constraint (Prisma P2002) also returns 200 with the original row, never 500. | C-139 |
+| BR-43 | Duplicate submission | A repeat with a key already used by the same author returns 200 and creates nothing, with the same body shape as a first success: the staff Ticket DTO for an action, the Ticket DTO for a Ticket, the comment or note for a Public Comment or Internal Note. A concurrent duplicate that hits the unique constraint (Prisma P2002) answers the same, never 500. The lookup runs after ownership and before `TICKET_CLOSED` / `TICKET_RESOLVED` and body validation, so a replay succeeds even if the Ticket has since closed. The body is not compared: a reused key is a replay (A-05). | C-139, C-165, C-166 |
 | BR-44 | Duplicate submission | The client mints a new `clientRequestId` when a form opens and again after every success, and keeps disabling the submit button while a request is in flight. | C-139, L2 C-26 superseded |
 | BR-45 | Duplicate submission | Attachment uploads are outside `clientRequestId`: the button is disabled in flight, the five-file cap holds, and the Requester can remove a duplicate. | C-139 |
 | BR-46 | Activity time | `Ticket.lastActivityAt` is set to server now on Ticket create, every status, owner and IT Priority change, claim, every action write, every Public Comment, every Attachment upload and soft removal, and the Requester's flag. | C-140, 1.1 report 2.11 |
 | BR-47 | Activity time | An Internal Note never writes `lastActivityAt`, so no Requester screen reveals that a private note was added. | C-140 |
 | BR-48 | Activity time | "Last updated" on every screen shows `lastActivityAt`. The queue API keeps its `updatedAt` sort for the Lab 3 test and adds a `lastActivityAt` sort; the queue UI's "Last updated" sort uses `lastActivityAt`. | C-140, L3 C-78 |
 | BR-49 | Resolution time | `Ticket.resolvedAt` is set to server now on `-> RESOLVED`, cleared on `-> REOPENED` and kept on `-> CLOSED`. Legacy rows keep NULL. | C-126 |
-| BR-50 | Status history | Every Ticket status change appends one `TicketStatusChange` (`ticketId`, `fromStatus`, `toStatus`, `changedById`, `changedAt`) in the same transaction as the change. No route updates or deletes one. | C-141 |
+| BR-50 | Status history | Every Ticket status change appends one `TicketStatusChange` (`ticketId`, `fromStatus`, `toStatus`, `changedById`, `changedAt`) in the same transaction as the change. Creating a Ticket appends one with `fromStatus` NULL and `toStatus` `NEW`. No route updates or deletes one. | C-141, C-167 |
 | BR-51 | Status history | A Ticket that existed before the migration shows "History is recorded from <migration date>" above its history. | C-141 |
 | BR-52 | Dashboard time | The server computes every metric at request time. Metric functions take `now` as a parameter. The response carries `generatedAt` and `timeZone: "Asia/Bangkok"`, and times are displayed in Asia/Bangkok. | C-142, C-143 |
 | BR-53 | Dashboard time | "Recent" is a rolling 7 days with an inclusive boundary: `>= now - 168 h`. No "from yesterday" delta is shown. If a "today" metric is ever added, it is the Asia/Bangkok calendar day. | C-142 |
 | BR-54 | Terms | "Active" means not `CLOSED` and not `CANCELLED` - the queue's default set, which includes `RESOLVED`. The queue filter's "Open tickets" label is unchanged. | C-150, L3 C-111 |
 | BR-55 | Terms | The Requester's "Open tickets" means `NEW`, `OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER` and `REOPENED` - not `RESOLVED`. | C-150 |
-| BR-56 | Drill-down | Every count card has exactly one drill-down, and the drill-down list's total (`meta.total`, or the row count of an unpaginated list) equals the card. Lists show at most 5 items, `lastActivityAt desc, id desc`, each linking to its Ticket, with a "View all". | C-127 |
+| BR-56 | Drill-down | Every count card has exactly one drill-down, and the drill-down list's total (`meta.total`, or the row count of an unpaginated list) equals the card. Each dashboard list uses the same order as its drill-down, so its rows are the first rows of that list (section 5.3). Lists show at most 5 items, each linking to its Ticket, with a "View all" - except the uncapped "My planned actions" panel (BR-84). | C-127, C-161, C-169 |
 | BR-57 | Empty behavior | A card whose count is zero shows `0`; it is not an empty state. A list with no rows shows the Lab 2 empty component. Every card is always present. | C-143 (the 4.4 catalogue) |
 | BR-58 | Refresh | A Dashboard loads when opened and on a manual Refresh. It never polls. | C-128 |
 | BR-59 | Dashboard access | `GET /api/dashboard/requester` is Requester-only and scopes every query to the session's user before any other condition. Any other role is refused 403 before any query. | C-143, L3 C-64 |
@@ -211,8 +211,11 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-70 | Regression | Every Lab 1-3 behavior and test keeps passing on the final commit. No test is deleted or skipped; a test is adapted where a decision changed what it asserts, and retired only where a decision row names its replacement. | `CLAUDE.md`, L3 BR-95 |
 | BR-71 | Regression | Every registered route appears in the authorization matrix (section 5.2), and a test fails if one does not or if one answers otherwise. | C-155 |
 | BR-72 | Performance | Against `toktickit_perf` with about 2,000 Tickets, each dashboard endpoint answers with p95 under 500 ms. `EXPLAIN` output is recorded as information, never asserted. | C-148 |
+| BR-88 | Queries | `statusGroup` and `currentStatus` together on My Tickets are refused 400 `INVALID_QUERY_PARAM`: one status filter at a time. | C-170, L2 C-43 |
+| BR-89 | Check order | `PATCH /api/staff/tickets/:id/status`, after session -> password-change gate -> role -> path parameters -> resource load, checks exactly: (1) target not one of the eight statuses -> 400 `VALIDATION_FAILED`; (2) target equals the current status -> 400 `SAME_STATUS`; (3) current status `CLOSED` or `CANCELLED` -> 409 `INVALID_STATUS_TRANSITION`; (4) `version` missing or not an integer -> 400; (5) `version` stale -> 409 `STALE_UPDATE`; (6) move outside the matrix -> 409 `INVALID_STATUS_TRANSITION`; (7) `OWNER_REQUIRED`, then `RESOLUTION_GATE_NOT_MET`, then `PLANNED_ACTIONS_OPEN` on a move to Cancelled. Steps 1, 2, 3 and 6 are Lab 3's order unchanged; a terminal Ticket is refused whatever `version` the client holds. | C-164, L3 C-77, L3 C-109 |
 
-BR-73 to BR-87 are the dashboard metrics, in section 5.3.
+BR-73 to BR-87 are the dashboard metrics, in section 5.3. BR-88 and BR-89 were appended after
+C-161..C-171 settled the first draft's open questions, so earlier IDs stay stable.
 
 ### 5.1 Status transition matrix
 
@@ -237,11 +240,17 @@ and **[P]** the cancel cells.
 **[G] The resolution gate** (C-137; BR-28 to BR-32). After the matrix permits the move: no
 owner is 409 `OWNER_REQUIRED`; then 409 `RESOLUTION_GATE_NOT_MET` with `reasons` from
 `NO_COMPLETED_ACTION`, `PLANNED_ACTIONS_OPEN`, `FOLLOW_UP_REQUIRED`,
-`NO_ACTION_SINCE_REOPEN`. On success `resolvedAt` is set (BR-49) and the Requester's flag
-cleared (L3 BR-61).
+`NO_ACTION_SINCE_REOPEN`, every applicable reason at once in that fixed order (C-167). The
+staff DTO's `resolutionGate` reports the same answer in advance, and the UI shows Resolved
+disabled with its reasons when it is not met (BR-27, C-171). On success `resolvedAt` is set
+(BR-49) and the Requester's flag cleared (L3 BR-61).
 
 **[P] The cancel rule** (C-124; BR-33). After the matrix permits the move, a Ticket with a
 `PLANNED` action is refused 409 `PLANNED_ACTIONS_OPEN`.
+
+The order in which the status route checks the refusals of this matrix is BR-89: a `-` cell
+in the `CLOSED` and `CANCELLED` rows is refused before `version` is read, and every other `-`
+cell after it.
 
 Every permitted move, in any cell, also: locks the Ticket row first (BR-34), checks
 `version` (BR-36), increases it (BR-37), sets `lastActivityAt` (BR-46), appends a
@@ -275,19 +284,19 @@ specific to that row.
 | 3 | `POST /api/auth/change-password` | 401 | 200 / wrong current 422 | 200 / 422 | 200 / 422 | 200 / 422 |
 | 3 | `POST /api/auth/logout` | 401 | 204 | 204 | 204 | 204 |
 | 2 · 4Δ | `POST /api/tickets` | 401 | 403 | 201 / **repeat key 200** | **403** | **403** |
-| 2 | `GET /api/tickets` | 401 | 403 | 200 | **403** | **403** |
+| 2 · 4Δ | `GET /api/tickets` (**`statusGroup`, `lastActivityAt` sort**) | 401 | 403 | 200 / bad or **conflicting status filters 400** | **403** | **403** |
 | 2 · 4Δ | `GET /api/tickets/:id` (Requester DTO, **now with actions and status history**) | 401 | 403 | own 200 / other 404 | **403** | **403** |
 | 2 | `GET /api/tickets/:id/attachments` | 401 | 403 | own 200 / other 404 | 200 / missing 404 | 200 / missing 404 |
 | 2 | `POST /api/tickets/:id/attachments` | 401 | 403 | own 201 / terminal 409 / other 404 | **403** | **403** |
-| 3 · 4Δ | `POST /api/tickets/:id/requester-resolved` (**bumps `version`**) | 401 | 403 | own 200 / wrong status 409 / other 404 | **403** | **403** |
+| 3 · 4Δ | `POST /api/tickets/:id/requester-resolved` (**sends no `version`, bumps it**) | 401 | 403 | own 200 / wrong status 409 / other 404 | **403** | **403** |
 | 2 | `GET /api/attachments/:id/download` | 401 | 403 | own 200, removed 410 / other 404 | 200, removed 410 | 200, removed 410 |
 | 2 | `DELETE /api/attachments/:id` | 401 | 403 | own 200 / terminal 409 / other 404 | **403** | **403** |
 | 3 · 4Δ | `GET /api/staff/tickets` (**`lastActivityAt` sort, `requesterResolved` filter**) | 401 | 403 | **403** | 200 | 200 |
-| 3 · 4Δ | `GET /api/staff/tickets/:id` (**now with actions, history, `allowedTransitions`**) | 401 | 403 | **403** | 200 / missing 404 | 200 / missing 404 |
+| 3 · 4Δ | `GET /api/staff/tickets/:id` (**now with actions, history, `allowedTransitions`, `resolutionGate`**) | 401 | 403 | **403** | 200 / missing 404 | 200 / missing 404 |
 | 3 · 4Δ | `POST /api/staff/tickets/:id/claim` (**bumps `version`**) | 401 | 403 | **403** | 200 / owned 409 / terminal 409 | same as IT Staff |
 | 3 · 4Δ | `PATCH /api/staff/tickets/:id/owner` | 401 | 403 | **403** | 200 / **no version 400** / ineligible 422 / **stale 409** / unassign in a worked status 409 / terminal 409 | same as IT Staff |
 | 3 · 4Δ | `PATCH /api/staff/tickets/:id/it-priority` | 401 | 403 | **403** | 200 / **no version 400** / **stale 409** / terminal 409 | same as IT Staff |
-| 3 · 4Δ | `PATCH /api/staff/tickets/:id/status` | 401 | 403 | **403** | 200 / same or **no version 400** / **stale 409** / not permitted 409 / no owner 409 / **gate 409** / **planned actions 409** | same as IT Staff |
+| 3 · 4Δ | `PATCH /api/staff/tickets/:id/status` | 401 | 403 | **403** | 200 / invalid target or same 400 / terminal 409 / **no version 400** / **stale 409** / not permitted 409 / no owner 409 / **gate 409** / **planned actions 409**, in that order (BR-89) | same as IT Staff |
 | 3 | `GET /api/staff/assignable-users` | 401 | 403 | **403** | 200 | 200 |
 | 3 | `GET /api/tickets/:id/public-comments` | 401 | 403 | own 200 / other 404 | 200 / missing 404 | 200 / missing 404 |
 | 3 · 4Δ | `POST /api/tickets/:id/public-comments` | 401 | 403 | own 201 / **repeat key 200** / terminal 409 / other 404 | 201 / **repeat key 200** / terminal 409 | same as IT Staff |
@@ -311,10 +320,13 @@ Rules the matrix encodes:
 - MustChange is 403 `PASSWORD_CHANGE_REQUIRED` everywhere except the public routes, login,
   current user, change-password and logout (L3 C-61, C-99).
 - A Requester 404 means the resource is not theirs or does not exist, and never says which.
-- "terminal 409" is `TICKET_CLOSED` (L3 BR-108, C-122); "Resolved 409" is `TICKET_RESOLVED`
-  (C-122); "stale 409" is `STALE_UPDATE` (C-138); "gate 409" is `RESOLUTION_GATE_NOT_MET` and
-  "no owner 409" `OWNER_REQUIRED` (C-137); "planned actions 409" is `PLANNED_ACTIONS_OPEN`
-  (C-124); "final action 409" is BR-14.
+- "terminal 409" is `TICKET_CLOSED` (L3 BR-108, C-122), except on the status route, where it
+  is `INVALID_STATUS_TRANSITION` (BR-89, C-164); "Resolved 409" is `TICKET_RESOLVED` (C-122);
+  "stale 409" is `STALE_UPDATE` (C-138); "gate 409" is `RESOLUTION_GATE_NOT_MET` and "no owner
+  409" `OWNER_REQUIRED` (C-137); "planned actions 409" is `PLANNED_ACTIONS_OPEN` (C-124);
+  "final action 409" is `ACTION_NOT_PLANNED` (BR-14, C-162).
+- "repeat key 200" is a replay (BR-43): it is answered before the terminal and Resolved
+  refusals, so a replay on a Ticket that has since closed is still 200 (C-166).
 - Every write returns the full staff Ticket DTO on the four action routes (C-136).
 - Administrator equals IT Staff on every Ticket and action row (L3 C-66); only the
   Administrator holds the user rows and `userCounts`.
@@ -338,8 +350,8 @@ returns.
 | BR-74 | Waiting for you | Card | own Tickets with `currentStatus = WAITING_FOR_REQUESTER` | `/tickets?currentStatus=WAITING_FOR_REQUESTER` | C-143 |
 | BR-75 | Resolved - awaiting closure | Card | own Tickets with `currentStatus = RESOLVED` | `/tickets?currentStatus=RESOLVED` | C-143 |
 | BR-76 | Closed | Card | own Tickets with `currentStatus = CLOSED` | `/tickets?currentStatus=CLOSED` | C-143 |
-| BR-77 | Recently updated | List, 5 | own Tickets with `lastActivityAt >= now - 168 h`, `lastActivityAt desc, id desc` | each row -> Ticket Detail; View all -> `/tickets?sort=lastActivityAt:desc` | C-143, C-140, C-127 |
-| BR-78 | Recently resolved | List, 5 | own Tickets with `resolvedAt >= now - 168 h`, whether now Resolved or Closed; `lastActivityAt desc, id desc`. A NULL `resolvedAt` never qualifies | each row -> Ticket Detail | C-143, C-126, C-127 |
+| BR-77 | Recently updated | List, 5 | own Tickets with `lastActivityAt >= now - 168 h`, `lastActivityAt desc, id desc` | each row -> Ticket Detail; View all -> `/tickets?sort=lastActivityAt:desc` | C-143, C-140, C-161 |
+| BR-78 | Recently resolved | List, 5 | own Tickets with `resolvedAt >= now - 168 h`, whether now Resolved or Closed; `resolvedAt desc, id desc`. A NULL `resolvedAt` never qualifies | each row -> Ticket Detail | C-143, C-126, C-161 |
 
 **IT Staff Dashboard** (`GET /api/dashboard/staff`; the Administrator sees it too)
 
@@ -350,10 +362,15 @@ returns.
 | BR-81 | New · Open · In Progress · Waiting for Requester · Reopened · Resolved | Six cards | active Tickets with `currentStatus` equal to that one status | `/queue?currentStatus=<STATUS>` | C-143 |
 | BR-82 | High IT Priority | Card | active Tickets with `itPriority = HIGH` | `/queue?itPriority=HIGH` | C-143 |
 | BR-83 | Requester says resolved | Card | active Tickets with `requesterResolvedAt IS NOT NULL` | `/queue?requesterResolved=true` | C-143, L3 C-76 |
-| BR-84 | My planned actions | Card + panel | `ActionTaken` rows with `status = PLANNED`, `assigneeId = session user`, on an active Ticket | the Dashboard's own "My planned actions" panel, whose total equals the card | C-143, C-127 |
-| BR-85 | Recently updated | List, 5 | active Tickets with `lastActivityAt >= now - 168 h`, `lastActivityAt desc, id desc` | each row -> Ticket Detail; View all -> `/queue?sort=lastActivityAt:desc` | C-143, C-140, C-127 |
-| BR-86 | Urgent | List, 5 | active Tickets with `itPriority = HIGH`, `lastActivityAt desc, id desc` | each row -> Ticket Detail; View all -> `/queue?itPriority=HIGH` | C-143, C-127 |
+| BR-84 | My planned actions | Card + panel | `ActionTaken` rows with `status = PLANNED`, `assigneeId = session user`, on a non-terminal (active) Ticket | `/dashboard#my-actions`: a panel listing **every** such action, no cap and no pagination, `actionAt asc, id asc`; the card equals its row count | C-143, C-169 |
+| BR-85 | Recently updated | List, 5 | active Tickets with `lastActivityAt >= now - 168 h`, `lastActivityAt desc, id desc` | each row -> Ticket Detail; View all -> `/queue?sort=lastActivityAt:desc` | C-143, C-140, C-161 |
+| BR-86 | Urgent | List, 5 | active Tickets with `itPriority = HIGH`, `createdAt asc, id desc` - oldest first, exactly the order `/queue?itPriority=HIGH` returns | each row -> Ticket Detail; View all -> `/queue?itPriority=HIGH` | C-143, C-161, L2 C-29 |
 | BR-87 | Requesters · IT Staff · Administrators (Administrator only, `userCounts`) | Three cards | **all** `User` rows with that `role`, active or not; secondary text "N active" counts those with `isActive = true` and has no drill-down | `/users?role=REQUESTER` · `IT_STAFF` · `ADMINISTRATOR` | C-143 |
+
+Each list's order is its drill-down's order (C-161), so a list's rows are the first rows of
+its "View all": both "Recently updated" lists and their drill-downs break ties on `id desc`
+(`queueOrderBy`, `listOrderBy`), and "Urgent" is the queue's default order under the High
+filter. "Recently resolved" has no "View all".
 
 The queue's default status set is the active set, and naming a `currentStatus` replaces it
 (`server/src/lib/list-query.ts` `queueWhere`), so each staff drill-down lists exactly the
@@ -377,11 +394,11 @@ the screenshot names. This section fixes structure and behavior.
 
 | Screen | Structure and modes | Role behavior |
 |---|---|---|
-| IT Staff Dashboard (`/dashboard`) | Heading, `generatedAt` in Asia/Bangkok and a Refresh button; a card grid (BR-79 to BR-83, BR-87 for the Administrator); the "My planned actions" panel; "Recently updated" and "Urgent" lists; Quick Actions "Search Tickets" and "My Queue" | IT Staff and Administrator; the Administrator also sees the three user cards |
+| IT Staff Dashboard (`/dashboard`) | Heading, `generatedAt` in Asia/Bangkok and a Refresh button; a card grid (BR-79 to BR-83, BR-87 for the Administrator); the uncapped "My planned actions" panel at `#my-actions`; "Recently updated" and "Urgent" lists; Quick Actions "Search Tickets" and "My Queue" | IT Staff and Administrator; the Administrator also sees the three user cards |
 | Requester Dashboard (`/dashboard`) | Same shell; four cards (BR-73 to BR-76); "Recently updated" and "Recently resolved" lists; Quick Action "Create Ticket" | Requester only; never duplicates the My Tickets table |
 | Actions Taken area (IT Staff Ticket Detail) | A list or table (BR-22) with status badges; create mode (status `PLANNED` or `COMPLETED`, assignee picker defaulting to me, the "Shown to the Requester" label); view/edit mode for a `PLANNED` action; Complete and Cancel each with their own fields; finished actions read-only with "Completed by" or "Cancelled by" and "Reason" | IT Staff and Administrator; operations offered as the API returns them (FR-09) |
 | Actions Taken (Requester Ticket Detail) | The same list, read-only, no controls | Requester, own Tickets only |
-| Ticket workflow (IT Staff Ticket Detail) | Status control listing only `allowedTransitions`; confirmation for Resolved, Closed, Cancelled (L3 BR-57); gate refusal shown with one line per reason; status history oldest first; "Last updated" from `lastActivityAt` | IT Staff and Administrator; the Requester sees status and history read-only |
+| Ticket workflow (IT Staff Ticket Detail) | Status control listing only `allowedTransitions`; confirmation for Resolved, Closed, Cancelled (L3 BR-57); Resolved shown disabled with the `resolutionGate` reasons beneath when the gate is not met, and a server gate refusal shown the same way; status history oldest first; "Last updated" from `lastActivityAt` | IT Staff and Administrator; the Requester sees status and history read-only |
 | Navigation | "Dashboard" first, active page marked with `aria-current`, per BR-61 | Per role |
 
 Feedback states, consistent on every Lab 4 screen: loading, validation (message directly
@@ -435,7 +452,8 @@ There is no delete path, and no edit path once `COMPLETED` or `CANCELLED` (BR-14
 
 ### 7.3 `TicketStatusChange` - new
 
-`id` (PK), `ticketId` (FK `Ticket`), `fromStatus` and `toStatus` (`TicketStatus`),
+`id` (PK), `ticketId` (FK `Ticket`), `fromStatus` (`TicketStatus?` - NULL only on the
+creation row, C-167) and `toStatus` (`TicketStatus`),
 `changedById` (FK `User`), `changedAt` (`@default(now())`). No `updatedAt`, no update or
 delete path (BR-50).
 
@@ -521,7 +539,8 @@ smoke answers with timings, with `EXPLAIN` recorded but not asserted.
   the latest `Attachment.uploadedAt` and the latest `Attachment.removedAt` for that Ticket
   (NULLs ignored). Internal Notes are not read (BR-47).
 - `version` = 0; `resolvedAt` = NULL (C-126); `clientRequestId` = NULL.
-- No `ActionTaken` and no `TicketStatusChange` row is invented. Legacy Tickets show
+- No `ActionTaken` and no `TicketStatusChange` row is invented - not even the creation row
+  that new Tickets get (C-167). Legacy Tickets show
   "History is recorded from <migration date>" (BR-51), and legacy Resolved and Closed Tickets
   are never re-validated against the gate (BR-32). An open legacy Ticket needs a completed
   action before it can be resolved, like any other.
@@ -558,24 +577,26 @@ error envelope `{ error: { code, message, fields? } }` is unchanged (C-138).
 |---|---|---|---|
 | `POST /api/tickets/:id/actions` | `status` (`PLANNED` or `COMPLETED`), `actionAt`, `description`, optional `assigneeId`, `attachmentNotes`; when `COMPLETED` also `result`, `followUpRequired`, `followUpNote`; optional `clientRequestId` | 201 staff Ticket DTO; repeat key 200 | C-136, C-139 |
 | `PATCH /api/actions/:id` | `version` plus any of `description`, `actionAt`, `assigneeId`, `attachmentNotes` | 200 staff Ticket DTO | C-133, C-136 |
-| `POST /api/actions/:id/complete` | `version`, `result`, `followUpRequired`, `followUpNote` | 200 staff Ticket DTO | C-133 |
+| `POST /api/actions/:id/complete` | `version`, `result`, `followUpRequired`, `followUpNote`, optional `actionAt` | 200 staff Ticket DTO | C-133, C-168 |
 | `POST /api/actions/:id/cancel` | `version`, `result` (the reason) | 200 staff Ticket DTO | C-133 |
 | `GET /api/dashboard/requester` | none | 200 `{ generatedAt, timeZone, cards: [{ key, label, count, drillDown }], lists: { recentlyUpdated, recentlyResolved } }` | C-143 |
 | `GET /api/dashboard/staff` | none | 200, same shape with the staff cards and lists, the "My planned actions" panel, and `userCounts` for the Administrator only | C-143 |
 | Status, owner, IT Priority PATCHes | gain a required `version` | unchanged | C-138 |
 | Create Ticket, Public Comment, Internal Note | gain an optional `clientRequestId` | unchanged; repeat key 200 | C-139 |
 | `GET /api/staff/tickets` | gains `sort=lastActivityAt:<dir>` and `requesterResolved=true` | rows gain `lastActivityAt` | C-140, C-143 |
-| `GET /api/tickets` | gains `statusGroup=open` and `sort=lastActivityAt:<dir>` | rows gain `lastActivityAt` | C-143 |
+| `GET /api/tickets` | gains `statusGroup=open` (never with `currentStatus`: 400) and `sort=lastActivityAt:<dir>` | rows gain `lastActivityAt` | C-143, C-170 |
 
 **DTO additions.** Both Ticket Detail DTOs gain `version`, `lastActivityAt`, `resolvedAt`,
 `actions` (BR-22 order) and `statusHistory` (BR-23 order); the Requester DTO carries names and
-never email addresses (C-123). The staff DTO also gains `allowedTransitions` (BR-27). The
+never email addresses (C-123). The staff DTO also gains `allowedTransitions` and
+`resolutionGate: { met, reasons }` (BR-27, C-171). A replayed create answers 200 with the
+same body shape as its first success (BR-43, C-165). The
 five exact key-set tests that break on new fields are adapted, not retired
 (1.1 report 2.15).
 
 **New refusal codes** (extending L3 C-100): 409 `STALE_UPDATE` (C-138), 409
 `RESOLUTION_GATE_NOT_MET` with `reasons` (C-137), 409 `PLANNED_ACTIONS_OPEN` (C-124), 409
-`TICKET_RESOLVED` (C-122). Reused: 409 `TICKET_CLOSED`, 409 `OWNER_REQUIRED`, 422
+`TICKET_RESOLVED` (C-122), 409 `ACTION_NOT_PLANNED` (C-162). Reused: 409 `TICKET_CLOSED`, 409 `OWNER_REQUIRED`, 422
 `ASSIGNEE_NOT_ELIGIBLE`, 400 `SAME_STATUS`, 409 `INVALID_STATUS_TRANSITION`.
 
 **Concurrency.** `version` on every Ticket PATCH and action update (BR-36), the row lock on
@@ -614,7 +635,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-20 | Given a `PLANNED` action | when cancel is sent without a `result` | then 400 is returned and the action stays `PLANNED` | BR-12 |
 | AC-21 | Given a `PLANNED` action | when IT Staff C cancels it with a reason | then it is `CANCELLED` with the reason in `result`, `performedById` C and `finishedAt` set, shown as "Cancelled by" C and "Reason" | BR-12 |
 | AC-22 | Given IT Staff C | when C creates an action already `COMPLETED` | then `performedById` is C, `finishedAt` equals `createdAt`, and `actionAt` is the submitted value | BR-13 |
-| AC-23 | Given a `COMPLETED` action | when edit, complete or cancel is sent for it | then 409 is returned and the action is unchanged | BR-14 |
+| AC-23 | Given a `COMPLETED` action | when edit, complete or cancel is sent for it with its current `version` | then 409 `ACTION_NOT_PLANNED` is returned and the action is unchanged | BR-14 |
 | AC-24 | Given the registered route list | when it is inspected | then no route updates or deletes a Public Comment, Internal Note, finished action or status-history row | BR-15, BR-50 |
 | AC-25 | Given an `IN_PROGRESS` Ticket | when an action on it is created and then completed | then the Ticket's status is still `IN_PROGRESS` | BR-16, BR-26 |
 | AC-26 | Given an action whose assignee is IT Staff A | when IT Staff B, who neither owns the Ticket nor is the assignee, completes it | then 200 is returned | BR-19 |
@@ -627,7 +648,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-33 | Given the Requester Ticket Detail | when it renders the Actions Taken list | then no create, edit, complete or cancel control is present | BR-20 |
 | AC-34 | Given the staff action composer | when it is open | then the label "Shown to the Requester" is visible | BR-21 |
 | AC-35 | Given two actions with the same `actionAt` | when the Ticket is loaded twice | then both loads list them in the same order, higher `id` first | BR-22 |
-| AC-36 | Given a Ticket moved through three statuses | when either Ticket Detail is loaded | then its history lists the three changes oldest first | BR-23, BR-50 |
+| AC-36 | Given a Ticket moved through three statuses | when either Ticket Detail is loaded | then its history lists the creation row and the three changes, oldest first | BR-23, BR-50 |
 | AC-37 | Given a `RESOLVED` Ticket | when any action write is sent | then 409 `TICKET_RESOLVED` is returned and nothing changes | BR-24 |
 | AC-38 | Given a `CLOSED` or `CANCELLED` Ticket | when any action write is sent | then 409 `TICKET_CLOSED` is returned and nothing changes | BR-24 |
 | AC-39 | Given a Ticket in each of `NEW`, `OPEN`, `IN_PROGRESS`, `WAITING_FOR_REQUESTER`, `REOPENED` | when an action is created | then 201 is returned | BR-24 |
@@ -652,7 +673,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-58 | Given an unowned Ticket at `version` v | when it is claimed with no `version` in the body | then 200 is returned and its `version` is v + 1 | BR-38 |
 | AC-59 | Given a stale PATCH | when 409 `STALE_UPDATE` is returned | then the body has the Lab 3 envelope `{ error: { code, message } }` | BR-39 |
 | AC-60 | Given a user with an unsaved change on a screen that has gone stale | when the save returns `STALE_UPDATE` | then the screen shows the fresh server values and the user's draft is still present | BR-39, BR-63 |
-| AC-61 | Given a stale `version` and a target the matrix forbids | when the status PATCH is sent | then 409 `STALE_UPDATE` is returned, not `INVALID_STATUS_TRANSITION` | BR-40 |
+| AC-61 | Given a non-terminal Ticket, a stale `version` and a target the matrix forbids | when the status PATCH is sent | then 409 `STALE_UPDATE` is returned, not `INVALID_STATUS_TRANSITION` | BR-89 |
 | AC-62 | Given a `RESOLVED` Ticket and an invalid action body | when an action create is sent | then 409 `TICKET_RESOLVED` is returned, not 400 | BR-41 |
 | AC-63 | Given a Public Comment posted with key K | when the same author posts again with K | then 200 is returned with the original comment and only one row exists | BR-42, BR-43 |
 | AC-64 | Given two concurrent action creates with the same author and key | when both complete | then one row exists and both responses carry it, neither a 500 | BR-43 |
@@ -673,7 +694,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-79 | Given an injected `now` and Tickets with `lastActivityAt` exactly `now - 168 h` and 1 ms earlier | when "Recently updated" is computed | then the first is included and the second is not | BR-53 |
 | AC-80 | Given either Dashboard | when it renders | then no "from yesterday" or other delta text is shown | BR-53 |
 | AC-81 | Given each count card | when its drill-down query is run in the same test | then its total equals the card's count (one test per card) | BR-56 |
-| AC-82 | Given more than five qualifying Tickets | when a dashboard list is returned | then it holds five, in `lastActivityAt desc, id desc` order, each linking to its Ticket | BR-56 |
+| AC-82 | Given more than five qualifying Tickets | when a dashboard list is returned | then it holds five, each linking to its Ticket, and they are the first five rows its drill-down returns, in the same order | BR-56 |
 | AC-83 | Given a user for whom a card counts nothing | when the Dashboard renders | then that card shows `0`, and a list with no rows shows the empty component | BR-57 |
 | AC-84 | Given an open Dashboard | when the user presses Refresh | then the dashboard endpoint is requested again, and it is not requested at any other time while the screen stays open | BR-58 |
 | AC-85 | Given an IT Staff or Administrator session | when `GET /api/dashboard/requester` is called | then 403 is returned | BR-59 |
@@ -712,6 +733,24 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-118 | Given an action write | when it succeeds | then the response is the full staff Ticket DTO and the Ticket summary on screen shows its values | FR-08 |
 | AC-119 | Given a Requester and an IT Staff user | when the Requester creates a Ticket and staff record actions, resolve and close it | then each step succeeds through the UI and the Requester sees the final state | FR-02, FR-11, C-154 |
 | AC-120 | Given each Lab 4 screen | when rendered at desktop, tablet and mobile width | then there is no horizontal page scroll, no clipped or overlapping control, and focus is visible on every control | FR-33 |
+| AC-121 | Given a `COMPLETED` action whose `version` has moved on | when an edit is sent with the old `version` | then 409 `STALE_UPDATE` is returned, not `ACTION_NOT_PLANNED` | BR-14, BR-40 |
+| AC-122 | Given the Requester's own Open Ticket at `version` v | when "Problem Appears Resolved" is sent with no `version` | then 200 is returned and the Ticket `version` is v + 1 | BR-38 |
+| AC-123 | Given a `CLOSED` or `CANCELLED` Ticket | when a status PATCH to `OPEN` is sent with a stale or missing `version` | then 409 `INVALID_STATUS_TRANSITION` is returned, not 400 or `STALE_UPDATE` | BR-89 |
+| AC-124 | Given a `CLOSED` or `CANCELLED` Ticket | when a status PATCH targets its current status | then 400 `SAME_STATUS` is returned | BR-89 |
+| AC-125 | Given a `CLOSED` Ticket | when a status PATCH names a target that is not one of the eight statuses | then 400 `VALIDATION_FAILED` is returned | BR-89 |
+| AC-126 | Given an action created with key K | when the same author replays it with K | then 200 is returned with the staff Ticket DTO, the same shape as the first 201 | BR-43 |
+| AC-127 | Given a Public Comment created with key K on a Ticket since moved to `CLOSED` | when the same author replays it with K | then 200 is returned with the original comment, not `TICKET_CLOSED` | BR-43, BR-40 |
+| AC-128 | Given an Internal Note created with key K | when the same author sends K with a different body | then 200 is returned with the original note and no row is created | BR-43 |
+| AC-129 | Given a Requester | when the Requester creates a Ticket | then its status history holds one row, `fromStatus` NULL to `NEW` | BR-50 |
+| AC-130 | Given an owned Ticket with no completed action and a `PLANNED` one | when a move to `RESOLVED` is sent | then `reasons` is exactly `["NO_COMPLETED_ACTION", "PLANNED_ACTIONS_OPEN"]`, in that order | BR-29 |
+| AC-131 | Given a `PLANNED` action | when complete is sent with an `actionAt` later than now + 5 minutes | then 400 is returned at `actionAt` and the action stays `PLANNED` | BR-07, BR-11 |
+| AC-132 | Given a `PLANNED` action whose stored `actionAt` is tomorrow | when complete is sent without `actionAt` | then 400 is returned at `actionAt` asking for the time the work was done | BR-07 |
+| AC-133 | Given seven `PLANNED` actions assigned to the caller | when the staff Dashboard renders `#my-actions` | then all seven are listed, `actionAt asc, id asc`, and the card shows 7 | BR-84 |
+| AC-134 | Given My Tickets | when `statusGroup=open` and `currentStatus=NEW` are sent together | then 400 `INVALID_QUERY_PARAM` is returned | BR-88 |
+| AC-135 | Given an owned Ticket that fails the gate | when the staff Ticket DTO is read | then `resolutionGate.met` is false and its `reasons` equal those a move to `RESOLVED` would return, while `allowedTransitions` still lists `RESOLVED` | BR-27 |
+| AC-136 | Given `resolutionGate.met` false | when IT Staff Ticket Detail renders | then Resolved is shown disabled with each reason listed beneath it | BR-27 |
+| AC-137 | Given active High IT Priority Tickets, two sharing a `createdAt` | when the staff Dashboard is retrieved | then "Urgent" lists them `createdAt asc, id desc`, the first rows of `/queue?itPriority=HIGH` | BR-86, BR-56 |
+| AC-138 | Given own Tickets resolved at different times in the last 7 days | when the Requester Dashboard is retrieved | then "Recently resolved" lists them `resolvedAt desc, id desc` | BR-78 |
 
 ## 10. Definition of Done
 
@@ -772,7 +811,7 @@ opened while one is open.
 ## 11. Assumptions and Decisions
 
 The reasoning behind every settled choice is recorded once, in `docs/lab-04/decisions.md`
-(C-122..C-160), and is cited in the rules above rather than repeated here.
+(C-122..C-171), and is cited in the rules above rather than repeated here.
 
 ### Assumptions
 
@@ -784,6 +823,9 @@ The reasoning behind every settled choice is recorded once, in `docs/lab-04/deci
    allowance on a completed action's `actionAt` absorbs that skew (C-134).
 4. **A-04. Ticket volume stays near the 2,000-row perf database**, so the C-145 indexes and the
    Lab 3 status-led indexes suffice; C-148's smoke is the check, not an `EXPLAIN` assertion.
+5. **A-05. A reused `clientRequestId` is a replay, whatever its body** (C-166). Keys are random
+   UUIDs the client mints, so the same key with a different body means a client bug, and the
+   server answers with the original rather than comparing bodies.
 
 ### Gaps closed
 
@@ -795,6 +837,17 @@ The reasoning behind every settled choice is recorded once, in `docs/lab-04/deci
 | Duplicate keys under concurrency (P2002) | C-139 | 200 with the original row |
 | Which "latest" the gate reads | C-137 | `finishedAt desc, id desc` |
 | Resolve again after a reopen on old work | C-137 | Refused: `NO_ACTION_SINCE_REOPEN` |
+| Dashboard list order, and Urgent's order | C-161 | Each list in its drill-down's order; Urgent `createdAt asc, id desc` |
+| The code for a write to a finished action | C-162 | 409 `ACTION_NOT_PLANNED`, after `STALE_UPDATE` |
+| Whether the Requester's flag sends a `version` | C-163 | No; it bumps it |
+| A status change on a terminal Ticket versus `SAME_STATUS` and `STALE_UPDATE` | C-164 | The seven-step status order, BR-89 |
+| The body of a replayed action create | C-165 | The same shape as a first success |
+| Where the replay lookup runs; a reused key with a different body | C-166 | After ownership, before the terminal refusals; treated as a replay (A-05) |
+| A creation row in status history; the order of gate reasons | C-167 | `NULL -> NEW`; all at once, fixed order |
+| A future `actionAt` on a planned action being completed | C-168 | Complete may send `actionAt`; the final one must be <= now + 5 min |
+| "My planned actions" drill-down | C-169 | `/dashboard#my-actions`, uncapped, `actionAt asc, id asc` |
+| `statusGroup` with `currentStatus` | C-170 | 400 `INVALID_QUERY_PARAM` |
+| Whether `allowedTransitions` hides an unmet gate | C-171 | No; `resolutionGate` explains it and Resolved shows disabled |
 
 ### Labsheet conflicts X-1 to X-6
 
@@ -826,9 +879,9 @@ The handoff section 4 drafts are superseded by `decisions.md` (its preamble). Di
 that change this document: action text bounds are 2000 and 1000, not 1000 and 500 (C-134);
 the action endpoints are Lab 3-style paths with no separate GET (C-136); the gate's "latest"
 is by `finishedAt` (C-137, C-160); `clientRequestId` is optional (C-139); the
-user cards count all accounts (C-143); the "Urgent" list follows C-127's list order
-(`lastActivityAt desc, id desc`) rather than the catalogue's "oldest first"; `EXPLAIN` is not
-asserted (C-148).
+user cards count all accounts (C-143); every dashboard list follows its drill-down's order,
+which keeps the catalogue's "oldest first" for "Urgent" and replaces C-127's single list
+order (C-161); `EXPLAIN` is not asserted (C-148).
 
 ### Glossary additions (C-150, extending L3 C-92)
 

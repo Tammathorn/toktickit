@@ -37,7 +37,8 @@ report was produced in the Issue #62 session and is not a file in this repositor
 | D-14 | C-140 | Changed | | D-28 | C-130 | As handoff |
 
 C-150..C-160 are new decisions with no handoff row: C-150..C-158 come from the 1.1 report,
-and C-159 and C-160 close gaps in C-122 and C-131.
+and C-159 and C-160 close gaps in C-122 and C-131. C-161..C-171 answer the questions the
+prompt 1.4 specification draft raised; their Source is "1.4 question N".
 
 ## Decision table
 
@@ -98,6 +99,22 @@ first draft of this log left open.
 | C-159 | Where `TICKET_RESOLVED` sits in the check order | Gap in C-122 | 409 `TICKET_RESOLVED` takes the same check-order slot as `TICKET_CLOSED`: after ownership, before body validation. | It is a refusal on the Ticket's state, not on the request body. | Extends C-122 and C-138's check order |
 | C-160 | `finishedAt` for an action created already `COMPLETED` | Gap in C-131 | An action created already `COMPLETED` gets `finishedAt = createdAt` (server time); `actionAt` stays the user's time the work happened. | The gate orders by when the work was recorded as finished, which only the server can vouch for. | Extends C-131 and C-137 |
 
+### Decisions from the 1.4 specification questions
+
+| ID | Topic | Source | Decision | Reason | Supersedes / extends |
+|---|---|---|---|---|---|
+| C-161 | Dashboard list order | 1.4 question 0 (correction to C-127) | Each dashboard list uses the same order as its drill-down, so its rows are the first rows of that list. "Recently updated" (both dashboards): `lastActivityAt desc, id desc`, as `/queue?sort=lastActivityAt:desc` and `/tickets?sort=lastActivityAt:desc` return it. "Urgent": active, IT Priority High, `createdAt asc, id desc` - exactly what `/queue?itPriority=HIGH` returns, keeping L2 C-29's `id desc` tie-break. "Recently resolved": `resolvedAt desc, id desc`. Lists stay top 5, except the C-169 panel. | The oldest High Ticket is the most urgent, and a card that shows the same rows as its drill-down can be checked by eye. | Supersedes C-127's "(activity desc, id desc)" clause |
+| C-162 | Writing to a finished action | 1.4 question 1 | Edit, complete or cancel on an action that is not `PLANNED` -> 409 `ACTION_NOT_PLANNED`, in the operation-refusal slot after `STALE_UPDATE`. | A finished action is history (C-133); with a stale version the client is told to refresh first, and the refresh shows it finished. | Extends C-133 and C-138; adds `ACTION_NOT_PLANNED` to C-100 |
+| C-163 | `version` on "Problem Appears Resolved" | 1.4 question 2 | The Requester's flag sends no `version`, like claim. It still bumps the Ticket `version`. | It is a flag, already conditional on the Ticket's status (C-76), and setting it twice changes nothing. | Extends C-138 |
+| C-164 | The status route's refusal order | 1.4 question 3 | `PATCH /api/staff/tickets/:id/status`, after session -> password gate -> role -> params -> load: (1) target not one of the eight statuses -> 400 `VALIDATION_FAILED`; (2) target equals the current status -> 400 `SAME_STATUS` (C-77); (3) current status `CLOSED` or `CANCELLED` -> 409 `INVALID_STATUS_TRANSITION` (C-109); (4) `version` missing or not an integer -> 400; (5) `version` stale -> 409 `STALE_UPDATE`; (6) move outside the matrix -> 409 `INVALID_STATUS_TRANSITION`; (7) `OWNER_REQUIRED`, then `RESOLUTION_GATE_NOT_MET`, then `PLANNED_ACTIONS_OPEN` on a move to Cancelled. Steps 1, 2, 3 and 6 are Lab 3's order unchanged; 4-5 are inserted. Every other write keeps C-138's general order, with `TICKET_CLOSED` and `TICKET_RESOLVED` before body validation. API-64, API-66, API-67, API-69, API-119 and API-121 keep their assertions; only their request bodies gain `version` (C-138), and the `RESOLVED` cells gain a completed action (C-137). | A terminal Ticket is refused whatever version the client holds, and C-77 and the Lab 3 tests stay unchanged. | Extends C-138 for the status route; keeps C-77 and C-109 |
+| C-165 | The body of a replayed create | 1.4 question 4 | A replay returns 200 with the same body shape as a first success: the staff Ticket DTO for an action, the Ticket DTO for a Ticket, the comment or note for a Public Comment or Internal Note. | The client handles one response shape per endpoint. | Extends C-139 (resolves it against C-136) |
+| C-166 | Where the replay lookup runs | 1.4 question 5 | The `clientRequestId` lookup runs after ownership and before `TICKET_CLOSED` / `TICKET_RESOLVED` and body validation. A replay returns 200 with the original even if the Ticket has since closed. The body is not compared: a key reused with a different body is treated as a replay, as a documented assumption. | The retry is of a request that already succeeded, and keys are random UUIDs the client mints, so a collision means a client bug. | Extends C-139 and C-138's check order |
+| C-167 | Creation history and gate reason order | 1.4 question 6 | Creating a Ticket writes a `TicketStatusChange` with `fromStatus` NULL and `toStatus` `NEW`; `fromStatus` is nullable. Legacy Tickets get no such row. Gate reasons are returned all at once, in this fixed order: `NO_COMPLETED_ACTION`, `PLANNED_ACTIONS_OPEN`, `FOLLOW_UP_REQUIRED`, `NO_ACTION_SINCE_REOPEN`. | New Tickets get a complete history, and a fixed order keeps the UI and the tests stable. | Extends C-141, C-145 and C-137 |
+| C-168 | `actionAt` on complete | 1.4 question 7 | Complete may send `actionAt`. The final `actionAt` (sent, or the stored one) must be <= now + 5 minutes, else 400 at `actionAt` asking for the time the work was done. C-134's lower bound still applies. | A `COMPLETED` action records work that happened, so it cannot be in the future. | Extends C-133 and C-134 |
+| C-169 | "My planned actions" drill-down | 1.4 question 8a | The card drills down to `/dashboard#my-actions`, a panel listing every `PLANNED` action assigned to the caller on a non-terminal Ticket, with no top-5 cap and no pagination, ordered `actionAt asc, id asc`. The card count equals the panel's row count. It is the one uncapped dashboard list. | Soonest work first, and a list with no cap is the drill-down. | Extends C-127 and C-143 |
+| C-170 | `statusGroup` with `currentStatus` | 1.4 question 8b | Both together on My Tickets -> 400 `INVALID_QUERY_PARAM`. | One status filter at a time, as in Lab 3. | Extends C-143 and L2 C-43 |
+| C-171 | The gate in the staff DTO | 1.4 question 8c | `allowedTransitions` keeps listing every move the matrix allows. The staff Ticket DTO adds `resolutionGate: { met, reasons }`. When `met` is false the UI shows Resolved disabled, with the reasons listed beneath. The server still enforces the gate. | The user learns why they cannot resolve, and the gate is visible in a screenshot for Part 7. | Extends C-137 |
+
 ---
 
 ## Lab 3 and Lab 2 decisions superseded or extended
@@ -112,15 +129,15 @@ Every row in 1.1 report item 2.18, then the four further rows this log extends.
 | C-89 | Test levels | Superseded for Lab 4: eight levels become ten (§10 adds workflow and performance-smoke) | §10; C-148 |
 | C-90 | Playwright configuration | Extended: Lab 4 screenshot folders under `artifacts/lab-04/screenshots/` (§12) and the console-error fixture | §12; C-149 |
 | C-93 | Acting on a Ticket, owner requirement | Extended: `-> RESOLVED` also passes the gate; `OWNER_REQUIRED` stays first with its own code | C-137 |
-| C-100 | Refusal codes | Extended: 409 `STALE_UPDATE`, `RESOLUTION_GATE_NOT_MET`, `PLANNED_ACTIONS_OPEN`, `TICKET_RESOLVED` | C-122, C-124, C-137, C-138 |
+| C-100 | Refusal codes | Extended: 409 `STALE_UPDATE`, `RESOLUTION_GATE_NOT_MET`, `PLANNED_ACTIONS_OPEN`, `TICKET_RESOLVED`, `ACTION_NOT_PLANNED` | C-122, C-124, C-137, C-138, C-162 |
 | C-109 | Writing to a terminal Ticket | Extended to Actions Taken | C-122 |
 | C-110 | Stacked PRs while review is batched | Superseded for Lab 4: review is no longer batched; the Lab 4 stacking rule is restated in `CLAUDE.md` (prompt 1.3) | Handoff sections 1 and 5 |
 | C-119 | Success on the two Ticket Detail screens | Extended: success messages for action create, edit, complete and cancel, with copy fixed in `ui-spec.md` | C-136 |
 | L2 C-26 | Duplicate submission, UI only | **Superseded**: server-side `clientRequestId` | C-139 |
 | `specification.md` 5.1 | Status transition matrix | The `RESOLVED` column's cells gain the gate; the `CANCELLED` column's cells gain `PLANNED_ACTIONS_OPEN`. No cell changes between `Y` and `-` | C-125, C-137, C-124 |
 | `specification.md` 5.2 | Authorization matrix | New rows for the action writes and both dashboards; the status, owner and IT Priority cells gain 409 `STALE_UPDATE`; the status cell gains the gate | C-136, C-138, C-137, C-143 |
-| C-63 | Check order | Extended: `TICKET_CLOSED` -> body validation -> `STALE_UPDATE` -> the operation's own refusals | C-138 |
-| C-76 | "Problem Appears Resolved" | Extended: the flag bumps `version` and sets `lastActivityAt` | C-138, C-140 |
+| C-63 | Check order | Extended: replay lookup -> `TICKET_CLOSED` -> body validation -> `STALE_UPDATE` -> the operation's own refusals; the status route has its own seven-step order | C-138, C-164, C-166 |
+| C-76 | "Problem Appears Resolved" | Extended: the flag sends no `version`, bumps it, and sets `lastActivityAt` | C-138, C-140, C-163 |
 | C-91 | Seed composition | Extended: actions, `resolvedAt`, run-relative activity times | C-146 |
 | C-92 | Terminology | Extended: "active" and the Requester's "Open tickets" | C-150 |
 
