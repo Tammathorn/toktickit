@@ -22,8 +22,8 @@ colour token**: every Lab 4 element below is built from them.
 **The three Playwright viewports** stay **1280, 834 and 390 px** (`desktop`, `tablet`,
 `mobile`), one inside each band (L3 C-90).
 
-Places this document needs a rule `specification.md` does not state are marked
-`TODO(question N)` and listed in section 17.
+The three places where the first draft needed a rule `specification.md` did not state are
+recorded in section 17; each is now closed by a decision row (C-177, C-179, C-180).
 
 ---
 
@@ -87,6 +87,7 @@ directly below its control.
 | BR-18 | `assigneeId` | `Choose an active IT Staff or Administrator user.` (L3 ui 6.1, reused) |
 | BR-36 | `version` | `Refresh the page and try again.` - a client defect if ever shown |
 | BR-42 | `clientRequestId` | `clientRequestId must be a UUID.` - a client defect if ever shown |
+| C-175 | any field an action route does not accept | `<field> is not accepted here.` - a client defect if ever shown |
 | BR-88 | `statusGroup` (query) | `statusGroup must be open and cannot be combined with currentStatus.` |
 | C-143 | `requesterResolved` (query) | `requesterResolved must be true.` |
 
@@ -269,8 +270,11 @@ readable in both.
 `Edit` on a planned row opens the row in place (a card-within-card at every width) with
 `Description`, `Action Date/Time`, `Assignee` and `Attachment Notes` pre-filled, primary
 `Save Action` and secondary `Close`. Status, result and follow-up are not editable here
-(BR-10). Only changed fields are sent, with the action's `version`. TODO(question 3): whether an
-unchanged assignee who has since been deactivated blocks the save.
+(BR-10). Only changed fields are sent, with the action's `version`; `Save Action` stays
+disabled until at least one field differs from the stored value, because an edit with no
+editable field is 400 (BR-90, C-175). An assignee who has since been deactivated shows as
+`<name> (inactive)` in the select and does not block saving other fields: it is not re-checked
+unless changed (BR-18, C-177).
 
 ### 8.5 Complete and Cancel
 
@@ -335,9 +339,10 @@ A section headed `Status history` in the Ticket information card, oldest first (
 | Creation row (`fromStatus` null) | `DD MMM YYYY HH:mm - Created as New by <name>` |
 | Change | `DD MMM YYYY HH:mm - <From> -> <To> by <name>`, with both status badges |
 
-An ordered list, `<ol>`, so the order is announced. No edit or delete control (BR-15). On a
-legacy Ticket (no creation row) a muted line above the list reads
-`History is recorded from <migration date>.` (BR-51) - TODO(question 5): the date's source.
+An ordered list, `<ol>`, so the order is announced. No edit or delete control (BR-15). When the
+DTO's `historyComplete` is false (a legacy Ticket) a muted line above the list reads
+`Status changes made before this history began were not recorded.` (BR-51, C-179). No date is
+shown.
 
 ## 10. Other screens - what changes
 
@@ -390,10 +395,10 @@ NF = `That item does not exist.` with a link back.
 | Loading | Skeleton cards and three skeleton panels; `Refresh` disabled |
 | Success | - (no write). After Refresh, the `Updated …` line changes |
 | Validation | - |
-| Empty | Per list: `No planned actions are assigned to you.` / `No tickets were updated in the last 7 days.` / `No High IT Priority tickets are open.` Each with the outline document icon; `View all` stays |
+| Empty | Per list: `No planned actions are assigned to you.` / `No tickets were updated in the last 7 days.` / `No High IT Priority tickets are open.` Each with the outline document icon; `View all` stays. The first is captured for real (the Administrator who owns nothing); the other two only from a mocked response (C-180) |
 | Zero | The card shows `0`; still a link (BR-57) |
 | No results | - |
-| Forbidden | FORB. TODO(question 6): how this state is reached when `/dashboard` serves every role |
+| Forbidden | - . `/dashboard` serves each role its own dashboard, so a forbidden state cannot occur here (C-180). Role restriction is proven at the API: a Requester's `GET /api/dashboard/staff` is 403 with no metric content |
 | Not found | - |
 | Conflict | - |
 | Failure | FAIL panel replacing the grid; `Refresh` stays |
@@ -403,7 +408,7 @@ NF = `That item does not exist.` with a link back.
 As 12.1, with Empty copy `None of your tickets changed in the last 7 days.` and
 `None of your tickets were resolved in the last 7 days.`; Zero is the real case of an account
 with no Tickets (nattapong.w), where all four cards show `0` and both lists show Empty.
-Forbidden: FORB, TODO(question 6).
+Forbidden: `-` (C-180), as 12.1.
 
 ### 12.3 Actions Taken (staff)
 
@@ -486,30 +491,36 @@ adds; Issue #70 (Issue 9) re-runs all of them on one fresh seed and completes se
 Captures wait for transitions to settle. Names containing `mocked` come from a mocked response
 and say so.
 
-**`staff-dashboard/`** - Issue #67, `dashboards.spec.ts` (9 states)
+**`staff-dashboard/`** - Issue #67, `dashboards.spec.ts` (8 states)
 
 ```
 staff-dashboard-<vp>-populated.png        IT Staff, seeded data
 staff-dashboard-<vp>-administrator.png    with the three user cards
 staff-dashboard-<vp>-loading.png
-staff-dashboard-<vp>-zero.png             the Administrator who owns nothing: Mine 0, My planned actions 0
-staff-dashboard-<vp>-empty-mocked.png     every list empty
+staff-dashboard-<vp>-zero.png             the Administrator who owns nothing: Mine 0, My planned
+                                          actions 0, and its panel's real Empty state
+staff-dashboard-<vp>-lists-empty-mocked.png  Recently updated and Urgent empty - the seed always
+                                          holds recent and High Tickets, so this cannot be real
 staff-dashboard-<vp>-my-actions.png       after following the card to #my-actions
 staff-dashboard-<vp>-failure.png
-staff-dashboard-<vp>-forbidden-mocked.png TODO(question 6)
 staff-dashboard-<vp>-focus.png            keyboard focus on a card
 ```
 
-**`requester-dashboard/`** - Issue #68, `dashboards.spec.ts` (6 states)
+No staff-dashboard Forbidden capture: the state cannot occur (C-180).
+
+**`requester-dashboard/`** - Issue #68, `dashboards.spec.ts` (5 states)
 
 ```
-requester-dashboard-<vp>-populated.png
+requester-dashboard-<vp>-populated.png  only the four Requester cards - Part 5's UI role evidence (C-180)
 requester-dashboard-<vp>-loading.png
-requester-dashboard-<vp>-zero.png             nattapong.w: four 0 cards, both lists empty
+requester-dashboard-<vp>-zero.png       nattapong.w: four 0 cards, both lists' real Empty state
 requester-dashboard-<vp>-failure.png
-requester-dashboard-<vp>-forbidden-mocked.png TODO(question 6)
 requester-dashboard-<vp>-focus.png
 ```
+
+Part 5's role-restriction evidence is completed by terminal output, not a screenshot: a
+Requester's `GET /api/dashboard/staff` -> 403 with no metric content, saved under
+`artifacts/lab-04/evidence/issue-6/` (C-180).
 
 **`actions-taken/`** - Issue #65, `actions-taken-flow.spec.ts` (15 states)
 
@@ -542,7 +553,7 @@ workflow-<vp>-cancel-blocked.png   PLANNED_ACTIONS_OPEN
 workflow-<vp>-conflict.png         STALE_UPDATE on the status control
 workflow-<vp>-history.png          staff view, oldest first
 workflow-<vp>-requester-history.png
-workflow-<vp>-legacy-history.png   TODO(question 5)
+workflow-<vp>-legacy-history.png   historyComplete false: a Lab 3 Ticket on the dev database (C-179)
 workflow-<vp>-reopened.png
 ```
 
@@ -565,7 +576,8 @@ forbidden-<vp>-requester.png       a Requester at /queue
 system-check-<vp>-online.png
 ```
 
-**Total: 54 states x 3 viewports = 162 screenshots.**
+**Total: 52 states x 3 viewports = 156 screenshots**, of which one state - three files,
+`staff-dashboard-<vp>-lists-empty-mocked.png` - is mocked and named so (C-180).
 
 ## 16. Visual and accessibility checklist
 
@@ -632,12 +644,13 @@ Measured by Issue #70 at D 1280, T 834, M 390 against the section 15 captures an
 - VIS-31 Touch targets at least 44 px at 390 px.
 - VIS-32 Card grids reflow to the section 13 column counts.
 
-## 17. Rules this document needed and could not find
+## 17. Rules this document needed and could not find - all closed
 
-Nothing here is resolved on this document's authority.
+The first draft declared three gaps and resolved none on its own authority. Each is now closed
+by a decision row, cited in place above.
 
-| # | Where | Gap |
-|---|---|---|
-| 3 | 8.4 | Whether saving an edit with the unchanged, since-deactivated assignee is refused (shared with `api-spec.md` question 3) |
-| 5 | 9.4, 15 | The source of `<migration date>` in the legacy history line (shared with `api-spec.md` question 5) |
-| 6 | 12.1, 12.2, 15 | How a Dashboard's Forbidden state is reached for Part 5 when `/dashboard` serves every role: a mocked 403 capture (as named in section 15), or separate role routes |
+| # | Where | Gap | Closed by | Answer |
+|---|---|---|---|---|
+| 3 | 8.4 | Saving an edit with the unchanged, since-deactivated assignee | C-177 | Accepted; the assignee is re-checked only when changed |
+| 5 | 9.4, 15 | The date in the legacy history line | C-179 | No date: `historyComplete` false shows `Status changes made before this history began were not recorded.` |
+| 6 | 12.1, 12.2, 15 | A Dashboard Forbidden state for Part 5 | C-180 | It cannot occur; no capture. The evidence is the API's 403 plus the Requester's own dashboard |

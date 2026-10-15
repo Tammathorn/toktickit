@@ -18,8 +18,8 @@ an endpoint absent from sections 3 to 5 is unchanged from Lab 3.
 **Thirty-six endpoints.** Six are new (sections 3 and 4), fourteen are Lab 2-3 endpoints whose
 contract changes (section 5), and sixteen are unchanged. Section 8.1 is the inventory.
 
-Places where this document needs a rule `specification.md` does not state are marked
-`TODO(question N)` and listed in section 9. None is resolved on this document's authority.
+The five places where the first draft needed a rule `specification.md` did not state are
+recorded in section 9; each is now closed by a decision row (C-175 to C-179).
 
 ---
 
@@ -47,7 +47,7 @@ Unchanged from `L3 api 1.1`:
 ```
 
 `fields` is present only on `VALIDATION_FAILED` and `INVALID_QUERY_PARAM`, keyed by field.
-**One code adds one key:** `RESOLUTION_GATE_NOT_MET` carries `reasons`, the array BR-29
+**One code adds one key (C-173):** `RESOLUTION_GATE_NOT_MET` carries `reasons`, the array BR-29
 requires, inside `error`, the same way `fields` sits inside it for validation:
 
 ```json
@@ -97,7 +97,7 @@ Lab 4 widens. A code absent from this table is a defect.
 | 3 · 4Δ | `FORBIDDEN_ROLE` | 403 | The role may never perform the operation, raised before any load. Lab 4: a Requester on any action write or on `GET /api/dashboard/staff`; IT Staff or Administrator on `GET /api/dashboard/requester` (BR-17, BR-59, BR-60) |
 | 3 | `ORIGIN_NOT_ALLOWED` | 403 | A state-changing request with a foreign `Origin` |
 | 3 | `TICKET_NOT_FOUND` | 404 | No such Ticket, or not this caller's |
-| **4** | `ACTION_NOT_FOUND` | 404 | No Action Taken with that id. Staff only, so it means genuine absence |
+| **4** | `ACTION_NOT_FOUND` | 404 | No Action Taken with that id (C-172). A Requester gets 403 `FORBIDDEN_ROLE` first, before any load, so this means genuine absence |
 | 3 | `ATTACHMENT_NOT_FOUND` | 404 | No such Attachment, or not this caller's |
 | 3 | `USER_NOT_FOUND` | 404 | No such User (Administrator routes) |
 | 3 | `ALREADY_OWNED` | 409 | Claim lost the race |
@@ -158,10 +158,9 @@ One shared order, so the status for any request is deterministic. Steps 1 to 6 a
 10. **Stale check** - `version` is not the current one -> 409 `STALE_UPDATE`. Each write's
     UPDATE is conditional on the version, so a race lost after this check is also
     `STALE_UPDATE`.
-11. **The operation's own refusals** - for example `ACTION_NOT_PLANNED` (409),
-    `ASSIGNEE_NOT_ELIGIBLE` (422), `OWNER_REQUIRED` on unassign (409), `ALREADY_OWNED` (409).
-    TODO(question 2): the order between `ACTION_NOT_PLANNED` and `ASSIGNEE_NOT_ELIGIBLE` when
-    both apply is not fixed by `specification.md`.
+11. **The operation's own refusals** - on an action edit `ACTION_NOT_PLANNED` (409) and then
+    `ASSIGNEE_NOT_ELIGIBLE` (422), in that order (C-176); elsewhere `OWNER_REQUIRED` on
+    unassign (409) and `ALREADY_OWNED` (409).
 
 The `Origin` check runs before step 1 on `POST`, `PATCH` and `DELETE` (L3 C-58).
 
@@ -201,11 +200,14 @@ both Ticket Detail DTOs (section 6), and every write returns the full IT Staff T
 Every action write also sets the Ticket's `lastActivityAt` (BR-46). None changes the Ticket's
 `version` (BR-37) or its status (BR-16).
 
-TODO(question 1): whether a field outside an operation's permitted set (for example `result`
-on a `PLANNED` create or on an edit, `assigneeId` on complete) is refused 400 or ignored, and
-whether an edit naming no editable field is 400 or a 200 that bumps `version`, is not fixed by
-`specification.md`. Server-set fields (BR-03: `createdById`, `createdAt`, `performedById`,
-`finishedAt`, `version` on create) are **ignored**, which BR-03 does fix.
+**Fields the operation does not accept** (BR-90, C-175). On these four routes only, a known
+field the operation does not accept - `result` on a `PLANNED` create or on an edit,
+`assigneeId` on complete or cancel, and the like - and any field the API does not define are
+refused 400 `VALIDATION_FAILED`, with `fields.<name>` = `<name> is not accepted here.`. Two
+groups are **silently ignored** instead, so BR-03 and L3 C-64 hold: the server-set fields
+(`createdById`, `createdAt`, `performedById`, `finishedAt`, and `version` on create) and identity
+fields (`requesterId`, `authorId` and the like) - a client can never assert who it is.
+`clientRequestId` is accepted on create.
 
 ### 3.1 `POST /api/tickets/:id/actions`
 
@@ -297,8 +299,12 @@ Edit a `PLANNED` action (BR-10).
 | `version` | integer | Required; the action's `version` as last read (BR-36) |
 | `description` | string | Optional; as 3.1 |
 | `actionAt` | string | Optional; as 3.1 for a `PLANNED` action |
-| `assigneeId` | integer | Optional; eligibility as 3.1 (BR-18). TODO(question 3): whether re-sending an unchanged assignee who has since been deactivated is 422 |
+| `assigneeId` | integer | Optional. Eligibility as 3.1 is checked **only when it differs from the stored assignee**; re-sending the stored assignee, even one since deactivated, is accepted (BR-18, C-177) |
 | `attachmentNotes` | string | Optional; 0-500 |
+
+At least one editable field is required; `{ "version": n }` alone is 400. An edit whose values
+all equal the stored ones answers 200 with **no write**: the action `version` and the Ticket's
+`lastActivityAt` stay as they were (BR-90, C-175).
 
 Success increases the action's `version` by one (BR-37).
 
@@ -307,7 +313,7 @@ Success increases the action's `version` by one (BR-37).
 | Status | Code | Condition |
 |---|---|---|
 | 200 | - | Saved |
-| 400 | `INVALID_QUERY_PARAM` / `VALIDATION_FAILED` | Bad `:id` / a field rule or a missing `version` |
+| 400 | `INVALID_QUERY_PARAM` / `VALIDATION_FAILED` | Bad `:id` / a field rule, a missing `version`, no editable field, or a field not accepted here (C-175) |
 | 401, 403 | as 3.1 | |
 | 404 | `ACTION_NOT_FOUND` | No such action |
 | 409 | `TICKET_RESOLVED` / `TICKET_CLOSED` | The action's Ticket is Resolved / terminal |
@@ -569,9 +575,8 @@ Each keeps its `L3 api` contract except what its box lists.
 > **Changed from Lab 3**
 > - Sends **no** `version`; increases the Ticket `version` (BR-38, C-163).
 > - Sets `lastActivityAt` (BR-46).
-> - TODO(question 4): `L3 api 4.4` says a repeat is permitted and overwrites the timestamp;
->   C-163's reason says "setting it twice changes nothing". Whether a repeat increases
->   `version` and `lastActivityAt` is not fixed.
+> - A repeat stays permitted, as `L3 api 4.4`: it overwrites the timestamp and, being a write,
+>   moves `version` and `lastActivityAt` again (BR-38, C-178).
 
 ### 5.5 `POST /api/tickets/:id/attachments` and `DELETE /api/attachments/:id` (`L3 api 5.2`, `5.4`)
 
@@ -670,6 +675,7 @@ Lab 3 keys unchanged, plus:
 | `resolvedAt` | ISO string \| null | BR-49 |
 | `actions` | array | `actionAt desc, id desc` (BR-22); Requester action shape below |
 | `statusHistory` | array | `changedAt, id` ascending (BR-23); people by `{ name }` only |
+| `historyComplete` | boolean | False for a Ticket that predates the history (BR-51, C-179) |
 
 **Requester action** - every field, people by name only, no ids, no `version` (BR-20):
 
@@ -693,10 +699,9 @@ Lab 3 keys unchanged, plus:
 `{ "id": 88, "fromStatus": null, "toStatus": "NEW", "changedBy": { "name": "Nicha Srisuk" },
 "changedAt": "2026-10-10T01:00:00.000Z" }`.
 
-TODO(question 5): the "History is recorded from <migration date>" line for a legacy Ticket
-needs a date and a way to know the Ticket is legacy; no field for either is fixed. A legacy
-Ticket is recognisable as one with no `fromStatus: null` row (C-167), but the date's source is
-open.
+**`historyComplete`** (boolean, both DTOs; BR-51, C-179): true when `statusHistory` holds the
+creation row (`fromStatus` null -> `NEW`), false for a Ticket that predates the history. No
+migration date is returned.
 
 ### 6.2 IT Staff Ticket DTO (`L3 api 10.5`, extended)
 
@@ -727,7 +732,7 @@ The 6.1 additions, with staff shapes, plus two keys:
 }
 ```
 
-`allowedOperations` is FR-09: `["EDIT", "COMPLETE", "CANCEL"]` for a `PLANNED` action on a
+`allowedOperations` is FR-09 (C-174): `["EDIT", "COMPLETE", "CANCEL"]` for a `PLANNED` action on a
 Ticket in a writable status (BR-24), else `[]`. `isActive` false renders "(inactive)". No
 email on any person.
 
@@ -803,15 +808,17 @@ new: 36, matching `specification.md` 5.2 row for row.
 
 ---
 
-## 9. Rules this document needed and could not find
+## 9. Rules this document needed and could not find - all closed
 
-Each is marked in place as `TODO(question N)`. Nothing here is resolved on this document's
-authority.
+The first draft declared five gaps and resolved none on its own authority. Each is now closed
+by a decision row, cited in place above. Three shape choices the draft made were confirmed as
+decisions too: `ACTION_NOT_FOUND` (C-172), `error.reasons` (C-173) and `allowedOperations`
+(C-174).
 
-| # | Where | Gap |
-|---|---|---|
-| 1 | Section 3 | A field outside an operation's permitted set (e.g. `result` on a `PLANNED` create or an edit, `assigneeId` on complete): 400 or ignored? And an edit carrying only `version`: 400, or 200 that bumps `version`? |
-| 2 | 2.1 step 11 | Order between `ACTION_NOT_PLANNED` (409) and `ASSIGNEE_NOT_ELIGIBLE` (422) on an edit of a finished action naming an ineligible assignee |
-| 3 | 3.2 | An edit that re-sends the unchanged assignee who has since been deactivated: 422 (BR-18 "where an assignee is set") or accepted (BR-19's spirit)? |
-| 4 | 5.4 | A repeated "Problem Appears Resolved": Lab 3 overwrites the timestamp; C-163's reason says "changes nothing". Does a repeat bump `version` and `lastActivityAt`? |
-| 5 | 6.1 | The source of the date in "History is recorded from <migration date>" |
+| # | Where | Gap | Closed by | Answer |
+|---|---|---|---|---|
+| 1 | Section 3, 3.2 | A field an action operation does not accept; an empty or no-change edit | C-175 | 400 naming the field, except server-set and identity fields, which stay ignored; empty edit 400; no-change edit 200 with no write |
+| 2 | 2.1 step 11 | `ACTION_NOT_PLANNED` versus `ASSIGNEE_NOT_ELIGIBLE` | C-176 | `ACTION_NOT_PLANNED` first |
+| 3 | 3.2 | Re-sending a since-deactivated assignee | C-177 | Accepted; eligibility checked only on a change |
+| 4 | 5.4 | A repeated "Problem Appears Resolved" | C-178 | A write: timestamp overwritten, `version` and `lastActivityAt` move |
+| 5 | 6.1 | The legacy history line's date | C-179 | No date; `historyComplete` |

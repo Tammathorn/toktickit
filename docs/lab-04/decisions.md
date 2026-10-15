@@ -38,7 +38,9 @@ report was produced in the Issue #62 session and is not a file in this repositor
 
 C-150..C-160 are new decisions with no handoff row: C-150..C-158 come from the 1.1 report,
 and C-159 and C-160 close gaps in C-122 and C-131. C-161..C-171 answer the questions the
-prompt 1.4 specification draft raised; their Source is "1.4 question N".
+prompt 1.4 specification draft raised; their Source is "1.4 question N". C-172..C-180 settle
+what the prompt 1.5 `api-spec.md` and `ui-spec.md` drafts raised ("1.5 confirm" or
+"1.5 question N").
 
 ## Decision table
 
@@ -115,6 +117,20 @@ first draft of this log left open.
 | C-170 | `statusGroup` with `currentStatus` | 1.4 question 8b | Both together on My Tickets -> 400 `INVALID_QUERY_PARAM`. | One status filter at a time, as in Lab 3. | Extends C-143 and L2 C-43 |
 | C-171 | The gate in the staff DTO | 1.4 question 8c | `allowedTransitions` keeps listing every move the matrix allows. The staff Ticket DTO adds `resolutionGate: { met, reasons }`. When `met` is false the UI shows Resolved disabled, with the reasons listed beneath. The server still enforces the gate. | The user learns why they cannot resolve, and the gate is visible in a screenshot for Part 7. | Extends C-137 |
 
+### Decisions from the 1.5 API and UI specification questions
+
+| ID | Topic | Source | Decision | Reason | Supersedes / extends |
+|---|---|---|---|---|---|
+| C-172 | A missing action | 1.5 confirm | 404 `ACTION_NOT_FOUND` for an action id that does not exist. A Requester still gets 403 first, before the action is loaded (staff-only middleware). | One code per resource, as Lab 3, and the role check stays ahead of every load. | Extends C-136 and C-100 |
+| C-173 | `error.reasons` | 1.5 confirm | `RESOLUTION_GATE_NOT_MET` carries `error.reasons`, the one additive key in the Lab 3 envelope, used by that code only. | The reasons are a list, not field errors. | Extends C-137 and C-138's "envelope unchanged" |
+| C-174 | `allowedOperations` | 1.5 confirm | Each action in the staff Ticket DTO carries `allowedOperations` (`EDIT`, `COMPLETE`, `CANCEL`, or none). | The server decides what the UI offers (`CLAUDE.md` working rule 3). | Extends C-136 |
+| C-175 | Fields an action operation does not accept | 1.5 question 1 | On the four action routes only: a known field the operation does not accept (e.g. `result` on a planned create or on an edit) and any unknown field -> 400 `VALIDATION_FAILED` naming the field. The BR-03 server-set fields (`createdById`, `createdAt`, `performedById`, `finishedAt`, `version` on create) and identity fields (`requesterId`, `authorId` and the like) stay silently ignored. `clientRequestId` is accepted on create. An edit with no editable field -> 400. An edit whose values equal the stored ones -> 200 with no write: `version` and `lastActivityAt` unchanged. No other route changes. | An identity field is ignored so a client can never assert who it is (C-64); any other unexpected field is a client bug that should surface, the same reasoning as the follow-up-note rule (C-134). A no-change save is harmless. | Extends C-133 and C-134; keeps C-64, BR-03 and AC-05 |
+| C-176 | `ACTION_NOT_PLANNED` versus `ASSIGNEE_NOT_ELIGIBLE` | 1.5 question 2 | `ACTION_NOT_PLANNED` is checked before `ASSIGNEE_NOT_ELIGIBLE`. | There is no point checking an assignee for an action that can no longer be edited. | Extends C-162 |
+| C-177 | Re-sending a deactivated assignee | 1.5 question 3 | An edit that re-sends the stored assignee, now deactivated, is accepted. Eligibility is checked only when `assigneeId` differs from the stored value. | C-132 applies 422 only when an assignee is set; re-sending is not setting. | Extends C-132 |
+| C-178 | Repeating "Problem Appears Resolved" | 1.5 question 4 | Lab 3's behavior stays: a repeat overwrites the timestamp, and `version` and `lastActivityAt` move, because it is a write. C-163's reason is corrected to: "it is a flag, already conditional on the Ticket's status (L3 C-76), so the version check adds nothing a stale screen could get wrong." | A repeat is a write like any other. | Corrects C-163's reason; keeps L3 C-76 |
+| C-179 | Legacy status history | 1.5 question 5 | No migration date. Both Ticket DTOs carry `historyComplete`: true when the Ticket has its creation row (`fromStatus` NULL -> `NEW`), false for legacy Tickets. When false, the UI shows "Status changes made before this history began were not recorded." above the list. | The server knows which Tickets predate the history; a date read from the migration table at runtime would be fragile. | **Replaces** C-141's "History is recorded from <migration date>" clause |
+| C-180 | Dashboard forbidden evidence | 1.5 question 6 | `/dashboard` serves each role its own dashboard, so a forbidden UI state cannot occur there and is not captured. Part 5's role-restriction evidence is the API - a Requester calling `GET /api/dashboard/staff` gets 403 with no metric content (terminal output) - plus a screenshot of a Requester's `/dashboard` showing only Requester cards. Empty dashboard lists are captured for real where the seed allows (the Administrator's empty "My planned actions"); a list that cannot be emptied for real is captured from a mocked response named `-mocked`. | Evidence must show states that happen, and this one does not. | Extends C-127, C-143 |
+
 ---
 
 ## Lab 3 and Lab 2 decisions superseded or extended
@@ -137,7 +153,7 @@ Every row in 1.1 report item 2.18, then the four further rows this log extends.
 | `specification.md` 5.1 | Status transition matrix | The `RESOLVED` column's cells gain the gate; the `CANCELLED` column's cells gain `PLANNED_ACTIONS_OPEN`. No cell changes between `Y` and `-` | C-125, C-137, C-124 |
 | `specification.md` 5.2 | Authorization matrix | New rows for the action writes and both dashboards; the status, owner and IT Priority cells gain 409 `STALE_UPDATE`; the status cell gains the gate | C-136, C-138, C-137, C-143 |
 | C-63 | Check order | Extended: replay lookup -> `TICKET_CLOSED` -> body validation -> `STALE_UPDATE` -> the operation's own refusals; the status route has its own seven-step order | C-138, C-164, C-166 |
-| C-76 | "Problem Appears Resolved" | Extended: the flag sends no `version`, bumps it, and sets `lastActivityAt` | C-138, C-140, C-163 |
+| C-76 | "Problem Appears Resolved" | Extended: the flag sends no `version`; each set, a repeat included, bumps it and sets `lastActivityAt` | C-138, C-140, C-163, C-178 |
 | C-91 | Seed composition | Extended: actions, `resolvedAt`, run-relative activity times | C-146 |
 | C-92 | Terminology | Extended: "active" and the Requester's "Open tickets" | C-150 |
 

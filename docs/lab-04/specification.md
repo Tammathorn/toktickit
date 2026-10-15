@@ -4,7 +4,7 @@ TokTickIT - CPE 334 Individual Sprint 4.
 Owner: Tammathorn Kananurak (67070503489).
 
 Sources: `docs/lab-04/spec/Lab_4_sheet.pdf` (cited `LS x.y`), `docs/lab-04/decisions.md`
-(C-122..C-171, approved) and `docs/lab-04/phase1-analysis.md` (the codebase survey, cited
+(C-122..C-180, approved) and `docs/lab-04/phase1-analysis.md` (the codebase survey, cited
 `1.1 report x.y`; reference, not contract). A bare `C-nn` from C-122 up is a Lab 4 decision.
 Earlier rules are cited `L3 BR-nn`, `L3 C-nn`, `L2 C-nn`, and keep their meaning inside
 `docs/lab-03/` and `docs/lab-02/`.
@@ -156,7 +156,7 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-15 | Append-only | Public Comments, Internal Notes, completed and cancelled actions, and status history are append-only: no route edits or deletes them. Planned actions are editable (BR-10). | C-151, L3 BR-63 |
 | BR-16 | Action lifecycle | Part 6's "status transition" is the action's own `PLANNED -> COMPLETED` or `PLANNED -> CANCELLED`. No action write changes the Ticket's status. | C-152, C-125 |
 | BR-17 | Who may write | Any active IT Staff or Administrator user may create, edit, complete and cancel actions on any Ticket they can see. A Requester calling any action write is refused 403 before the Ticket or action is loaded. | C-132, L3 C-93, L3 C-65 |
-| BR-18 | Assignee eligibility | An assignee must be an active IT Staff or Administrator user, else 422 `ASSIGNEE_NOT_ELIGIBLE`. This check applies only where an assignee is set - on create and on edit. A create without an assignee assigns the caller. | C-132, C-131, L3 BR-48 |
+| BR-18 | Assignee eligibility | An assignee must be an active IT Staff or Administrator user, else 422 `ASSIGNEE_NOT_ELIGIBLE`. This check applies only where an assignee is set - on create, and on an edit whose `assigneeId` differs from the stored value; re-sending the stored assignee, even one since deactivated, is accepted. A create without an assignee assigns the caller. | C-132, C-131, C-177, L3 BR-48 |
 | BR-19 | Assignee eligibility | The assignee is not access control: any active IT Staff or Administrator may complete or cancel any planned action. Completing or cancelling a planned action whose assignee has since been deactivated is allowed. | C-131, C-132 |
 | BR-20 | Requester visibility | A Requester sees every action on their own Tickets, every field, read-only, with people shown by name and never by email address. A Ticket that is not theirs answers 404. | C-123, L3 C-95, L3 C-65 |
 | BR-21 | Requester visibility | The staff action composer carries a visible "Shown to the Requester" label. Internal Notes remain the private channel. | C-123 |
@@ -176,9 +176,9 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-35 | Stale update | `Ticket` and `ActionTaken` each carry an integer `version`, starting at 0. | C-138, C-145 |
 | BR-36 | Stale update | Every Ticket PATCH (status, owner, IT Priority) and every action edit, complete and cancel sends the `version` the user saw, and the update is conditional on it. A missing `version` is 400; a mismatch is 409 `STALE_UPDATE`, and nothing changes. | C-138 |
 | BR-37 | Stale update | The Ticket `version` increases on a status, owner, IT Priority or claim change and on the Requester's flag - not on a Public Comment, Internal Note, Attachment or action write. An action's `version` increases on each edit, complete and cancel. | C-138, L3 C-76 |
-| BR-38 | Stale update | Claim and the Requester's "Problem Appears Resolved" send no `version`, because each is already conditional - claim on the Ticket being unowned, the flag on its status - but each increases the Ticket `version`. | C-138, C-163, L3 C-75, L3 C-76 |
+| BR-38 | Stale update | Claim and the Requester's "Problem Appears Resolved" send no `version`, because each is already conditional - claim on the Ticket being unowned, the flag on its status - but each increases the Ticket `version`. A repeated flag is a write like the first: it overwrites the timestamp and moves `version` and `lastActivityAt`. | C-138, C-163, C-178, L3 C-75, L3 C-76 |
 | BR-39 | Stale update | `STALE_UPDATE` uses the unchanged Lab 3 error envelope. On it the client re-fetches the Ticket, shows the fresh values and keeps the user's draft. | C-138, C-147 |
-| BR-40 | Check order | Every protected operation except the status change checks, in this fixed order: session -> password-change gate -> role -> path parameters -> resource load -> ownership -> the `clientRequestId` replay lookup (creates only, BR-43) -> `TICKET_CLOSED` / `TICKET_RESOLVED` -> body validation (a missing `version` is 400 here) -> `STALE_UPDATE` -> the operation's own refusals (for example `ACTION_NOT_PLANNED`, `ASSIGNEE_NOT_ELIGIBLE`). The status change has its own order, BR-89. | C-138, C-159, C-162, C-164, C-166, L3 C-63 |
+| BR-40 | Check order | Every protected operation except the status change checks, in this fixed order: session -> password-change gate -> role -> path parameters -> resource load -> ownership -> the `clientRequestId` replay lookup (creates only, BR-43) -> `TICKET_CLOSED` / `TICKET_RESOLVED` -> body validation (a missing `version` is 400 here) -> `STALE_UPDATE` -> the operation's own refusals (on an action edit, `ACTION_NOT_PLANNED` before `ASSIGNEE_NOT_ELIGIBLE`). The status change has its own order, BR-89. | C-138, C-159, C-162, C-164, C-166, C-176, L3 C-63 |
 | BR-41 | Check order | `TICKET_RESOLVED` takes the same slot as `TICKET_CLOSED`: after ownership, before body validation. | C-159 |
 | BR-42 | Duplicate submission | Create Ticket, Action Taken, Public Comment and Internal Note accept an optional UUID `clientRequestId`, unique per (author, `clientRequestId`). Absent means no de-duplication, so the Lab 1-3 create contracts are unchanged. | C-139 |
 | BR-43 | Duplicate submission | A repeat with a key already used by the same author returns 200 and creates nothing, with the same body shape as a first success: the staff Ticket DTO for an action, the Ticket DTO for a Ticket, the comment or note for a Public Comment or Internal Note. A concurrent duplicate that hits the unique constraint (Prisma P2002) answers the same, never 500. The lookup runs after ownership and before `TICKET_CLOSED` / `TICKET_RESOLVED` and body validation, so a replay succeeds even if the Ticket has since closed. The body is not compared: a reused key is a replay (A-05). | C-139, C-165, C-166 |
@@ -189,7 +189,7 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-48 | Activity time | "Last updated" on every screen shows `lastActivityAt`. The queue API keeps its `updatedAt` sort for the Lab 3 test and adds a `lastActivityAt` sort; the queue UI's "Last updated" sort uses `lastActivityAt`. | C-140, L3 C-78 |
 | BR-49 | Resolution time | `Ticket.resolvedAt` is set to server now on `-> RESOLVED`, cleared on `-> REOPENED` and kept on `-> CLOSED`. Legacy rows keep NULL. | C-126 |
 | BR-50 | Status history | Every Ticket status change appends one `TicketStatusChange` (`ticketId`, `fromStatus`, `toStatus`, `changedById`, `changedAt`) in the same transaction as the change. Creating a Ticket appends one with `fromStatus` NULL and `toStatus` `NEW`. No route updates or deletes one. | C-141, C-167 |
-| BR-51 | Status history | A Ticket that existed before the migration shows "History is recorded from <migration date>" above its history. | C-141 |
+| BR-51 | Status history | Both Ticket DTOs carry `historyComplete`: true when the Ticket has its creation row (`fromStatus` NULL -> `NEW`), false for a Ticket that existed before the migration. When false, the screen shows "Status changes made before this history began were not recorded." above the history. | C-141, C-179 |
 | BR-52 | Dashboard time | The server computes every metric at request time. Metric functions take `now` as a parameter. The response carries `generatedAt` and `timeZone: "Asia/Bangkok"`, and times are displayed in Asia/Bangkok. | C-142, C-143 |
 | BR-53 | Dashboard time | "Recent" is a rolling 7 days with an inclusive boundary: `>= now - 168 h`. No "from yesterday" delta is shown. If a "today" metric is ever added, it is the Asia/Bangkok calendar day. | C-142 |
 | BR-54 | Terms | "Active" means not `CLOSED` and not `CANCELLED` - the queue's default set, which includes `RESOLVED`. The queue filter's "Open tickets" label is unchanged. | C-150, L3 C-111 |
@@ -213,9 +213,11 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-72 | Performance | Against `toktickit_perf` with about 2,000 Tickets, each dashboard endpoint answers with p95 under 500 ms. `EXPLAIN` output is recorded as information, never asserted. | C-148 |
 | BR-88 | Queries | `statusGroup` and `currentStatus` together on My Tickets are refused 400 `INVALID_QUERY_PARAM`: one status filter at a time. | C-170, L2 C-43 |
 | BR-89 | Check order | `PATCH /api/staff/tickets/:id/status`, after session -> password-change gate -> role -> path parameters -> resource load, checks exactly: (1) target not one of the eight statuses -> 400 `VALIDATION_FAILED`; (2) target equals the current status -> 400 `SAME_STATUS`; (3) current status `CLOSED` or `CANCELLED` -> 409 `INVALID_STATUS_TRANSITION`; (4) `version` missing or not an integer -> 400; (5) `version` stale -> 409 `STALE_UPDATE`; (6) move outside the matrix -> 409 `INVALID_STATUS_TRANSITION`; (7) `OWNER_REQUIRED`, then `RESOLUTION_GATE_NOT_MET`, then `PLANNED_ACTIONS_OPEN` on a move to Cancelled. Steps 1, 2, 3 and 6 are Lab 3's order unchanged; a terminal Ticket is refused whatever `version` the client holds. | C-164, L3 C-77, L3 C-109 |
+| BR-90 | Action fields | On the four action routes only, a known field the operation does not accept (for example `result` on a planned create or on an edit) and any unknown field are refused 400 `VALIDATION_FAILED` naming the field. The BR-03 server-set fields and identity fields (`requesterId`, `authorId` and the like) stay silently ignored, and `clientRequestId` is accepted on create. An edit with no editable field is 400; an edit whose values equal the stored ones answers 200 with no write, leaving `version` and `lastActivityAt` unchanged. | C-175, C-64 |
 
 BR-73 to BR-87 are the dashboard metrics, in section 5.3. BR-88 and BR-89 were appended after
-C-161..C-171 settled the first draft's open questions, so earlier IDs stay stable.
+C-161..C-171 settled the first draft's open questions, and BR-90 after C-175, so earlier IDs
+stay stable.
 
 ### 5.1 Status transition matrix
 
@@ -540,8 +542,8 @@ smoke answers with timings, with `EXPLAIN` recorded but not asserted.
   (NULLs ignored). Internal Notes are not read (BR-47).
 - `version` = 0; `resolvedAt` = NULL (C-126); `clientRequestId` = NULL.
 - No `ActionTaken` and no `TicketStatusChange` row is invented - not even the creation row
-  that new Tickets get (C-167). Legacy Tickets show
-  "History is recorded from <migration date>" (BR-51), and legacy Resolved and Closed Tickets
+  that new Tickets get (C-167). Legacy Tickets therefore carry `historyComplete: false` and
+  show "Status changes made before this history began were not recorded." (BR-51, C-179), and legacy Resolved and Closed Tickets
   are never re-validated against the gate (BR-32). An open legacy Ticket needs a completed
   action before it can be resolved, like any other.
 
@@ -587,15 +589,17 @@ error envelope `{ error: { code, message, fields? } }` is unchanged (C-138).
 | `GET /api/tickets` | gains `statusGroup=open` (never with `currentStatus`: 400) and `sort=lastActivityAt:<dir>` | rows gain `lastActivityAt` | C-143, C-170 |
 
 **DTO additions.** Both Ticket Detail DTOs gain `version`, `lastActivityAt`, `resolvedAt`,
-`actions` (BR-22 order) and `statusHistory` (BR-23 order); the Requester DTO carries names and
-never email addresses (C-123). The staff DTO also gains `allowedTransitions` and
-`resolutionGate: { met, reasons }` (BR-27, C-171). A replayed create answers 200 with the
+`actions` (BR-22 order), `statusHistory` (BR-23 order) and `historyComplete` (BR-51, C-179);
+the Requester DTO carries names and never email addresses (C-123). The staff DTO also gains
+`allowedTransitions` and `resolutionGate: { met, reasons }` (BR-27, C-171), and each staff
+action carries `allowedOperations` (FR-09, C-174). A replayed create answers 200 with the
 same body shape as its first success (BR-43, C-165). The
 five exact key-set tests that break on new fields are adapted, not retired
 (1.1 report 2.15).
 
 **New refusal codes** (extending L3 C-100): 409 `STALE_UPDATE` (C-138), 409
-`RESOLUTION_GATE_NOT_MET` with `reasons` (C-137), 409 `PLANNED_ACTIONS_OPEN` (C-124), 409
+`RESOLUTION_GATE_NOT_MET` with `error.reasons`, the envelope's one additive key (C-137,
+C-173), 404 `ACTION_NOT_FOUND` (C-172), 409 `PLANNED_ACTIONS_OPEN` (C-124), 409
 `TICKET_RESOLVED` (C-122), 409 `ACTION_NOT_PLANNED` (C-162). Reused: 409 `TICKET_CLOSED`, 409 `OWNER_REQUIRED`, 422
 `ASSIGNEE_NOT_ELIGIBLE`, 400 `SAME_STATUS`, 409 `INVALID_STATUS_TRANSITION`.
 
@@ -689,7 +693,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-74 | Given a `RESOLVED` Ticket with `resolvedAt` set | when it is moved to `CLOSED` | then `resolvedAt` is kept | BR-49 |
 | AC-75 | Given a `RESOLVED` Ticket | when it is moved to `REOPENED` | then `resolvedAt` is NULL | BR-49 |
 | AC-76 | Given a status change whose transaction fails | when the change is attempted | then neither the status nor a history row is written | BR-50 |
-| AC-77 | Given a Ticket that existed before the migration | when either Ticket Detail shows its history | then "History is recorded from <migration date>" is shown | BR-51 |
+| AC-77 | Given a Ticket that existed before the migration | when either Ticket Detail shows its history | then `historyComplete` is false and "Status changes made before this history began were not recorded." is shown above the list | BR-51 |
 | AC-78 | Given a dashboard request | when it is answered | then the body carries `generatedAt` and `timeZone` `Asia/Bangkok` | BR-52 |
 | AC-79 | Given an injected `now` and Tickets with `lastActivityAt` exactly `now - 168 h` and 1 ms earlier | when "Recently updated" is computed | then the first is included and the second is not | BR-53 |
 | AC-80 | Given either Dashboard | when it renders | then no "from yesterday" or other delta text is shown | BR-53 |
@@ -751,6 +755,16 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-136 | Given `resolutionGate.met` false | when IT Staff Ticket Detail renders | then Resolved is shown disabled with each reason listed beneath it | BR-27 |
 | AC-137 | Given active High IT Priority Tickets, two sharing a `createdAt` | when the staff Dashboard is retrieved | then "Urgent" lists them `createdAt asc, id desc`, the first rows of `/queue?itPriority=HIGH` | BR-86, BR-56 |
 | AC-138 | Given own Tickets resolved at different times in the last 7 days | when the Requester Dashboard is retrieved | then "Recently resolved" lists them `resolvedAt desc, id desc` | BR-78 |
+| AC-139 | Given a planned action | when an edit is sent carrying `result` | then 400 `VALIDATION_FAILED` names `result` and nothing changes | BR-90 |
+| AC-140 | Given an action create | when the body carries a field the API does not define | then 400 `VALIDATION_FAILED` names that field and nothing is created | BR-90 |
+| AC-141 | Given an action create carrying `requesterId` and `createdById` | when it is submitted | then both are ignored and the action is created by the session user | BR-90, BR-03 |
+| AC-142 | Given a planned action | when an edit is sent with only `version` | then 400 is returned | BR-90 |
+| AC-143 | Given a planned action at `version` v | when an edit re-sends every stored value unchanged | then 200 is returned, and the action `version` and the Ticket `lastActivityAt` are unchanged | BR-90 |
+| AC-144 | Given a `COMPLETED` action | when an edit names an inactive assignee with the current `version` | then 409 `ACTION_NOT_PLANNED` is returned, not 422 | BR-14, BR-40 |
+| AC-145 | Given a planned action whose assignee has since been deactivated | when an edit changes only the description and re-sends that `assigneeId` | then 200 is returned | BR-18 |
+| AC-146 | Given a Ticket whose Requester has already set "Problem Appears Resolved" | when the Requester sets it again | then the timestamp is overwritten and the Ticket `version` and `lastActivityAt` both move | BR-38 |
+| AC-147 | Given a newly created Ticket | when either Ticket Detail is read | then `historyComplete` is true and no legacy line is shown | BR-51 |
+| AC-148 | Given a staff action id that does not exist | when IT Staff edit it, and when a Requester edits it | then IT Staff get 404 `ACTION_NOT_FOUND` and the Requester gets 403 | BR-17, BR-40 |
 
 ## 10. Definition of Done
 
@@ -811,7 +825,7 @@ opened while one is open.
 ## 11. Assumptions and Decisions
 
 The reasoning behind every settled choice is recorded once, in `docs/lab-04/decisions.md`
-(C-122..C-171), and is cited in the rules above rather than repeated here.
+(C-122..C-180), and is cited in the rules above rather than repeated here.
 
 ### Assumptions
 
@@ -848,6 +862,13 @@ The reasoning behind every settled choice is recorded once, in `docs/lab-04/deci
 | "My planned actions" drill-down | C-169 | `/dashboard#my-actions`, uncapped, `actionAt asc, id asc` |
 | `statusGroup` with `currentStatus` | C-170 | 400 `INVALID_QUERY_PARAM` |
 | Whether `allowedTransitions` hides an unmet gate | C-171 | No; `resolutionGate` explains it and Resolved shows disabled |
+| The code for a missing action; where the gate reasons sit; how the UI learns an action's operations | C-172, C-173, C-174 | 404 `ACTION_NOT_FOUND`; `error.reasons`; `allowedOperations` |
+| A field an action operation does not accept; an empty or no-change edit | C-175 | 400 naming the field, identity and server-set fields still ignored; empty edit 400; no-change edit 200 with no write |
+| `ACTION_NOT_PLANNED` versus `ASSIGNEE_NOT_ELIGIBLE` | C-176 | `ACTION_NOT_PLANNED` first |
+| Re-sending a since-deactivated assignee | C-177 | Accepted; eligibility checked only on a change |
+| A repeated "Problem Appears Resolved" | C-178 | A write: timestamp overwritten, `version` and `lastActivityAt` move |
+| The legacy history line's date | C-179 | No date: `historyComplete` and a fixed sentence |
+| A Dashboard Forbidden state | C-180 | None in the UI; the evidence is the API's 403 and the Requester's own dashboard |
 
 ### Labsheet conflicts X-1 to X-6
 
