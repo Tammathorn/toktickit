@@ -154,11 +154,12 @@ docs/lab-04/            specification  api-spec  ui-spec  tests  decisions  revi
                         ai-use  handoff  phase1-analysis                     (.md)
 server/tests/lab-04/    actions-taken  ticket-workflow  requester-dashboard
                         staff-dashboard                              (.api.test.ts)
-                        migration.db.test.ts
-                        the perf-smoke script, run by `npm run test:perf` (C-148)
+                        migration.db.test.ts  authorization.api.test.ts (C-184)
+                        perf-smoke.ts, run by `npm run test:perf` (C-148, C-183)
 client/tests/lab-04/    StaffDashboard  RequesterDashboard  ActionsTaken
                         TicketWorkflow                                  (.test.tsx)
-e2e/lab-04/             actions-taken-flow  ticket-resolution  dashboards  (.spec.ts)
+e2e/lab-04/             actions-taken-flow  ticket-resolution  dashboards
+                        regression (C-185)                               (.spec.ts)
 artifacts/lab-04/       screenshots/{staff-dashboard,requester-dashboard,actions-taken,
                         ticket-workflow,regression}/
                         evidence.md   evidence/issue-<N>/README.md

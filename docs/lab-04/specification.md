@@ -169,7 +169,7 @@ the decision it comes from. The Area column is the grouping key used for coverag
 | BR-28 | Resolution gate | A move to `RESOLVED` is checked first for an owner: without one it is refused 409 `OWNER_REQUIRED`, unchanged from Lab 3, with its own code. | C-137, L3 C-93 |
 | BR-29 | Resolution gate | With an owner, a move to `RESOLVED` is refused 409 `RESOLUTION_GATE_NOT_MET` with a `reasons` array drawn from: `NO_COMPLETED_ACTION` (no `COMPLETED` action); `PLANNED_ACTIONS_OPEN` (a `PLANNED` action exists); `FOLLOW_UP_REQUIRED` (the latest `COMPLETED` action has `followUpRequired` true); `NO_ACTION_SINCE_REOPEN` (BR-31). Every reason that applies is returned at once, in exactly that order. | C-137, C-167 |
 | BR-30 | Resolution gate | "Latest `COMPLETED` action" means latest by `finishedAt desc, id desc` - when the work was recorded as finished - not by `actionAt`. | C-137, C-160 |
-| BR-31 | Resolution gate | `NO_ACTION_SINCE_REOPEN` applies when the Ticket has been reopened and no action has a `finishedAt` after the latest status-history row into `REOPENED`. | C-137, C-141 |
+| BR-31 | Resolution gate | `NO_ACTION_SINCE_REOPEN` applies when the Ticket has been reopened and no `COMPLETED` action has a `finishedAt` after the latest status-history row into `REOPENED`; a cancelled action does not count. | C-137, C-141, C-186 |
 | BR-32 | Resolution gate | The backend enforces the gate on every request, whatever the client did. Legacy Resolved and Closed Tickets are never re-validated: an existing row keeps its status and may still move along the matrix. | C-137, `LS 4.5` |
 | BR-33 | Cancellation | A move to `CANCELLED` while the Ticket has a `PLANNED` action is refused 409 `PLANNED_ACTIONS_OPEN`, and nothing changes. The planned actions are cancelled first. | C-124 |
 | BR-34 | Row lock | Every action write and every Ticket status change begins its transaction with a conditional UPDATE of the Ticket row, so concurrent writes on one Ticket serialize on that row under READ COMMITTED. | C-137 |
@@ -664,7 +664,7 @@ column names the rules it covers. Every BR is covered by at least one AC.
 | AC-45 | Given an owned Ticket with a completed action and a `PLANNED` one | when a move to `RESOLVED` is sent | then the gate refuses it with `PLANNED_ACTIONS_OPEN` in `reasons` | BR-29 |
 | AC-46 | Given an owned Ticket whose latest completed action has follow-up required | when a move to `RESOLVED` is sent | then the gate refuses it with `FOLLOW_UP_REQUIRED` in `reasons` | BR-29 |
 | AC-47 | Given a follow-up-required action finished first, then a no-follow-up action finished later but with an earlier `actionAt` | when a move to `RESOLVED` is sent | then `FOLLOW_UP_REQUIRED` is not a reason | BR-30 |
-| AC-48 | Given a Ticket resolved, reopened, and with no action finished since | when a move to `RESOLVED` is sent | then the gate refuses it with `NO_ACTION_SINCE_REOPEN` in `reasons` | BR-31 |
+| AC-48 | Given a Ticket resolved, reopened, and with no action completed since | when a move to `RESOLVED` is sent | then the gate refuses it with `NO_ACTION_SINCE_REOPEN` in `reasons` | BR-31 |
 | AC-49 | Given an owned Ticket that meets the gate | when a move to `RESOLVED` is sent | then 200 is returned and the Ticket is `RESOLVED` | BR-29 |
 | AC-50 | Given a legacy `RESOLVED` Ticket with no actions | when it is moved to `CLOSED` | then 200 is returned | BR-32 |
 | AC-51 | Given a Ticket with a `PLANNED` action | when a move to `CANCELLED` is sent | then 409 `PLANNED_ACTIONS_OPEN` is returned and nothing changes | BR-33 |

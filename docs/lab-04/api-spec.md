@@ -129,7 +129,7 @@ Lab 4 widens. A code absent from this table is a defect.
 | `NO_COMPLETED_ACTION` | The Ticket has no `COMPLETED` action |
 | `PLANNED_ACTIONS_OPEN` | The Ticket has a `PLANNED` action |
 | `FOLLOW_UP_REQUIRED` | The latest `COMPLETED` action by `finishedAt desc, id desc` has `followUpRequired` true |
-| `NO_ACTION_SINCE_REOPEN` | The Ticket has a status-history row into `REOPENED` and no action has a `finishedAt` after the latest such row |
+| `NO_ACTION_SINCE_REOPEN` | The Ticket has a status-history row into `REOPENED` and no `COMPLETED` action has a `finishedAt` after the latest such row (a cancelled action does not count, C-186) |
 
 ---
 
@@ -628,7 +628,7 @@ Each keeps its `L3 api` contract except what its box lists.
 
 > **Changed from Lab 3** - body gains required `version`
 > (`{ "itPriority": "HIGH", "version": 3 }`), with the same 400 and 409 `STALE_UPDATE`; success
-> increases `version` and sets `lastActivityAt`. Re-sending the current value stays 200.
+> increases `version` and sets `lastActivityAt`. Re-sending the current value stays 200 with no write: `version` and `lastActivityAt` unchanged (C-187).
 
 ### 5.13 `PATCH /api/staff/tickets/:id/status` (`L3 api 8.6`)
 

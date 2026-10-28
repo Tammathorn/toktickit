@@ -24,8 +24,7 @@ disposition. `docs/lab-03/tests.md` is the template.
 C-141 (status history) and the C-137 gate rules are not on the cut list and are planned in full.
 
 The `Final` column is blank until the final run on `lab4-staging` (C-157). A row whose `Final`
-is blank is a planned test, not a passing one, and no claim is made for it. Open points are
-marked `TODO(question N)` and listed in section 7.
+is blank is a planned test, not a passing one, and no claim is made for it. The open points of the first draft are settled by C-181 to C-189 (section 7).
 
 ---
 
@@ -63,7 +62,7 @@ server/tests/lab-04/ticket-workflow.api.test.ts       UNIT, WF
 server/tests/lab-04/requester-dashboard.api.test.ts   UNIT, API, SEC
 server/tests/lab-04/staff-dashboard.api.test.ts       API, SEC
 server/tests/lab-04/migration.db.test.ts              MIG
-server/tests/lab-04/perf-smoke.ts                     PERF   TODO(question 3): name not fixed
+server/tests/lab-04/perf-smoke.ts                     PERF   (C-183, npm run test:perf)
 client/tests/lab-04/StaffDashboard.test.tsx           UI, STYLE
 client/tests/lab-04/RequesterDashboard.test.tsx       UI
 client/tests/lab-04/ActionsTaken.test.tsx             UNIT, UI, STYLE
@@ -71,15 +70,16 @@ client/tests/lab-04/TicketWorkflow.test.tsx           UI, STYLE
 e2e/lab-04/actions-taken-flow.spec.ts                 E2E, RESP
 e2e/lab-04/ticket-resolution.spec.ts                  E2E, RESP
 e2e/lab-04/dashboards.spec.ts                         E2E, RESP
+server/tests/lab-04/authorization.api.test.ts         SEC    (C-184)
+e2e/lab-04/regression.spec.ts                         E2E    (C-185)
 ```
 
 - `server/vitest.config.ts` collects `tests/**/*.test.ts`, so the perf-smoke script must **not**
   end in `.test.ts`; that keeps it out of the Supertest count (C-148).
 - `client/vite.config.ts` collects only `tests/**/*.test.tsx`; the four client files are in
   `client/tests/lab-04/`, checked before the first test is written.
-- Three placements are choices this plan had to make inside the fixed tree and are flagged:
-  the route-matrix tests (TODO(question 4)), the console-error fixture's own tests and the
-  regression captures (TODO(question 5)).
+- Two files are added to the section 12 minimum: `authorization.api.test.ts` (C-184) and
+  `regression.spec.ts` (C-185).
 
 ### 1.2 Approach
 
@@ -253,10 +253,10 @@ row count) and equals the fixture's expected number. One test per card: 4 Reques
 | SEC-06 | Authorization | AC-85; BR-59 | IT Staff and Administrator `GET /api/dashboard/requester` | Each 403 `FORBIDDEN_ROLE`, no metric content | `server/tests/lab-04/requester-dashboard.api.test.ts` | |
 | SEC-07 | Authorization | AC-87; BR-60, FR-19 | IT Staff and Administrator `GET /api/dashboard/staff` | Only the Administrator's body has `userCounts`; on IT Staff's the key is absent, not null | `server/tests/lab-04/staff-dashboard.api.test.ts` | |
 | SEC-08 | Authorization | AC-02, AC-107; BR-59, L3 C-64 | Requester A's dashboard with Requester B holding Tickets in every status, recent and resolved | A's counts equal A's own fixture; no B Ticket id or number anywhere in A's body; `?requesterId=<B>` changes nothing; adding Tickets to B leaves A's response identical | `server/tests/lab-04/requester-dashboard.api.test.ts` | |
-| SEC-09 | Authorization | AC-101; BR-71, FR-31, C-155 | Route inventory versus `specification.md` 5.2 | Every method and path registered on the Express app appears in the matrix table and every matrix row is registered: 36 rows, none missing either way. TODO(question 4) | `server/tests/lab-04/actions-taken.api.test.ts` | |
-| SEC-10 | Authorization | AC-101; BR-71, L3 C-61 | Each matrix row's Anon, MustChange and bold-403 cells, driven from the same table | Non-public routes: 401 anonymous, 403 `PASSWORD_CHANGE_REQUIRED` for MustChange; every bold 403 answered with a missing id, so before any load | `server/tests/lab-04/actions-taken.api.test.ts` | |
-| SEC-11 | Authorization | AC-24; BR-15, BR-50, C-151 | Registered routes against the append-only records | No `PUT`, `PATCH` or `DELETE` addresses a Public Comment, Internal Note or status-history row; no `DELETE` on `/api/actions/:id`; the only action edit refuses finished actions (API-25) | `server/tests/lab-04/actions-taken.api.test.ts` | |
-| SEC-12 | Authorization | `CLAUDE.md` security rules, L3 BR-88 | Every Lab 4 response, success and error, across the six new routes | No body carries `password`, `passwordHash`, a `scrypt$` string or the session token | `server/tests/lab-04/actions-taken.api.test.ts` | |
+| SEC-09 | Authorization | AC-101; BR-71, FR-31, C-155 | Route inventory versus `specification.md` 5.2 | Every method and path registered on the Express app appears in the matrix table and every matrix row is registered: 36 rows, none missing either way. Lands in Issue #68 (C-184). | `server/tests/lab-04/authorization.api.test.ts` | |
+| SEC-10 | Authorization | AC-101; BR-71, L3 C-61 | Each matrix row's Anon, MustChange and bold-403 cells, driven from the same table | Non-public routes: 401 anonymous, 403 `PASSWORD_CHANGE_REQUIRED` for MustChange; every bold 403 answered with a missing id, so before any load | `server/tests/lab-04/authorization.api.test.ts` | |
+| SEC-11 | Authorization | AC-24; BR-15, BR-50, C-151 | Registered routes against the append-only records | No `PUT`, `PATCH` or `DELETE` addresses a Public Comment, Internal Note or status-history row; no `DELETE` on `/api/actions/:id`; the only action edit refuses finished actions (API-25) | `server/tests/lab-04/authorization.api.test.ts` | |
+| SEC-12 | Authorization | `CLAUDE.md` security rules, L3 BR-88 | Every Lab 4 response, success and error, across the six new routes | No body carries `password`, `passwordHash`, a `scrypt$` string or the session token | `server/tests/lab-04/authorization.api.test.ts` | |
 | SEC-13 | Authorization | AC-02; C-123, `api-spec.md` 4.1 | Requester dashboard list items | Items carry only the `api-spec.md` 4.1 keys: no requester, owner, email, description or note key | `server/tests/lab-04/requester-dashboard.api.test.ts` | |
 | SEC-14 | Authorization | L3 C-58 | The four action writes with a foreign `Origin` | Each 403 `ORIGIN_NOT_ALLOWED`; nothing written | `server/tests/lab-04/actions-taken.api.test.ts` | |
 
@@ -277,7 +277,7 @@ the row says otherwise; each refusal also asserts the Ticket's status and `versi
 | WF-06 | Workflow | AC-130; BR-29, C-167 | Two combined: no completed action and a `PLANNED` one | `reasons` exactly `["NO_COMPLETED_ACTION", "PLANNED_ACTIONS_OPEN"]` | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-07 | Workflow | BR-29, C-167 | The fixed order with three reasons, both possible triples (Prisma fixtures: a reopened legacy Ticket with only a planned action; a reopened Ticket whose latest completed action, finished before the reopen, has follow-up, plus a planned one) | `["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN","NO_ACTION_SINCE_REOPEN"]` and `["PLANNED_ACTIONS_OPEN","FOLLOW_UP_REQUIRED","NO_ACTION_SINCE_REOPEN"]`; all four can never co-occur (UNIT-05) | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-08 | Workflow | AC-47; BR-30, C-160 | A follow-up action finished first, then a no-follow-up action finished later with an earlier `actionAt` | `FOLLOW_UP_REQUIRED` not a reason; 200 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
-| WF-09 | Workflow | BR-31, C-137 | Reopened Ticket whose only post-reopen action is `CANCELLED` (it has a `finishedAt`) | TODO(question 6): C-137 says "completed after", BR-31 says "a `finishedAt` after" | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
+| WF-09 | Workflow | BR-31, C-137 | Reopened Ticket whose only post-reopen action is `CANCELLED` (it has a `finishedAt`) | Gate still refuses with `NO_ACTION_SINCE_REOPEN`: a cancelled action does not count (C-186) | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-10 | Workflow | AC-49; BR-29, BR-49, L3 BR-61 | Owned Ticket meeting the gate -> `RESOLVED` | 200; `RESOLVED`; `resolvedAt` set; Requester flag cleared; one history row; `version` + 1 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-11 | Workflow | AC-135; BR-27, C-171 | Staff DTO of a Ticket failing the gate | `resolutionGate.met` false, `reasons` equal to the refusal's; `allowedTransitions` still lists `RESOLVED` | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-12 | Workflow | AC-50; BR-32 | Legacy `RESOLVED` Ticket with no actions (Prisma fixture) -> `CLOSED` | 200: never re-validated | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
@@ -323,7 +323,7 @@ violates every later step, so the test proves the step wins.
 | WF-35 | Workflow | AC-70; BR-46 | Ticket create | `lastActivityAt` = create time within 2 s; `version` 0 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-36 | Workflow | AC-70, AC-57 | Status change | `lastActivityAt` advances; `version` + 1 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-37 | Workflow | AC-70, AC-57 | Owner change | Advances; `version` + 1 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
-| WF-38 | Workflow | AC-70, AC-57 | IT Priority change to a new value | Advances; `version` + 1. Re-sending the current value: TODO(question 7) | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
+| WF-38 | Workflow | AC-70, AC-57 | IT Priority change to a new value | Advances; `version` + 1. Re-sending the current value: 200, `version` and `lastActivityAt` unchanged (C-187) | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-39 | Workflow | AC-70, AC-58; BR-38 | Claim with no body | 200; advances; `version` + 1 | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-40 | Workflow | AC-70, AC-56 | Action create | Advances; Ticket `version` unchanged | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
 | WF-41 | Workflow | AC-70, AC-56 | Action edit | Advances; Ticket `version` unchanged | `server/tests/lab-04/ticket-workflow.api.test.ts` | |
@@ -402,12 +402,12 @@ with the migrations, Lab 4's included.
 `DATABASE_URL` names any other database. Ten warm-up requests, then 50 timed requests per
 endpoint; p95 by nearest rank. `EXPLAIN (ANALYZE, BUFFERS)` for each dashboard query is written
 to the output as information and never asserted (C-148). The `test:perf` script entry is added
-in Issue 8; populating `toktickit_perf` is TODO(question 3).
+in Issue 8; the script fills `toktickit_perf` itself (C-183).
 
 | Test ID | Type | Requirement / AC | What It Tests | Expected Result | Automated Test File | Final |
 |---|---|---|---|---|---|---|
-| PERF-01 | Performance-smoke | AC-102; BR-72 | `GET /api/dashboard/requester` as the Requester with the most Tickets, about 2,000 Tickets in the database | p95 under 500 ms | `server/tests/lab-04/perf-smoke.ts` - TODO(question 3) | |
-| PERF-02 | Performance-smoke | AC-102; BR-72 | `GET /api/dashboard/staff` as the Administrator (every staff query plus `userCounts`) | p95 under 500 ms | `server/tests/lab-04/perf-smoke.ts` - TODO(question 3) | |
+| PERF-01 | Performance-smoke | AC-102; BR-72 | `GET /api/dashboard/requester` as the Requester with the most Tickets, about 2,000 Tickets in the database | p95 under 500 ms | `server/tests/lab-04/perf-smoke.ts` | |
+| PERF-02 | Performance-smoke | AC-102; BR-72 | `GET /api/dashboard/staff` as the Administrator (every staff query plus `userCounts`) | p95 under 500 ms | `server/tests/lab-04/perf-smoke.ts` | |
 
 ### 2.8 UI component
 
@@ -462,7 +462,7 @@ in Issue 8; populating `toktickit_perf` is TODO(question 3).
 | UI-47 | UI | AC-36; FR-14, BR-23 | Status history, both detail screens | An `<ol>` oldest first; `Created as New by <name>`; change rows with both badges; no edit or delete control | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
 | UI-48 | UI | AC-77, AC-147; BR-51 | Legacy line | `historyComplete` false: `Status changes made before this history began were not recorded.` above the list on both screens; true: absent | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
 | UI-49 | UI | AC-72; BR-48 | Staff Ticket Detail `Last Updated` | Shows `lastActivityAt`, not `updatedAt` | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
-| UI-50 | UI | BR-63, C-147 | Public Comment (both screens) and Internal Note composers after 400, 409, 500 and a rejected `fetch` | Every typed value kept. TODO(question 1) | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
+| UI-50 | UI | BR-63, C-147 | Public Comment (both screens) and Internal Note composers after 400, 409, 500 and a rejected `fetch` | Every typed value kept (C-181: the action form is UI-49's) | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
 | UI-51 | UI | AC-67, AC-68; BR-44 | The same composers' key and button | A new `clientRequestId` after each success; the submit button disabled and busy in flight | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
 | UI-52 | UI | AC-69; BR-45 | Requester Attachment upload | The upload control disabled in flight; at five active files the cap message shows and no request is sent | `client/tests/lab-04/TicketWorkflow.test.tsx` | |
 
@@ -528,8 +528,8 @@ where the fixture must trip.
 | E2E-14 | E2E | AC-60 | Stale status, two contexts (expected 409) | Conflict panel on the status control, chosen status kept | `e2e/lab-04/ticket-resolution.spec.ts` | |
 | E2E-15 | E2E | AC-48 | Reopen, then try to resolve | `Record an action completed since the ticket was reopened.`; after a new completed action, Resolved succeeds | `e2e/lab-04/ticket-resolution.spec.ts` | |
 | E2E-16 | E2E | AC-36; FR-14 | History on both screens | Oldest first, the creation row first | `e2e/lab-04/ticket-resolution.spec.ts` | |
-| E2E-17 | E2E | `ui-spec.md` 15; AC-77 | Captures `ticket-workflow/`, 10 states | `workflow-<vp>-<state>.png` for the 10 names; the legacy-history state: TODO(question 8) | `e2e/lab-04/ticket-resolution.spec.ts` | |
-| E2E-18 | E2E | AC-91; BR-63 | Create Ticket with every field filled; the submit fails by network abort, then succeeds | Every value kept after the failure; one Ticket created. TODO(question 2) | `e2e/lab-04/ticket-resolution.spec.ts` | |
+| E2E-17 | E2E | `ui-spec.md` 15; AC-77 | Captures `ticket-workflow/`, 10 states | `workflow-<vp>-<state>.png` for the 10 names; the legacy-history state from `toktickit_rehearsal` (C-188) | `e2e/lab-04/ticket-resolution.spec.ts` | |
+| E2E-18 | E2E | AC-91; BR-63 | Create Ticket with every field filled; the submit fails by network abort, then succeeds | Every value kept after the failure; one Ticket created; the abort is declared to the fixture (C-182) | `e2e/lab-04/ticket-resolution.spec.ts` | |
 | E2E-19 | E2E | AC-88; FR-23 | Each role signs in | Lands on `/dashboard`; `Dashboard` first and `aria-current` | `e2e/lab-04/dashboards.spec.ts` | |
 | E2E-20 | E2E | AC-89; FR-28, FR-30, C-149 | **Requester walk** under the fixture: every nav item, Quick Action, card and list link | Each loads with no console error; every Lab 2-3 Requester screen reachable | `e2e/lab-04/dashboards.spec.ts` | |
 | E2E-21 | E2E | AC-89; FR-28, FR-30 | **IT Staff walk**, as E2E-20 | No console error; every Lab 3 staff screen reachable | `e2e/lab-04/dashboards.spec.ts` | |
@@ -539,14 +539,14 @@ where the fixture must trip.
 | E2E-25 | E2E | AC-84; C-128 | Refresh and no polling, with `page.clock` advanced 15 min | No dashboard request while idle; Refresh sends one and the `Updated …` line changes | `e2e/lab-04/dashboards.spec.ts` | |
 | E2E-26 | E2E | AC-133; VIS-26 | Following `My planned actions` | `#my-actions` in view, focus on its heading | `e2e/lab-04/dashboards.spec.ts` | |
 | E2E-27 | E2E | C-144 | A Requester at `/queue` (expected 403 where requested) | Forbidden with `Go to Dashboard` | `e2e/lab-04/dashboards.spec.ts` | |
-| E2E-28 | E2E | AC-95; BR-66 | Fixture: a page that calls `console.error` | The test fails (`test.fail()` passes) | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
-| E2E-29 | E2E | AC-95; BR-66 | Fixture: an uncaught page exception | The test fails | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
-| E2E-30 | E2E | AC-95; BR-66 | Fixture: a same-origin 500 | The test fails | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
-| E2E-31 | E2E | AC-95; BR-66 | Fixture: a declared expected 404 (`/tickets/999999` as a Requester) | The test passes; the `Failed to load resource` line is allowlisted | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
-| E2E-32 | E2E | AC-95; BR-66 | Fixture: the same 404 undeclared | The test fails | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
-| E2E-33 | E2E | `ui-spec.md` 15 | Captures `staff-dashboard/`, 8 states | Including `-zero` (the real Administrator) and `-lists-empty-mocked` (named mocked, C-180); `-failure`: TODO(question 2) | `e2e/lab-04/dashboards.spec.ts` | |
-| E2E-34 | E2E | `ui-spec.md` 15, C-180 | Captures `requester-dashboard/`, 5 states | `-populated` (Part 5 role evidence), `-zero` for nattapong.w; `-failure`: TODO(question 2) | `e2e/lab-04/dashboards.spec.ts` | |
-| E2E-35 | E2E | `ui-spec.md` 15; FR-29, FR-30 | Captures `regression/`, 14 states | The 14 names, from the real app; `system-check` public | `e2e/lab-04/dashboards.spec.ts` - TODO(question 5) | |
+| E2E-28 | E2E | AC-95; BR-66 | Fixture: a page that calls `console.error` | The test fails (`test.fail()` passes) | `e2e/lab-04/regression.spec.ts` | |
+| E2E-29 | E2E | AC-95; BR-66 | Fixture: an uncaught page exception | The test fails | `e2e/lab-04/regression.spec.ts` | |
+| E2E-30 | E2E | AC-95; BR-66 | Fixture: a same-origin 500 | The test fails | `e2e/lab-04/regression.spec.ts` | |
+| E2E-31 | E2E | AC-95; BR-66 | Fixture: a declared expected 404 (`/tickets/999999` as a Requester) | The test passes; the `Failed to load resource` line is allowlisted | `e2e/lab-04/regression.spec.ts` | |
+| E2E-32 | E2E | AC-95; BR-66 | Fixture: the same 404 undeclared | The test fails | `e2e/lab-04/regression.spec.ts` | |
+| E2E-33 | E2E | `ui-spec.md` 15 | Captures `staff-dashboard/`, 8 states | Including `-zero` (the real Administrator) and `-lists-empty-mocked` (named mocked, C-180); `-failure` by a declared mocked 500 (C-182) | `e2e/lab-04/dashboards.spec.ts` | |
+| E2E-34 | E2E | `ui-spec.md` 15, C-180 | Captures `requester-dashboard/`, 5 states | `-populated` (Part 5 role evidence), `-zero` for nattapong.w; `-failure` by a declared mocked 500 (C-182) | `e2e/lab-04/dashboards.spec.ts` | |
+| E2E-35 | E2E | `ui-spec.md` 15; FR-29, FR-30 | Captures `regression/`, 14 states | The 14 names, from the real app; `system-check` public | `e2e/lab-04/regression.spec.ts` | |
 
 ---
 
@@ -651,8 +651,8 @@ Partly manual, with automated parts listed alongside:
 | AC | Automated | Manual or conditional |
 |---|---|---|
 | AC-120 | RESP-01..RESP-11 measure scroll, columns, touch targets and focus | "No clipped or overlapping control" over 13 screens x 3 widths is a judgement: VIS-28..VIS-32 against the section 15 captures |
-| AC-91 | L2 UI-15 already proves a failed Create Ticket keeps every value | E2E-18's network failure depends on TODO(question 2) |
-| AC-77 | WF-53 and UI-48 | The real-legacy screenshot depends on TODO(question 8) |
+| AC-91 | L2 UI-15 already proves a failed Create Ticket keeps every value | E2E-18's network failure is a declared failure (C-182) |
+| AC-77 | WF-53 and UI-48 | The real-legacy screenshot comes from `toktickit_rehearsal` (C-188) |
 
 ---
 
@@ -689,7 +689,7 @@ asserted key sets change, because a decision changed them.
 | `comments-notes`, `create-ticket`, `data-model.db`, `lab-03/migration.db` | all | **Unchanged** | C-139 (optional key), C-158 | `clientRequestId` is optional; the two seed constraints (L3 `migration.db.test.ts:430-443`, L2 `my-tickets-screenshots.spec.ts`) stay binding and MIG-19 restates them |
 
 **28 server tests adapted.** `phase1-analysis.md` section 3's summary line says 32, but its own
-list names these 28 by ID; the difference is TODO(question 9). Any further test whose fixture
+list names these 28 by ID; the adapted count is taken from the Issue #66 run (C-189). Any further test whose fixture
 walks to `RESOLVED` through the API is adapted the same way (C-137) and added to this table when
 Issue 5 meets it.
 
@@ -738,7 +738,7 @@ retirement**, so every "after" equals "before" plus the Lab 4 additions.
 | Perf-smoke (`npm run test:perf`) | - | +2 timings | **2 passed** |
 
 A drop below these numbers, or a change in any "before" figure, is a bug, and MIG-22 records it.
-If a TODO in section 7 is answered by adding a file, the file and its count are added here first.
+Files added by C-184 and C-185 are counted here.
 
 ---
 
@@ -816,7 +816,7 @@ Set-Location C:\Downloads\Lab1_Starter_Scaffold\toktickit\server
 $env:DATABASE_URL = "$Base/toktickit_perf?schema=public"
 npx prisma migrate deploy
 npm run prisma:seed
-# populate about 2,000 Tickets: TODO(question 3)
+# perf-smoke.ts fills toktickit_perf itself (C-183)
 npm run test:perf
 Remove-Item Env:DATABASE_URL
 ```
@@ -877,19 +877,10 @@ empty in the PDF only.
 
 ---
 
-## 7. Open Questions
+## 7. Open Questions - settled
 
-Rules this plan needed and the documents do not state. None is resolved here; each row's test
-is planned with the question marked in place.
-
-| # | Where | Question |
-|---|---|---|
-| 1 | UI-50 | C-147 says "Create Ticket and **the two composers**"; BR-63, FR-26 and `ui-spec.md` 10 name the action, Public Comment and Internal Note composers. Which composers does C-147 cover? Planned per BR-63 |
-| 2 | E2E-18, E2E-33, E2E-34 | C-149's allowlist covers expected 401/403/404/409/422 only. The `-failure` captures and AC-91's network failure need a deliberately mocked 500 or an aborted request, which the fixture fails as written. May a test declare a mocked failure it causes itself? |
-| 3 | PERF-01, PERF-02, section 5 step 9 | C-148 names neither the perf-smoke script's file (planned `server/tests/lab-04/perf-smoke.ts`, not `*.test.ts`) nor how `toktickit_perf` gets about 2,000 Tickets (a script, `seed-demo.ts` extended, or SQL) |
-| 4 | SEC-09, SEC-10, SEC-11, SEC-12, SEC-14 | `CLAUDE.md` names no Lab 4 authorization file; planned in `actions-taken.api.test.ts` because C-155 lands in Issue #64. The two dashboard routes are not registered until Issues 6-7, so SEC-09 stays red until then. Accept that, or place it elsewhere? |
-| 5 | E2E-28..E2E-32, E2E-35 | `ui-spec.md` 15 puts the regression captures in "a regression spec in `e2e/lab-04/`" that `CLAUDE.md` does not name, and the fixture's own tests have no named home. Planned in `dashboards.spec.ts`; may `e2e/lab-04/regression.spec.ts` be added instead? |
-| 6 | WF-09 | `NO_ACTION_SINCE_REOPEN`: C-137 says "no action was **completed** after the latest change into `REOPENED`"; BR-31 and `api-spec.md` 1.3 say "no action has a **`finishedAt`** after it", and cancel sets `finishedAt`. Does a cancelled action after the reopen satisfy the gate? |
-| 7 | WF-38 | IT Priority re-sent with its current value "stays 200" (`api-spec.md` 5.12). Is that a write (`version` + 1, `lastActivityAt` moves, as C-178 treats a repeated flag) or a no-op (as C-175 treats a no-change action edit)? |
-| 8 | E2E-17, AC-77 | C-146 does not say whether the seed writes creation history rows. If it does not, every seeded Ticket shows `historyComplete` false; if it does, a fresh-seeded evidence database has no legacy Ticket, and `workflow-<vp>-legacy-history.png` must come from the dev database (`ui-spec.md` 15), outside the one-fresh-seed run of Issue #70 |
-| 9 | Section 4.1 | `phase1-analysis.md` section 3 totals 32 adapted server tests but enumerates 28. Which four, if any, are missing from its list? |
+The nine questions the first draft raised are settled by decisions C-181 to C-189 in
+`decisions.md`: composers (C-181), declared failures (C-182), perf-smoke (C-183), the
+route-matrix file (C-184), the regression spec (C-185), a cancelled action after a reopen
+(C-186), re-sending the current IT Priority (C-187), seed and status history (C-188), and
+the adapted Lab 3 count (C-189).
