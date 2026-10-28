@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import type { TicketStatus } from "@prisma/client";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
@@ -65,7 +66,7 @@ afterAll(async () => {
   const written = { OR: [{ ticket: { requesterId: { in: userIds } } }, { authorId: { in: userIds } }] };
   await prisma.publicComment.deleteMany({ where: written });
   await prisma.internalNote.deleteMany({ where: written });
-  await prisma.ticket.deleteMany({ where: { requesterId: { in: userIds } } });
+  await deleteTickets(prisma, { requesterId: { in: userIds } });
   await removeUsers(prisma, userIds);
 });
 

@@ -1,0 +1,21 @@
+﻿Command: docker exec toktickit-db psql -U toktickit -d toktickit_rehearsal -f /tmp/lab4-backfill.sql
+Date: 2026-10-28 15:10:46 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; Issue 2 implementation applied, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+ null_activity | activity_before_update | nonzero_version | resolved_at_set 
+---------------+------------------------+-----------------+-----------------
+             0 |                      0 |               0 |               0
+(1 row)
+
+ mismatched_backfill 
+---------------------
+                   0
+(1 row)
+
+ actions | history_rows 
+---------+--------------
+       0 |            0
+(1 row)
+
+

@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber, type NewTicket } from "../../src/lib/ticket-repository.js";
 import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
@@ -162,7 +163,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prisma.ticket.deleteMany({ where: { id: { in: allTicketIds } } });
+  await deleteTickets(prisma, { id: { in: allTicketIds } });
   await removeUsers(prisma, allUserIds);
 });
 

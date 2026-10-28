@@ -1,0 +1,23 @@
+Command: docker exec toktickit-db psql -U toktickit -d toktickit -f /tmp/lab4-dev-after.sql   (after migrate deploy and the seed runs)
+Date: 2026-10-28 15:33:56 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; implementation applied with the audit fixes, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+        tbl         | count 
+--------------------+-------
+ ActionTaken        |     9
+ InternalNote       |    47
+ PublicComment      |    58
+ Ticket             |  1238
+ TicketStatusChange |   239
+ User               |    83
+(6 rows)
+
+  status   | followUpRequired | count 
+-----------+------------------+-------
+ PLANNED   | f                |     1
+ COMPLETED | f                |     5
+ COMPLETED | t                |     2
+ CANCELLED | f                |     1
+(4 rows)
+

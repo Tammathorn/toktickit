@@ -1,0 +1,25 @@
+Command: cd server; npx vitest run tests/lab-04/migration.db.test.ts
+Date: 2026-10-28 15:33:53 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; implementation applied with the audit fixes, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-04/migration.db.test.ts (42 tests) 5153ms
+   ✓ Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > leaves the Ticket, Public Comment, Internal Note, ActionTaken and TicketStatusChange counts unchanged 871ms
+   ✓ Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keeps a password that was changed after seeding 1009ms
+
+ Test Files  1 passed (1)
+      Tests  42 passed (42)
+   Start at  15:33:45
+   Duration  7.80s (transform 86ms, setup 0ms, collect 95ms, tests 5.15s, environment 0ms, prepare 72ms)
+

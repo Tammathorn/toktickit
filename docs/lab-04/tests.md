@@ -363,10 +363,14 @@ violates every later step, so the test proves the step wins.
 
 ### 2.6 Migration and regression
 
-MIG-01 to MIG-08 and MIG-14 to MIG-21 are assertions in `migration.db.test.ts` against
-`toktickit_test`. **MIG-09 to MIG-13 and MIG-22 are artifact rows**: `toktickit_test` is created
-fresh, so it holds no pre-migration data and cannot show counts unchanged, a backfill or a
-restore. Those rows are discharged by captures under `artifacts/lab-04/evidence/issue-2/`
+MIG-01 to MIG-08 and MIG-14 to MIG-21 are assertions in `migration.db.test.ts`. MIG-01 to
+MIG-08 read the schema of `toktickit_test`. MIG-14 to MIG-21 are claims about a fresh seed
+(AC-99), and `toktickit_test` is not one: it persists between runs, its seed Tickets predate the
+Lab 4 migration (so, as legacy rows, they carry no history and a NULL `resolvedAt`, C-188), and
+tests add rows to it. Those eight run against `toktickit_test_fresh_seed`, which the file
+creates, migrates with `migrate deploy`, seeds and drops (Issue #63). **MIG-09 to MIG-13 and
+MIG-22 are artifact rows**: no test database holds pre-migration data, so none can show counts
+unchanged, a backfill or a restore. Those rows are discharged by captures under `artifacts/lab-04/evidence/issue-2/`
 (rehearsal) and `artifacts/lab-04/evidence/issue-10/` (final runs), as L3 MIG-21 to MIG-23 were.
 The automated zero-drift check is **L3 MIG-14**, carried unchanged: it compares the whole schema
 with the migrations, Lab 4's included.
@@ -687,6 +691,7 @@ asserted key sets change, because a decision changed them.
 | `server/tests/lab-02/my-tickets.api.test.ts` | untitled "returns the C-27 envelope and list-row shape" (L90) | Adapted | C-140 | Row shape gains `lastActivityAt` |
 | `server/tests/lab-02/ticket-detail.api.test.ts` | L2 API-28 | Adapted | C-123, C-136, C-141, C-179 | **Inverts in part**: the Requester DTO must now carry `actions`, `statusHistory`, `historyComplete`; it must still carry no Internal Note key |
 | `comments-notes`, `create-ticket`, `data-model.db`, `lab-03/migration.db` | all | **Unchanged** | C-139 (optional key), C-158 | `clientRequestId` is optional; the two seed constraints (L3 `migration.db.test.ts:430-443`, L2 `my-tickets-screenshots.spec.ts`) stay binding and MIG-19 restates them |
+| `attachments`, `create-ticket`, `data-model.db`, `my-tickets`, `ticket-detail` (L2); `authorization`, `comments-notes`, `migration.db`, `staff-queue`, `staff-ticket-detail` (L3) | 8 `afterAll` blocks, 4 inline deletes | Cleanup, not a test | C-167, C-188, BR-50 | `prisma.ticket.delete`/`deleteMany` becomes `deleteTickets` (`server/tests/support/cleanup.ts`), which removes the Ticket's `TicketStatusChange` and `ActionTaken` rows first: every created Ticket now has a creation history row under a RESTRICT key. No assertion changes (Issue #63) |
 
 **28 server tests adapted.** `phase1-analysis.md` section 3's summary line says 32, but its own
 list names these 28 by ID; the adapted count is taken from the Issue #66 run (C-189). Any further test whose fixture

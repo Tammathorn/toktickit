@@ -15,7 +15,7 @@ async function main() {
       `${s.activeRequesters} active and ${s.inactiveRequesters} inactive Requesters, ` +
       `${s.activeItStaff} active and ${s.inactiveItStaff} inactive IT Staff, ` +
       `${s.administrators} Administrator, ${s.firstLoginAccounts} first-login account, ` +
-      `${s.tickets} tickets, ${s.publicComments} public comments and ${s.internalNotes} internal notes.`,
+      `${s.tickets} tickets, ${s.publicComments} public comments, ${s.internalNotes} internal notes and ${s.actions} actions taken.`,
   );
 }
 

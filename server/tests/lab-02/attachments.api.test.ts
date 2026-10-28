@@ -4,6 +4,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR, MAX_UPLOAD_BYTES } from "../../src/lib/uploads.js";
@@ -79,7 +80,7 @@ afterAll(async () => {
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
   await prisma.attachment.deleteMany({ where: { ticketId: { in: ids } } });
-  await prisma.ticket.deleteMany({ where: { id: { in: ids } } });
+  await deleteTickets(prisma, { id: { in: ids } });
   await removeUsers(prisma, users);
 });
 

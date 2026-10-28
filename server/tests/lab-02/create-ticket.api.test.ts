@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll, vi } from "vitest";
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { TICKET_NUMBER_PATTERN } from "../../src/lib/ticket-number.js";
 import { MESSAGES } from "../../src/lib/validation.js";
@@ -51,8 +52,8 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prisma.ticket.deleteMany({ where: { summary: { startsWith: TEST_TAG } } });
-  await prisma.ticket.deleteMany({ where: { requesterId } });
+  await deleteTickets(prisma, { summary: { startsWith: TEST_TAG } });
+  await deleteTickets(prisma, { requesterId });
   await removeUsers(prisma, [requesterId]);
 });
 
@@ -123,7 +124,7 @@ describe("POST /api/tickets", () => {
     const b = await post(validBody({ summary: oneTwenty }));
     expect(a.status).toBe(201);
     expect(b.status).toBe(201);
-    await prisma.ticket.delete({ where: { id: a.body.id } });
+    await deleteTickets(prisma, { id: a.body.id });
   });
 
   it("API-06 enforces the Description boundaries: 19 and 5001 fail, 20 and 5000 pass (BR-32)", async () => {
