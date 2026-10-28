@@ -4,6 +4,7 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { fileURLToPath } from "node:url";
 import { dirname, join, resolve } from "node:path";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 
@@ -196,7 +197,7 @@ describe("MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71,
     expect(ticket.itPriority).toBe("HIGH");
     expect(ticket.itPriority).toBe(ticket.requestedPriority);
 
-    await prisma.ticket.delete({ where: { id: ticket.id } });
+    await deleteTickets(prisma, { id: ticket.id });
   });
 });
 

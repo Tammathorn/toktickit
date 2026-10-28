@@ -1,0 +1,10 @@
+Command: cd server; npm run prisma:seed   (second run, fixed seed)
+Date: 2026-10-28 15:33:56 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; implementation applied with the audit fixes, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+
+> toktickit-server@1.0.0 prisma:seed
+> tsx prisma/seed.ts
+
+Seeded 4 categories, 7 related systems, 4 active and 1 inactive Requesters, 3 active and 1 inactive IT Staff, 1 Administrator, 1 first-login account, 9 tickets, 7 public comments, 4 internal notes and 9 actions taken.

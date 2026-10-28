@@ -1,0 +1,27 @@
+﻿Command: cd server; npx prisma migrate deploy   (DATABASE_URL from server\.env: toktickit)
+Date: 2026-10-28 15:11:08 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; Issue 2 implementation applied, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+Applying migration `20261028090000_lab04_action_status_enum`
+Applying migration `20261028090100_lab04_ticket_activity_columns`
+Applying migration `20261028090200_lab04_actions_and_status_history`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20261028090000_lab04_action_status_enum/
+    └─ migration.sql
+  └─ 20261028090100_lab04_ticket_activity_columns/
+    └─ migration.sql
+  └─ 20261028090200_lab04_actions_and_status_history/
+    └─ migration.sql
+      
+All migrations have been successfully applied.
+
