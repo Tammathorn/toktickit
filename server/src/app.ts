@@ -9,6 +9,7 @@ import { attachmentsRouter } from "./routes/attachments.js";
 import { staffRouter } from "./routes/staff.js";
 import { commentsNotesRouter } from "./routes/comments-notes.js";
 import { usersRouter } from "./routes/users.js";
+import { actionsRouter } from "./routes/actions.js";
 // getPrisma() is the lazy database handle. It is called INSIDE the routes that
 // need the DB, so routes like /api/health stay free of database side effects.
 
@@ -99,6 +100,8 @@ app.use(staffRouter);
 app.use(commentsNotesRouter);
 // Lab 3 (#43) - Administrator user management.
 app.use(usersRouter);
+// Lab 4 (#64) - Actions Taken.
+app.use(actionsRouter);
 
 // The one error handler, last. Express's own would answer with an HTML page
 // quoting the error - for a body express.json cannot parse, a page quoting the
