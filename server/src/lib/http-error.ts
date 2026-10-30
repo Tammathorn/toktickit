@@ -33,6 +33,13 @@ export type ErrorCode =
   | "EMAIL_TAKEN"
   | "LAST_ADMINISTRATOR"
   | "SELF_DEACTIVATION"
+  // Lab 4 (api-spec.md 1.3).
+  | "ACTION_NOT_FOUND"
+  | "TICKET_RESOLVED"
+  | "STALE_UPDATE"
+  | "RESOLUTION_GATE_NOT_MET"
+  | "PLANNED_ACTIONS_OPEN"
+  | "ACTION_NOT_PLANNED"
   | "INTERNAL_ERROR";
 
 export function sendError(
@@ -43,6 +50,20 @@ export function sendError(
   fields?: Record<string, string>,
 ): void {
   res.status(status).json({ error: fields ? { code, message, fields } : { code, message } });
+}
+
+// C-173 - RESOLUTION_GATE_NOT_MET is the one code that adds a key to the
+// envelope: the reasons, in the fixed C-167 order.
+export function sendGateNotMet(res: Response, reasons: readonly string[]): void {
+  res.status(409).json({
+    error: { code: "RESOLUTION_GATE_NOT_MET", message: "This ticket cannot be resolved yet.", reasons: [...reasons] },
+  });
+}
+
+// BR-36, C-138 - the version sent is not the current one. No copy of the
+// resource travels with it; the client re-fetches the Ticket (BR-39).
+export function sendStale(res: Response): void {
+  sendError(res, 409, "STALE_UPDATE", "Someone else changed this first. The latest version is shown, and your changes are kept so you can apply them again.");
 }
 
 export function sendInternalError(res: Response): void {

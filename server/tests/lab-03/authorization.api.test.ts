@@ -292,10 +292,12 @@ describe("Internal Notes are staff-only (BR-70)", () => {
     const res = await a.agent.get(`/api/tickets/${ticketA.id}`);
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body.publicComments)).toBe(true);
+    // Lab 4 adaptation (tests.md 4.1; C-136, C-140, C-141): the Lab 4 keys
+    // join the key set; still no key carrying note data.
     expect(Object.keys(res.body).sort()).toEqual(
       ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description", "requestedPriority",
         "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt", "attachments",
-        "publicComments"].sort(),
+        "publicComments", "version", "lastActivityAt", "resolvedAt", "actions", "statusHistory", "historyComplete"].sort(),
     );
     // Over every key at every depth, not a guessed name.
     const keys: string[] = [];

@@ -1,0 +1,25 @@
+Command: cd server; npx vitest run tests/lab-04/actions-taken.api.test.ts tests/lab-04/authorization.api.test.ts
+Date: 2026-10-30 17:22:13 +0700
+Commit: 6378a7a (feature/lab4-3-actions-api; implementation applied with the audit fixes, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-04/actions-taken.api.test.ts (57 tests) 5639ms
+   ✓ clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-46 five concurrent creates by one author with the same K (the P2002 path) -> exactly one row; every response 200 or 201 carrying that row; none 500 (AC-64, C-139) 2291ms
+ ✓ tests/lab-04/authorization.api.test.ts (6 tests) 498ms
+
+ Test Files  2 passed (2)
+      Tests  63 passed (63)
+   Start at  17:22:01
+   Duration  11.80s (transform 610ms, setup 0ms, collect 1.48s, tests 6.14s, environment 0ms, prepare 217ms)
+
