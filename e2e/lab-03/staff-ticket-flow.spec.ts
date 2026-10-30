@@ -10,6 +10,7 @@ import {
   apiAs,
   settle,
 } from "../support/auth";
+import { addCompletedAction } from "../support/lab4";
 
 // IT Staff Ticket Detail - tests.md section 2.12, E2E-07..E2E-18, and the
 // RESP-01..06, RESP-09, RESP-10 rows this file owns (Issue #42/#6). Also the
@@ -135,6 +136,11 @@ test.describe("IT Staff Ticket Detail flow", () => {
     const requester = await apiAs(E2E_REQUESTER);
     const ticket = await createTicket(requester, "E2E: priority and status");
     await requester.dispose();
+    // Adapted for Lab 4 (tests.md 4.3, C-137): an action is completed before
+    // Resolve, or the resolution gate keeps Resolved disabled.
+    const staffApi = await apiAs(IT_STAFF);
+    await addCompletedAction(staffApi, ticket.id);
+    await staffApi.dispose();
 
     await gotoStaffDetail(page, ticket.id);
     await page.getByRole("button", { name: "Claim" }).click();
@@ -528,6 +534,9 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
     // FR-30: the resolution action only renders in Open, In Progress,
     // Waiting for Requester or Reopened - not New, which createTicket leaves it in.
     await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
+    // Adapted for Lab 4 (C-137): the staff Resolve below needs the resolution
+    // gate met, so one completed action is recorded first.
+    await addCompletedAction(admin, ticket.id);
 
     const reqContext = await browser.newContext({ storageState: STATE.requester });
     const reqPage = await reqContext.newPage();

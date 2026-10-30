@@ -3,6 +3,7 @@ import { render, screen, within, waitFor, cleanup } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { IT_STAFF, signInAs } from "../support/auth.js";
 
 // Planned rows from tests.md section 2.3: UI-16..UI-24, STYLE-03, STYLE-04
@@ -33,6 +34,7 @@ function row(id: number, summary: string, extra: Partial<api.QueueRow> = {}): ap
     requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T04:12:33.041Z",
+    lastActivityAt: "2026-09-05T04:12:33.041Z",
     ...extra,
   };
 }

@@ -3,6 +3,7 @@ import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { REQUESTER_A, REQUESTER_B, signInAs } from "../support/auth.js";
 
 // UI-10, UI-18..UI-23, STYLE-06 and STYLE-08 from tests.md (sections 2.3 and
@@ -34,6 +35,7 @@ function row(id: number, summary: string, extra: Partial<api.TicketListRow> = {}
     requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T04:12:33.041Z",
+    lastActivityAt: "2026-09-05T04:12:33.041Z",
     ...extra,
     // C-71: IT Priority starts as a copy of Requested Priority and is never null.
     itPriority: extra.itPriority ?? extra.requestedPriority ?? "MEDIUM",
@@ -176,6 +178,7 @@ describe("My Tickets", () => {
       owner: null,
       publicComments: [],
       attachments: [],
+      ...lab4Fields(A_ROWS[1].updatedAt),
     });
     const user = userEvent.setup();
     renderList();
