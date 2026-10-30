@@ -14,6 +14,7 @@ import {
   signIn,
   withFirstLoginAccount,
 } from "../support/auth";
+import { addCompletedAction } from "../support/lab4";
 
 // Issue #12 (feature/lab3-12-ui-evidence) - the visual checklist, ui-spec.md
 // section 24, made provable at all three C-90 viewports.
@@ -640,13 +641,27 @@ async function focusWalk(page: Page, screen: string) {
       const cs = getComputedStyle(el);
       return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none";
     };
-    return Array.from(document.querySelectorAll(sel)).filter(visible).length;
+    // A named radio group is one Tab stop (arrow keys move inside it), so it
+    // counts once. Adapted for Lab 4: the Actions Taken composer (ui-spec 8.3,
+    // C-123) brings the first radio pair onto a walked screen.
+    const groups = new Set<string>();
+    return Array.from(document.querySelectorAll(sel))
+      .filter(visible)
+      .filter((el) => {
+        const r = el as HTMLInputElement;
+        if (r.tagName !== "INPUT" || r.type !== "radio" || !r.name) return true;
+        const key = `${r.form ? Array.from(document.forms).indexOf(r.form) : -1}:${r.name}`;
+        if (groups.has(key)) return false;
+        groups.add(key);
+        return true;
+      }).length;
   }, FOCUSABLE);
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   const stops: Array<{ element: string; name: string; ring: string | null }> = [];
   const seen = new Set<string>();
   let captured = false;
   let completedCycle = false;
+  let lastKey: string | null = null;
   for (let i = 0; i < expected * 3 + 20; i++) {
     await page.keyboard.press("Tab");
     await settle(page);
@@ -667,6 +682,10 @@ async function focusWalk(page: Page, screen: string) {
       };
     });
     if (!info) continue;
+    // Tab inside a datetime-local input (ui-spec 8.3) moves between its date
+    // and time segments, so the same element repeats: one stop, not a cycle.
+    if (info.key === lastKey) continue;
+    lastKey = info.key;
     if (seen.has(info.key)) {
       completedCycle = true;
       break;
@@ -805,6 +824,11 @@ test.describe("Accessibility proof - IT Staff", () => {
   test("E2E-46 the status confirmation traps focus, closes on Escape and restores focus (ui-spec 16.2, 22)", async ({ page }) => {
     const ticket = await e2eTicket("A11Y: confirm dialog");
     await staffMoves(ticket.id, ["claim", "OPEN"]);
+    // Adapted for Lab 4 (C-137): Resolved is offered only once the resolution
+    // gate is met, so one completed action is recorded first.
+    const staff = await apiAs(IT_STAFF);
+    await addCompletedAction(staff, ticket.id);
+    await staff.dispose();
     await page.goto(`/queue/${ticket.id}`);
     await page.locator("#status-select").selectOption({ label: "Resolved" });
     const save = page.getByRole("group", { name: "Current Status controls" }).getByRole("button", { name: "Save Changes" });
