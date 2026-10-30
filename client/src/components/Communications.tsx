@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { ApiError, postPublicComment, postInternalNote, type Entry } from "../api.js";
+import { ApiError, newClientRequestId, postPublicComment, postInternalNote, type Entry } from "../api.js";
 import { formatDisplayTimestamp } from "../format.js";
 import { ENTRY_BODY_MAX, MESSAGES, messageForCode } from "../validation.js";
 import { RoleBadge } from "./Badge.js";
@@ -70,6 +70,9 @@ export function PublicCommentsCard({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Lab 4 (BR-42, C-139): one replay key per composer opening, renewed after
+  // every success, so a network retry cannot post twice.
+  const [clientRequestId, setClientRequestId] = useState(() => newClientRequestId());
   const trimmed = draft.trim();
 
   async function submit() {
@@ -77,9 +80,10 @@ export function PublicCommentsCard({
     setBusy(true);
     setError(null);
     try {
-      const entry = await postPublicComment(ticketId, trimmed);
+      const entry = await postPublicComment(ticketId, trimmed, clientRequestId);
       onPosted(entry);
       setDraft("");
+      setClientRequestId(newClientRequestId());
     } catch (err) {
       setError(err instanceof ApiError && err.code === "VALIDATION_FAILED" ? MESSAGES.commentBody : messageForCode(err instanceof ApiError ? err.code : "INTERNAL_ERROR"));
     } finally {
@@ -143,6 +147,9 @@ export function InternalNotesCard({
   const [draft, setDraft] = useState("");
   const [busy, setBusy] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // Lab 4 (BR-42, C-139): one replay key per composer opening, renewed after
+  // every success, so a network retry cannot post twice.
+  const [clientRequestId, setClientRequestId] = useState(() => newClientRequestId());
   const trimmed = draft.trim();
 
   async function submit() {
@@ -150,9 +157,10 @@ export function InternalNotesCard({
     setBusy(true);
     setError(null);
     try {
-      const entry = await postInternalNote(ticketId, trimmed);
+      const entry = await postInternalNote(ticketId, trimmed, clientRequestId);
       onPosted(entry);
       setDraft("");
+      setClientRequestId(newClientRequestId());
     } catch (err) {
       setError(err instanceof ApiError && err.code === "VALIDATION_FAILED" ? MESSAGES.noteBody : messageForCode(err instanceof ApiError ? err.code : "INTERNAL_ERROR"));
     } finally {

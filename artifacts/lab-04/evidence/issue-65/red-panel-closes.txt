@@ -1,0 +1,1116 @@
+Command: cd client; npx vitest run tests/lab-04/ActionsTaken.test.tsx
+Date: 2026-10-30 17:47:09 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; UI-31..33 extended, panel-close fix not yet applied)
+Exit code: 1
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+stderr | tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44)
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:349:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:287:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ❯ tests/lab-04/ActionsTaken.test.tsx (25 tests | 3 failed) 8217ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-24 Result and Follow-Up show only for Completed; the note only when ticked, and unticking clears it (BR-05, AC-09) 603ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-25 the request body: trimmed text, +07:00 time, the replay key, and no follow-up note when unticked (BR-04, BR-07, BR-42) 1023ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-27 success shows Action added., resets the form and mints a new key (FR-08, BR-44) 908ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44) 439ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-29 a failure keeps every typed value (BR-63, C-147) 659ms
+   × Actions Taken - IT Staff Ticket Detail > UI-31 Edit sends only the changed fields with the action's version; Save is disabled until something differs (BR-90, C-175) 510ms
+     → expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Edit action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="edit-31-description"
+  >
+    Description 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    class="form-control"
+    id="edit-31-description"
+    maxlength="2000"
+    rows="3"
+  >
+    Replace the laptop battery. Recalibrate.
+  </textarea>
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-actionAt"
+  >
+    Action Date/Time 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <input
+    class="form-control"
+    id="edit-31-actionAt"
+    type="datetime-local"
+    value="2026-10-27T10:00"
+  />
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-assigneeId"
+  >
+    Assignee
+  </label>
+  <select
+    class="form-select"
+    id="edit-31-assigneeId"
+  >
+    <option
+      value="6"
+    >
+      Araya Methee
+    </option>
+    <option
+      value="7"
+    >
+      Decha Intharat
+    </option>
+  </select>
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-attachmentNotes"
+  >
+    Attachment Notes
+  </label>
+  <textarea
+    class="form-control"
+    id="edit-31-attachmentNotes"
+    maxlength="500"
+    rows="2"
+  />
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-primary"
+      type="button"
+    >
+      Save Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+   × Actions Taken - IT Staff Ticket Detail > UI-32 Complete sends result, follow-up and version; the stored time is not re-sent unless changed (BR-11, C-168) 611ms
+     → expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Complete action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="complete-31-actionAt"
+  >
+    Action Date/Time 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <input
+    class="form-control"
+    id="complete-31-actionAt"
+    type="datetime-local"
+    value="2026-10-27T10:00"
+  />
+  <label
+    class="form-label tk-label mt-2"
+    for="complete-31-result"
+  >
+    Result 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    class="form-control"
+    id="complete-31-result"
+    maxlength="2000"
+    rows="2"
+  >
+    Battery replaced.
+  </textarea>
+  <div
+    class="form-check mt-2"
+  >
+    <input
+      class="form-check-input"
+      id="complete-31-followUp"
+      type="checkbox"
+    />
+    <label
+      class="form-check-label"
+      for="complete-31-followUp"
+    >
+      Follow-Up Required?
+    </label>
+  </div>
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-primary"
+      type="button"
+    >
+      Complete Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+   × Actions Taken - IT Staff Ticket Detail > UI-33 Cancel needs a Reason, warns it is final, and sends it as the result (BR-12) 1653ms
+     → expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Cancel action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="cancel-31-reason"
+  >
+    Reason 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    aria-describedby="cancel-31-reason-help"
+    class="form-control"
+    id="cancel-31-reason"
+    maxlength="2000"
+    rows="2"
+  >
+    No longer needed.
+  </textarea>
+  <div
+    class="tk-muted small"
+    id="cancel-31-reason-help"
+  >
+    Cancelling is final. The action stays on the record with your reason.
+  </div>
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-danger"
+      type="button"
+    >
+      Cancel Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <header
+        class="tk-header"
+      >
+        <nav
+          aria-label="Main navigation"
+          class="navbar navbar-expand-md"
+          data-bs-theme="dark"
+        >
+          <div
+            class="container"
+          >
+            <a
+              class="navbar-brand tk-brand"
+              href="/queue"
+            >
+              TokTickIT
+            </a>
+            <button
+              aria-controls="tk-nav-panel"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              class="navbar-toggler"
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                class="navbar-toggler-icon"
+              />
+            </button>
+            <div
+              class="collapse navbar-collapse"
+              id="tk-nav-panel"
+            >
+              <ul
+                class="navbar-nav mx-auto"
+              >
+                <li
+                  class="nav-item"
+                >
+                  <a
+                    aria-current="page"
+                    class="nav-link tk-nav-link tk-nav-link-active"
+                    href="/queue"
+                  >
+                    Ticket Queue
+                  </a>
+                </li>
+              </ul>
+              <div
+                class="tk-identity tk-identity-shell"
+              >
+                <span
+                  class="tk-identity-name"
+                >
+                  Araya Methee
+                </span>
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                <button
+                  class="btn tk-btn-tertiary tk-btn-on-primary"
+                  type="button"
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main
+        class="container tk-main"
+      >
+        <section
+          aria-labelledby="staff-detail-title"
+        >
+          <div
+            aria-live="polite"
+            class="tk-panel tk-panel-pale tk-panel-success"
+            role="status"
+          >
+            <p>
+              <svg
+                aria-hidden="true"
+                class="tk-success-icon"
+                focusable="false"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <path
+                  d="M13.5 4.5 6.5 11.5 2.5 7.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+               
+              <span>
+                Action cancelled.
+              </span>
+            </p>
+          </div>
+          <div
+            class="row g-3 mb-3"
+          >
+            <div
+              class="col-12 col-lg-7"
+            >
+              <div
+                aria-label="Ticket information"
+                class="card tk-card h-100"
+                role="region"
+              >
+                <div
+                  class="d-flex flex-wrap align-items-center gap-2 mb-3"
+                >
+                  <h1
+                    class="tk-title mb-0"
+                    id="staff-detail-title"
+                  >
+                    TKT-2026-000077
+                  </h1>
+                  <span
+                    class="tk-badge tk-badge-square tk-status-in-progress"
+                  >
+                    In Progress
+                  </span>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                </div>
+                <dl
+                  class="row tk-detail-list"
+                >
+                  <div
+                    class="col-12 col-md-6 col-lg-4"
+                  >
+                    <dt>
+                      Requester
+                    </dt>
+                    <dd
+                      class="tk-readonly-value"
+                    >
+                      Anucha Prasert
+                       (
+                      anucha.p@example.ac.th
+                      )
+                    </dd>
+                  </div>
+                  <div
+                    class="col-12 col-md-6 col-lg-4"
+                  >
+                    <dt>
+                      Ticket Date
+                    </dt>
+                    <dd
+                      class="tk-readonly-value"
+                    >
+                      20 Oct 2026 10:00[0...
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-34 STALE_UPDATE on an edit: re-fetch, keep the draft, apply again with the fresh version (BR-39, C-153) 397ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 3 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-31 Edit sends only the changed fields with the action's version; Save is disabled until something differs (BR-90, C-175)
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Edit action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="edit-31-description"
+  >
+    Description 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    class="form-control"
+    id="edit-31-description"
+    maxlength="2000"
+    rows="3"
+  >
+    Replace the laptop battery. Recalibrate.
+  </textarea>
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-actionAt"
+  >
+    Action Date/Time 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <input
+    class="form-control"
+    id="edit-31-actionAt"
+    type="datetime-local"
+    value="2026-10-27T10:00"
+  />
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-assigneeId"
+  >
+    Assignee
+  </label>
+  <select
+    class="form-select"
+    id="edit-31-assigneeId"
+  >
+    <option
+      value="6"
+    >
+      Araya Methee
+    </option>
+    <option
+      value="7"
+    >
+      Decha Intharat
+    </option>
+  </select>
+  <label
+    class="form-label tk-label mt-2"
+    for="edit-31-attachmentNotes"
+  >
+    Attachment Notes
+  </label>
+  <textarea
+    class="form-control"
+    id="edit-31-attachmentNotes"
+    maxlength="500"
+    rows="2"
+  />
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-primary"
+      type="button"
+    >
+      Save Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+ ❯ tests/lab-04/ActionsTaken.test.tsx:259:76
+    257|     expect(await screen.findByText("Action saved.")).toBeInTheDocument…
+    258|     // A successful write returns the row to view mode.
+    259|     expect(within(card).queryByRole("group", { name: "Edit action" }))…
+       |                                                                            ^
+    260|   });
+    261| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/3]⎯
+
+ FAIL  tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-32 Complete sends result, follow-up and version; the stored time is not re-sent unless changed (BR-11, C-168)
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Complete action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="complete-31-actionAt"
+  >
+    Action Date/Time 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <input
+    class="form-control"
+    id="complete-31-actionAt"
+    type="datetime-local"
+    value="2026-10-27T10:00"
+  />
+  <label
+    class="form-label tk-label mt-2"
+    for="complete-31-result"
+  >
+    Result 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    class="form-control"
+    id="complete-31-result"
+    maxlength="2000"
+    rows="2"
+  >
+    Battery replaced.
+  </textarea>
+  <div
+    class="form-check mt-2"
+  >
+    <input
+      class="form-check-input"
+      id="complete-31-followUp"
+      type="checkbox"
+    />
+    <label
+      class="form-check-label"
+      for="complete-31-followUp"
+    >
+      Follow-Up Required?
+    </label>
+  </div>
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-primary"
+      type="button"
+    >
+      Complete Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+ ❯ tests/lab-04/ActionsTaken.test.tsx:275:80
+    273|     expect(await screen.findByText("Action completed.")).toBeInTheDocu…
+    274|     // A successful write returns the row to view mode: no panel on a …
+    275|     expect(within(card).queryByRole("group", { name: "Complete action"…
+       |                                                                                ^
+    276|   });
+    277| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/3]⎯
+
+ FAIL  tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-33 Cancel needs a Reason, warns it is final, and sends it as the result (BR-12)
+Error: expect(element).not.toBeInTheDocument()
+
+expected document not to contain element, found <div
+  aria-label="Cancel action"
+  class="card tk-card tk-action-panel mt-2"
+  role="group"
+>
+  <label
+    class="form-label tk-label"
+    for="cancel-31-reason"
+  >
+    Reason 
+     
+    <span
+      aria-hidden="true"
+      class="tk-required"
+    >
+      *
+    </span>
+    <span
+      class="visually-hidden"
+    >
+       (required)
+    </span>
+  </label>
+  <textarea
+    aria-describedby="cancel-31-reason-help"
+    class="form-control"
+    id="cancel-31-reason"
+    maxlength="2000"
+    rows="2"
+  >
+    No longer needed.
+  </textarea>
+  <div
+    class="tk-muted small"
+    id="cancel-31-reason-help"
+  >
+    Cancelling is final. The action stays on the record with your reason.
+  </div>
+  <div
+    class="d-flex gap-2 mt-3"
+  >
+    <button
+      class="btn btn-danger"
+      type="button"
+    >
+      Cancel Action
+    </button>
+    <button
+      class="btn btn-secondary"
+      type="button"
+    >
+      Close
+    </button>
+  </div>
+</div> instead
+
+Ignored nodes: comments, script, style
+<html>
+  <head />
+  <body>
+    <div>
+      <header
+        class="tk-header"
+      >
+        <nav
+          aria-label="Main navigation"
+          class="navbar navbar-expand-md"
+          data-bs-theme="dark"
+        >
+          <div
+            class="container"
+          >
+            <a
+              class="navbar-brand tk-brand"
+              href="/queue"
+            >
+              TokTickIT
+            </a>
+            <button
+              aria-controls="tk-nav-panel"
+              aria-expanded="false"
+              aria-label="Toggle navigation"
+              class="navbar-toggler"
+              type="button"
+            >
+              <span
+                aria-hidden="true"
+                class="navbar-toggler-icon"
+              />
+            </button>
+            <div
+              class="collapse navbar-collapse"
+              id="tk-nav-panel"
+            >
+              <ul
+                class="navbar-nav mx-auto"
+              >
+                <li
+                  class="nav-item"
+                >
+                  <a
+                    aria-current="page"
+                    class="nav-link tk-nav-link tk-nav-link-active"
+                    href="/queue"
+                  >
+                    Ticket Queue
+                  </a>
+                </li>
+              </ul>
+              <div
+                class="tk-identity tk-identity-shell"
+              >
+                <span
+                  class="tk-identity-name"
+                >
+                  Araya Methee
+                </span>
+                <span
+                  class="tk-badge tk-badge-square tk-badge-role tk-role-it-staff"
+                >
+                  IT Staff
+                </span>
+                <button
+                  class="btn tk-btn-tertiary tk-btn-on-primary"
+                  type="button"
+                >
+                  Log Out
+                </button>
+              </div>
+            </div>
+          </div>
+        </nav>
+      </header>
+      <main
+        class="container tk-main"
+      >
+        <section
+          aria-labelledby="staff-detail-title"
+        >
+          <div
+            aria-live="polite"
+            class="tk-panel tk-panel-pale tk-panel-success"
+            role="status"
+          >
+            <p>
+              <svg
+                aria-hidden="true"
+                class="tk-success-icon"
+                focusable="false"
+                height="16"
+                viewBox="0 0 16 16"
+                width="16"
+              >
+                <path
+                  d="M13.5 4.5 6.5 11.5 2.5 7.5"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                />
+              </svg>
+               
+              <span>
+                Action cancelled.
+              </span>
+            </p>
+          </div>
+          <div
+            class="row g-3 mb-3"
+          >
+            <div
+              class="col-12 col-lg-7"
+            >
+              <div
+                aria-label="Ticket information"
+                class="card tk-card h-100"
+                role="region"
+              >
+                <div
+                  class="d-flex flex-wrap align-items-center gap-2 mb-3"
+                >
+                  <h1
+                    class="tk-title mb-0"
+                    id="staff-detail-title"
+                  >
+                    TKT-2026-000077
+                  </h1>
+                  <span
+                    class="tk-badge tk-badge-square tk-status-in-progress"
+                  >
+                    In Progress
+                  </span>
+                  <span
+                    class="tk-badge tk-badge-pill tk-priority-medium"
+                  >
+                    IT Medium
+                  </span>
+                </div>
+                <dl
+                  class="row tk-detail-list"
+                >
+                  <div
+                    class="col-12 col-md-6 col-lg-4"
+                  >
+                    <dt>
+                      Requester
+                    </dt>
+                    <dd
+                      class="tk-readonly-value"
+                    >
+                      Anucha Prasert
+                       (
+                      anucha.p@example.ac.th
+                      )
+                    </dd>
+                  </div>
+                  <div
+                    class="col-12 col-md-6 col-lg-4"
+                  >
+                    <dt>
+                      Ticket Date
+                    </dt>
+                    <dd
+                      class="tk-readonly-value"
+                    >
+                      20 Oct 2026 10:00[0...
+ ❯ tests/lab-04/ActionsTaken.test.tsx:294:98
+    292|     await waitFor(() => expect(cancel).toHaveBeenCalledWith(31, { vers…
+    293|     // A successful write returns the row to view mode: no panel on a …
+    294|     await waitFor(() => expect(within(card).queryByRole("group", { nam…
+       |                                                                                                  ^
+    295|   });
+    296| 
+ ❯ runWithExpensiveErrorDiagnosticsDisabled node_modules/@testing-library/dom/dist/config.js:47:12
+ ❯ checkCallback node_modules/@testing-library/dom/dist/wait-for.js:124:77
+ ❯ Timeout.checkRealTimersCallback node_modules/@testing-library/dom/dist/wait-for.js:118:16
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/3]⎯
+
+ Test Files  1 failed (1)
+      Tests  3 failed | 22 passed (25)
+   Start at  17:46:58
+   Duration  10.74s (transform 400ms, setup 213ms, collect 740ms, tests 8.22s, environment 865ms, prepare 150ms)
+

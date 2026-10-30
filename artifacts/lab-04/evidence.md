@@ -47,3 +47,19 @@ not `issue-3/` by the convention above.
 | `clientRequestId` replay, including five concurrent creates (P2002) and a replay on a closed Ticket | API-45..API-48; AC-64, AC-126 | `evidence/issue-64/green-actions-authorization.txt` | 3 | captured |
 | Action routes: Requester 403 with no content, anonymous 401, MustChange 403, foreign Origin 403, append-only, no secrets | SEC-01..SEC-04, SEC-10, SEC-11, SEC-12, SEC-14; AC-03, AC-24, AC-101 | `evidence/issue-64/green-actions-authorization.txt` | 3 | captured |
 | Labs 1-3 suites still pass; three key-set tests adapted per `tests.md` 4.1 | L3 API-49, L3 SEC-26, L2 API-28 | `evidence/issue-64/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt` (and the two `ECONNRESET` runs kept beside it) | 3 | captured |
+
+## Actions Taken UI - Issue 4 (#65, with the workflow UI of #66)
+
+This Issue's folder is `evidence/issue-65/`, named by the GitHub number as its task directed.
+No screenshots are committed in this Issue; the `actions-taken/` and `ticket-workflow/` captures
+belong to the Playwright specs of Issue 9.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| Tests written first and shown failing | UNIT-09..11, UI-21..UI-51, STYLE-01, STYLE-02, STYLE-06, STYLE-11 | `evidence/issue-65/red-client-suite.txt` | 4 | captured |
+| Actions Taken card on IT Staff Ticket Detail: list, composer, edit, complete, cancel, row controls from `allowedOperations`, conflicts, plain text | UNIT-09..11, UI-21..UI-37, UI-39, STYLE-01, STYLE-02, STYLE-06; FR-01, FR-08, FR-09, AC-09, AC-14 | `evidence/issue-65/green-client-suite.txt` | 4 | captured |
+| Actions Taken read-only on Requester Ticket Detail: every action, names only, no control | UI-38; C-123, BR-20 | `evidence/issue-65/green-client-suite.txt` | 4 | captured |
+| Workflow UI: status select from `allowedTransitions`, gate callout, `version` on every PATCH, `STALE_UPDATE` panel, gate and planned-action refusals, status history, `lastActivityAt` | UI-40..UI-49, UI-51, STYLE-11 (against mocked responses; the server reads `version` from #66 on) | `evidence/issue-65/green-client-suite.txt` | 4 | captured |
+| A successful row write returns the row to view mode | UI-31..UI-33 (extended) | `evidence/issue-65/red-panel-closes.txt`, `green-client-suite.txt` | 4 | captured |
+| Real app, dev database: create planned, edit, complete, cancel, Requester view, no console error | Task step 5 | `evidence/issue-65/manual-actions-card-check.txt` (+ script and the three earlier runs) | 4 | captured |
+| Labs 1-3 suites still pass; E2E-11, E2E-15, E2E-45, E2E-46 adapted (C-137, C-123) | see `evidence/issue-65/README.md` | `evidence/issue-65/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-before-adaptation.txt` | 4 | captured |

@@ -10,6 +10,8 @@ import AttachmentSection from "../components/AttachmentSection.js";
 import Forbidden from "../components/Forbidden.js";
 import NotFound from "../components/NotFound.js";
 import SuccessPanel from "../components/SuccessPanel.js";
+import { RequesterActionsCard } from "../components/ActionsTaken.js";
+import StatusHistory from "../components/StatusHistory.js";
 
 // Requester Ticket Detail - ui-spec.md section 13, extended by section 14 for
 // Lab 3. Card 1 is the read-only Ticket information (BR-61, AC-53), now with
@@ -144,10 +146,11 @@ export default function TicketDetail({ id }: { id: number }) {
               )}
             </dd>
           </div>
-          <div className="col-12 col-md-6 col-lg-4"><dt>Last Updated</dt><dd className="tk-readonly-value">{formatDisplayTimestamp(t.updatedAt)}</dd></div>
+          <div className="col-12 col-md-6 col-lg-4"><dt>Last Updated</dt><dd className="tk-readonly-value">{formatDisplayTimestamp(t.lastActivityAt)}</dd></div>
           <div className="col-12"><dt>Ticket Summary</dt><dd className="tk-readonly-value">{t.summary}</dd></div>
           <div className="col-12"><dt>Description</dt><dd className="tk-readonly-value tk-prewrap">{t.description}</dd></div>
         </dl>
+        <StatusHistory rows={t.statusHistory} complete={t.historyComplete} />
 
         <ResolutionAction
           ticket={t}
@@ -164,6 +167,9 @@ export default function TicketDetail({ id }: { id: number }) {
         />
         {conflict && <p className="tk-conflict" role="alert" aria-live="assertive">{conflict}</p>}
       </div>
+
+      {/* Lab 4, ui-spec 8.6 - read-only, after the information card. */}
+      <RequesterActionsCard actions={t.actions} />
 
       <PublicCommentsCard
         ticketId={t.id}
