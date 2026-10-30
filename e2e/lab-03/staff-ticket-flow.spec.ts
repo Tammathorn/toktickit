@@ -182,8 +182,12 @@ test.describe("IT Staff Ticket Detail flow", () => {
     const ticket = await createTicket(requester, "E2E: refused on a closed ticket");
     const admin = await apiAs(ADMINISTRATOR);
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "RESOLVED" } });
+    // C-156: every fixture move asserts its status, so a refused one fails here
+    // instead of leaving the test to assert against the wrong state.
+    const opened = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
+    expect(opened.status(), `OPEN on ticket ${ticket.id}`).toBe(200);
+    const resolved = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "RESOLVED" } });
+    expect(resolved.status(), `RESOLVED on ticket ${ticket.id}`).toBe(200);
     const closed = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "CLOSED" } });
     expect(closed.status()).toBe(200);
     await requester.dispose();
@@ -533,7 +537,8 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
     // FR-30: the resolution action only renders in Open, In Progress,
     // Waiting for Requester or Reopened - not New, which createTicket leaves it in.
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
+    const opened = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
+    expect(opened.status(), `OPEN on ticket ${ticket.id}`).toBe(200); // C-156
     // Adapted for Lab 4 (C-137): the staff Resolve below needs the resolution
     // gate met, so one completed action is recorded first.
     await addCompletedAction(admin, ticket.id);
@@ -571,9 +576,11 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
 
     const admin = await apiAs(ADMINISTRATOR);
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "RESOLVED" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "CLOSED" } });
+    // C-156: each fixture move asserts its status.
+    for (const step of ["OPEN", "RESOLVED", "CLOSED"]) {
+      const moved = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: step } });
+      expect(moved.status(), `${step} on ticket ${ticket.id}`).toBe(200);
+    }
 
     const browserContext = await browser.newContext({ storageState: STATE.requester });
     const page = await browserContext.newPage();
