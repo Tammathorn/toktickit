@@ -764,3 +764,33 @@ textarea.form-control { height: auto; resize: vertical; }
 /* Conflict panel (ui-spec 11): warning border and icon, never colour alone. */
 .tk-panel-warning { border: 1px solid var(--tk-warning); background: var(--tk-surface); color: var(--tk-text); }
 .tk-conflict-panel { margin-top: 0.5rem; }
+
+/* ---- Bootstrap defaults that leaked colours outside the tokens ------------
+   Found by the Issue #70 measurements (VIS-01, VIS-21, VIS-25): links, the
+   Bootstrap field-error text, checked boxes and the header's focus ring drew
+   Bootstrap's own blue and red. Each is routed through the tokens. */
+:root {
+  --bs-link-color-rgb: 11, 122, 70;       /* --tk-secondary as the triplet Bootstrap's links read */
+  --bs-link-hover-color-rgb: 0, 107, 60;  /* --tk-primary */
+}
+.invalid-feedback { color: var(--tk-danger); }
+.form-control.is-invalid, .form-select.is-invalid { border-color: var(--tk-danger); }
+.form-control.is-invalid:focus, .form-select.is-invalid:focus { border-color: var(--tk-danger); box-shadow: var(--tk-focus-ring); }
+.form-check-input:checked { background-color: var(--tk-primary); border-color: var(--tk-primary); }
+.form-check-input:focus { border-color: var(--tk-secondary); box-shadow: var(--tk-focus-ring); }
+/* The token ring is green on the green header and would not show; pale does. */
+.tk-nav-link:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--tk-pale); }
+
+/* Touch targets below md (ui-spec 13, VIS-31): the dashboards' Ticket links and
+   View all, the action row buttons and the composer's radio and checkbox labels
+   measured under 44 px at 390 (Issue #70). */
+@media (max-width: 767.98px) {
+  .tk-dash-row a, .tk-card > p.mt-2 > a { display: inline-flex; align-items: center; min-height: 44px; min-width: 44px; }
+  .tk-action-row .btn-sm { min-width: 44px; min-height: 44px; }
+  .tk-actions-card .form-check-label { display: inline-flex; align-items: center; min-height: 44px; }
+}
+
+/* A badge inside a metric card may wrap rather than push the card wider than its
+   column: "Requester says resolved" overflowed the 390 px viewport by 23 px
+   (measured, Issue #70, VIS-28 and VIS-30). */
+.tk-metric-label .tk-badge { white-space: normal; max-width: 100%; }

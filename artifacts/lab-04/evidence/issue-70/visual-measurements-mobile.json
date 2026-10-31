@@ -1,0 +1,2374 @@
+{
+  "viewport": "mobile",
+  "width": 390,
+  "measuredAt": "2026-10-31T14:10:33.912Z",
+  "rows": [
+    {
+      "id": "VIS-06",
+      "ok": true,
+      "values": {
+        "cards": 11,
+        "samples": [
+          {
+            "isLink": true,
+            "linksInside": 0,
+            "label": "Unassigned",
+            "count": "75",
+            "cue": "View list ›",
+            "name": "Unassigned: 75. Open the Ticket Queue filtered to unassigned tickets."
+          },
+          {
+            "isLink": true,
+            "linksInside": 0,
+            "label": "Mine",
+            "count": "34",
+            "cue": "View list ›",
+            "name": "Mine: 34. Open the Ticket Queue filtered to your tickets."
+          },
+          {
+            "isLink": true,
+            "linksInside": 0,
+            "label": "New New",
+            "count": "74",
+            "cue": "View list ›",
+            "name": "New: 74. Open the Ticket Queue filtered to New."
+          }
+        ]
+      }
+    },
+    {
+      "id": "VIS-08 staff",
+      "ok": true,
+      "values": [
+        {
+          "title": "My planned actions",
+          "rows": 27,
+          "viewAll": false
+        },
+        {
+          "title": "Recently updated",
+          "rows": 5,
+          "viewAll": true
+        },
+        {
+          "title": "Urgent",
+          "rows": 5,
+          "viewAll": true
+        }
+      ]
+    },
+    {
+      "id": "VIS-32 staff grid",
+      "ok": true,
+      "values": {
+        "viewport": "mobile",
+        "cardsInFirstRow": 2,
+        "distinctLefts": 2
+      }
+    },
+    {
+      "id": "VIS-28 count never wraps",
+      "ok": true,
+      "values": {
+        "countHeightsUnder48": true
+      }
+    },
+    {
+      "id": "VIS-03 dashboard type scale",
+      "ok": true,
+      "values": {
+        "h1": {
+          "size": "28px",
+          "weight": "600"
+        },
+        "h2": {
+          "size": "20px",
+          "weight": "600"
+        },
+        "label": {
+          "size": "14px",
+          "weight": "600"
+        },
+        "count": {
+          "size": "32px",
+          "weight": "600"
+        }
+      }
+    },
+    {
+      "id": "VIS-02 dashboard cards",
+      "ok": true,
+      "values": {
+        "metric": {
+          "bg": "rgb(255, 255, 255)",
+          "border": "1px solid rgb(216, 224, 219)",
+          "shadow": "rgba(31, 42, 36, 0.06) 0px 1px 2px 0px"
+        },
+        "panel": {
+          "bg": "rgb(255, 255, 255)",
+          "border": "1px solid rgb(216, 224, 219)",
+          "shadow": "rgba(31, 42, 36, 0.06) 0px 1px 2px 0px"
+        }
+      }
+    },
+    {
+      "id": "VIS-24 dashboard",
+      "ok": true,
+      "values": {
+        "label": "staff dashboard",
+        "stops": 55,
+        "noRing": [],
+        "missed": [],
+        "backwards": []
+      }
+    },
+    {
+      "id": "VIS-25 dashboard",
+      "ok": true,
+      "values": {
+        "stops": 55,
+        "withoutRing": []
+      }
+    },
+    {
+      "id": "VIS-26",
+      "ok": true,
+      "values": {
+        "id": "my-actions-title",
+        "hash": "#my-actions"
+      }
+    },
+    {
+      "id": "VIS-11",
+      "ok": true,
+      "values": [
+        {
+          "label": "Requesters",
+          "count": "6",
+          "secondary": "5 active",
+          "secondaryColor": "rgb(90, 107, 98)"
+        },
+        {
+          "label": "IT Staff",
+          "count": "4",
+          "secondary": "3 active",
+          "secondaryColor": "rgb(90, 107, 98)"
+        },
+        {
+          "label": "Administrators",
+          "count": "4",
+          "secondary": "1 active",
+          "secondaryColor": "rgb(90, 107, 98)"
+        }
+      ]
+    },
+    {
+      "id": "VIS-32 user cards",
+      "ok": true,
+      "values": {
+        "rowsOfUserCards": 2
+      }
+    },
+    {
+      "id": "VIS-12",
+      "ok": true,
+      "values": {
+        "before": "Updated 31 Oct 2026 21:10 (Asia/Bangkok)",
+        "afterRefresh": "Updated 31 Oct 2026 21:25 (Asia/Bangkok)",
+        "ariaLive": "polite"
+      }
+    },
+    {
+      "id": "VIS-07",
+      "ok": true,
+      "values": [
+        {
+          "label": "Open tickets",
+          "count": "0",
+          "emptyComponentInside": false,
+          "isLink": true,
+          "href": "/tickets?statusGroup=open"
+        },
+        {
+          "label": "Waiting for you Waiting for Requester",
+          "count": "0",
+          "emptyComponentInside": false,
+          "isLink": true,
+          "href": "/tickets?currentStatus=WAITING_FOR_REQUESTER"
+        },
+        {
+          "label": "Resolved - awaiting closure",
+          "count": "0",
+          "emptyComponentInside": false,
+          "isLink": true,
+          "href": "/tickets?currentStatus=RESOLVED"
+        },
+        {
+          "label": "Closed",
+          "count": "0",
+          "emptyComponentInside": false,
+          "isLink": true,
+          "href": "/tickets?currentStatus=CLOSED"
+        }
+      ]
+    },
+    {
+      "id": "VIS-32 requester grid",
+      "ok": true,
+      "values": {
+        "viewport": "mobile",
+        "cardsInFirstRow": 2
+      }
+    },
+    {
+      "id": "VIS-08 requester",
+      "ok": true,
+      "values": [
+        {
+          "title": "Recently updated",
+          "rows": 5,
+          "viewAll": true
+        },
+        {
+          "title": "Recently resolved",
+          "rows": 1,
+          "viewAll": false
+        }
+      ]
+    },
+    {
+      "id": "VIS-24 requester dashboard",
+      "ok": true,
+      "values": {
+        "label": "requester dashboard",
+        "stops": 15,
+        "noRing": [],
+        "missed": [],
+        "backwards": []
+      }
+    },
+    {
+      "id": "VIS-25 requester dashboard",
+      "ok": true,
+      "values": {
+        "stops": 15,
+        "withoutRing": []
+      }
+    },
+    {
+      "id": "VIS-13",
+      "ok": true,
+      "values": {
+        "cues": {
+          "bar": true,
+          "icon": true,
+          "label": true,
+          "ground": true
+        },
+        "distinct": {
+          "actions": {
+            "bg": "rgb(255, 255, 255)",
+            "borderLeft": "4px solid rgb(0, 107, 60)",
+            "borderTop": "1px solid rgb(216, 224, 219)",
+            "icon": "<rect x=\"3\" y=\"2.5\" width=\"10\" height=\"12\" rx=\"1.5\" fill=\"no",
+            "standing": "Shown to the Requester.",
+            "standingWeight": "600"
+          },
+          "comments": {
+            "bg": "rgb(255, 255, 255)",
+            "borderLeft": "1px solid rgb(216, 224, 219)",
+            "borderTop": "1px solid rgb(216, 224, 219)",
+            "icon": null,
+            "standing": "Visible to the Requester.",
+            "standingWeight": "400"
+          },
+          "notes": {
+            "bg": "rgb(243, 241, 231)",
+            "borderLeft": "1px solid rgb(201, 185, 138)",
+            "borderTop": "1px solid rgb(201, 185, 138)",
+            "icon": null,
+            "standing": "Not visible to the Requester.",
+            "standingWeight": "600"
+          }
+        },
+        "greyscaleLuminance": {
+          "actions": 1,
+          "comments": 1,
+          "notes": 0.8773480204661865,
+          "barActions": 0.1084163449557257,
+          "barComments": 0.7302471193952125
+        }
+      }
+    },
+    {
+      "id": "VIS-14",
+      "ok": true,
+      "values": {
+        "labelTop": 1719,
+        "composerTop": 2831,
+        "weight": "600",
+        "visible": true
+      }
+    },
+    {
+      "id": "VIS-15",
+      "ok": true,
+      "values": {
+        "planned": {
+          "text": "Planned",
+          "icon": "M8 4v4l2.5 1.5M8 14.5A6.5 6.5 0 1 1 8 1.5a6.5 6.5 0 0 1 0 13Z",
+          "borderStyle": "dashed",
+          "bg": "rgb(255, 255, 255)",
+          "strike": "none"
+        },
+        "completed": {
+          "text": "Completed",
+          "icon": "M13 4.5 6.5 11 3 7.5",
+          "borderStyle": "solid",
+          "bg": "rgb(234, 246, 239)",
+          "strike": "none"
+        },
+        "cancelled": {
+          "text": "Cancelled",
+          "icon": "M4 4l8 8M12 4l-8 8",
+          "borderStyle": "solid",
+          "bg": "rgb(237, 241, 238)",
+          "strike": "line-through"
+        }
+      }
+    },
+    {
+      "id": "VIS-16",
+      "ok": true,
+      "values": [
+        {
+          "kind": "cancelled",
+          "by": "Cancelled by Panida Srisawat on 31 Oct 2026 21:10Created by Panida Srisawat on 31 Oct 2026 21:10",
+          "reasonLabel": true,
+          "resultLabel": false,
+          "bg": "rgb(237, 241, 238)"
+        },
+        {
+          "kind": "completed",
+          "by": "Completed by Decha Intharat on 31 Oct 2026 21:10Created by Decha Intharat on 31 Oct 2026 21:10",
+          "reasonLabel": false,
+          "resultLabel": true,
+          "bg": "rgb(237, 241, 238)"
+        }
+      ]
+    },
+    {
+      "id": "VIS-19",
+      "ok": true,
+      "values": {
+        "finishedRow": "rgb(237, 241, 238)",
+        "readonlyField": "rgb(237, 241, 238)",
+        "editable": [
+          "rgb(255, 255, 255)",
+          "rgb(255, 255, 255)",
+          "rgb(255, 255, 255)"
+        ],
+        "luminanceReadonly": "0.871",
+        "luminanceWhite": "1.000",
+        "greyscaleDifference": "0.129"
+      }
+    },
+    {
+      "id": "VIS-17",
+      "ok": true,
+      "values": {
+        "beforeTick": 0,
+        "afterUntick": 0,
+        "marker": {
+          "text": "*",
+          "color": "rgb(164, 38, 44)",
+          "ariaHidden": "true"
+        }
+      }
+    },
+    {
+      "id": "VIS-21",
+      "ok": true,
+      "values": [
+        {
+          "message": "Description is required and must be 2000 characters or fewer.",
+          "control": "action-description",
+          "gapBelowControl": 28,
+          "startsUnderControl": true,
+          "color": "rgb(164, 38, 44)",
+          "asteriskStillThere": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "ariaInvalid": "true"
+        },
+        {
+          "message": "Result is required and must be 2000 characters or fewer.",
+          "control": "action-result",
+          "gapBelowControl": 28,
+          "startsUnderControl": true,
+          "color": "rgb(164, 38, 44)",
+          "asteriskStillThere": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "ariaInvalid": "true"
+        },
+        {
+          "message": "Follow-up Note is required when follow-up is needed, and must be 1000 characters or fewer.",
+          "control": "action-followUpNote",
+          "gapBelowControl": 28,
+          "startsUnderControl": true,
+          "color": "rgb(164, 38, 44)",
+          "asteriskStillThere": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "ariaInvalid": "true"
+        }
+      ]
+    },
+    {
+      "id": "VIS-22",
+      "ok": true,
+      "values": [
+        {
+          "control": "action-description",
+          "asterisk": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "messageToo": "Description is required and must be 2000 characters or fewer."
+        },
+        {
+          "control": "action-result",
+          "asterisk": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "messageToo": "Result is required and must be 2000 characters or fewer."
+        },
+        {
+          "control": "action-followUpNote",
+          "asterisk": true,
+          "asteriskColor": "rgb(164, 38, 44)",
+          "messageToo": "Follow-up Note is required when follow-up is needed, and must be 1000 characters or fewer."
+        }
+      ]
+    },
+    {
+      "id": "VIS-20",
+      "ok": true,
+      "values": {
+        "optionText": "Resolved - not available yet",
+        "optionDisabled": true,
+        "reasons": [
+          "Complete or cancel every planned action.",
+          "The latest completed action needs follow-up. Record the follow-up work first."
+        ],
+        "describedBy": "gate-callout",
+        "calloutVisible": true,
+        "selectToCalloutGap": 8,
+        "fitsOneScreen": true
+      }
+    },
+    {
+      "id": "VIS-24 staff detail",
+      "ok": true,
+      "values": {
+        "label": "staff ticket detail",
+        "stops": 28,
+        "noRing": [],
+        "missed": [],
+        "backwards": []
+      }
+    },
+    {
+      "id": "VIS-25 staff detail",
+      "ok": true,
+      "values": {
+        "stops": 28,
+        "withoutRing": []
+      }
+    },
+    {
+      "id": "VIS-23 action",
+      "ok": true,
+      "values": {
+        "insideGroup": "Edit action",
+        "panelWithinGroupBox": true,
+        "draft": "VIS planned: order the part and the adapter",
+        "buttons": [
+          "Apply my changes again",
+          "Discard my changes"
+        ]
+      }
+    },
+    {
+      "id": "VIS-24 conflict buttons",
+      "ok": true,
+      "values": {
+        "missed": [],
+        "backwards": [],
+        "stops": 38
+      }
+    },
+    {
+      "id": "VIS-23 status",
+      "ok": true,
+      "values": {
+        "insideGroup": "Current Status controls",
+        "chosenStatusKept": "IN_PROGRESS",
+        "buttons": [
+          "Apply my changes again",
+          "Discard my changes"
+        ]
+      }
+    },
+    {
+      "id": "VIS-27",
+      "ok": true,
+      "values": [
+        {
+          "kind": "Resolve this ticket",
+          "focusStartsInside": true,
+          "tabStaysInside": true,
+          "tabPresses": 9,
+          "escapeCloses": true,
+          "focusRestoredToOpener": true
+        },
+        {
+          "kind": "Close this ticket",
+          "focusStartsInside": true,
+          "tabStaysInside": true,
+          "tabPresses": 9,
+          "escapeCloses": true,
+          "focusRestoredToOpener": true
+        },
+        {
+          "kind": "Cancel this ticket",
+          "focusStartsInside": true,
+          "tabStaysInside": true,
+          "tabPresses": 9,
+          "escapeCloses": true,
+          "focusRestoredToOpener": true
+        }
+      ]
+    },
+    {
+      "id": "VIS-18",
+      "ok": true,
+      "values": {
+        "rows": 3,
+        "controls": 0,
+        "composerHeading": false,
+        "standing": "Recorded by IT Staff.",
+        "emailInPage": false
+      }
+    },
+    {
+      "id": "VIS-25 requester detail",
+      "ok": true,
+      "values": {
+        "stops": 6,
+        "withoutRing": []
+      }
+    },
+    {
+      "id": "VIS-01",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "offTokenColours": []
+        },
+        {
+          "page": "administrator dashboard",
+          "offTokenColours": []
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "offTokenColours": []
+        },
+        {
+          "page": "requester dashboard",
+          "offTokenColours": []
+        },
+        {
+          "page": "staff ticket detail",
+          "offTokenColours": []
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "offTokenColours": []
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "offTokenColours": []
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "offTokenColours": []
+        },
+        {
+          "page": "requester ticket detail",
+          "offTokenColours": []
+        },
+        {
+          "page": "ticket queue",
+          "offTokenColours": []
+        },
+        {
+          "page": "user management",
+          "offTokenColours": []
+        }
+      ]
+    },
+    {
+      "id": "VIS-01 stylesheet",
+      "ok": true,
+      "values": {
+        "themeSheets": 1,
+        "rulesWithHexOutsideRoot": [],
+        "inlineStyleHex": 0
+      }
+    },
+    {
+      "id": "VIS-03 one h1",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "h1": 1
+        },
+        {
+          "page": "administrator dashboard",
+          "h1": 1
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "h1": 1
+        },
+        {
+          "page": "requester dashboard",
+          "h1": 1
+        },
+        {
+          "page": "staff ticket detail",
+          "h1": 1
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "h1": 1
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "h1": 1
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "h1": 1
+        },
+        {
+          "page": "requester ticket detail",
+          "h1": 1
+        },
+        {
+          "page": "ticket queue",
+          "h1": 1
+        },
+        {
+          "page": "user management",
+          "h1": 1
+        }
+      ]
+    },
+    {
+      "id": "VIS-04",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "administrator dashboard",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": true
+        },
+        {
+          "page": "requester dashboard",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": true
+        },
+        {
+          "page": "staff ticket detail",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "requester ticket detail",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": true
+        },
+        {
+          "page": "ticket queue",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        },
+        {
+          "page": "user management",
+          "brand": "TokTickIT",
+          "tikTock": false,
+          "profile": false,
+          "createTicketOffered": false
+        }
+      ]
+    },
+    {
+      "id": "VIS-10",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "deltaText": false
+        },
+        {
+          "page": "administrator dashboard",
+          "deltaText": false
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "deltaText": false
+        },
+        {
+          "page": "requester dashboard",
+          "deltaText": false
+        }
+      ]
+    },
+    {
+      "id": "VIS-28 no clipped label or count",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "clipped": []
+        },
+        {
+          "page": "administrator dashboard",
+          "clipped": []
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "clipped": []
+        },
+        {
+          "page": "requester dashboard",
+          "clipped": []
+        },
+        {
+          "page": "staff ticket detail",
+          "clipped": []
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "clipped": []
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "clipped": []
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "clipped": []
+        },
+        {
+          "page": "requester ticket detail",
+          "clipped": []
+        },
+        {
+          "page": "ticket queue",
+          "clipped": []
+        },
+        {
+          "page": "user management",
+          "clipped": []
+        }
+      ]
+    },
+    {
+      "id": "VIS-29 no overlap",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "overlaps": []
+        },
+        {
+          "page": "administrator dashboard",
+          "overlaps": []
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "overlaps": []
+        },
+        {
+          "page": "requester dashboard",
+          "overlaps": []
+        },
+        {
+          "page": "staff ticket detail",
+          "overlaps": []
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "overlaps": []
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "overlaps": []
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "overlaps": []
+        },
+        {
+          "page": "requester ticket detail",
+          "overlaps": []
+        },
+        {
+          "page": "ticket queue",
+          "overlaps": []
+        },
+        {
+          "page": "user management",
+          "overlaps": []
+        }
+      ]
+    },
+    {
+      "id": "VIS-30 no horizontal scroll",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "administrator dashboard",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "requester dashboard",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "staff ticket detail",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "requester ticket detail",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "ticket queue",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        },
+        {
+          "page": "user management",
+          "scrollWidth": 390,
+          "innerWidth": 390
+        }
+      ]
+    },
+    {
+      "id": "VIS-31 touch targets at 390",
+      "ok": true,
+      "values": [
+        {
+          "page": "staff dashboard",
+          "controls": 55,
+          "below44": []
+        },
+        {
+          "page": "administrator dashboard",
+          "controls": 31,
+          "below44": []
+        },
+        {
+          "page": "requester dashboard (zero)",
+          "controls": 9,
+          "below44": []
+        },
+        {
+          "page": "requester dashboard",
+          "controls": 15,
+          "below44": []
+        },
+        {
+          "page": "staff ticket detail",
+          "controls": 22,
+          "below44": []
+        },
+        {
+          "page": "staff ticket detail - validation errors shown",
+          "controls": 23,
+          "below44": []
+        },
+        {
+          "page": "staff ticket detail - action conflict",
+          "controls": 27,
+          "below44": []
+        },
+        {
+          "page": "staff ticket detail - status conflict",
+          "controls": 25,
+          "below44": []
+        },
+        {
+          "page": "requester ticket detail",
+          "controls": 6,
+          "below44": []
+        },
+        {
+          "page": "ticket queue",
+          "controls": 22,
+          "below44": []
+        },
+        {
+          "page": "user management",
+          "controls": 10,
+          "below44": []
+        }
+      ]
+    },
+    {
+      "id": "VIS-05",
+      "ok": true,
+      "values": {
+        "badges": 186,
+        "kinds": [
+          "status/other",
+          "priority",
+          "role",
+          "action-status"
+        ],
+        "emptyText": 0,
+        "distinctTexts": [
+          "Cancelled",
+          "Completed",
+          "High",
+          "IT High",
+          "IT Medium",
+          "IT Staff",
+          "In Progress",
+          "Medium",
+          "New",
+          "Open",
+          "Planned",
+          "Reopened",
+          "Requester",
+          "Requester says resolved",
+          "Resolved",
+          "Waiting for Requester"
+        ]
+      }
+    }
+  ],
+  "pages": [
+    {
+      "label": "staff dashboard",
+      "url": "/dashboard",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 55,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-reopened",
+          "text": "Reopened",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-resolved",
+          "text": "Resolved",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-resolved-marker",
+          "text": "Requester says resolved",
+          "hasIcon": true
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-reopened",
+          "text": "Reopened",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "administrator dashboard",
+      "url": "/dashboard",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 31,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-reopened",
+          "text": "Reopened",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-resolved",
+          "text": "Resolved",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-resolved-marker",
+          "text": "Requester says resolved",
+          "hasIcon": true
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-resolved",
+          "text": "Resolved",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-in-progress",
+          "text": "In Progress",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "requester dashboard (zero)",
+      "url": "/dashboard",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 9,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": true,
+      "delta": false
+    },
+    {
+      "label": "requester dashboard",
+      "url": "/dashboard",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 15,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-waiting",
+          "text": "Waiting for Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-resolved",
+          "text": "Resolved",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-resolved",
+          "text": "Resolved",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": true,
+      "delta": false
+    },
+    {
+      "label": "staff ticket detail",
+      "url": "/queue/127",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 22,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-cancelled",
+          "text": "Cancelled",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-completed",
+          "text": "Completed",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-planned",
+          "text": "Planned",
+          "hasIcon": true
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-requester",
+          "text": "Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "staff ticket detail - validation errors shown",
+      "url": "/queue/127",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 23,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-cancelled",
+          "text": "Cancelled",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-completed",
+          "text": "Completed",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-planned",
+          "text": "Planned",
+          "hasIcon": true
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-requester",
+          "text": "Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "staff ticket detail - action conflict",
+      "url": "/queue/127",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 27,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-cancelled",
+          "text": "Cancelled",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-completed",
+          "text": "Completed",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-planned",
+          "text": "Planned",
+          "hasIcon": true
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-requester",
+          "text": "Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "staff ticket detail - status conflict",
+      "url": "/queue/127",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 25,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-cancelled",
+          "text": "Cancelled",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-completed",
+          "text": "Completed",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-planned",
+          "text": "Planned",
+          "hasIcon": true
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-requester",
+          "text": "Requester",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "requester ticket detail",
+      "url": "/tickets/127",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 6,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-cancelled",
+          "text": "Cancelled",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-completed",
+          "text": "Completed",
+          "hasIcon": true
+        },
+        {
+          "kind": "action-status",
+          "cls": "tk-badge tk-badge-square tk-action-badge tk-action-planned",
+          "text": "Planned",
+          "hasIcon": true
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-requester",
+          "text": "Requester",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": true,
+      "delta": false
+    },
+    {
+      "label": "ticket queue",
+      "url": "/queue?owner=unassigned",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 22,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-new",
+          "text": "New",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "IT High",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-high",
+          "text": "High",
+          "hasIcon": false
+        },
+        {
+          "kind": "status/other",
+          "cls": "tk-badge tk-badge-square tk-status-open",
+          "text": "Open",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "IT Medium",
+          "hasIcon": false
+        },
+        {
+          "kind": "priority",
+          "cls": "tk-badge tk-badge-pill tk-priority-medium",
+          "text": "Medium",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    },
+    {
+      "label": "user management",
+      "url": "/users?role=IT_STAFF",
+      "scrollWidth": 390,
+      "innerWidth": 390,
+      "reportedInnerWidth": 390,
+      "h1": 1,
+      "offToken": [],
+      "clipped": [],
+      "overlaps": [],
+      "controls": 10,
+      "smallTargets": [],
+      "tikTock": false,
+      "profile": false,
+      "badges": [
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        },
+        {
+          "kind": "role",
+          "cls": "tk-badge tk-badge-square tk-badge-role tk-role-it-staff",
+          "text": "IT Staff",
+          "hasIcon": false
+        }
+      ],
+      "brand": "TokTickIT",
+      "createTicketOffered": false,
+      "delta": false
+    }
+  ]
+}

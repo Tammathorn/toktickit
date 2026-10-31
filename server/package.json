@@ -9,7 +9,8 @@
     "start": "node dist/index.js",
     "prisma:migrate": "prisma migrate deploy",
     "prisma:seed": "tsx prisma/seed.ts",
-    "test": "vitest run"
+    "test": "vitest run",
+    "test:perf": "tsx tests/lab-04/perf-smoke.ts"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"

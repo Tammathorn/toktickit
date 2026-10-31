@@ -1,0 +1,75 @@
+{
+  "viewport": "tablet",
+  "pairs": [
+    {
+      "card": "Unassigned",
+      "href": "/queue?owner=unassigned",
+      "cardCount": 48,
+      "listTotal": 48,
+      "reads": 1
+    },
+    {
+      "card": "Mine",
+      "href": "/queue?owner=me",
+      "cardCount": 10,
+      "listTotal": 10,
+      "reads": 2
+    },
+    {
+      "card": "New New",
+      "href": "/queue?currentStatus=NEW",
+      "cardCount": 48,
+      "listTotal": 48,
+      "reads": 2
+    },
+    {
+      "card": "Open Open",
+      "href": "/queue?currentStatus=OPEN",
+      "cardCount": 7,
+      "listTotal": 7,
+      "reads": 1
+    },
+    {
+      "card": "In Progress In Progress",
+      "href": "/queue?currentStatus=IN_PROGRESS",
+      "cardCount": 2,
+      "listTotal": 2,
+      "reads": 1
+    },
+    {
+      "card": "Waiting for Requester Waiting for Requester",
+      "href": "/queue?currentStatus=WAITING_FOR_REQUESTER",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Reopened Reopened",
+      "href": "/queue?currentStatus=REOPENED",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Resolved Resolved",
+      "href": "/queue?currentStatus=RESOLVED",
+      "cardCount": 5,
+      "listTotal": 5,
+      "reads": 1
+    },
+    {
+      "card": "High IT Priority",
+      "href": "/queue?itPriority=HIGH",
+      "cardCount": 11,
+      "listTotal": 11,
+      "reads": 1
+    },
+    {
+      "card": "Requester says resolved Requester says resolved",
+      "href": "/queue?requesterResolved=true",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    }
+  ]
+}
