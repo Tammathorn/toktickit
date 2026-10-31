@@ -100,3 +100,20 @@ Dashboard screenshots (E2E-33, C-180) are rows of Issue 9, which writes `e2e/lab
 | Part 5 metrics match database queries (dev database, one psql query per staff card, beside the API JSON of the same moment) | AC-81; BR-56, C-127 | `evidence/issue-67/part5-staff-cards.sql`, `part5-psql-staff-cards.txt`, `part5-api-staff-dashboard-it-staff.json`, `part5-api-staff-dashboard-administrator.json`, `part5-api-drilldown-totals.json` | 6 | captured |
 | Staff Dashboard UI: cards, user row, zero/empty, Refresh without polling, no deltas, Quick Actions, `#my-actions`, list rows, loading/failure, drill-down landings, nav | UI-01..UI-12, STYLE-09, STYLE-10, STYLE-12; AC-80, AC-82..AC-84, AC-88, AC-90; C-128, C-144 | `evidence/issue-67/green-client-suite.txt` | 6 | captured |
 | Labs 1-3 suites still pass; C-144 adaptations per `tests.md` 4.2/4.3 | see `evidence/issue-67/README.md` | `evidence/issue-67/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-resp12-header.txt` | 6 | captured |
+
+## Requester dashboard and the route-matrix test - Issue 7 (#68)
+
+This Issue's folder is `evidence/issue-68/`. The Requester dashboard code and its client tests
+came with #67's patch, so the #68 API tests had no code-caused red run; the README says so.
+Requester dashboard screenshots (E2E-34, C-180) are rows of Issue 9.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| Requester dashboard shape: four cards in api-spec 4.1 order, two lists | API-49; AC-78, BR-52 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| Every Requester card's count equals its `GET /api/tickets` drill-down total, one test per card | API-50..API-53; AC-81, AC-103..AC-106; C-127 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| Recent lists: order, tie-break, 168 h inclusive boundary with `now` injected; zero Requester (nattapong.w) | UNIT-08, API-54..API-57; AC-79, AC-82, AC-83, AC-107, AC-108, AC-138; C-142, C-161 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| My Tickets `statusGroup=open` conflicts -> 400; `sort=lastActivityAt:desc` | API-58, API-59; AC-72, AC-134; C-170 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| Part 5 role restriction: IT Staff and Administrator -> 403; Requester A never sees B's numbers; list items carry no staff-only key | SEC-06, SEC-08, SEC-13; AC-02, AC-85; C-180 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| Every registered route is in the `specification.md` 5.2 matrix and every matrix row is registered (36 rows) | SEC-09; AC-101; C-155, C-184 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
+| Stale `toktickit_test` rows (pre-`1c688b5` seed) found by API-57; test DB rebuilt from migrations + seed, dev DB untouched | API-57 | `evidence/issue-68/first-run-api57-stale-test-db.txt`, `test-db-rebuild-drop.txt` | 7 | captured |
+| Labs 1-3 suites still pass | see `evidence/issue-68/README.md` | `evidence/issue-68/green-server-suite.txt`, `green-client-suite.txt` | 7 | captured |

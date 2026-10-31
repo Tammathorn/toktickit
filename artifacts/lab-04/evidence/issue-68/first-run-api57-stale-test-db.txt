@@ -1,0 +1,66 @@
+Command: cd server; npx vitest run tests/lab-04/requester-dashboard.api.test.ts tests/lab-04/authorization.api.test.ts --reporter=verbose
+Date: 2026-10-31 12:07:53 +0700
+Commit: e48da97 (feature/lab4-7-requester-dashboard; the two #68 test files uncommitted; no server source changed)
+Exit code: 1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - the recent predicate (UNIT-08) > UNIT-08 recentSince(now) is now - 168 h: a time exactly at it is recent, 1 ms earlier is not
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - shape (API-49) > API-49 GET /api/dashboard/requester -> 200 with generatedAt, Asia/Bangkok, four cards in api-spec 4.1 order; recentlyUpdated.viewAll set, recentlyResolved.viewAll null
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-50 card openTickets = GET /api/tickets?statusGroup=open: own Tickets in all eight statuses -> the five open statuses counted, RESOLVED, CLOSED, CANCELLED not; meta.total equal, same ids
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-51 card waitingForYou = ?currentStatus=WAITING_FOR_REQUESTER: only WAITING_FOR_REQUESTER counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-52 card resolvedAwaitingClosure = ?currentStatus=RESOLVED: only RESOLVED counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-53 card closed = ?currentStatus=CLOSED: only CLOSED counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-54 recentlyUpdated with seven own recent Tickets, one own active 8 days ago and another Requester's recent one -> five own items within 7 days, lastActivityAt desc then id desc, equal to the first five rows of ?sort=lastActivityAt:desc
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-55 recentlyResolved: a RESOLVED Ticket and one CLOSED after resolving both listed, resolvedAt desc then id desc; a legacy CLOSED Ticket with NULL resolvedAt never
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-56 both Requester lists with now injected: rows at exactly now - 168 h are included, rows 1 ms earlier are excluded
+ × tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-57 nattapong.w, who has zero Tickets -> four cards present, each count 0; both lists items []
+   → openTickets: expected 2 to be +0 // Object.is equality
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 My Tickets changes behind the Requester cards (api-spec 5.2) > API-58 GET /api/tickets?statusGroup=open&currentStatus=NEW and ?statusGroup=closed -> each 400 INVALID_QUERY_PARAM with fields.statusGroup
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 My Tickets changes behind the Requester cards (api-spec 5.2) > API-59 My Tickets sort=lastActivityAt:desc -> rows in lastActivityAt desc then id desc, each carrying lastActivityAt
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-06 IT Staff and Administrator GET /api/dashboard/requester -> each 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-08 Requester A never sees Requester B's numbers: A's counts equal A's fixture, no B id or number in A's body, ?requesterId=<B> changes nothing, B's new Tickets leave A's response identical 818ms
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-13 Requester dashboard list items carry only the api-spec 4.1 keys: no requester, owner, email, description or note key
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/tickets/:id/actions: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 PATCH /api/actions/:id: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/complete: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/cancel: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-09 the route inventory versus the specification.md 5.2 matrix (AC-101, BR-71, FR-31, C-155, C-184) > SEC-09 every method and path registered on the Express app is a 5.2 matrix row and every matrix row is registered: 36 rows, none missing either way
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-11 append-only records (AC-24, BR-15, BR-50, C-151) > SEC-11 no PUT, PATCH or DELETE addresses a Public Comment, Internal Note or status-history row; no DELETE or PUT on /api/actions/:id; the one action edit route is PATCH /api/actions/:id
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-12 no secret in any action-route response (CLAUDE.md security rules, L3 BR-88) > SEC-12 every success and error body from the four action routes carries no password, passwordHash, scrypt$ string or session token
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-57 nattapong.w, who has zero Tickets -> four cards present, each count 0; both lists items []
+AssertionError: openTickets: expected 2 to be +0 // Object.is equality
+
+- Expected
++ Received
+
+- 0
++ 2
+
+ ❯ tests/lab-04/requester-dashboard.api.test.ts:262:56
+    260|     const body = await dashboard(agent);
+    261|     expect(body.cards.map((c: { key: string }) => c.key)).toEqual(CARD…
+    262|     for (const c of body.cards) expect(c.count, c.key).toBe(0);
+       |                                                        ^
+    263|     expect(body.lists.recentlyUpdated.items).toEqual([]);
+    264|     expect(body.lists.recentlyResolved.items).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed | 1 passed (2)
+      Tests  1 failed | 21 passed (22)
+   Start at  12:06:41
+   Duration  9.95s (transform 768ms, setup 0ms, collect 1.80s, tests 3.72s, environment 0ms, prepare 160ms)
+
