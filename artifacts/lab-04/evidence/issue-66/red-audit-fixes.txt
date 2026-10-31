@@ -1,0 +1,47 @@
+﻿Command: cd server; npx vitest run tests/lab-04/ticket-workflow.api.test.ts -t audit
+Date: 2026-10-30 18:55:27 +07:00
+Commit: 5617a2c (#66 work uncommitted; before the audit fixes)
+Exit code: 1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/ticket-workflow.api.test.ts (68 tests | 1 failed | 67 skipped) 305ms
+   × stale updates (C-138) > WF-34 (audit) an owner PATCH with an ownerId beyond int4 is 400 at fields.ownerId, never 500; nothing changes 32ms
+     → {"error":{"code":"INTERNAL_ERROR","message":"Something went wrong on our side."}}: expected 500 to be 400 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-34 (audit) an owner PATCH with an ownerId beyond int4 is 400 at fields.ownerId, never 500; nothing changes
+AssertionError: {"error":{"code":"INTERNAL_ERROR","message":"Something went wrong on our side."}}: expected 500 to be 400 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 400
++ 500
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:632:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+System.Management.Automation.RemoteException
+ Test Files  1 failed (1)
+      Tests  1 failed | 67 skipped (68)
+   Start at  18:55:24
+   Duration  3.10s (transform 219ms, setup 0ms, collect 505ms, tests 305ms, environment 0ms, prepare 76ms)
+

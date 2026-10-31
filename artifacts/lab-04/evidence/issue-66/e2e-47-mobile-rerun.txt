@@ -1,0 +1,46 @@
+﻿Command: npx playwright test --reporter=list --project=mobile -g E2E-47  (rerun after the full run's mobile E2E-47 hung)
+Date: 2026-10-31 06:12:55 +07:00
+Commit: 5617a2c (#66 work uncommitted)
+Exit code: 1
+
+
+Running 4 tests using 3 workers
+
+(node:33256) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:37960) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+(node:21420) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✓  3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (280ms)
+  ✓  1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (293ms)
+  ✓  2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (289ms)
+(node:15732) Warning: The 'NO_COLOR' env is ignored due to the 'FORCE_COLOR' env being set.
+(Use `node --trace-warnings ...` to show where the warning was created)
+  ✘  4 [mobile] › e2e\lab-03\visual-evidence.spec.ts:853:7 › Accessibility proof - Administrator › E2E-47 User Management: accessible names and focus rings; the Create User panel traps and restores focus (4.7h)
+
+
+  1) [mobile] › e2e\lab-03\visual-evidence.spec.ts:853:7 › Accessibility proof - Administrator › E2E-47 User Management: accessible names and focus rings; the Create User panel traps and restores focus 
+
+    Test timeout of 90000ms exceeded.
+
+    Error: keyboard.press: Test timeout of 90000ms exceeded.
+
+      673 |   let lastKey: string | null = null;
+      674 |   for (let i = 0; i < expected * 3 + 20; i++) {
+    > 675 |     await page.keyboard.press("Tab");
+          |                         ^
+      676 |     await settle(page);
+      677 |     const info = await page.evaluate(() => {
+      678 |       const el = document.activeElement as HTMLElement | null;
+        at focusWalk (C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:675:25)
+        at a11yScreen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:744:16)
+        at C:\Downloads\Lab1_Starter_Scaffold\toktickit\e2e\lab-03\visual-evidence.spec.ts:860:5
+
+    Error Context: test-results\lab-03-visual-evidence-Acc-2c7a1-el-traps-and-restores-focus-mobile\error-context.md
+
+  Slow test file: [mobile] › e2e\lab-03\visual-evidence.spec.ts (4.7h)
+  Consider running tests from slow files in parallel. See: https://playwright.dev/docs/test-parallel
+  1 failed
+    [mobile] › e2e\lab-03\visual-evidence.spec.ts:853:7 › Accessibility proof - Administrator › E2E-47 User Management: accessible names and focus rings; the Create User panel traps and restores focus 
+  3 passed (4.7h)
