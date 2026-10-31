@@ -782,7 +782,11 @@ retirement**, so every "after" equals "before" plus the Lab 4 additions.
 | Perf-smoke (`npm run test:perf`) | - | +2 timings | **2 passed** |
 
 After the review fix (section 2.12) the server expectation is 518 tests (510 + the 8 rows API-125 to
-API-132); no other figure moves.
+API-132); no other figure moves. **Actual after the review fix**
+(`feature/lab4-10-release-docs` at `8dcf0d3`, one run each, `artifacts/lab-04/evidence/issue-74/`): server
+**518 tests, 21 files**; client **193 tests, 15 files**; Playwright Lab 4 specs, desktop project only,
+**48 passed, 1 skipped** (`legacy-history`). The full three-viewport Playwright run of Issue #71 was not
+repeated, because the fix changes no screen.
 
 A drop below these numbers, or a change in any "before" figure, is a bug, and MIG-22 records it.
 Files added by C-184 and C-185 are counted here.
