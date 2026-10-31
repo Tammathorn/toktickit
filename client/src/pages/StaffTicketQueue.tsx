@@ -29,8 +29,9 @@ const SORT_OPTIONS: Array<[string, string]> = [
   ["", "IT Priority, then oldest"],
   ["createdAt:desc", "Newest first"],
   ["createdAt:asc", "Oldest first"],
-  ["updatedAt:desc", "Recently updated"],
-  ["updatedAt:asc", "Least recently updated"],
+  // Lab 4 (BR-48, C-140): "updated" means the activity time.
+  ["lastActivityAt:desc", "Recently updated"],
+  ["lastActivityAt:asc", "Least recently updated"],
   ["itPriority:desc", "IT Priority, high to low"],
   ["itPriority:asc", "IT Priority, low to high"],
   ["ticketNumber:asc", "Ticket Number, ascending"],
@@ -66,6 +67,8 @@ interface QueueState {
   itPriority: string;
   owner: string;
   categoryId: string;
+  /** Lab 4, BR-83 - "true" or empty. */
+  requesterResolved: string;
   sort: string;
   page: number;
   pageSize: number;
@@ -83,6 +86,7 @@ function readState(search: string): QueueState {
     itPriority: p.get("itPriority") ?? "",
     owner: p.get("owner") ?? "",
     categoryId: p.get("categoryId") ?? "",
+    requesterResolved: p.get("requesterResolved") ?? "",
     sort: p.get("sort") ?? "",
     page: int("page", 1),
     pageSize: int("pageSize", 10),
@@ -96,6 +100,7 @@ function toSearch(state: QueueState): string {
   if (state.itPriority) p.set("itPriority", state.itPriority);
   if (state.owner) p.set("owner", state.owner);
   if (state.categoryId) p.set("categoryId", state.categoryId);
+  if (state.requesterResolved) p.set("requesterResolved", state.requesterResolved);
   if (state.sort) p.set("sort", state.sort);
   if (state.page !== 1) p.set("page", String(state.page));
   if (state.pageSize !== 10) p.set("pageSize", String(state.pageSize));
@@ -106,7 +111,7 @@ function toSearch(state: QueueState): string {
 // 15.1: Clear filters appears for a search or a non-default filter - sort is
 // not one of them, it has its own stated default option.
 function filtersActive(state: QueueState): boolean {
-  return Boolean(state.search || state.currentStatus || state.itPriority || state.owner || state.categoryId);
+  return Boolean(state.search || state.currentStatus || state.itPriority || state.owner || state.categoryId || state.requesterResolved);
 }
 
 // 15.1: the muted default-view line disappears once any filter OR sort changes.
@@ -170,6 +175,7 @@ export default function StaffTicketQueue() {
       itPriority: state.itPriority,
       owner: state.owner,
       categoryId: state.categoryId,
+      requesterResolved: state.requesterResolved,
       sort: state.sort,
       page: state.page,
       pageSize: state.pageSize,
@@ -314,6 +320,20 @@ export default function StaffTicketQueue() {
               ))}
             </select>
             {load.kind === "invalid-query" && load.fields.categoryId && <p className="tk-invalid-feedback">{load.fields.categoryId}</p>}
+          </div>
+          <div className="col-6 col-md-3 col-lg-2">
+            <label htmlFor="queue-requester-resolved" className="form-label tk-label">Requester says resolved</label>
+            <select
+              id="queue-requester-resolved"
+              className="form-select"
+              value={state.requesterResolved}
+              onChange={(e) => apply({ requesterResolved: e.target.value, page: 1 })}
+              aria-invalid={load.kind === "invalid-query" && load.fields.requesterResolved ? "true" : undefined}
+            >
+              <option value="">Any</option>
+              <option value="true">Only these</option>
+            </select>
+            {load.kind === "invalid-query" && load.fields.requesterResolved && <p className="tk-invalid-feedback">{load.fields.requesterResolved}</p>}
           </div>
           <div className="col-6 col-md-3 col-lg-2">
             <label htmlFor="queue-sort" className="form-label tk-label">Sort</label>
@@ -507,7 +527,7 @@ function QueueTable({
               <td className={t.owner ? undefined : "tk-owner-cell-pale"}>
                 <OwnerValue owner={t.owner} currentUserId={currentUserId} />
               </td>
-              <td className="tk-nowrap">{formatDisplayTimestamp(t.updatedAt)}</td>
+              <td className="tk-nowrap">{formatDisplayTimestamp(t.lastActivityAt)}</td>
             </tr>
           ))}
         </tbody>
@@ -535,7 +555,7 @@ function QueueCards({ rows, currentUserId }: { rows: QueueRow[]; currentUserId: 
             <div>
               <span className="tk-label">Owner:</span> <OwnerValue owner={t.owner} currentUserId={currentUserId} />
             </div>
-            <div className="tk-muted">Updated {formatDisplayTimestamp(t.updatedAt)}</div>
+            <div className="tk-muted">Updated {formatDisplayTimestamp(t.lastActivityAt)}</div>
             {t.requesterResolvedAt && (
               <div className="mt-1">
                 <ResolvedMarker />

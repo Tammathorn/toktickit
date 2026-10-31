@@ -1,0 +1,407 @@
+Command: cd server; npx vitest run tests/lab-04/staff-dashboard.api.test.ts
+Date: 2026-10-31 11:42:09 +07:00
+Commit: 2dc8f41 (feature/lab4-6-staff-dashboard; the new test file uncommitted, the #67 patches NOT applied - Lab 4 tests first)
+Exit code: 1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/staff-dashboard.api.test.ts (24 tests | 24 failed) 2266ms
+   × Lab 4 staff dashboard - shape (API-60) > API-60 GET /api/dashboard/staff -> 200 with generatedAt, Asia/Bangkok, eleven cards in api-spec 4.2 order and three lists 34ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-61 card unassigned = GET /api/staff/tickets?owner=unassigned meta.total: an unowned OPEN counted, an unowned CLOSED not 10ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-62 card mine = ?owner=me meta.total: only the caller's active Tickets; another user's and the caller's CLOSED excluded 11ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-63 card statusNew = ?currentStatus=NEW meta.total: only NEW counted 7ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-64 card statusOpen = ?currentStatus=OPEN meta.total: only OPEN counted 6ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-65 card statusInProgress = ?currentStatus=IN_PROGRESS meta.total: only IN_PROGRESS counted 7ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-66 card statusWaitingForRequester = ?currentStatus=WAITING_FOR_REQUESTER meta.total: only WAITING_FOR_REQUESTER counted 6ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-67 card statusReopened = ?currentStatus=REOPENED meta.total: only REOPENED counted 4ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-68 card statusResolved = ?currentStatus=RESOLVED meta.total: only RESOLVED counted 7ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-69 card highItPriority = ?itPriority=HIGH meta.total: an active High counted, a CLOSED High and an active Medium not 6ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-70 card requesterSaysResolved = ?requesterResolved=true meta.total: a flagged active Ticket counted and listed, an unflagged one and a flagged CLOSED one not 6ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-71 card myPlannedActions = the panel's row count: the caller's PLANNED action on an active Ticket counted; another assignee's, a COMPLETED one and one on a CLOSED Ticket not 5ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - Administrator user cards (BR-87) > API-72 Administrator card requesters = GET /api/users?role=REQUESTER: count is the list length, inactive included; activeCount the active ones 7ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - Administrator user cards (BR-87) > API-73 Administrator card itStaff = GET /api/users?role=IT_STAFF: count is the list length, inactive included; activeCount the active ones 5ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - Administrator user cards (BR-87) > API-74 Administrator card administrators = GET /api/users?role=ADMINISTRATOR: count is the list length, inactive included; activeCount the active ones 5ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-75 seven PLANNED actions assigned to the caller -> all seven in the panel, actionAt asc then id asc, no cap; card 7 264ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-76 recentlyUpdated with seven recent active Tickets and a CLOSED one updated today -> five items, the CLOSED absent, equal to the first five rows of ?sort=lastActivityAt:desc 185ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-77 urgent with seven active High Tickets (two sharing createdAt), Medium ones and a CLOSED High -> five High items, createdAt asc then id desc, equal to the first five rows of ?itPriority=HIGH 332ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-78 staff recentlyUpdated with now injected: a row at exactly now - 168 h is included, one 1 ms earlier is excluded 25ms
+     → Failed to load url ../../src/routes/dashboard.js (resolved id: ../../src/routes/dashboard.js). Does the file exist?
+   × Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-79 the Administrator who owns nothing -> mine 0 and myPlannedActions 0, both present; panel items [] 23ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-80 queue sort=lastActivityAt:desc -> lastActivityAt desc then id desc, lastActivityAt on each row; sort=updatedAt:desc still 200 85ms
+     → {"error":{"code":"INVALID_QUERY_PARAM","message":"Some search or filter values are not valid.","fields":{"sort":"sort must be field:direction with field one of createdAt, updatedAt, itPriority, ticketNumber, currentStatus and direction asc or desc."}}}: expected 400 to be 200 // Object.is equality
+   × Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-81 queue requesterResolved=true filters to flagged rows within the default status set; =false and =yes -> 400 INVALID_QUERY_PARAM 122ms
+     → expected null not to be null
+   × Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-05 Requester GET /api/dashboard/staff -> 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content 8ms
+     → expected 404 to be 403 // Object.is equality
+   × Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-07 IT Staff and Administrator GET /api/dashboard/staff -> only the Administrator's body has userCounts; on IT Staff's the key is absent, not null 5ms
+     → {}: expected 404 to be 200 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 24 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - shape (API-60) > API-60 GET /api/dashboard/staff -> 200 with generatedAt, Asia/Bangkok, eleven cards in api-spec 4.2 order and three lists
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:164:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-61 card unassigned = GET /api/staff/tickets?owner=unassigned meta.total: an unowned OPEN counted, an unowned CLOSED not
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ card tests/lab-04/staff-dashboard.api.test.ts:96:16
+ ❯ expectCardEqualsDrillDown tests/lab-04/staff-dashboard.api.test.ts:121:18
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:181:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-62 card mine = ?owner=me meta.total: only the caller's active Tickets; another user's and the caller's CLOSED excluded
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ card tests/lab-04/staff-dashboard.api.test.ts:96:16
+ ❯ expectCardEqualsDrillDown tests/lab-04/staff-dashboard.api.test.ts:121:18
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:190:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-63 card statusNew = ?currentStatus=NEW meta.total: only NEW counted
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-64 card statusOpen = ?currentStatus=OPEN meta.total: only OPEN counted
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-65 card statusInProgress = ?currentStatus=IN_PROGRESS meta.total: only IN_PROGRESS counted
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-66 card statusWaitingForRequester = ?currentStatus=WAITING_FOR_REQUESTER meta.total: only WAITING_FOR_REQUESTER counted
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-67 card statusReopened = ?currentStatus=REOPENED meta.total: only REOPENED counted
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-68 card statusResolved = ?currentStatus=RESOLVED meta.total: only RESOLVED counted
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ card tests/lab-04/staff-dashboard.api.test.ts:96:16
+ ❯ expectCardEqualsDrillDown tests/lab-04/staff-dashboard.api.test.ts:121:18
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:208:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-69 card highItPriority = ?itPriority=HIGH meta.total: an active High counted, a CLOSED High and an active Medium not
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ card tests/lab-04/staff-dashboard.api.test.ts:96:16
+ ❯ expectCardEqualsDrillDown tests/lab-04/staff-dashboard.api.test.ts:121:18
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:218:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-70 card requesterSaysResolved = ?requesterResolved=true meta.total: a flagged active Ticket counted and listed, an unflagged one and a flagged CLOSED one not
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ card tests/lab-04/staff-dashboard.api.test.ts:96:16
+ ❯ expectCardEqualsDrillDown tests/lab-04/staff-dashboard.api.test.ts:121:18
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:227:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-71 card myPlannedActions = the panel's row count: the caller's PLANNED action on an active Ticket counted; another assignee's, a COMPLETED one and one on a CLOSED Ticket not
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:236:20
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-72 Administrator card requesters = GET /api/users?role=REQUESTER: count is the list length, inactive included; activeCount the active ones
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-73 Administrator card itStaff = GET /api/users?role=IT_STAFF: count is the list length, inactive included; activeCount the active ones
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-74 Administrator card administrators = GET /api/users?role=ADMINISTRATOR: count is the list length, inactive included; activeCount the active ones
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:266:23
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-75 seven PLANNED actions assigned to the caller -> all seven in the panel, actionAt asc then id asc, no cap; card 7
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:295:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-76 recentlyUpdated with seven recent active Tickets and a CLOSED one updated today -> five items, the CLOSED absent, equal to the first five rows of ?sort=lastActivityAt:desc
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:319:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-77 urgent with seven active High Tickets (two sharing createdAt), Medium ones and a CLOSED High -> five High items, createdAt asc then id desc, equal to the first five rows of ?itPriority=HIGH
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:342:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-78 staff recentlyUpdated with now injected: a row at exactly now - 168 h is included, one 1 ms earlier is excluded
+Error: Failed to load url ../../src/routes/dashboard.js (resolved id: ../../src/routes/dashboard.js). Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-79 the Administrator who owns nothing -> mine 0 and myPlannedActions 0, both present; panel items []
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:375:18
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-80 queue sort=lastActivityAt:desc -> lastActivityAt desc then id desc, lastActivityAt on each row; sort=updatedAt:desc still 200
+AssertionError: {"error":{"code":"INVALID_QUERY_PARAM","message":"Some search or filter values are not valid.","fields":{"sort":"sort must be field:direction with field one of createdAt, updatedAt, itPriority, ticketNumber, currentStatus and direction asc or desc."}}}: expected 400 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 400
+
+ ❯ queue tests/lab-04/staff-dashboard.api.test.ts:106:48
+    104| async function queue(as: Agent, query: string) {
+    105|   const res = await as.get(`/api/staff/tickets?${query}`);
+    106|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+    107|   return res.body as { data: { id: number; lastActivityAt: string; req…
+    108| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:391:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-81 queue requesterResolved=true filters to flagged rows within the default status set; =false and =yes -> 400 INVALID_QUERY_PARAM
+AssertionError: expected null not to be null
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:414:41
+    412|     const all = await queue(staffA.agent, "requesterResolved=true&page…
+    413|     for (const r of all.data) {
+    414|       expect(r.requesterResolvedAt).not.toBeNull();
+       |                                         ^
+    415|       expect(["CLOSED", "CANCELLED"]).not.toContain(r.currentStatus);
+    416|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-05 Requester GET /api/dashboard/staff -> 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content
+AssertionError: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:432:24
+    430|   it("SEC-05 Requester GET /api/dashboard/staff -> 403 FORBIDDEN_ROLE,…
+    431|     const res = await requester.agent.get("/api/dashboard/staff");
+    432|     expect(res.status).toBe(403);
+       |                        ^
+    433|     expect(Object.keys(res.body)).toEqual(["error"]);
+    434|     expect(Object.keys(res.body.error).sort()).toEqual(["code", "messa…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/24]⎯
+
+ FAIL  tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-07 IT Staff and Administrator GET /api/dashboard/staff -> only the Administrator's body has userCounts; on IT Staff's the key is absent, not null
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ dashboard tests/lab-04/staff-dashboard.api.test.ts:91:48
+     89| async function dashboard(as: Agent) {
+     90|   const res = await as.get("/api/dashboard/staff");
+     91|   expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                ^
+     92|   return res.body;
+     93| }
+ ❯ tests/lab-04/staff-dashboard.api.test.ts:441:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/24]⎯
+
+ Test Files  1 failed (1)
+      Tests  24 failed (24)
+   Start at  11:41:34
+   Duration  15.85s (transform 712ms, setup 0ms, collect 2.25s, tests 2.27s, environment 0ms, prepare 862ms)
+

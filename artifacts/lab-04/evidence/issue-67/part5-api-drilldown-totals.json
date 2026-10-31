@@ -1,0 +1,119 @@
+{
+  "capturedAt": "2026-10-31T04:52:47.787Z",
+  "caller": "araya.m@example.ac.th (IT Staff)",
+  "cards": [
+    {
+      "key": "unassigned",
+      "cardCount": 1935,
+      "drillDownApi": "GET /api/staff/tickets?owner=unassigned",
+      "status": 200,
+      "metaTotal": 1935,
+      "equal": true
+    },
+    {
+      "key": "mine",
+      "cardCount": 246,
+      "drillDownApi": "GET /api/staff/tickets?owner=me",
+      "status": 200,
+      "metaTotal": 246,
+      "equal": true
+    },
+    {
+      "key": "statusNew",
+      "cardCount": 2200,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=NEW",
+      "status": 200,
+      "metaTotal": 2200,
+      "equal": true
+    },
+    {
+      "key": "statusOpen",
+      "cardCount": 143,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=OPEN",
+      "status": 200,
+      "metaTotal": 143,
+      "equal": true
+    },
+    {
+      "key": "statusInProgress",
+      "cardCount": 29,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=IN_PROGRESS",
+      "status": 200,
+      "metaTotal": 29,
+      "equal": true
+    },
+    {
+      "key": "statusWaitingForRequester",
+      "cardCount": 1,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=WAITING_FOR_REQUESTER",
+      "status": 200,
+      "metaTotal": 1,
+      "equal": true
+    },
+    {
+      "key": "statusReopened",
+      "cardCount": 1,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=REOPENED",
+      "status": 200,
+      "metaTotal": 1,
+      "equal": true
+    },
+    {
+      "key": "statusResolved",
+      "cardCount": 63,
+      "drillDownApi": "GET /api/staff/tickets?currentStatus=RESOLVED",
+      "status": 200,
+      "metaTotal": 63,
+      "equal": true
+    },
+    {
+      "key": "highItPriority",
+      "cardCount": 10,
+      "drillDownApi": "GET /api/staff/tickets?itPriority=HIGH",
+      "status": 200,
+      "metaTotal": 10,
+      "equal": true
+    },
+    {
+      "key": "requesterSaysResolved",
+      "cardCount": 49,
+      "drillDownApi": "GET /api/staff/tickets?requesterResolved=true",
+      "status": 200,
+      "metaTotal": 49,
+      "equal": true
+    },
+    {
+      "key": "myPlannedActions",
+      "cardCount": 2,
+      "drillDownApi": "lists.myPlannedActions.items (the #my-actions panel, C-169)",
+      "panelRows": 2,
+      "equal": true
+    }
+  ],
+  "administratorUserCounts": [
+    {
+      "key": "requesters",
+      "count": 143,
+      "activeCount": 142,
+      "usersApiRows": 143,
+      "usersApiActive": 142,
+      "equal": true
+    },
+    {
+      "key": "itStaff",
+      "count": 49,
+      "activeCount": 48,
+      "usersApiRows": 49,
+      "usersApiActive": 48,
+      "equal": true
+    },
+    {
+      "key": "administrators",
+      "count": 1,
+      "activeCount": 1,
+      "usersApiRows": 1,
+      "usersApiActive": 1,
+      "equal": true
+    }
+  ]
+}

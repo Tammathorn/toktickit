@@ -1,0 +1,33 @@
+Command: cd server; npx vitest run tests/lab-04/staff-dashboard.api.test.ts
+Date: 2026-10-31 11:55:44 +0700
+Commit: 2dc8f41 (feature/lab4-6-staff-dashboard; tmp/lab4/06 and 07 applied, uncommitted)
+Exit code: 0
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 8.0.0-rc.29                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+ ✓ tests/lab-04/staff-dashboard.api.test.ts (24 tests) 2154ms
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  11:43:16
+   Duration  6.42s (transform 548ms, setup 0ms, collect 1.07s, tests 2.15s, environment 0ms, prepare 87ms)
+

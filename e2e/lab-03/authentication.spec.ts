@@ -129,11 +129,11 @@ test("E2E-03 the first-login account meets only Change Password, cannot leave it
     await expect(page.getByText("Your password has been changed.")).toBeVisible();
     await capture(page, "change-password-<vp>-success");
 
-    // The gate clears and the role's landing screen renders: a Requester's is
-    // My Tickets (FR-18, AC-28, ui-spec 9.1).
+    // The gate clears and the role's landing screen renders (FR-18, AC-28,
+    // ui-spec 9.1). Adapted for Lab 4 (C-144): every role lands on /dashboard.
     await expect(heading).toHaveCount(0, { timeout: 5_000 });
-    await expect(page.getByRole("heading", { level: 1, name: "My Tickets" })).toBeVisible();
-    await expect(page).toHaveURL(/\/tickets$/);
+    await expect(page.getByRole("heading", { level: 1, name: "Dashboard" })).toBeVisible();
+    await expect(page).toHaveURL(/\/dashboard$/);
   });
 });
 
@@ -188,10 +188,12 @@ test("E2E-04 the shell shows who is signed in; after Log Out a bookmarked URL, B
 // #40: landing, navigation and identity per role
 // ---------------------------------------------------------------------------
 
+// Adapted for Lab 4 (C-144): "Dashboard" is first in every role's nav and
+// /dashboard is every role's landing screen.
 const ROLES: Array<{ account: Account; role: string; name: string; badge: string; landing: RegExp; heading: string; nav: string[]; shot: string }> = [
-  { account: REQUESTER, role: "Requester", name: "Anucha Prasert", badge: "Requester", landing: /\/tickets$/, heading: "My Tickets", nav: ["My Tickets", "Create Ticket"], shot: "requester" },
-  { account: IT_STAFF, role: "IT Staff", name: "Araya Methee", badge: "IT Staff", landing: /\/queue$/, heading: "Ticket Queue", nav: ["Ticket Queue"], shot: "it-staff" },
-  { account: ADMINISTRATOR, role: "Administrator", name: "Panida Srisawat", badge: "Administrator", landing: /\/queue$/, heading: "Ticket Queue", nav: ["Ticket Queue", "User Management"], shot: "administrator" },
+  { account: REQUESTER, role: "Requester", name: "Anucha Prasert", badge: "Requester", landing: /\/dashboard$/, heading: "Dashboard", nav: ["Dashboard", "My Tickets", "Create Ticket"], shot: "requester" },
+  { account: IT_STAFF, role: "IT Staff", name: "Araya Methee", badge: "IT Staff", landing: /\/dashboard$/, heading: "Dashboard", nav: ["Dashboard", "Ticket Queue"], shot: "it-staff" },
+  { account: ADMINISTRATOR, role: "Administrator", name: "Panida Srisawat", badge: "Administrator", landing: /\/dashboard$/, heading: "Dashboard", nav: ["Dashboard", "Ticket Queue", "User Management"], shot: "administrator" },
 ];
 
 async function signInThroughLogin(page: Page, account: Account, at = "/") {
@@ -208,10 +210,11 @@ async function navLabels(page: Page): Promise<string[]> {
     .then((labels) => labels.map((l) => l.trim()));
 }
 
-test("E2E-01 a Requester signs in at the root, lands on My Tickets, and the shell shows their name and Role badge (AC-01)", async ({ page }) => {
+// Adapted for Lab 4 (C-144): the landing screen is the Dashboard.
+test("E2E-01 a Requester signs in at the root, lands on the Dashboard, and the shell shows their name and Role badge (AC-01)", async ({ page }) => {
   await signInThroughLogin(page, REQUESTER);
-  await expect(page.getByRole("heading", { level: 1, name: "My Tickets" })).toBeVisible();
-  await expect(page).toHaveURL(/\/tickets$/);
+  await expect(page.getByRole("heading", { level: 1, name: "Dashboard" })).toBeVisible();
+  await expect(page).toHaveURL(/\/dashboard$/);
   const header = page.getByRole("banner");
   await expect(header.locator(".tk-identity-name")).toHaveText("Anucha Prasert");
   await expect(header.locator(".tk-badge-role")).toHaveText("Requester");
@@ -237,7 +240,8 @@ test("E2E-05 each role signs in and sees exactly its own destinations, landing o
 
 test("E2E-06 after signing in, localStorage and sessionStorage hold no identity in the real browser (AC-34, FR-11)", async ({ page }) => {
   await signInThroughLogin(page, REQUESTER);
-  await expect(page.getByRole("heading", { level: 1, name: "My Tickets" })).toBeVisible();
+  // Adapted for Lab 4 (C-144): signed in once the landing Dashboard renders.
+  await expect(page.getByRole("heading", { level: 1, name: "Dashboard" })).toBeVisible();
   const storage = await page.evaluate(() => ({
     local: Object.entries(window.localStorage),
     session: Object.entries(window.sessionStorage),
@@ -253,7 +257,8 @@ test("a role reaching another role's address sees the Forbidden state inside the
   await signInThroughLogin(page, REQUESTER, "/queue");
   await expect(page.getByRole("heading", { name: "You do not have access to that page." })).toBeVisible();
   await expect(page.getByRole("banner")).toBeVisible();
-  await expect(page.getByRole("link", { name: "Go to My Tickets" })).toBeVisible();
+  // Adapted for Lab 4 (C-144): the way out is the role's landing screen.
+  await expect(page.getByRole("link", { name: "Go to Dashboard" })).toBeVisible();
   await capture(page, "forbidden-<vp>-requester-at-queue");
 });
 
@@ -313,7 +318,8 @@ test("RESP-08 tabbing Login, the shell and the Forbidden state reaches every con
 
   await fillLogin(page, REQUESTER.email, REQUESTER.password);
   await signInButton(page).click();
-  await expect(page.getByRole("heading", { level: 1, name: "My Tickets" })).toBeVisible();
+  // Adapted for Lab 4 (C-144): signed in once the landing Dashboard renders.
+  await expect(page.getByRole("heading", { level: 1, name: "Dashboard" })).toBeVisible();
   await page.goto("/queue");
   await expect(page.getByRole("heading", { name: "You do not have access to that page." })).toBeVisible();
   await page.locator("body").click({ position: { x: 1, y: 1 } });

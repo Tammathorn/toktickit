@@ -865,10 +865,12 @@ test.describe("Accessibility proof - Administrator", () => {
   });
 });
 
+// Adapted for Lab 4 (C-144): each role's nav gains Dashboard first, so the
+// aria-current walk starts at /dashboard.
 const NAV_CASES = [
-  { role: "requester", state: STATE.requester, pages: [["/tickets", "My Tickets"], ["/tickets/new", "Create Ticket"]] },
-  { role: "it-staff", state: STATE.itStaff, pages: [["/queue", "Ticket Queue"]] },
-  { role: "administrator", state: STATE.administrator, pages: [["/queue", "Ticket Queue"], ["/users", "User Management"]] },
+  { role: "requester", state: STATE.requester, pages: [["/dashboard", "Dashboard"], ["/tickets", "My Tickets"], ["/tickets/new", "Create Ticket"]] },
+  { role: "it-staff", state: STATE.itStaff, pages: [["/dashboard", "Dashboard"], ["/queue", "Ticket Queue"]] },
+  { role: "administrator", state: STATE.administrator, pages: [["/dashboard", "Dashboard"], ["/queue", "Ticket Queue"], ["/users", "User Management"]] },
 ] as const;
 
 for (const c of NAV_CASES) {
