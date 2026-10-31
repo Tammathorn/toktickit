@@ -684,12 +684,14 @@ asserted key sets change, because a decision changed them.
 | same | L3 API-49 | Adapted | C-136, C-138, C-140, C-126, C-141, C-171, C-179 | Exact staff DTO key set gains `version`, `lastActivityAt`, `resolvedAt`, `actions`, `statusHistory`, `historyComplete`, `allowedTransitions`, `resolutionGate` |
 | same | L3 UNIT-12 | **Unchanged** | C-125 | The matrix is unchanged |
 | `server/tests/lab-03/authorization.api.test.ts` | L3 SEC-13 | Adapted | C-138 | The Administrator's owner, priority and status calls send `version` |
-| same | L3 SEC-23 | Adapted | C-138 | Its successful PATCHes send `version` |
+| same | L3 SEC-23 | **Unchanged** (Issue #66 finding) | C-138 | It makes no staff Ticket PATCH (only `/api/users` calls), so there is no body to gain `version`; it passes unchanged |
 | same | L3 SEC-26 | Adapted | C-136, C-140, C-141 | Requester DTO key set gains the Lab 4 keys; still no key carrying note data |
 | same | L3 SEC-01, SEC-17, SEC-18, the byte-identical 403 test | **Unchanged** | L3 C-63 | The 403 precedes the body; SEC-01 picks up the six new routes from the router itself |
 | `server/tests/lab-03/staff-queue.api.test.ts` | L3 API-48 | Adapted | C-140 | Queue row key set gains `lastActivityAt`; the `updatedAt` sort test (L264) stays |
 | `server/tests/lab-02/my-tickets.api.test.ts` | untitled "returns the C-27 envelope and list-row shape" (L90) | Adapted | C-140 | Row shape gains `lastActivityAt` |
 | `server/tests/lab-02/ticket-detail.api.test.ts` | L2 API-28 | Adapted | C-123, C-136, C-141, C-179 | **Inverts in part**: the Requester DTO must now carry `actions`, `statusHistory`, `historyComplete`; it must still carry no Internal Note key |
+| `server/tests/lab-02/attachments.api.test.ts` | L2 API-34 | Adapted (Issue #66) | C-140 | The row insert and the Ticket's `lastActivityAt` move now share one transaction, so the forced failure is injected on `prisma.$transaction` instead of `prisma.attachment.create` (which the transaction client no longer calls); the no-row, no-file and envelope assertions are unchanged |
+| `e2e/lab-03/visual-evidence.spec.ts` | L3 E2E-47 | Adapted (timeout only, Issue #66) | - | `test.slow()`: the focus walk visits every Edit button of the unpaginated user list (pagination is out of scope); each full e2e run adds users to the dev database, so the walk grew past 30 s (21.7 s in #64 to over 30 s in #66). No assertion, locator or Tab count changed. Not a Lab 4 behaviour change |
 | `comments-notes`, `create-ticket`, `data-model.db`, `lab-03/migration.db` | all | **Unchanged** | C-139 (optional key), C-158 | `clientRequestId` is optional; the two seed constraints (L3 `migration.db.test.ts:430-443`, L2 `my-tickets-screenshots.spec.ts`) stay binding and MIG-19 restates them |
 | `attachments`, `create-ticket`, `data-model.db`, `my-tickets`, `ticket-detail` (L2); `authorization`, `comments-notes`, `migration.db`, `staff-queue`, `staff-ticket-detail` (L3) | 8 `afterAll` blocks, 4 inline deletes | Cleanup, not a test | C-167, C-188, BR-50 | `prisma.ticket.delete`/`deleteMany` becomes `deleteTickets` (`server/tests/support/cleanup.ts`), which removes the Ticket's `TicketStatusChange` and `ActionTaken` rows first: every created Ticket now has a creation history row under a RESTRICT key. No assertion changes (Issue #63) |
 
@@ -722,7 +724,9 @@ fixture is checked by eye for `Invalid Date` and blank renders (1.1 report cauti
 | same | untitled Forbidden test (L252) | Adapted | C-144 | Link reads `Go to Dashboard` |
 | `e2e/lab-03/staff-ticket-flow.spec.ts` | L3 E2E-11 | Adapted | C-137, C-138 | An action is completed before Resolve |
 | same | L3 E2E-12, E2E-15, E2E-26 | Adapted | C-138, C-137, C-156 | Raw fixture PATCHes send `version` and now assert their status first (C-156) |
-| `e2e/lab-03/visual-evidence.spec.ts` | `staffMoves` helper | Helper, not a test | C-138 | Sends `version` |
+| `e2e/lab-03/visual-evidence.spec.ts` | `staffMoves` helper | Helper, not a test | C-138, C-137, C-156 | Sends `version` (read from the staff GET by `e2e/support/lab4.ts` `moveStatus`) and asserts 200; a `RESOLVED` step records a completed action first (Issue #66) |
+| `e2e/lab-03/staff-ticket-flow.spec.ts` | L3 E2E-15 (requester status check) | Adapted (Issue #66) | BR-50, C-167 | The server now records the `New -> Open` move, so "Open" also appears in the Status history list; `getByText("Open")` became the header status badge (`.tk-badge` outside `.tk-history`) in the "Ticket information" region |
+| `e2e/lab-03/visual-evidence.spec.ts` | L3 E2E-32 (conflict state) | Adapted (Issue #66) | BR-50, C-167 | Same cause: the header's Resolved badge is named apart from the history list's |
 | same | L3 E2E-32, E2E-36 | Adapted | C-137, C-138 | The walk through `RESOLVED` gains a completed action |
 | same | L3 E2E-41, E2E-46, E2E-49 | Adapted | C-138 | Via the helper only |
 | same | L3 E2E-48 (one declaration, three role cases) | Adapted | C-144 | `aria-current` checked on the new nav |

@@ -93,7 +93,8 @@ describe("GET /api/tickets", () => {
     expect(res.status).toBe(200);
     expect(res.body.meta).toEqual({ page: 1, pageSize: 10, total: OWNER_ROWS, totalPages: 2, sort: "createdAt:desc" });
     expect(Object.keys(res.body.data[0]).sort()).toEqual(
-      ["category", "createdAt", "currentStatus", "id", "itPriority", "relatedSystem", "requestedPriority", "summary", "ticketNumber", "updatedAt"].sort(),
+      // Adapted for Lab 4 (C-140, tests.md 4.1): the row gains lastActivityAt.
+      ["category", "createdAt", "currentStatus", "id", "itPriority", "lastActivityAt", "relatedSystem", "requestedPriority", "summary", "ticketNumber", "updatedAt"].sort(),
     );
   });
 

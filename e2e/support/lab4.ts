@@ -19,3 +19,15 @@ export async function addCompletedAction(staff: APIRequestContext, ticketId: num
   });
   expect(res.status(), `completed action on ticket ${ticketId}`).toBe(201);
 }
+
+// Lab 4 fixture move (C-138, C-156). From #66 the status PATCH requires the
+// Ticket's current `version`, so it is read from the staff GET first, as the
+// screen does; the move then asserts 200, so a refused fixture step fails here
+// instead of leaving the test to assert against the wrong state.
+export async function moveStatus(staff: APIRequestContext, ticketId: number, currentStatus: string): Promise<void> {
+  const detail = await staff.get(`/api/staff/tickets/${ticketId}`);
+  expect(detail.status(), `GET staff ticket ${ticketId}`).toBe(200);
+  const { version } = (await detail.json()) as { version: number };
+  const res = await staff.patch(`/api/staff/tickets/${ticketId}/status`, { data: { currentStatus, version } });
+  expect(res.status(), `${currentStatus} on ticket ${ticketId}`).toBe(200);
+}

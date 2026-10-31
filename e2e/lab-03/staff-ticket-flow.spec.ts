@@ -10,7 +10,7 @@ import {
   apiAs,
   settle,
 } from "../support/auth";
-import { addCompletedAction } from "../support/lab4";
+import { addCompletedAction, moveStatus } from "../support/lab4";
 
 // IT Staff Ticket Detail - tests.md section 2.12, E2E-07..E2E-18, and the
 // RESP-01..06, RESP-09, RESP-10 rows this file owns (Issue #42/#6). Also the
@@ -182,10 +182,13 @@ test.describe("IT Staff Ticket Detail flow", () => {
     const ticket = await createTicket(requester, "E2E: refused on a closed ticket");
     const admin = await apiAs(ADMINISTRATOR);
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "RESOLVED" } });
-    const closed = await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "CLOSED" } });
-    expect(closed.status()).toBe(200);
+    // C-156: every fixture move asserts its status. Adapted for Lab 4: each
+    // move sends the Ticket's current version (C-138), and Resolved needs the
+    // resolution gate met, so one completed action is recorded first (C-137).
+    await moveStatus(admin, ticket.id, "OPEN");
+    await addCompletedAction(admin, ticket.id);
+    await moveStatus(admin, ticket.id, "RESOLVED");
+    await moveStatus(admin, ticket.id, "CLOSED");
     await requester.dispose();
 
     await gotoStaffDetail(page, ticket.id);
@@ -533,7 +536,8 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
     // FR-30: the resolution action only renders in Open, In Progress,
     // Waiting for Requester or Reopened - not New, which createTicket leaves it in.
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
+    // C-156 asserts the move; C-138: it sends the current version.
+    await moveStatus(admin, ticket.id, "OPEN");
     // Adapted for Lab 4 (C-137): the staff Resolve below needs the resolution
     // gate met, so one completed action is recorded first.
     await addCompletedAction(admin, ticket.id);
@@ -544,7 +548,12 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
     await reqPage.getByRole("button", { name: "Problem Appears Resolved" }).click();
     await reqPage.getByRole("dialog").getByRole("button", { name: "Report it" }).click();
     await expect(reqPage.getByText("Requester says resolved")).toBeVisible();
-    await expect(reqPage.getByText("Open")).toBeVisible(); // status is untouched
+    // status is untouched. Adapted for Lab 4 (BR-50, C-167): the server now
+    // records the New -> Open move, so "Open" also appears in the Status history
+    // list (ui-spec 9.4); the assertion targets the header's status badge.
+    await expect(
+      reqPage.getByRole("region", { name: "Ticket information" }).locator(".tk-badge:not(.tk-history .tk-badge)", { hasText: "Open" }),
+    ).toBeVisible();
     await reqContext.close();
 
     const staffContext = await browser.newContext({ storageState: STATE.itStaff });
@@ -571,9 +580,13 @@ test.describe("Requester visibility, the resolution round trip, and a closed Tic
 
     const admin = await apiAs(ADMINISTRATOR);
     await admin.post(`/api/staff/tickets/${ticket.id}/claim`);
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "OPEN" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "RESOLVED" } });
-    await admin.patch(`/api/staff/tickets/${ticket.id}/status`, { data: { currentStatus: "CLOSED" } });
+    // C-156: each fixture move asserts its status. Adapted for Lab 4: each
+    // sends the current version (C-138), and Resolved needs a completed
+    // action first (C-137).
+    await moveStatus(admin, ticket.id, "OPEN");
+    await addCompletedAction(admin, ticket.id);
+    await moveStatus(admin, ticket.id, "RESOLVED");
+    await moveStatus(admin, ticket.id, "CLOSED");
 
     const browserContext = await browser.newContext({ storageState: STATE.requester });
     const page = await browserContext.newPage();

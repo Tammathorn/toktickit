@@ -91,6 +91,7 @@ ticketsRouter.get(
             currentStatus: true,
             createdAt: true,
             updatedAt: true,
+            lastActivityAt: true,
           },
         }),
       ]);
@@ -215,14 +216,20 @@ ticketsRouter.post(
 
       let row;
       try {
-        row = await prisma.attachment.create({
-          data: {
-            ticketId,
-            originalFilename: file.originalname,
-            storedFilename: file.filename,
-            mimeType: file.mimetype,
-            sizeBytes: file.size,
-          },
+        // Lab 4 (BR-46): an upload moves the Ticket's activity time, in the
+        // same transaction as the row, and never its version (BR-37).
+        row = await prisma.$transaction(async (tx) => {
+          const created = await tx.attachment.create({
+            data: {
+              ticketId,
+              originalFilename: file.originalname,
+              storedFilename: file.filename,
+              mimeType: file.mimetype,
+              sizeBytes: file.size,
+            },
+          });
+          await tx.ticket.update({ where: { id: ticketId }, data: { lastActivityAt: created.uploadedAt } });
+          return created;
         });
       } catch (insertError) {
         // File written, row failed: compensate by deleting the file (BR-41).
@@ -265,7 +272,9 @@ ticketsRouter.post("/api/tickets/:id/requester-resolved", ...requesterOnly, asyn
     // the write cannot leave the flag set on a status that forbids it.
     const { count } = await prisma.ticket.updateMany({
       where: { id: ticket.id, requesterId: authOf(res).user.id, currentStatus: { in: [...RESOLUTION_FLAG_STATUSES] } },
-      data: { requesterResolvedAt: new Date() },
+      // Lab 4: no version is sent (C-163), but the write moves it and the
+      // Ticket's activity time (BR-38, BR-46, C-178).
+      data: { requesterResolvedAt: new Date(), version: { increment: 1 }, lastActivityAt: new Date() },
     });
     if (count === 0) {
       sendError(res, 409, "RESOLUTION_NOT_PERMITTED_IN_STATUS", "You can only report this while the ticket is open or in progress.");

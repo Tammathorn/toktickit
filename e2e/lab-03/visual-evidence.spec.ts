@@ -14,7 +14,7 @@ import {
   signIn,
   withFirstLoginAccount,
 } from "../support/auth";
-import { addCompletedAction } from "../support/lab4";
+import { addCompletedAction, moveStatus } from "../support/lab4";
 
 // Issue #12 (feature/lab3-12-ui-evidence) - the visual checklist, ui-spec.md
 // section 24, made provable at all three C-90 viewports.
@@ -111,11 +111,16 @@ async function staffMoves(id: number, steps: Array<"claim" | "OPEN" | "IN_PROGRE
   const staff = await apiAs(IT_STAFF);
   try {
     for (const step of steps) {
-      const res =
-        step === "claim"
-          ? await staff.post(`/api/staff/tickets/${id}/claim`)
-          : await staff.patch(`/api/staff/tickets/${id}/status`, { data: { currentStatus: step } });
-      expect(res.status(), `${step} on ticket ${id}`).toBe(200);
+      if (step === "claim") {
+        const res = await staff.post(`/api/staff/tickets/${id}/claim`);
+        expect(res.status(), `${step} on ticket ${id}`).toBe(200);
+        continue;
+      }
+      // Adapted for Lab 4: Resolved needs the resolution gate met, so a
+      // completed action is recorded first (C-137); every move sends the
+      // Ticket's current version and asserts 200 (C-138, C-156).
+      if (step === "RESOLVED") await addCompletedAction(staff, id);
+      await moveStatus(staff, id, step);
     }
   } finally {
     await staff.dispose();
@@ -392,8 +397,12 @@ test.describe("State matrix (ui-spec 20) - Requester screens", () => {
     await staffMoves(ticket.id, ["RESOLVED"]);
     await page.getByRole("dialog").getByRole("button", { name: "Report it" }).click();
     await expect(page.locator(".tk-conflict")).toBeVisible();
-    // refreshed: the header shows the status the server now holds
-    await expect(page.getByRole("region", { name: "Ticket information" }).locator(".tk-badge", { hasText: "Resolved" })).toBeVisible();
+    // refreshed: the header shows the status the server now holds. Adapted for
+    // Lab 4 (BR-50, C-167): the recorded move also puts a Resolved badge in the
+    // Status history list (ui-spec 9.4), so the header badge is named apart.
+    await expect(
+      page.getByRole("region", { name: "Ticket information" }).locator(".tk-badge:not(.tk-history .tk-badge)", { hasText: "Resolved" }),
+    ).toBeVisible();
     await shot(page, "requester-detail-<vp>-conflict");
 
     await staffMoves(ticket.id, ["CLOSED"]);
@@ -842,6 +851,11 @@ test.describe("Accessibility proof - Administrator", () => {
   test.use({ storageState: STATE.administrator });
 
   test("E2E-47 User Management: accessible names and focus rings; the Create User panel traps and restores focus", async ({ page }) => {
+    // test.slow(): the focus walk visits every Edit button of the unpaginated
+    // user list (user-list pagination is out of scope, L3 CLAUDE.md never-add
+    // list); each full e2e run adds users to the dev database, so the walk's
+    // length grows run by run. Not a Lab 4 behaviour change.
+    test.slow();
     await page.goto("/users");
     await a11yScreen(page, "users", page.getByRole("button", { name: /^Edit / }).first());
     const opener = page.getByRole("button", { name: "Create User" });
