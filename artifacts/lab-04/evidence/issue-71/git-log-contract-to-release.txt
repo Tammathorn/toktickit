@@ -1,0 +1,32 @@
+# Command: git log --reverse --format="%h %ad %s" --date=iso-strict 084d6e4..HEAD   (the Lab 4 plan to this branch)
+4ed029d 2026-10-12T17:48:28+07:00 chore: ignore tmp and fix local paths in the Lab 4 plan
+d857db1 2026-10-13T15:41:32+07:00 docs: add Lab 4 decision log C-122 onward
+e45f32d 2026-10-13T15:46:49+07:00 docs: rewrite CLAUDE.md for Lab 4
+3a2a66a 2026-10-13T15:54:31+07:00 docs: repair decision log table and restore Lab 2 citations
+55451a2 2026-10-13T16:07:01+07:00 docs: add Lab 4 specification
+ad301af 2026-10-13T16:23:02+07:00 docs: settle Lab 4 open questions C-161 onward
+d57f8d1 2026-10-15T16:22:07+07:00 docs: add Lab 4 API specification
+65ccf7a 2026-10-15T16:25:15+07:00 docs: add Lab 4 UI specification
+39a7b86 2026-10-15T17:07:25+07:00 docs: settle api-spec and ui-spec questions C-172 onward
+b36171a 2026-10-15T17:35:10+07:00 docs: add Lab 4 test plan
+3bfade9 2026-10-28T07:53:50Z docs: settle the tests.md questions C-181 to C-189
+2b7e2b0 2026-10-28T15:35:08+07:00 test: add Lab 4 migration and seed tests MIG-01..08, MIG-14..21 (#63)
+6378a7a 2026-10-28T15:35:23+07:00 feat: add Lab 4 data model, migrations, backfill and seed (#63)
+b914bee 2026-10-30T17:31:34+07:00 test: add Lab 4 Actions Taken and action-route authorization tests (#64)
+fdd6131 2026-10-30T17:31:43+07:00 feat: add the Actions Taken API with check order, replay and row lock (#64)
+a566f17 2026-10-30T18:10:41+07:00 test: add Lab 4 Actions Taken and workflow UI tests; adapt Lab 2/3 fixtures and e2e (#65)
+b27e318 2026-10-30T18:10:49+07:00 feat: add the Actions Taken card and the workflow UI on both Ticket Detail screens (#65)
+5617a2c 2026-10-30T18:16:39+07:00 test: assert the status of every e2e fixture PATCH before the version change (C-156, #66)
+f79ead5 2026-10-31T11:35:59+07:00 test: add Lab 4 ticket workflow tests; send version and meet the gate in Lab 2/3 fixtures (#66)
+2dc8f41 2026-10-31T11:36:11+07:00 feat: enforce the resolution gate, stale-update checks and status history on the Ticket workflow (#66)
+82014ec 2026-10-31T12:00:39+07:00 test: add Lab 4 staff dashboard API and dashboard UI tests; adapt Lab 3 nav and landing to Dashboard (C-144, #67)
+e48da97 2026-10-31T12:00:57+07:00 feat: add the IT Staff and Administrator dashboard with count-equals-drill-down cards, Dashboard landing and Part 5 evidence (#67)
+a256f56 2026-10-31T12:27:00+07:00 test: add Requester dashboard API tests and SEC-09 route-matrix test (C-127, C-184, #68)
+fe44fd9 2026-10-31T12:27:00+07:00 docs: add Issue #68 evidence and index rows
+5b6f74e 2026-10-31T12:41:22+07:00 test: add the console-error fixture and its E2E-28..32 tests (C-149, C-182, C-185, #69)
+5abde68 2026-10-31T12:41:22+07:00 feat: draw one skeleton panel per list in the dashboard loading state (ui-spec 12.1, #69)
+e1b4ba5 2026-10-31T12:41:23+07:00 docs: add the Lab 4 README section, C-195 and Issue #69 evidence; record deadline cuts (#69)
+8b506e4 2026-10-31T21:12:37+07:00 test: add the Lab 4 E2E specs, the visual-checklist measurements and the perf smoke (#70)
+cb786ec 2026-10-31T21:12:37+07:00 fix: route link, field-error, checkbox and focus-ring colours through the tokens and meet 44 px touch targets at 390 (#70)
+3f544e7 2026-10-31T21:12:42+07:00 docs: add Issue #70 evidence, the measured visual checklist and the index rows
+6ccf79d 2026-10-31T21:12:48+07:00 test: add the Lab 4 screenshots from the fresh evidence database (#70)

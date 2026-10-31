@@ -1,0 +1,532 @@
+# Command: cd server; npx vitest run --reporter=verbose   (npm test with the verbose reporter; toktickit_test via global setup)
+# Date: 2026-10-31
+# Commit: 6ccf79d (branch feature/lab4-10-release-docs; Issue #71 changes only documents, so the code under test is the code of feature/lab4-9-e2e-visual)
+# ANSI stripped; session tokens and database URLs redacted
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-01 description/result: whitespace-only and 2001 fail, 1 and 2000 pass, after trim, with the L3 C-74 validator itself; follow-up note and attachment notes bounds (BR-04..BR-06)
+ ✓ tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-02 actionAt: no offset fails, +07:00 and Z parse, before createdAt fails, completed now + 5 min passes and 1 ms later fails (BR-07, now injected)
+ ✓ tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-03 each operation accepts exactly its api-spec 3.1-3.4 fields; server-set and identity fields are ignored; anything else is refused (BR-90, C-175)
+ ✓ tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-04 allowedOperations(actionStatus, ticketStatus) over 3 x 8: EDIT, COMPLETE, CANCEL only for PLANNED on the five writable statuses (FR-09, C-174, BR-24)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-01 IT Staff A creates a PLANNED action assigned to IT Staff B -> 201 staff DTO, one row, version 0, no performer; lastActivityAt moves, Ticket version unchanged (AC-01)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-02 IT Staff C creates an action already COMPLETED -> performedById C, finishedAt = createdAt, actionAt as submitted (AC-22, C-160)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-03 IT Staff B creates an action on a Ticket owned by IT Staff A -> 201, createdById B, the owner is still A (AC-04)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-04 createdById, createdAt, performedById, finishedAt and version in the body are ignored: the row holds the session user, server times, version 0, no 400 (AC-05, BR-03)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-05 requesterId and createdById in the body are ignored; the action is created by the session user (AC-141, L3 C-64)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-06 a create with no assigneeId assigns the caller (AC-29, BR-18)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-07 a Requester named as assignee, on create and on edit -> 422 ASSIGNEE_NOT_ELIGIBLE, nothing changes (AC-27)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-08 an inactive IT Staff user and an unknown id as assignee, on create and on an edit that changes the assignee -> 422 each, nothing changes (AC-28, C-177)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-09 description whitespace-only and 2001 characters -> 400 at description, nothing saved; 2000 accepted (AC-06, BR-04)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-10 result missing and 2001 characters, on a completed create and on complete -> 400 at result, nothing saved, the action stays PLANNED (BR-04, BR-11)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-11 followUpRequired true with no followUpNote, and with 1001 characters -> 400 at followUpNote, nothing saved (AC-07, BR-05)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-12 followUpNote sent with followUpRequired false -> 400 at followUpNote, nothing saved (AC-08, BR-05)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-13 attachmentNotes of 501 characters -> 400 at attachmentNotes; 500 accepted (AC-10, BR-06)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-14 actionAt 1 minute before the Ticket's createdAt -> 400 at actionAt, 'cannot be before the ticket was created' (AC-11, BR-07)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-15 a COMPLETED create with actionAt now + 10 min -> 400 at actionAt; a PLANNED create for tomorrow -> 201 (AC-12, BR-07)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-16 actionAt 2026-10-16T10:00 with no offset -> 400 at actionAt (AC-13, BR-07)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-17 status CANCELLED, and status absent -> 400 at status, nothing saved (AC-17, BR-09)
+ ✓ tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-18 create on a Ticket in each of NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER and REOPENED -> 201 on each (AC-39, BR-24)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-19 an edit of description, actionAt, assignee and attachment notes with the current version -> 200, stored, action version + 1; Ticket version unchanged, lastActivityAt moves (AC-18, BR-10, BR-37)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-20 IT Staff C completes a planned action with a result -> 200, COMPLETED, performedById C, finishedAt within 2 s of now, version + 1; lastActivityAt moves, Ticket version unchanged (AC-19, BR-11)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-21 complete sending actionAt now + 10 min -> 400 at actionAt; the action stays PLANNED (AC-131, C-168)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-22 complete without actionAt on an action stored for tomorrow -> 400 at actionAt with the 'in the future' text; then complete sending a past actionAt -> 200 (AC-132, C-168)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-23 cancel with no result -> 400 at result (the reason); the action stays PLANNED (AC-20, BR-12)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-24 IT Staff C cancels with a reason -> 200, CANCELLED, the reason in result, performedById C, finishedAt set; lastActivityAt moves, Ticket version unchanged (AC-21, BR-12)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-25 edit, complete and cancel on a COMPLETED and on a CANCELLED action, current version -> 409 ACTION_NOT_PLANNED each, the action unchanged (AC-23, BR-14, C-162)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-26 IT Staff B, neither owner nor assignee, completes an action assigned to IT Staff A -> 200 (AC-26, BR-19)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-27 two planned actions whose assignee is deactivated afterwards: another staff user completes one and cancels the other -> both 200 (AC-30, C-132)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-28 an edit changing only the description and re-sending the stored, since-deactivated assigneeId -> 200; the description changes, the assignee is kept (AC-145, C-177)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-29 an edit of a COMPLETED action naming an inactive assignee, current version -> 409 ACTION_NOT_PLANNED, not 422 (AC-144, C-176)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-30 STALE_UPDATE on an action edit: an old version on a PLANNED action, and on a COMPLETED one -> 409 STALE_UPDATE, not ACTION_NOT_PLANNED; nothing changes (AC-121, AC-55, BR-40)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-31 a known field the operation does not accept - result on an edit, result on a planned create, assigneeId on complete -> 400 '<name> is not accepted here.', nothing changes (AC-139, C-175)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-32 an undefined field (priority) on create and on edit -> 400 naming priority, nothing created or changed (AC-140, C-175)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-33 an edit carrying only version -> 400 VALIDATION_FAILED (AC-142, BR-90)
+ ✓ tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-34 an edit re-sending every stored value unchanged -> 200 with no write: action version and the Ticket's lastActivityAt unchanged (AC-143, C-175)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-35 create, edit, complete and cancel on a RESOLVED Ticket -> 409 TICKET_RESOLVED each, nothing changes (AC-37, C-122)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-36 the four writes on a CLOSED and on a CANCELLED Ticket -> 409 TICKET_CLOSED each, nothing changes (AC-38, L3 C-109)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-37 a create on a RESOLVED Ticket with an empty description -> 409 TICKET_RESOLVED, not 400 (AC-62, C-159)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-38 a missing action id on edit, complete and cancel -> 404 ACTION_NOT_FOUND x 3; create on a missing Ticket -> 404 TICKET_NOT_FOUND; abc as :id -> 400 INVALID_QUERY_PARAM (AC-148, C-172)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-41 creating and completing an action on an IN_PROGRESS Ticket leaves it IN_PROGRESS with its version unchanged (AC-25, BR-16)
+ ✓ tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-39 the body of each of the four writes is exactly the api-spec 6.2 staff Ticket DTO, with the written action reflected (AC-118, C-136)
+ ✓ tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-40 two actions with the same actionAt come back in the same order twice, higher id first, on the staff and the Requester DTO (AC-35, BR-22)
+ ✓ tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-42 a Requester reads their own Ticket with actions by three staff: every action and field, people as { name } only, no email key, no @ anywhere, no version on an action (AC-31, BR-20, C-123)
+ ✓ tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-43 a Requester reading another Requester's Ticket that has actions -> 404 TICKET_NOT_FOUND, byte-identical to a missing Ticket, no action data (AC-32, L3 C-65)
+ ✓ tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-44 allowedOperations in the staff DTO: EDIT, COMPLETE, CANCEL on a planned action of an OPEN Ticket; [] on finished actions and on a planned action of a RESOLVED Ticket (FR-09, C-174)
+ ✓ tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-45 the same author replaying a create with key K -> 200 with the staff Ticket DTO, the same key set as the first 201; one row for K (AC-126, C-165)
+ ✓ tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-46 five concurrent creates by one author with the same K (the P2002 path) -> exactly one row; every response 200 or 201 carrying that row; none 500 (AC-64, C-139) 1713ms
+ ✓ tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-47 a replay of K after the Ticket has moved to CLOSED -> 200 with the original action, not TICKET_CLOSED; no new row (C-166)
+ ✓ tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-48 clientRequestId not-a-uuid -> 400 at clientRequestId, nothing created (BR-42)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-01 Requester POST /api/tickets/:id/actions on their own Ticket and on a missing id -> 403 FORBIDDEN_ROLE, byte-identical, no action created, no action content (AC-03, BR-17)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-02 Requester PATCH /api/actions/:id on an existing and a missing action -> 403, byte-identical; the action unchanged (AC-148, BR-17)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-03 Requester POST /api/actions/:id/complete, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-04 Requester POST /api/actions/:id/cancel, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17)
+ ✓ tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-14 the four action writes with a foreign Origin -> 403 ORIGIN_NOT_ALLOWED each, nothing written; the same create without it -> 201 (L3 C-58)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the gate and the matrix as functions (UNIT) > UNIT-05 gate reasons as a pure function over all 16 combinations: every reason that applies, in the fixed order; NO_COMPLETED_ACTION and FOLLOW_UP_REQUIRED never together (BR-29, C-167)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the gate and the matrix as functions (UNIT) > UNIT-06 the latest completed action is chosen by finishedAt desc, id desc: a later actionAt on an earlier-finished action does not win; a finishedAt tie goes to the higher id (BR-30)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the gate and the matrix as functions (UNIT) > UNIT-07 allowedTransitions(status) equals the section 5.1 Y targets for all eight statuses; [] for CLOSED and CANCELLED (BR-27, C-125)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-01 an unowned OPEN Ticket with no completed action -> RESOLVED is 409 OWNER_REQUIRED, not the gate code, and carries no reasons key
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-02 a client bypassing the UI PATCHes RESOLVED on a Ticket with no actions at all -> 409 RESOLUTION_GATE_NOT_MET, reasons exactly [NO_COMPLETED_ACTION]
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-03 a completed action without follow-up plus a PLANNED one -> reasons exactly [PLANNED_ACTIONS_OPEN]
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-04 the latest completed action has follow-up required -> reasons exactly [FOLLOW_UP_REQUIRED]
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-05 resolved, reopened, no action finished since -> reasons exactly [NO_ACTION_SINCE_REOPEN]; after a new completed action, 200
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-06 two combined: no completed action and a PLANNED one -> reasons exactly [NO_COMPLETED_ACTION, PLANNED_ACTIONS_OPEN]
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-07 the fixed order with three reasons, both possible triples
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-08 a follow-up action finished first, then a no-follow-up action finished later with an earlier actionAt -> FOLLOW_UP_REQUIRED is not a reason; 200 (BR-30, C-160)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-09 a reopened Ticket whose only post-reopen action is CANCELLED (it has a finishedAt) -> still NO_ACTION_SINCE_REOPEN: a cancelled action does not count (C-186)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-10 an owned Ticket meeting the gate -> RESOLVED: 200, resolvedAt set, Requester flag cleared, one history row, version + 1
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-11 the staff DTO of a Ticket failing the gate: resolutionGate.met false with the refusal's reasons; allowedTransitions still lists RESOLVED (C-171)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-12 a legacy RESOLVED Ticket with no actions -> CLOSED is 200: never re-validated (BR-32)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-13 -> CANCELLED with a PLANNED action is 409 PLANNED_ACTIONS_OPEN and nothing changes; after that action is cancelled, 200 (BR-33, C-124)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-14 allowedTransitions over HTTP for a Ticket in each of the eight statuses equals that status's section 5.1 Y targets; [] on CLOSED and CANCELLED
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-15 step 1: target DONE, and target absent, on a CLOSED Ticket with no version -> 400 VALIDATION_FAILED naming currentStatus, not version
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-16 step 2: target equal to the current status with a stale version, on OPEN, CLOSED and CANCELLED -> 400 SAME_STATUS each (L3 C-77)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-17 step 3: CLOSED and CANCELLED -> OPEN with version missing and stale -> 409 INVALID_STATUS_TRANSITION, not 400 and not STALE_UPDATE
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-18 step 4: a non-terminal Ticket, a permitted target, version missing, "3" and 1.5 -> 400 VALIDATION_FAILED with fields.version
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-19 step 5: a non-terminal Ticket, a stale version, a target the matrix forbids -> 409 STALE_UPDATE, not INVALID_STATUS_TRANSITION
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-20 step 6: the current version, a forbidden target, on an unowned Ticket failing the gate -> 409 INVALID_STATUS_TRANSITION
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-21 step 7 with the current version: unowned -> RESOLVED failing the gate is OWNER_REQUIRED; owned -> RESOLVED failing it is RESOLUTION_GATE_NOT_MET; -> CANCELLED with a planned action is PLANNED_ACTIONS_OPEN
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-22 an owner PATCH without version -> 400 fields.version; the owner unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-23 an IT Priority PATCH without version -> 400 fields.version; the priority unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-24 a status PATCH with the version read before another user's change -> 409 STALE_UPDATE; nothing changes
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-25 an owner PATCH with an old version -> 409 STALE_UPDATE; nothing changes
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-26 an IT Priority PATCH with an old version -> 409 STALE_UPDATE; nothing changes
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-27 edit, complete and cancel with an action version older than another user's edit -> each 409 STALE_UPDATE; the action unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-28 the STALE_UPDATE body is exactly { error: { code, message } }: no fields, no reasons (C-173)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-29 race on status: two agents read version v, then send OPEN -> IN_PROGRESS and OPEN -> WAITING_FOR_REQUESTER concurrently -> exactly one 200, the other 409 STALE_UPDATE; version v + 1; one new history row
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-30 race on owner: two concurrent owner PATCHes with v, to different users -> one 200, one STALE_UPDATE; the owner is the winner's choice; version v + 1
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-31 race on an action edit: two concurrent edits with action version v -> one 200, one STALE_UPDATE; the description is the winner's; action version v + 1
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-32 a planned-action create and -> RESOLVED sent concurrently on a gate-met Ticket, 20 runs: no run ends RESOLVED with a PLANNED action (BR-34) 579ms
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-33 an action edit with a 2001-character description and a stale version -> 400 VALIDATION_FAILED: body before stale (BR-40)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-34 owner PATCH order: CLOSED with no version -> 409 TICKET_CLOSED (not 400); a stale version with a Requester as owner -> 409 STALE_UPDATE (not 422)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-34 (audit) an owner PATCH with an ownerId beyond int4 is 400 at fields.ownerId, never 500; nothing changes
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-35 Ticket create: lastActivityAt = the create time within 2 s; version 0
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-36 a status change advances lastActivityAt; version + 1
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-37 an owner change advances lastActivityAt; version + 1
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-38 an IT Priority change to a new value advances lastActivityAt, version + 1; re-sending the current value is 200 with version and lastActivityAt unchanged (C-187)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-39 claim with no body is 200, advances lastActivityAt; version + 1 (BR-38)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-40 an action create advances lastActivityAt; the Ticket version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-41 an action edit advances lastActivityAt; the Ticket version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-42 an action complete advances lastActivityAt; the Ticket version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-43 an action cancel advances lastActivityAt; the Ticket version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-44 a Public Comment advances lastActivityAt; version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-45 an Attachment upload advances lastActivityAt; version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-46 an Attachment soft removal advances lastActivityAt; version unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-47 the Requester's "Problem Appears Resolved" with no version sent is 200, advances lastActivityAt; version + 1 (BR-38)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-48 an Internal Note leaves lastActivityAt and version both unchanged; the Requester's My Tickets row shows the same lastActivityAt as before (BR-47)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-49 the flag set a second time: 200; requesterResolvedAt overwritten; version and lastActivityAt move again (C-178)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-50 RESOLVED -> CLOSED keeps resolvedAt unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-51 RESOLVED -> REOPENED sets resolvedAt to NULL
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-52 a Requester creates a Ticket: one history row, fromStatus null -> NEW; historyComplete true on both DTOs (C-167, C-179)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-53 a legacy Ticket with no history row: historyComplete false and statusHistory [] on both DTOs (C-179)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-54 three moves: both DTOs list the creation row and the three changes, changedAt then id ascending; Requester rows carry changedBy { name } only
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-55 a status change whose transaction fails (a temporary trigger raising on INSERT INTO TicketStatusChange) -> 500 INTERNAL_ERROR with no stack or SQL; status, version, lastActivityAt and history unchanged
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-56 a Public Comment posted twice by one author with key K: the second is 200 with the original comment; one row
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-57 an Internal Note replayed with K and a different body: 200 with the original note; no new row; the body is not compared (C-166)
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-58 five concurrent Public Comments with one K (the P2002 path): one row; every response 200 or 201 with it; none 500
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-59 five concurrent Internal Notes with one K (the P2002 path): one row; none 500
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-60 a Public Comment replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-61 an Internal Note replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-62 two identical Internal Notes with no clientRequestId make two rows
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-63 two staff authors using the same K on notes, and the Requester and a staff user using it on comments, each get their own row
+ ✓ tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-64 POST /api/tickets twice by one Requester with the same clientRequestId: 201 both times, two Tickets - the field is ignored (C-158)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > the status transition matrix > UNIT-12 every one of the 64 cells of specification.md 5.1 matches the transition function (BR-55)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > API-49 the staff DTO carries requester with email, owner, publicComments and internalNotes (FR-43)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/tickets/:id > a missing Ticket is 404 TICKET_NOT_FOUND and a malformed id 400 INVALID_QUERY_PARAM, to a staff caller (api-spec.md 8.2, C-113)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-50 claiming an unassigned Ticket makes the caller its owner (AC-70, BR-46)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-51 claiming a Ticket already owned -> 409 ALREADY_OWNED naming the owner; the owner does not change (AC-71, BR-46)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-52 two simultaneous claims: exactly one 200, the other 409, and the Ticket has exactly one owner (BR-46, C-75)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/staff/tickets/:id/claim > API-53 claiming does not change status: a NEW Ticket claimed stays NEW (C-102)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-54 assigning to an active IT Staff user and to an active Administrator both succeed (AC-72, BR-47, C-66)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-55 a Requester, an inactive user and an unknown id each -> 422 ASSIGNEE_NOT_ELIGIBLE; the owner does not change (AC-73, BR-48)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-56 a Ticket in NEW or OPEN unassigns with 200 and appears under the unassigned filter (AC-74, BR-47)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-57 ownerId null on a Ticket in IN_PROGRESS, WAITING_FOR_REQUESTER and RESOLVED each -> 409 OWNER_REQUIRED; owner and status unchanged (AC-111, BR-97, C-104)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-58 reassigning a Ticket being worked on to another eligible user succeeds (AC-111, C-104)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-59 the release path: IN_PROGRESS moved to OPEN then unassigned, both succeed, and it appears under unassigned (AC-117, BR-97)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/owner > API-60 an absent ownerId is not an unassign: an empty body -> 400 and the owner is unchanged (api-spec.md 8.4)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/it-priority > API-61 each of LOW, MEDIUM and HIGH is stored and returned; an out-of-set value is 400 (AC-76, FR-47)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-62 an unassigned Ticket moved to IN_PROGRESS, WAITING_FOR_REQUESTER or RESOLVED -> 409 OWNER_REQUIRED, status unchanged; after a claim each succeeds (AC-109, BR-97, C-93)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-64 all 64 cells of section 5.1 over HTTP on an owned Ticket: Y succeeds, - is 409 INVALID_STATUS_TRANSITION with the status unchanged (AC-77, BR-55) 837ms
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-66 each of the eight statuses targeting itself -> 400 SAME_STATUS, not 409 and not a silent 200 (AC-78, BR-56, C-77)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-67 from CLOSED and from CANCELLED each of the seven other targets -> 409, status unchanged (AC-81, BR-58, C-98)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-68 RESOLVED -> REOPENED succeeds; REOPENED requested from every other status -> 409 (AC-112, BR-98, C-98)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-69 an unassigned CLOSED Ticket asked for IN_PROGRESS -> INVALID_STATUS_TRANSITION, not OWNER_REQUIRED (api-spec.md 8.6)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-70 moving to Resolved, Closed and Cancelled each clears requesterResolvedAt, and no Public Comment is created (AC-59, BR-61, C-76)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > API-71 a move to IN_PROGRESS or WAITING_FOR_REQUESTER leaves requesterResolvedAt set (BR-61)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > PATCH /api/staff/tickets/:id/status > an out-of-set or absent currentStatus -> 400 VALIDATION_FAILED (api-spec.md 8.6 step 1)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > the queue is shared work > API-72 a staff user who does not own the Ticket sets IT Priority, comments, writes a note and makes a permitted status change (AC-110, BR-96, C-93)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-73 the owning Requester in Open, In Progress, Waiting for Requester and Reopened succeeds, Current Status unchanged (AC-55, BR-59, BR-60)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-74 New, Resolved, Closed and Cancelled each -> 409 RESOLUTION_NOT_PERMITTED_IN_STATUS (AC-56, BR-60)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > POST /api/tickets/:id/requester-resolved > API-75 a Requester who does not own the Ticket -> 404, identical to a missing Ticket (AC-57, BR-42)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > GET /api/staff/assignable-users > API-116 returns active IT Staff and Administrator users only, each exactly { id, name, role }, never an email (BR-104, C-105)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-119 claim, an owner change and an IT Priority change each -> 409 TICKET_CLOSED with nothing changed; a status change still answers INVALID_STATUS_TRANSITION (AC-118, BR-108, C-109)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-120 an upload and a soft removal each -> 409 TICKET_CLOSED, no row created, no file written, no row modified; metadata and download still 200 (AC-118, BR-108, C-109)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-121 refusal order ownership -> TICKET_CLOSED -> body 400 -> the operation's own 409/422: a malformed body on a Closed or Cancelled Ticket -> 409 TICKET_CLOSED, nothing changed (C-109, api-spec.md 1.4)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > Closed and Cancelled Tickets refuse writes > API-122 an already-removed Attachment on a Closed or Cancelled Ticket stays 410 ATTACHMENT_REMOVED, not 409 TICKET_CLOSED: the resource being gone precedes the ticket being write-locked (C-109, L2 C-52)
+ ✓ tests/lab-03/staff-ticket-detail.api.test.ts > a malformed path id > API-123 every #42 route and every route addressed by a Ticket or Attachment id answers abc, 0, -1 and 1.5 with 400 INVALID_QUERY_PARAM naming id (C-113)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-01 hashPassword() stores scrypt$N$r$p$salt$hash with a 16-byte salt (BR-11, C-53)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-02 the same password hashed twice gives two strings that both verify (BR-11)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-03 verifyPassword() is right for right and wrong, and compares with timingSafeEqual (BR-11)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-04 a NULL or malformed stored hash never verifies and throws nothing (BR-17, C-72)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-05 the policy accepts 8 and 128 characters and refuses 7 and 129 (BR-12)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-06 the policy refuses a password missing any one character class (BR-12)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-08 a session token is 32 bytes as 64 hex characters, stored only as its SHA-256 (BR-21, C-54)
+ ✓ tests/lab-03/auth.api.test.ts > password and session primitives > UNIT-09 a session expires exactly 8 hours after creation: live at +7h59m, expired at +8h01m (BR-22, C-55)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-01 valid credentials -> 200 with the user's identity and role (AC-01, FR-02)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-02 the login body has exactly six keys and no password, hash, token or session id (AC-12, BR-10)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-03 Set-Cookie names tt_session with HttpOnly, SameSite=Strict, Path=/ and no expiry or Secure (AC-13, BR-21)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-04 the Session row stores the token's SHA-256 and the raw token appears in no column (AC-14, BR-21)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-05 unknown email -> 401 INVALID_CREDENTIALS, byte-identical to a wrong password, no cookie (AC-05, BR-07)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-06 wrong password -> 401, and the password appears in no response body or log line (AC-06, BR-88)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-07 a NULL password hash -> the same generic 401 for any password (AC-07, BR-17)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-08 inactive account with the right password -> 403 ACCOUNT_INACTIVE and no cookie (AC-08, BR-09)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-09 inactive account with a wrong password -> the generic 401, not ACCOUNT_INACTIVE (AC-09, BR-09)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-10 ten failures then the right password -> 200: there is no lockout (AC-10, BR-08) 326ms
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > API-11 a mixed-case, padded email logs in to the lower-case account (AC-11, BR-06)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > a missing email or password -> 400 VALIDATION_FAILED with the catalogue message at each field (api-spec 2.4)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > an undecodable path -> the 400 envelope, not Express's page and not 500 (api-spec 1.2)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/login > a malformed JSON body -> 400, and the text sent is echoed nowhere (BR-88, BR-89)
+ ✓ tests/lab-03/auth.api.test.ts > GET /api/auth/me > API-12 a user who must change their password still gets 200 with name and role (AC-22, BR-32)
+ ✓ tests/lab-03/auth.api.test.ts > GET /api/auth/me > API-13 the current-user body has the six keys and no hash or token (BR-33, FR-70)
+ ✓ tests/lab-03/auth.api.test.ts > GET /api/auth/me > no cookie -> 401 AUTH_REQUIRED (BR-34)
+ ✓ tests/lab-03/auth.api.test.ts > GET /api/auth/me > every 401 cause - unknown, malformed, expired, logged out, deactivated - gives a body byte-identical to no cookie (api-spec 1.1)
+ ✓ tests/lab-03/auth.api.test.ts > the password-change gate on a protected probe route > a gated session -> 403 PASSWORD_CHANGE_REQUIRED, never 401 (AC-21, BR-19, C-99)
+ ✓ tests/lab-03/auth.api.test.ts > the password-change gate on a protected probe route > an ungated session passes the gate, and no session is 401 before the gate runs (C-63)
+ ✓ tests/lab-03/auth.api.test.ts > API-14 the gate on the real protected routes > API-14 a gated user gets 403 PASSWORD_CHANGE_REQUIRED, never 401, from GET /api/tickets (AC-21, AC-02, C-99)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-15 a valid change -> 200, mustChangePassword false in the body, the session still works (AC-28, BR-18)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-16 a wrong current password -> 422 CURRENT_PASSWORD_INCORRECT at the field, not 401; nothing changes (AC-27, BR-105, C-106)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-17 7 characters, 129 characters and each missing class -> 400 with the BR-12 message at newPassword (AC-23, AC-24)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-18 the current password as the new one -> 400 with the BR-13 message (AC-25)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-19 a mismatched confirmation is refused by the server too, and the current password is required (AC-26, BR-13)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > API-20 changing the password keeps the calling session and ends the user's other session (AC-29, BR-102, C-97)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/change-password > no session -> 401 AUTH_REQUIRED
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/logout > API-21 logging out one session -> 204 and the user's other session still works (AC-16, BR-23)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/logout > API-22 the logged-out token replayed -> 401, its row is gone, and the cookie was cleared (AC-17, FR-07)
+ ✓ tests/lab-03/auth.api.test.ts > POST /api/auth/logout > no session -> 401 AUTH_REQUIRED
+ ✓ tests/lab-03/auth.api.test.ts > session lifetime > API-23 a session older than 8 hours -> 401 on every protected route; one at 7h59m still works (AC-15, BR-22)
+ ✓ tests/lab-03/auth.api.test.ts > session lifetime > API-24 the lookup that finds a session expired deletes its row (AC-116, BR-101, C-96)
+ ✓ tests/lab-03/auth.api.test.ts > session lifetime > API-25 a user deactivated after logging in -> 401 on their next request (AC-18, BR-24)
+ ✓ tests/lab-03/auth.api.test.ts > session lifetime > API-26 logging in again while signed in issues a second Session row and both tokens work (A-01)
+ ✓ tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > API-27 POST with a valid session and Origin http://evil.example -> 403 ORIGIN_NOT_ALLOWED, nothing done (AC-19, BR-27)
+ ✓ tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > a foreign Origin is refused before the session is looked at: no cookie still gives 403, not 401 (api-spec 1.4)
+ ✓ tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > API-28 the same POST with no Origin header -> accepted (AC-20, BR-27)
+ ✓ tests/lab-03/auth.api.test.ts > the Origin check on state-changing requests > a POST from the configured client origin is accepted, and a GET is never Origin-checked (C-58)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-01 every registered route outside the four public ones answers 401 with no session (AC-43, FR-20)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > an anonymous write with an unparseable body is 401, not 400: the session is checked before the body (C-63, BR-86)
+ ✓ tests/lab-03/authorization.api.test.ts > the route inventory > SEC-02 health, categories and related systems answer 200 with no session in their Lab 1 shapes; login is reachable (AC-44, C-62)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-08 Requester B GET Requester A's ticket -> 404, no ticket data, identical to a missing ticket (AC-38, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-09 Requester B on A's attachment: metadata, download and soft removal each 404, nothing removed (AC-39, BR-42)
+ ✓ tests/lab-03/authorization.api.test.ts > Requester ownership > SEC-10 a removed attachment: the non-owner gets 404, never 410, so removal state does not leak; the owner gets 410 (BR-44, AC-40)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-14 IT Staff and Administrator -> 403 FORBIDDEN_ROLE on create, list and read of the Requester routes, before any load or parse (C-101)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-15 IT Staff and Administrator read attachments (200, removed 410) but get 403 on upload and soft removal (C-103)
+ ✓ tests/lab-03/authorization.api.test.ts > role restrictions > SEC-03 Requester GET /api/staff/tickets -> 403, no ticket data (AC-36, BR-74)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-04 Requester GET /api/tickets/:id/internal-notes -> 403, no note content (AC-04, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-05 Requester internal-notes on a nonexistent ticket -> 403, byte-identical to an existing one (AC-37, C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-06 Requester internal-notes with a malformed id -> 403, not 400 (AC-37, C-63)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-07 Requester POST /api/tickets/:id/internal-notes -> 403, no InternalNote row created (BR-70, FR-29)
+ ✓ tests/lab-03/authorization.api.test.ts > Internal Notes are staff-only (BR-70) > SEC-26 the Requester DTO carries publicComments and no key of any name carrying note data (AC-47, FR-29, BR-70)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-17 Requester PATCH /api/staff/tickets/:id/status -> 403 for all eight targets, including Resolved and Closed; status unchanged (AC-79, BR-05, BR-54)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-18 Requester PATCH /api/staff/tickets/:id/it-priority -> 403, stored value unchanged (AC-76, BR-50)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > Requester -> every staff ticket route -> one byte-identical 403 for an existing, a missing and a malformed id, nothing changed (C-63, C-65)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-27 Requester GET /api/staff/assignable-users -> 403, no user data; IT Staff and Administrator 200 (BR-104, C-105)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-16 IT Staff and Administrator POST /api/tickets/:id/requester-resolved -> 403, flag not set (AC-58, BR-60)
+ ✓ tests/lab-03/authorization.api.test.ts > staff ticket operations are refused to a Requester (C-63, C-65) > SEC-13 an Administrator succeeds on all eight staff permissions: queue, detail, claim, owner, IT Priority, status, comment, note (BR-39, C-66)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-19 POST /api/tickets carrying B's requesterId is saved against the signed-in A (AC-41, AC-03)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-20 GET /api/tickets?requesterId=<B> returns only A's Tickets (AC-42, BR-43)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-21 GET /api/tickets/<B's>?requesterId=<B> is still 404 to A (AC-03, BR-31)
+ ✓ tests/lab-03/authorization.api.test.ts > a client-supplied requesterId is ignored > SEC-22 no handler reads requesterId from a query or a body, and lib/requester.ts is gone (AC-103, C-64)
+ ✓ tests/lab-03/authorization.api.test.ts > Administrator user management is Administrator-only (BR-39, #43) > SEC-11 IT Staff and Requester -> every user-administration route -> 403, no user data (AC-96, BR-39)
+ ✓ tests/lab-03/authorization.api.test.ts > Administrator user management is Administrator-only (BR-39, #43) > SEC-23 no response body on any path carries a password, a passwordHash or a session token (BR-88, FR-70, AC-06)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-24 a forced failure -> 500 INTERNAL_ERROR with no stack trace, SQL, path or database text (AC-105, BR-89)
+ ✓ tests/lab-03/authorization.api.test.ts > failures and dependencies > SEC-25 no package.json or source file carries passport, jsonwebtoken, bcrypt, bcryptjs, argon2 or express-session (AC-104)
+ ✓ tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > holds exactly PLANNED, COMPLETED, CANCELLED in declaration order
+ ✓ tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > is created by a migration whose only statement is CREATE TYPE "ActionStatus"
+ ✓ tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > is ordered before the migration that creates the ActionTaken table
+ ✓ tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > has each column with its type and nullability
+ ✓ tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > defaults followUpRequired to false, version to 0 and createdAt to now
+ ✓ tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > references exactly one Ticket and the assignee, creator and performer Users
+ ✓ tests/lab-04/migration.db.test.ts > MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > has a nullable fromStatus, a NOT NULL toStatus, both TicketStatus, and changedAt defaulting to now
+ ✓ tests/lab-04/migration.db.test.ts > MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > references the Ticket and the User who made the change
+ ✓ tests/lab-04/migration.db.test.ts > MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > has no updatedAt column
+ ✓ tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds version INT NOT NULL DEFAULT 0
+ ✓ tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds lastActivityAt NOT NULL DEFAULT now()
+ ✓ tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds a nullable resolvedAt
+ ✓ tests/lab-04/migration.db.test.ts > MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > makes Ticket(requesterId, clientRequestId), PublicComment and InternalNote (authorId, clientRequestId) and ActionTaken(createdById, clientRequestId) unique
+ ✓ tests/lab-04/migration.db.test.ts > MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > lets one author insert two rows with a NULL key into each of the four tables
+ ✓ tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes ActionTaken([ 'ticketId', 'actionAt', 'id' ])
+ ✓ tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes ActionTaken([ 'assigneeId', 'status' ])
+ ✓ tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes Ticket([ 'requesterId', 'lastActivityAt' ])
+ ✓ tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes Ticket([ 'resolvedAt' ])
+ ✓ tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes TicketStatusChange([ 'ticketId', 'changedAt', 'id' ])
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > finds the Lab 4 migrations to inspect
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > contains no DROP TABLE
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > contains no DROP COLUMN
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > contains no DROP TYPE
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > contains no a column type change
+ ✓ tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > contains no a CHECK constraint
+ ✓ tests/lab-04/migration.db.test.ts > MIG-08 — a Ticket created without any Lab 4 field gets the defaults (C-145) > creates with version 0, lastActivityAt set and resolvedAt null
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > leaves the Ticket, Public Comment, Internal Note, ActionTaken and TicketStatusChange counts unchanged 752ms
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keys actions by (Ticket, description): each seeded action exists exactly once
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keeps a password that was changed after seeding 754ms
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed composition: action counts (AC-99, BR-02, C-146) > holds Tickets with zero, one and several actions
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed composition: action counts (AC-99, BR-02, C-146) > holds one Ticket whose actions were created or performed by three different staff users
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-16 — seed composition: action states (C-146) > holds at least one PLANNED, COMPLETED, CANCELLED and follow-up-required action
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-17 — seed composition: the resolution gate (AC-99, C-146) > holds one open Ticket whose gate is met and one whose gate is not despite a completed action
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-18 — seeded RESOLVED and CLOSED Tickets (C-146, BR-32, BR-49) > gives each a resolvedAt and completed actions that satisfy the gate
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-19 — the zero-metric accounts (AC-99, C-146) > leaves the active Requester nattapong.w with zero Tickets
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-19 — the zero-metric accounts (AC-99, C-146) > leaves the Administrator owning zero Tickets and assigned zero planned actions
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > never dates a seeded Ticket's lastActivityAt before its latest Public Comment or action (BR-46)
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > fills the staff Recently updated list (BR-85)
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > fills a seeded Requester's Recently updated and Recently resolved lists (BR-77, BR-78)
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > never dates an action before its Ticket, nor a completed one after now + 5 min
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > carries a followUpNote if and only if followUpRequired
+ ✓ tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > keeps every text field within its bounds after trim
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-90 every user appears with name, email, role, isActive and mustChangePassword (AC-82, FR-56)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-92 search matches a name fragment and an email fragment, case-insensitively (AC-83, FR-57)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-93 the role filter returns only users holding that role (AC-84, FR-58)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-94 ?page and ?pageSize do not paginate; the full list is returned (BR-84, FR-66, AC-98)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-95 inactive users are listed too - Status is a column, not a filter (FR-56)
+ ✓ tests/lab-03/users-admin.api.test.ts > GET /api/users - the user list (9.1) > API-117 the list is name ascending then id, and ?sort= changes nothing (BR-106, C-107)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-96 creates a user: 201, the given fields stored, mustChangePassword true (AC-85, BR-75, BR-16)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-97 the created user signs in with the initial password, mustChangePassword true, and every other route is gated 403 (AC-86, BR-16)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-98 a weak initial password is refused with the shared BR-12 message (BR-12, BR-14, C-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-99 a duplicate email -> 409 EMAIL_TAKEN at the email field (AC-87, BR-77, FR-62)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-100 an address differing only in case is still a duplicate (AC-88, BR-77, BR-06)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-102 name bounds: 0 and 101 chars refused, 1 and 100 accepted, padding trimmed (AC-113, BR-99, C-94)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-103 email bounds and format: 254 accepted, 255 refused, no @ refused, padding and case normalised (AC-114, BR-99, C-94)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > role out of set -> 400 and exactly one role is accepted, never an array (BR-35, BR-75)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-113 there is no DELETE /api/users/:id (BR-81, FR-66, AC-98)
+ ✓ tests/lab-03/users-admin.api.test.ts > POST /api/users - create (9.2) > API-115 GET /api/requesters is removed (BR-93, C-62)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-101 editing to another user's address is 409; editing to one's own current address succeeds (AC-87)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-104 name, email, role and isActive are all saved; createdAt, mustChangePassword and the hash are unchanged (AC-89, BR-76, FR-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-105 extra fields (passwordHash, mustChangePassword, id, createdAt) are not editable (BR-76, FR-60)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-106 a role change revokes that user's sessions - their next request is 401 (AC-90, BR-83, BR-24)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-107 setting a new initial password revokes sessions, flags mustChangePassword, and the next login requires a change (AC-91, BR-78, C-79)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-108 self-deactivation -> 422 SELF_DEACTIVATION, stays active (AC-92, BR-79, C-81)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-109 the last active Administrator cannot be deactivated -> 409 LAST_ADMINISTRATOR, stays active (AC-93, BR-80, C-80)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-110 the last active Administrator's role cannot be changed away -> 409, twice over (AC-94, BR-80, BR-82)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-112 self role change is permitted while another active Administrator exists (BR-82, C-81)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > API-111 the last-Administrator race: two active Administrators deactivate each other concurrently - exactly one succeeds (AC-95, BR-80, C-80) 500ms
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > the malformed-path-id convention: a non-numeric id is 400 INVALID_QUERY_PARAM, not VALIDATION_FAILED (C-113)
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an unknown id is 404 USER_NOT_FOUND
+ ✓ tests/lab-03/users-admin.api.test.ts > PATCH /api/users/:id - edit (9.3) > an empty body is 400, a no-op is a client defect (api-spec.md 9.3)
+ ✓ tests/lab-03/users-admin.api.test.ts > Deactivation retains data; no secrets ever (API-114, BR-29) > API-114 a deactivated user's Tickets, Attachments, comments and notes still exist and are reachable by staff
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - shape (API-60) > API-60 GET /api/dashboard/staff -> 200 with generatedAt, Asia/Bangkok, eleven cards in api-spec 4.2 order and three lists
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-61 card unassigned = GET /api/staff/tickets?owner=unassigned meta.total: an unowned OPEN counted, an unowned CLOSED not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-62 card mine = ?owner=me meta.total: only the caller's active Tickets; another user's and the caller's CLOSED excluded
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-63 card statusNew = ?currentStatus=NEW meta.total: only NEW counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-64 card statusOpen = ?currentStatus=OPEN meta.total: only OPEN counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-65 card statusInProgress = ?currentStatus=IN_PROGRESS meta.total: only IN_PROGRESS counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-66 card statusWaitingForRequester = ?currentStatus=WAITING_FOR_REQUESTER meta.total: only WAITING_FOR_REQUESTER counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-67 card statusReopened = ?currentStatus=REOPENED meta.total: only REOPENED counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-68 card statusResolved = ?currentStatus=RESOLVED meta.total: only RESOLVED counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-69 card highItPriority = ?itPriority=HIGH meta.total: an active High counted, a CLOSED High and an active Medium not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-70 card requesterSaysResolved = ?requesterResolved=true meta.total: a flagged active Ticket counted and listed, an unflagged one and a flagged CLOSED one not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-71 card myPlannedActions = the panel's row count: the caller's PLANNED action on an active Ticket counted; another assignee's, a COMPLETED one and one on a CLOSED Ticket not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-72 Administrator card requesters = GET /api/users?role=REQUESTER: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-73 Administrator card itStaff = GET /api/users?role=IT_STAFF: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-74 Administrator card administrators = GET /api/users?role=ADMINISTRATOR: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-75 seven PLANNED actions assigned to the caller -> all seven in the panel, actionAt asc then id asc, no cap; card 7
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-76 recentlyUpdated with seven recent active Tickets and a CLOSED one updated today -> five items, the CLOSED absent, equal to the first five rows of ?sort=lastActivityAt:desc
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-77 urgent with seven active High Tickets (two sharing createdAt), Medium ones and a CLOSED High -> five High items, createdAt asc then id desc, equal to the first five rows of ?itPriority=HIGH
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-78 staff recentlyUpdated with now injected: a row at exactly now - 168 h is included, one 1 ms earlier is excluded
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-79 the Administrator who owns nothing -> mine 0 and myPlannedActions 0, both present; panel items []
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-80 queue sort=lastActivityAt:desc -> lastActivityAt desc then id desc, lastActivityAt on each row; sort=updatedAt:desc still 200
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-81 queue requesterResolved=true filters to flagged rows within the default status set; =false and =yes -> 400 INVALID_QUERY_PARAM
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-05 Requester GET /api/dashboard/staff -> 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-07 IT Staff and Administrator GET /api/dashboard/staff -> only the Administrator's body has userCounts; on IT Staff's the key is absent, not null
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-29 the default view excludes Closed and Cancelled, and orders IT Priority high to low then oldest first (AC-61, BR-72, FR-38)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-30 supplying currentStatus=CLOSED returns Closed tickets, proving the exclusion is a default and not permanent (BR-72)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-31 search by Ticket Number: an exact number returns exactly that Ticket, a shared prefix returns the group (AC-62, BR-71, FR-34)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-32 search by Ticket Summary: a case-insensitive substring matches, and Description is never searched (AC-62, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-33 owner filter unassigned: every returned Ticket has owner null (AC-63, BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-34 owner filter me: scoped to the calling staff user, and a different caller sees a different set (AC-64, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-35 owner filter by a named user id: every returned Ticket is owned by that user (BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-36 two filters together: currentStatus and itPriority combine conjunctively (AC-65, BR-71)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-37 category filter: only Tickets in that category are returned (BR-71, FR-35)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-38 all five sort fields, both directions, give the asserted order (AC-66, BR-71, FR-36)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-39 itPriority:desc gives HIGH, MEDIUM, LOW - declaration order, not alphabetical (BR-71, api-spec 8.1)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-40 page sizes 10, 25 and 50 give 200; 11 gives 400 naming pageSize (AC-67, BR-72)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-41 paging boundaries: a partial last page, and one page beyond returns an empty array with 200, not an error (BR-72, L2 C-43)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-42 an unknown sort field gives 400 INVALID_QUERY_PARAM naming sort, before any query reaches the database (AC-68, BR-73, FR-42)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-43 three bad parameters at once give three field entries, not one generic message (BR-73)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > an owner value that is neither me, unassigned nor a positive integer gives 400 naming owner (BR-71, audit #3)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > an out-of-range categoryId or page gives 400, not a database error (BR-73, audit #3)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > % and _ in search match literally, not as SQL wildcards (BR-23, BR-71, audit #4)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-44 all eight TicketStatus values are accepted as a filter (BR-71, C-70)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-45 a Ticket carrying requesterResolvedAt returns it non-null in its queue row (AC-60, BR-62, FR-40)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-46 a Ticket owned by a deactivated user returns owner.isActive false and keeps that owner (AC-75, BR-30, FR-46)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-47 the queue is not Requester-scoped: Tickets from more than one Requester appear together (BR-74, api-spec 10.4)
+ ✓ tests/lab-03/staff-queue.api.test.ts > GET /api/staff/tickets > API-48 the queue row carries exactly the api-spec 10.4 keys, and no requester key (api-spec 10.4, FR-39)
+ ✓ tests/lab-03/migration.db.test.ts > MIG-01 — the TicketStatus enum carries eight values (C-70, BR-52) > holds NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER, RESOLVED, CLOSED, REOPENED, CANCELLED in declaration order
+ ✓ tests/lab-03/migration.db.test.ts > MIG-02 — the UserRole enum exists (C-69) > holds REQUESTER, IT_STAFF, ADMINISTRATOR
+ ✓ tests/lab-03/migration.db.test.ts > MIG-03 — the table is named User (C-67) > has a User table and no RequesterUser table
+ ✓ tests/lab-03/migration.db.test.ts > MIG-04 — the rename was not a drop (C-67) > contains no DROP TABLE "RequesterUser" in any migration SQL file
+ ✓ tests/lab-03/migration.db.test.ts > MIG-04 — the rename was not a drop (C-67) > renames the table with ALTER TABLE "RequesterUser" RENAME TO "User"
+ ✓ tests/lab-03/migration.db.test.ts > MIG-05 — the foreign key column keeps its name (C-68) > keeps Ticket.requesterId, pointing at User
+ ✓ tests/lab-03/migration.db.test.ts > MIG-06 — User carries the new columns (specification 7) > adds role NOT NULL default REQUESTER, nullable passwordHash, mustChangePassword NOT NULL default true, and updatedAt
+ ✓ tests/lab-03/migration.db.test.ts > MIG-06 — User carries the new columns (specification 7) > keeps the Lab 2 columns, so the rename preserved the shape
+ ✓ tests/lab-03/migration.db.test.ts > MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > makes Ticket.itPriority NOT NULL
+ ✓ tests/lab-03/migration.db.test.ts > MIG-07 — itPriority is NOT NULL and copies Requested Priority (C-71, BR-49, AC-45) > gives a newly created Ticket an itPriority equal to its requestedPriority
+ ✓ tests/lab-03/migration.db.test.ts > MIG-08 — Ticket carries the new workflow columns (specification 7) > adds a nullable ownerId foreign key to User and a nullable requesterResolvedAt
+ ✓ tests/lab-03/migration.db.test.ts > MIG-09 — the three new tables exist (specification 7, C-73) > creates Session with its columns and its User foreign key
+ ✓ tests/lab-03/migration.db.test.ts > MIG-09 — the three new tables exist (specification 7, C-73) > creates PublicComment and InternalNote as two separate tables with Ticket and User foreign keys
+ ✓ tests/lab-03/migration.db.test.ts > MIG-10 — comments and notes are append-only by absence (specification 7) > gives neither PublicComment nor InternalNote an updatedAt or a deletedAt column
+ ✓ tests/lab-03/migration.db.test.ts > MIG-11 — the three queue indexes exist (specification 7) > indexes [currentStatus, itPriority, createdAt], [currentStatus, ownerId] and [currentStatus, categoryId]
+ ✓ tests/lab-03/migration.db.test.ts > MIG-12 — the session and list indexes exist (specification 7) > makes Session.tokenHash unique and indexes Session by userId
+ ✓ tests/lab-03/migration.db.test.ts > MIG-12 — the session and list indexes exist (specification 7) > indexes PublicComment and InternalNote by [ticketId, createdAt]
+ ✓ tests/lab-03/migration.db.test.ts > MIG-13 — the four Lab 2 indexes survive the migration (specification 7) > keeps every requesterId-led Ticket index, so My Tickets still has the index it was given
+ ✓ tests/lab-03/migration.db.test.ts > MIG-14 — the migrated database has zero drift from schema.prisma (DoD) > reports no difference between the schema and the database it is deployed to 1551ms
+ ✓ tests/lab-03/migration.db.test.ts > MIG-15 — the graded seed is idempotent (AC-99, C-91) > leaves the User, Category, RelatedSystem, Ticket, PublicComment and InternalNote counts unchanged on a second run 735ms
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least four active and one inactive Requester
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds three active and one inactive IT Staff
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds at least one active Administrator
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > seeds the dedicated first-login account, flagged and able to authenticate
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > clears mustChangePassword for the named personas, so only the first-login account is flagged
+ ✓ tests/lab-03/migration.db.test.ts > MIG-16 — the seed matches labsheet 5.3 (AC-100, C-91) > never seeds a user without a password hash, so no seeded account is unreachable
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > spreads Tickets across more than one Requester
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all eight statuses
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > covers all three Requested Priorities
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries both owned and unassigned Tickets
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > gives every Ticket a non-null IT Priority
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > carries example Public Comments and Internal Notes
+ ✓ tests/lab-03/migration.db.test.ts > MIG-17 — the seed carries realistic Tickets, Comments and Notes (C-91, LS 5.3) > plans no Ticket for the THIRD active Requester persona, which is how the empty state is reached
+ ✓ tests/lab-03/migration.db.test.ts > MIG-18 — the seed never overwrites a changed password (AC-101, C-72) > keeps a hash that was changed after seeding when the seed runs again 735ms
+ ✓ tests/lab-03/migration.db.test.ts > MIG-19 — the first-login account stays flagged (C-72) > keeps mustChangePassword true after a re-seed 768ms
+ ✓ tests/lab-03/migration.db.test.ts > MIG-20 — the (Requester email, summary) natural key is safe (C-91) > raises rather than proceeding if two seeded Tickets would share a Requester email and summary
+ ✓ tests/lab-03/migration.db.test.ts > MIG-20 — the (Requester email, summary) natural key is safe (C-91) > accepts the shipped seed fixture, which carries no duplicate key
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - the recent predicate (UNIT-08) > UNIT-08 recentSince(now) is now - 168 h: a time exactly at it is recent, 1 ms earlier is not
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - shape (API-49) > API-49 GET /api/dashboard/requester -> 200 with generatedAt, Asia/Bangkok, four cards in api-spec 4.1 order; recentlyUpdated.viewAll set, recentlyResolved.viewAll null
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-50 card openTickets = GET /api/tickets?statusGroup=open: own Tickets in all eight statuses -> the five open statuses counted, RESOLVED, CLOSED, CANCELLED not; meta.total equal, same ids
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-51 card waitingForYou = ?currentStatus=WAITING_FOR_REQUESTER: only WAITING_FOR_REQUESTER counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-52 card resolvedAwaitingClosure = ?currentStatus=RESOLVED: only RESOLVED counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - one count = drill-down test per card (C-127, BR-56) > API-53 card closed = ?currentStatus=CLOSED: only CLOSED counted; equals meta.total
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-54 recentlyUpdated with seven own recent Tickets, one own active 8 days ago and another Requester's recent one -> five own items within 7 days, lastActivityAt desc then id desc, equal to the first five rows of ?sort=lastActivityAt:desc
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-55 recentlyResolved: a RESOLVED Ticket and one CLOSED after resolving both listed, resolvedAt desc then id desc; a legacy CLOSED Ticket with NULL resolvedAt never
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-56 both Requester lists with now injected: rows at exactly now - 168 h are included, rows 1 ms earlier are excluded
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - lists, order and the time boundary (C-161, C-142) > API-57 nattapong.w, who has zero Tickets -> four cards present, each count 0; both lists items []
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 My Tickets changes behind the Requester cards (api-spec 5.2) > API-58 GET /api/tickets?statusGroup=open&currentStatus=NEW and ?statusGroup=closed -> each 400 INVALID_QUERY_PARAM with fields.statusGroup
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 My Tickets changes behind the Requester cards (api-spec 5.2) > API-59 My Tickets sort=lastActivityAt:desc -> rows in lastActivityAt desc then id desc, each carrying lastActivityAt
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-06 IT Staff and Administrator GET /api/dashboard/requester -> each 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-08 Requester A never sees Requester B's numbers: A's counts equal A's fixture, no B id or number in A's body, ?requesterId=<B> changes nothing, B's new Tickets leave A's response identical
+ ✓ tests/lab-04/requester-dashboard.api.test.ts > Lab 4 Requester dashboard - authorization (SEC-06, SEC-08, SEC-13) > SEC-13 Requester dashboard list items carry only the api-spec 4.1 keys: no requester, owner, email, description or note key
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > stores a permitted file: 201, row written, file on disk under a generated name (AC-32, BR-53)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-30 refuses an unsupported type with 415; no row and no file written (AC-24, BR-42)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-31 refuses 5 MB + 1 byte with 413 and accepts exactly 5 MB (AC-25, BR-43)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-32 accepts the fifth active attachment and refuses the sixth with 422 (AC-26, BR-44)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > API-43 leaves the Ticket in place after a rejected upload (AC-28, BR-40)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > refuses another Requester with 404 like an unknown Ticket, and bad callers with 401 (C-65, C-64)
+ ✓ tests/lab-02/attachments.api.test.ts > POST /api/tickets/:id/attachments > refuses a request with no file part with 400
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-35 downloads an active attachment: 200, Content-Disposition attachment, identical bytes (AC-30)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-36 previews an active attachment inline with identical bytes (AC-31, BR-49)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-37 refuses a whitespace-only reason with 422 and a missing key with 400 (AC-35, BR-47)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-38 soft removal keeps the row, sets isRemoved, removedAt and the trimmed reason, keeps the file (AC-34, BR-46)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-39 answers the owner's download or preview of a removed attachment with 410 (AC-36, BR-51)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-40 answers a non-owner's download of a removed attachment with 404, never 410 (AC-39, C-65)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-41 refuses another Requester's attachment on download and on removal with 404 (AC-39, C-65)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-42 answers an unknown attachment id with 404 on download and on removal (AC-64)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-33 frees a slot on removal: five active, remove one, the next upload succeeds (AC-27, BR-44, C-18)
+ ✓ tests/lab-02/attachments.api.test.ts > GET /api/attachments/:id/download and DELETE /api/attachments/:id > API-34 compensates a failed row insert: no row and no file left in UPLOAD_DIR (AC-29, BR-41)
+ ✓ tests/lab-03/comments-notes.api.test.ts > authorship > API-76 the owning Requester posts a comment: 201, author is the signed-in user, createdAt server-set, first in the list (AC-48, BR-65, FR-28)
+ ✓ tests/lab-03/comments-notes.api.test.ts > authorship > API-77 a body carrying authorId, author and createdAt is stored with the session's user and the server's clock (BR-65, FR-52)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-79 1 and 2000 characters succeed; empty, whitespace-only and 2001 are refused with no row created - on comments and on notes (AC-49, AC-50, BR-64)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-80 a 2000-character body padded with spaces is accepted and stored trimmed (BR-64)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-81 a body containing markup is stored and returned verbatim, unescaped and unaltered (AC-51)
+ ✓ tests/lab-03/comments-notes.api.test.ts > content > API-82 a multi-line body round-trips with its newlines intact (AC-52, BR-66)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-83 three entries posted in order come back newest first - comments and notes (BR-67)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-84 the owning Requester, IT Staff and Administrator each list and post Public Comments (BR-68, BR-04)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-85 IT Staff and Administrator each list and create Internal Notes with a server-set author and creation time (AC-53, FR-55)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-86 a note and a comment with identical bodies: each endpoint returns only its own (BR-69, C-73)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-87 no PATCH, PUT or DELETE route exists on either collection or on any single comment or note - from the router inventory (BR-63, FR-51)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-88 a Requester listing or posting a comment on another Requester's Ticket -> 404, no row created (BR-42)
+ ✓ tests/lab-03/comments-notes.api.test.ts > lists and audiences > API-89 comment and note rows carry id, body, author { id, name, role } and createdAt - and no author email (api-spec.md 10.7)
+ ✓ tests/lab-03/comments-notes.api.test.ts > Closed and Cancelled Tickets > API-118 posting a comment or a note -> 409 TICKET_CLOSED with no row; listing stays 200; a non-owning Requester still gets 404 (AC-118, BR-108, C-109)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-15 scopes the list to the owner: no other Requester's Ticket appears (AC-03, BR-22)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > returns the C-27 envelope and list-row shape, description omitted
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-16 searches Ticket Summary case-insensitively by substring (AC-41, BR-23)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-17 searches Ticket Number by exact and by prefix, never Description (AC-42, BR-23)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-18 filters by Category (AC-43, BR-24)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-19 filters by Related System and by currentStatus (BR-24)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-20 returns page 2 as the correct slice with correct metadata (AC-44, BR-27)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-21 answers a page beyond the last with data: [] and correct meta, status 200 (AC-45, BR-29)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-22 accepts page sizes 10, 25, 50 and refuses 11, page=abc and page=0 (BR-27, C-43)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-23 orders correctly on each of the four permitted sort fields, both directions (AC-46, BR-25)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-24 refuses a sort outside BR-25 with 400 naming sort (AC-47, BR-28)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > API-25 defaults to createdAt desc with id desc as the tiebreak (AC-48, BR-26)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets > refuses malformed filter values and a bad caller per the check order
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets/:id - ownership refusals used by the Part 7 rejection capture > returns 404 TICKET_NOT_FOUND with no Ticket field for another Requester's Ticket (AC-38, C-65)
+ ✓ tests/lab-02/my-tickets.api.test.ts > GET /api/tickets/:id - ownership refusals used by the Part 7 rejection capture > returns 200 with the full Ticket to its owner, and 404 for an unknown id
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-01 creates a Ticket: 201, one row saved, body carries the Ticket Number (AC-01)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-02 gives two creations different numbers, both matching the pattern (AC-15)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-03 applies the defaults: currentStatus NEW, itPriority copied from Requested Priority (AC-16, AC-45)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-04 rejects a 4-character and a 121-character Ticket Summary with the BR-31 message (AC-18)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-05 accepts a 5-character and a 120-character Ticket Summary (AC-19)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-06 enforces the Description boundaries: 19 and 5001 fail, 20 and 5000 pass (BR-32)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-07 stores a padded Ticket Summary trimmed (AC-20, BR-30)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-08 validates independently of the client: missing Category and bad priority give one fields entry each (AC-67)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-09 emits exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > rejects system-generated fields if supplied (api-spec 3.1)
+ ✓ tests/lab-02/create-ticket.api.test.ts > POST /api/tickets > API-14 reports an unexpected failure safely as 500 INTERNAL_ERROR (AC-66, BR-38)
+ ✓ tests/lab-02/create-ticket.api.test.ts > Reference data > API-10 filters inactive rows and keeps {id, name} in id order (AC-14, BR-56)
+ ✓ tests/lab-02/create-ticket.api.test.ts > Reference data > API-44 keeps the Lab 1 contract intact (C-05)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds exactly the four required Categories, all active
+ ✓ tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least six Related Systems
+ ✓ tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least four active Requesters
+ ✓ tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds at least one inactive Requester (BR-11, C-33)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-01 — the graded seed matches labsheet 5.3 (C-22) > seeds three active and one inactive IT Staff, and one active Administrator (LS 5.3)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-02 — the graded seed is idempotent (LS 5.3) > creates no duplicate rows when run a second time 709ms
+ ✓ tests/lab-02/data-model.db.test.ts > DB-03 — the Lab 1 contract survives the additive migration (C-05, C-37) > keeps the four Lab 1 Categories in id order with their original ids
+ ✓ tests/lab-02/data-model.db.test.ts > DB-03 — the Lab 1 contract survives the additive migration (C-05, C-37) > defaults the new isActive column to true, so no backfill was needed
+ ✓ tests/lab-02/data-model.db.test.ts > DB-04 — enums carry their full Lab 3 range (C-21, C-23) > accepts every TicketStatus value the enum declares
+ ✓ tests/lab-02/data-model.db.test.ts > DB-04 — enums carry their full Lab 3 range (C-21, C-23) > declares exactly three Requested Priority values
+ ✓ tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > creates the four Ticket indexes and the Attachment index
+ ✓ tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > makes ticketNumber unique, which is the index C-30's search relies on
+ ✓ tests/lab-02/data-model.db.test.ts > DB-05 — every index in specification.md section 7 exists > leaves summary and description unindexed, per C-30
+ ✓ tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > returns a Ticket whose number is non-null and matches the pattern
+ ✓ tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > applies the defaults: status NEW and IT Priority copied from Requested Priority (BR-02, C-71)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-06 — Ticket Number is assigned inside the creation transaction (C-49) > leaves no Ticket without a number visible outside the transaction (BR-01)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-07 — ownership and soft-removal columns exist as section 7 specifies > makes ticketNumber nullable in the schema (C-49)
+ ✓ tests/lab-02/data-model.db.test.ts > DB-07 — ownership and soft-removal columns exist as section 7 specifies > gives Attachment its soft-removal trio, with removedAt and removalReason nullable
+ ✓ tests/lab-02/data-model.db.test.ts > DB-08 — the five LS 5.1 relationships are foreign keys > declares Ticket -> User, Category, RelatedSystem and Attachment -> Ticket
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/tickets/:id/actions: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 PATCH /api/actions/:id: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/complete: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/cancel: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-09 the route inventory versus the specification.md 5.2 matrix (AC-101, BR-71, FR-31, C-155, C-184) > SEC-09 every method and path registered on the Express app is a 5.2 matrix row and every matrix row is registered: 36 rows, none missing either way
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-11 append-only records (AC-24, BR-15, BR-50, C-151) > SEC-11 no PUT, PATCH or DELETE addresses a Public Comment, Internal Note or status-history row; no DELETE or PUT on /api/actions/:id; the one action edit route is PATCH /api/actions/:id
+ ✓ tests/lab-04/authorization.api.test.ts > SEC-12 no secret in any action-route response (CLAUDE.md security rules, L3 BR-88) > SEC-12 every success and error body from the four action routes carries no password, passwordHash, scrypt$ string or session token
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-26 answers a missing Ticket with 404 TICKET_NOT_FOUND (AC-40)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-27 refuses another Requester's Ticket with 404 and no Ticket field (AC-38, C-65)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id > API-28 carries publicComments, owner and requesterResolvedAt, and no note, actions-taken or status-transition key, not even as null (AC-53, AC-47)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > API-29 returns active and removed attachments, distinguished by isRemoved, reason on the removed one (AC-38)
+ ✓ tests/lab-02/ticket-detail.api.test.ts > GET /api/tickets/:id/attachments > refuses another Requester with 404 TICKET_NOT_FOUND, identical to an unknown Ticket (C-65)
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-01 — Ticket Number format (AC-15, BR-04) > builds TKT-YYYY-NNNNNN from a known id and createdAt
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-01 — Ticket Number format (AC-15, BR-04) > matches the C-11 regex asserted by the unit test
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > pads id 1 to six digits
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > leaves id 999999 unpadded
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-02 — zero padding at the boundaries (BR-04) > does not truncate the year segment when the id exceeds six digits
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-03 — the year comes from createdAt, not from now (BR-04, BR-10) > uses the ticket's own creation year
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-03 — the year comes from createdAt, not from now (BR-04, BR-10) > uses the UTC year of createdAt, per the example tests.md UNIT-03 fixes
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > renders DD MMM YYYY HH:mm in Asia/Bangkok, +7 from the stored UTC value
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > pads the day and uses a 24-hour clock
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-04 — display timestamp format (BR-10, AC-60) > rolls the date over when +7 crosses midnight
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > removes leading and trailing whitespace before length is measured
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > collapses a whitespace-only value to the empty string
+ ✓ tests/lab-02/ticket-number.unit.test.ts > UNIT-05 — trim helper (BR-30) > leaves interior whitespace alone
+ ✓ tests/lab-01/categories.test.ts > GET /api/categories > returns the four seeded categories in id order
+ ✓ tests/lab-01/health.test.ts > GET /api/health > returns 200 with status ok and the service name
+
+ Test Files  21 passed (21)
+      Tests  510 passed (510)
+   Start at  21:21:39
+   Duration  55.04s (transform 484ms, setup 0ms, collect 5.91s, tests 42.10s, environment 3ms, prepare 1.77s)
+

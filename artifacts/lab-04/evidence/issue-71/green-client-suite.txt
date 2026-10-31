@@ -1,0 +1,459 @@
+# Command: cd client; npx vitest run --reporter=verbose
+# Date: 2026-10-31
+# Commit: 6ccf79d (branch feature/lab4-10-release-docs; Issue #71 changes only documents, so the code under test is the code of feature/lab4-9-e2e-visual)
+# ANSI stripped; session tokens and database URLs redacted
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > renders the TokTickIT heading
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows Online and the seeded categories on success
+ ✓ tests/lab-01/App.test.tsx > SystemCheck (Lab 1, repointed per C-04) > shows an Offline error message when the API is unavailable
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-09 shows the signed-in user's name and Role badge at the top, and no shell (AC-22, FR-15)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - units > UNIT-09 a datetime-local value is read as Asia/Bangkok and sent with +07:00; back again (BR-07, AC-14)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - units > UNIT-10 action times display as DD MMM YYYY HH:mm in Asia/Bangkok
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - units > UNIT-11 newClientRequestId mints a fresh RFC 4122 UUID each call (BR-42)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-10 the BR-12 rule is stated before anything is typed (FR-16)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-01 renders Email Address and Password, both required, and one Sign In button (FR-01)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-38 the list renders Name, Email, Role, Status and Edit for every user (AC-82, FR-56)
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-13 four link cards to My Tickets, each with its count, Waiting for you with its badge (FR-20)
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-54 My Tickets: the Current Status cell also carries the IT Priority badge for the md table, hidden from lg where IT Priority has its own column (C-116, FR-31)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-01 renders one link card per API card, in API order, each with its count and drill-down (FR-18, BR-56)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-21 shows a loading state until the list request settles (AC-52)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-24 renders the Ticket information read-only with no edit, note or status control (AC-53, rewritten per C-76)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-16 renders all nine FR-39 columns at desktop width (ui-spec 15.2)
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-11 populates Category and Related System from the API and nothing else (AC-13)
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-55 a 404 renders the Not found state of ui-spec 20.1 - heading, a body naming what was addressed, a secondary link back - not the failure panel, and not Forbidden (C-65)
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-14 Recently updated has View all; Recently resolved shows the resolved time and none (BR-77, BR-78)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-21 lists every action newest first with status, people, result and follow-up (FR-01, BR-22)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-25 the read-only group renders Requester, Category, Related System, Requested Priority and the dates with no input among them (FR-43)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-02 submitting empty shows both catalogue messages below their fields and sends nothing (FR-01)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-40 the status select offers exactly allowedTransitions, whatever they are (BR-27, C-171)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-39 no delete, checkbox, bulk, import, export, pagination or sortable header is rendered (AC-98, FR-66, BR-84)
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-56 IT Staff Ticket Detail renders the same Not found state for a 404, linking back to the Ticket Queue (ui-spec 20.1)
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-15 the zero account: every card 0 and still a link; both lists show Empty (BR-57)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-17 an owned row shows the owner's name; an unassigned row shows Unassigned on a pale cell (FR-40)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-26 adds a permitted file to the active group without leaving the screen (AC-32)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > renders the owner's rows with the pagination summary and calls the API with no requester of its own
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.1 renders a Ticket Owner row, Unassigned when there is none (BR-100)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-22 an empty list says so, with the composer still present
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-16 one Quick Action, Create Ticket; no My Tickets table repeated, no staff content (LS 8.2, C-144)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-18 a row whose owner is inactive renders Name (inactive) (AC-75, FR-46)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-02 the Administrator sees the User accounts row with N active; IT Staff does not (BR-87, AC-87)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.1 / C-114 marks a deactivated owner (inactive), without saying why
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-41 gate unmet: Resolved is disabled with the reasons beneath, bound by aria-describedby (ui-spec 9.2)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-19 the resolution marker renders for a resolved-by-requester Ticket, and is not in the status column (AC-60, FR-40)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-26 Claim renders only when the Ticket is unassigned (FR-44)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-23 composer defaults: Completed, now in Bangkok, the signed-in user as assignee (BR-18)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-03 a zero card shows 0 and stays a link; empty lists show their Empty copy (BR-57)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-42 gate met: Resolved is enabled and there is no callout
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-17 Refresh calls the API again; it never calls the staff dashboard
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-20 shows the empty state with no filter active, and the distinct no-matches state with a filter active (FR-41, AC-69)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > a page past the last one shows No matches with Clear filters, not the Empty state (audit #2)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 lists Public Comments newest first, with an empty state and a composer with a live counter (BR-67, FR-53)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-27 the lost claim race renders the conflict inline, refreshes the view, and Claim is gone (FR-44, AC-71)
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-18 the Open tickets card lands on My Tickets with the Open tickets filter selected (BR-88)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.2 shows the empty state with the composer still present (BR-27)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-04 Refresh calls the API again; nothing polls on its own (BR-58)
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-19 loading skeleton, then a safe failure panel with Retry
+ ✓ tests/lab-04/RequesterDashboard.test.tsx > Requester Dashboard > UI-20 the Forbidden state links to the Dashboard (C-144)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-05 shows the generated-at line and no 'from yesterday' delta anywhere (C-142, X-5)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-28 Assign/Reassign offers only the users GET /api/staff/assignable-users returns (FR-45, BR-104, C-105)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-06 Quick Actions are Search Tickets and My Queue, with no Create Ticket (C-144, L3 C-101)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-21 shows a loading skeleton with aria-busy, then a safe failure panel with Retry that keeps the toolbar (FR-41)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-43 STALE_UPDATE on status: re-fetch, keep the chosen status, re-send with the fresh version (BR-39, C-153)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-07 the My planned actions card moves focus to the #my-actions panel, which lists every row (BR-84, C-169)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-29 the status select offers exactly the matrix's permitted targets from each current status (ui-spec 16.2, specification 5.1)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-07 (seven rows) arriving at /dashboard#my-actions focuses the panel heading; seven rows in API order, card 7, footer '7 planned actions'
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-22 an INVALID_QUERY_PARAM fields message renders beside its own control, and Clear filters replaces Retry (FR-42, AC-68)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-30 on a Closed and on a Cancelled Ticket the status select is absent and the explanatory line renders once, below the lists (BR-58, C-98, C-117)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-08 list rows link to the staff detail and keep the API order (C-161)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-09 shows a skeleton while loading and a safe failure panel with Retry (ui-spec 12.1)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-09 loading skeleton draws three list panels beside the cards (ui-spec 12.1)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-40 search and the role filter each issue a request carrying their parameter (AC-83, AC-84) 632ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 711ms
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-44 owner and IT Priority PATCHes carry the version; STALE_UPDATE on priority keeps the draft (C-138)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-10 a card opens the queue already filtered (FR-16, BR-56)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 380ms
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-41 the Create panel renders Name, Email, Role, Status, Initial Password, the must-change line, and no email option (FR-59, BR-16)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-24 Result and Follow-Up show only for Completed; the note only when ticked, and unticking clears it (BR-05, AC-09) 599ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 866ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 768ms
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-10 (requesterResolved) /queue?requesterResolved=true shows the filter as Only these, requests it, and Last updated shows lastActivityAt (FR-16, BR-48)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-31 Resolved, Closed and Cancelled each open a confirmation and send no request until confirmed; Cancel sends nothing (AC-80, BR-57)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 831ms
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-18 shows the empty state with a Create Ticket action when nothing is owned and no filter is active (AC-49)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-19 shows the distinct no-results state with Clear filters when a filter excludes everything (AC-50)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-45 a server RESOLUTION_GATE_NOT_MET renders its reasons as a conflict after a re-fetch
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > the Cancelled confirmation reads Keep the ticket, never Cancel beside Cancel Ticket (BR-58)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-11 a user card opens User Management already filtered by role (FR-24)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-12 Dashboard is the first navigation item and is marked current (C-144)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-20 shows a safe failure panel with Retry and keeps the toolbar (AC-51)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.3 the resolution confirmation: Cancel sends nothing, confirming sets the marker and swaps the action for a reported line (FR-30, BR-59, BR-61)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-12 (hash) on /dashboard#my-actions Dashboard is still the current navigation item (C-144)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > ui-spec 14.4 a Closed Ticket is read-only: no composer, no upload, no Remove, and the terminal line renders once (BR-108, C-109)
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > STYLE-09 a metric card shows its label, a count and a 'View list' line, so it reads as a link without colour
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > UI-25 renders Ticket Date and Last Updated as DD MMM YYYY HH:mm in Asia/Bangkok (AC-60)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-07 renders the Current Status badge and the IT Priority badge beside it (FR-31, C-71)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-22 opens the Ticket's detail route from the row (AC-62)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > STYLE-09 gives every interactive control a non-empty accessible name (AC-56)
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx > Requester Ticket Detail > offers Back to My Tickets and a headed Attachments card with the active count
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > STYLE-10 the panels are labelled landmarks and the #my-actions heading is focusable
+ ✓ tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > STYLE-12 Lab 4 components use tokens, never a hard-coded colour
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-57 IT Staff Ticket Detail confirms each write with the ui-spec 20.1 success panel - pale, check icon, sentence, polite (C-119) 1110ms
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-46 PLANNED_ACTIONS_OPEN on cancel shows its message and a link to Actions Taken (BR-33)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a confirmed Resolved move sends the request and the view updates (AC-80)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-47 status history: oldest first, the creation row, people by name (BR-23, C-167)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > UI-23 shows Clear filters only once a search or filter is active, and it returns to the default list (FR-35)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-48 a legacy Ticket shows the history line and no date (BR-51, C-179)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-49 Last Updated shows lastActivityAt, not updatedAt (BR-48)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a status move needing an owner, with none, renders the OWNER_REQUIRED message inline beside the status control (C-93)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-32 the resolution callout renders when the flag is set, and is not presented as a status (FR-50, AC-59)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1374ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-33 Public Comments and Internal Notes render distinctly: different headings, the standing label, and separation between the composers (FR-55, AC-107)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-29 keeps a removed attachment's metadata and reason visible with no Preview and no Download (AC-34)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 954ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 783ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-30 shows the unavailable state on a 410 for a row believed active, with Refresh (C-46)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-42 a duplicate email on create renders at the Email Address field, not as a banner (AC-87, FR-62) 882ms
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-43 the Status control is disabled on the viewer's own row with its explanation; a 422 renders inline (AC-92, FR-63)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > debounces the search box into the request and resets to page 1 431ms
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-06 renders priority badges as pills and status badges square, each with title-case text (AC-58)
+ ✓ tests/lab-02/MyTickets.test.tsx > My Tickets > STYLE-08 marks the active navigation item with the active class and aria-current
+stderr | tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56)
+Warning: An update to RouterProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:93:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:93:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-58 Requester Ticket Detail confirms a posted comment with the success panel (C-119) 661ms
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-44 a 409 LAST_ADMINISTRATOR on edit renders as a form-level banner (AC-93, AC-94)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > UI-31 renders the 6.1 message naming the file for 415 and 413, with Retry and Discard (AC-24, AC-25)
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > STYLE-03 (hierarchy) renders Preview and Download as tertiary and Remove as destructive (ui-spec 7)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-25 the request body: trimmed text, +07:00 time, the replay key, and no follow-up note when unticked (BR-04, BR-07, BR-42) 1099ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 447ms
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-45 the Role select is not disabled on the viewer's own row (BR-82, C-81)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > UI-51 the note composer sends a replay key and mints a new one after success (BR-42) 621ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx > Attachment section > downloads an active attachment through the API and reports it (AC-30)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-26 client validation shows the catalogue messages below their fields and sends nothing
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-46 the Edit panel carries Name, Email, Role and Status only - no password field (FR-60, BR-76)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-35 the live character counter tracks the body length and turns danger past 2000 (FR-53)
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-59 the User Management panels are real modals: Tab wraps inside, Escape closes, focus returns to the opener (ui-spec 22, checklist A11y row 4)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-36 no comment and no note renders an edit or delete affordance (FR-51, BR-63)
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - IT Staff Ticket Detail > STYLE-11 the gate callout is an info callout; the conflict panel is an alert with a warning icon
+ ✓ tests/lab-04/TicketWorkflow.test.tsx > Ticket workflow - Requester Ticket Detail > UI-47 (Requester) the history renders read-only, names only
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56) 550ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > UI-24 a 403 from the API renders the Forbidden state, not a blank screen (FR-24, AC-97)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > STYLE-03 each of the eight statuses renders its own treatment and title-case text, never the raw enum (ui-spec 8.2)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > UI-37 staff attachments are read-only: Preview and Download render, no upload and no Remove control renders (C-103, FR-49)
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > STYLE-04 every row renders an IT Priority badge, never absent (FR-31, BR-49)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-47 Set a new initial password opens a panel with the validator's rules and the session warning (FR-61, AC-91)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > UI-48 a non-Administrator sees the forbidden state and no user request is issued (AC-97, FR-24, FR-65)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > STYLE-05 the Role badge family renders for all three roles with the glossary spelling (ui-spec 8.4)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > renders a loading skeleton, then a safe failure panel with Retry (ui-spec 20.1)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a 403 FORBIDDEN_ROLE from the API renders the Forbidden state, not a blank screen (FR-24, C-63)
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx > IT Staff Ticket Detail > a missing Ticket renders the not-found refusal, never revealing existence (C-65)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > STYLE-11 every interactive control has a non-empty accessible name (AC-106 group)
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-60 a refused resolution report is the ui-spec 20.1 Conflict state: the message stays inline in the information card and the view is refreshed (C-76, 14.3)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 753ms
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > UI-61 User Management's Empty and No results states carry the ui-spec 20.1 icon and body, and differ from each other (17.3, C-121) 395ms
+ ✓ tests/lab-03/UiDefects.test.tsx > Visual-checklist defects (Issue #12) > STYLE-13 a disabled primary and a disabled secondary button stay visibly different levels: filled versus outlined (C-118, ui-spec 7, 19)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-27 success shows Action added., resets the form and mints a new key (FR-08, BR-44) 794ms
+stderr | tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44)
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:53:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 768ms
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-07 offers no forgot-password, create-account, remember-me, SSO or social sign-in (LS 4.2)
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > creating a user shows Creating… then the success panel and refetches the list (BR-16) 968ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2474ms
+ ✓ tests/lab-03/UserManagement.test.tsx > User Management > empty and no-results states are distinguished by whether a filter is active (L2 C-28) 439ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-29 a failure keeps every typed value (BR-63, C-147) 635ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-30 row controls come from allowedOperations only (FR-09, C-174)
+ ✓ tests/lab-03/Login.test.tsx > Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 752ms
+ ✓ tests/lab-03/Login.test.tsx > Login > STYLE-12 the screen and the page title spell TokTickIT, and TikTockIT appears nowhere in the client (L2 C-41)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-49 the shell shows name, Role badge and Log Out, and 'Development Requester' and 'Change Requester' exist nowhere in the client (AC-30, FR-09, BR-94)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-50 navigation is derived from the role: Requester, IT Staff and Administrator each see exactly their destinations (AC-31..AC-33, BR-36)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > each role lands on its own Dashboard (ui-spec 9.1, Lab 4 C-144)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-31 Edit sends only the changed fields with the action's version; Save is disabled until something differs (BR-90, C-175) 405ms
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a destination the role may not use renders the Forbidden state inside the shell and fetches nothing for it (FR-24, BR-40)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a 403 FORBIDDEN_ROLE from a screen's own request renders the Forbidden state, not a failure (ui-spec 20.1, FR-24)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > a 403 PASSWORD_CHANGE_REQUIRED from any request shows Change Password, not a banner (ui-spec 6.2, BR-19)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > Log Out ends the session and shows Login without the session-ended banner (FR-06, BR-23)
+ ✓ tests/lab-03/Login.test.tsx > the authenticated shell > UI-51 a 401 from a screen's own request discards the user and shows Login with the session-ended message (AC-35, BR-34)
+ ✓ tests/lab-03/Login.test.tsx > theme > STYLE-01 the theme carries the four fixed Zen Green values unchanged (ui-spec 2.1)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3579ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-32 Complete sends result, follow-up and version; the stored time is not re-sent unless changed (BR-11, C-168) 485ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-33 Cancel needs a Reason, warns it is final, and sends it as the result (BR-12) 550ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 2066ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-34 STALE_UPDATE on an edit: re-fetch, keep the draft, apply again with the fresh version (BR-39, C-153) 392ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-35 ACTION_NOT_PLANNED re-fetches and shows its message without the two buttons
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-36 a 422 ASSIGNEE_NOT_ELIGIBLE renders at the Assignee field (BR-18)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-37 a Resolved Ticket shows the reopen line and no composer; a Closed one no controls at all (BR-24)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-39 text renders as plain text: markup is shown, never parsed (BR-08)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > STYLE-01 Actions Taken is distinct: primary left bar class, clipboard icon, standing label (ui-spec 8.1, BR-21)
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > STYLE-02 each action status badge carries an icon and its text, so it reads without colour
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > STYLE-06 button levels: Add Action primary, Cancel Action destructive, Close secondary
+ ✓ tests/lab-04/ActionsTaken.test.tsx > Actions Taken - Requester Ticket Detail > UI-38 read-only: every action, names only, the Recorded by IT Staff label, and no control (BR-20, C-123)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2360ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-14 a gated user sees Change Password at My Tickets, the Ticket Queue and User Management alike (FR-14, BR-20)
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2079ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-16 / STYLE-04 renders Requester and Ticket Date read-only, not disabled (AC-61)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1272ms
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 391ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 1986ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-01 / STYLE-02 places each message under its control and marks every required label
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-04 (shading) gives read-only and editable controls different surfaces in the theme (ui-spec 4)
+ ✓ tests/lab-03/ChangePassword.test.tsx > Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2328ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1934ms
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > STYLE-10 defines the Zen Green tokens on :root
+ ✓ tests/lab-02/CreateTicket.test.tsx > Create Ticket > marks a file the client can already tell is invalid, before any request (AC-24, ui-spec 14.1)
+
+ Test Files  15 passed (15)
+      Tests  193 passed (193)
+   Start at  21:22:35
+   Duration  15.37s (transform 1.15s, setup 4.41s, collect 15.77s, tests 54.71s, environment 25.98s, prepare 3.35s)
+

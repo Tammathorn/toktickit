@@ -84,7 +84,8 @@ directly below its control.
 | BR-05 | `followUpNote` (required) | `Follow-up Note is required when follow-up is needed, and must be 1000 characters or fewer.` |
 | BR-05 | `followUpNote` (sent while not required) | `Remove the Follow-up Note, or tick Follow-Up Required?.` - never reachable from the screen, which clears the note (AC-09) |
 | BR-06 | `attachmentNotes` | `Attachment Notes must be 500 characters or fewer.` |
-| BR-18 | `assigneeId` | `Choose an active IT Staff or Administrator user.` (L3 ui 6.1, reused) |
+| BR-18 | `assigneeId` | `Choose an active IT Staff or Administrator user.` (L3 ui 6.1, reused). The server's 422 `ASSIGNEE_NOT_ELIGIBLE` carries no `fields` key (C-191), so the screen places this message at the Assignee field from the status and code |
+| BR-90, C-192 | `version` (an action edit with no editable field) | `Change at least one field before saving.` - the server's 400 `fields.version`; never reachable from the screen, whose `Save Action` stays disabled until a field differs (section 8.4) |
 | BR-36 | `version` | `Refresh the page and try again.` - a client defect if ever shown |
 | BR-42 | `clientRequestId` | `clientRequestId must be a UUID.` - a client defect if ever shown |
 | C-175 | any field an action route does not accept | `<field> is not accepted here.` - a client defect if ever shown |
