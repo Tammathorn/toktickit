@@ -1,6 +1,6 @@
 import { Router, type Request, type Response } from "express";
 import { getPrisma } from "../prisma.js";
-import { sendError, sendInternalError } from "../lib/http-error.js";
+import { sendError, sendInternalError, sendKeyReused } from "../lib/http-error.js";
 import { anyRole, authOf, staffOnly } from "../middleware/auth.js";
 import { MESSAGES } from "../lib/validation.js";
 import { trimmedWithin } from "../lib/text.js";
@@ -46,18 +46,22 @@ function malformedClientRequestId(req: Request): boolean {
 }
 
 // Step 7 of api-spec.md 2.1: this author already used this key -> 200 with the
-// original row, before the Ticket state is consulted (C-165, C-166). Returns
-// undefined when there is nothing to replay, so the caller carries on.
-async function findReplay(table: "publicComment" | "internalNote", authorId: number, req: Request, res: Response): Promise<true | undefined> {
+// original row, before the Ticket state is consulted (C-165, C-166). A key
+// first used on another Ticket is 409 IDEMPOTENCY_KEY_REUSED and says nothing
+// about that Ticket (C-199). Returns undefined when there is nothing to
+// answer, so the caller carries on.
+async function findReplay(table: "publicComment" | "internalNote", authorId: number, ticketId: number, req: Request, res: Response): Promise<true | undefined> {
   const clientRequestId = readClientRequestId(req);
   if (!clientRequestId) return undefined;
   const where = { authorId_clientRequestId: { authorId, clientRequestId } };
+  const select = { ...entrySelect, ticketId: true };
   const row =
     table === "publicComment"
-      ? await getPrisma().publicComment.findUnique({ where, select: entrySelect })
-      : await getPrisma().internalNote.findUnique({ where, select: entrySelect });
+      ? await getPrisma().publicComment.findUnique({ where, select })
+      : await getPrisma().internalNote.findUnique({ where, select });
   if (!row) return undefined;
-  res.status(200).json(toEntryDto(row));
+  if (row.ticketId !== ticketId) sendKeyReused(res);
+  else res.status(200).json(toEntryDto(row));
   return true;
 }
 
@@ -95,7 +99,7 @@ commentsNotesRouter.post("/api/tickets/:id/public-comments", ...anyRole, async (
   try {
     const ticket = await loadVisibleTicket(req, res);
     if (!ticket) return;
-    const replay = await findReplay("publicComment", authOf(res).user.id, req, res);
+    const replay = await findReplay("publicComment", authOf(res).user.id, ticket.id, req, res);
     if (replay !== undefined) return;
     if (isTerminal(ticket.currentStatus)) {
       sendTicketClosed(res);
@@ -130,7 +134,7 @@ commentsNotesRouter.post("/api/tickets/:id/public-comments", ...anyRole, async (
       }
       res.status(201).json(toEntryDto(row));
     } catch (error) {
-      if (clientRequestId && isUniqueViolation(error) && (await findReplay("publicComment", authorId, req, res)) !== undefined) return;
+      if (clientRequestId && isUniqueViolation(error) && (await findReplay("publicComment", authorId, ticket.id, req, res)) !== undefined) return;
       throw error;
     }
   } catch {
@@ -156,7 +160,7 @@ commentsNotesRouter.post("/api/tickets/:id/internal-notes", ...staffOnly, async 
   try {
     const ticket = await loadVisibleTicket(req, res);
     if (!ticket) return;
-    const replay = await findReplay("internalNote", authOf(res).user.id, req, res);
+    const replay = await findReplay("internalNote", authOf(res).user.id, ticket.id, req, res);
     if (replay !== undefined) return;
     if (isTerminal(ticket.currentStatus)) {
       sendTicketClosed(res);
@@ -189,7 +193,7 @@ commentsNotesRouter.post("/api/tickets/:id/internal-notes", ...staffOnly, async 
       }
       res.status(201).json(toEntryDto(row));
     } catch (error) {
-      if (clientRequestId && isUniqueViolation(error) && (await findReplay("internalNote", authorId, req, res)) !== undefined) return;
+      if (clientRequestId && isUniqueViolation(error) && (await findReplay("internalNote", authorId, ticket.id, req, res)) !== undefined) return;
       throw error;
     }
   } catch {

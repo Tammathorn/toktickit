@@ -1,7 +1,7 @@
 import { Router, type Request, type Response } from "express";
 import type { ActionStatus, UserRole } from "@prisma/client";
 import { getPrisma } from "../prisma.js";
-import { sendError, sendInternalError, sendStale } from "../lib/http-error.js";
+import { sendError, sendInternalError, sendKeyReused, sendStale } from "../lib/http-error.js";
 import { authOf, staffOnly } from "../middleware/auth.js";
 import { parsePathId } from "../lib/validation.js";
 import { loadStaffTicketDto } from "../lib/ticket-dto.js";
@@ -135,14 +135,18 @@ actionsRouter.post("/api/tickets/:id/actions", ...staffOnly, async (req: Request
     }
     const body = readBody(req.body);
 
-    // Step 7 - replay lookup, before the Ticket state (C-165, C-166).
+    // Step 7 - replay lookup, before the Ticket state (C-165, C-166); a key
+    // found on another Ticket is 409 IDEMPOTENCY_KEY_REUSED (C-199).
     if (isUuid(body.clientRequestId)) {
       const original = await prisma.actionTaken.findUnique({
         where: { createdById_clientRequestId: { createdById: me.id, clientRequestId: body.clientRequestId } },
         select: { ticketId: true },
       });
       if (original) {
-        await respondWithTicket(res, original.ticketId, 200);
+        // C-199: a key first used on another Ticket is refused, never answered
+        // with that Ticket's data.
+        if (original.ticketId !== ticket.id) sendKeyReused(res);
+        else await respondWithTicket(res, original.ticketId, 200);
         return;
       }
     }
@@ -239,7 +243,8 @@ actionsRouter.post("/api/tickets/:id/actions", ...staffOnly, async (req: Request
           select: { ticketId: true },
         });
         if (!original) throw error;
-        await respondWithTicket(res, original.ticketId, 200);
+        if (original.ticketId !== ticket.id) sendKeyReused(res);
+        else await respondWithTicket(res, original.ticketId, 200);
         return;
       }
       throw error;

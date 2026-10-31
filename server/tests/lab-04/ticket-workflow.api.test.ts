@@ -9,7 +9,7 @@ import { UPLOAD_DIR } from "../../src/lib/uploads.js";
 import { removeUsers, signIn, signedInUser, type Agent } from "../support/agents.js";
 
 // Lab 4 Ticket workflow - tests.md sections 2.1 (UNIT-05..UNIT-07) and 2.5
-// (WF-01..WF-64), Issue #66: the resolution gate (C-137, C-186), the status
+// (WF-01..WF-64, plus API-129..API-132 for C-199), Issue #66: the resolution gate (C-137, C-186), the status
 // route's seven-step order (BR-89, C-164), stale updates (C-138, C-187), the
 // activity time per write path (C-140), resolvedAt and status history (BR-49,
 // BR-50), and replays on Public Comments and Internal Notes (C-139).
@@ -990,5 +990,74 @@ describe("replays on Public Comments and Internal Notes (C-139)", () => {
     const b = await reqA.agent.post("/api/tickets").send(body);
     expect([a.status, b.status]).toEqual([201, 201]);
     expect(a.body.id).not.toBe(b.body.id);
+  });
+});
+
+// ===========================================================================
+// A key reused on another Ticket (C-199, supersedes C-194)
+// ===========================================================================
+describe("a replay key reused on another Ticket (C-199)", () => {
+  const KEY_REUSED_MESSAGE = "This request key was already used for another Ticket.";
+  type Entry = typeof comment;
+  const kinds: { label: string; send: Entry; as: () => Agent; count: (ticketId: number) => Promise<number> }[] = [
+    { label: "Public Comment", send: comment, as: () => reqA.agent, count: (id) => prisma.publicComment.count({ where: { ticketId: id } }) },
+    { label: "Internal Note", send: note, as: () => staffA.agent, count: (id) => prisma.internalNote.count({ where: { ticketId: id } }) },
+  ];
+
+  kinds.forEach((k, i) => {
+    const idReuse = 129 + i;
+    const idRace = 131 + i;
+
+    it(`API-${idReuse} a ${k.label} key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged; K on A is still a 200 replay (C-199)`, async () => {
+      const a = await ticket({ summary: `${TAG} API-${idReuse} ticket A secret-summary` });
+      const b = await ticket();
+      const key = uuid();
+      const first = await k.send(k.as(), a.id, { body: `API-${idReuse} on A.`, clientRequestId: key });
+      expect(first.status).toBe(201);
+      const beforeB = await row(b.id);
+
+      const reused = await k.send(k.as(), b.id, { body: `API-${idReuse} on B.`, clientRequestId: key });
+      expectCode(reused, 409, "IDEMPOTENCY_KEY_REUSED");
+      expect(reused.body.error.message).toBe(KEY_REUSED_MESSAGE);
+      expect(Object.keys(reused.body)).toEqual(["error"]);
+      expect(Object.keys(reused.body.error).sort()).toEqual(["code", "message"]);
+      expect(JSON.stringify(reused.body)).not.toContain(`API-${idReuse} on A.`);
+      expect(JSON.stringify(reused.body)).not.toContain("secret-summary");
+      expect(await k.count(b.id)).toBe(0);
+      const afterB = await row(b.id);
+      expect(afterB.version).toBe(beforeB.version);
+      expect(afterB.lastActivityAt.getTime()).toBe(beforeB.lastActivityAt.getTime());
+
+      const replay = await k.send(k.as(), a.id, { body: `API-${idReuse} on A.`, clientRequestId: key });
+      expect(replay.status, JSON.stringify(replay.body)).toBe(200);
+      expect(replay.body).toEqual(first.body);
+      expect(await k.count(a.id)).toBe(1);
+    });
+
+    it(`API-${idRace} concurrent ${k.label}s with one K on two Tickets (the P2002 path) -> exactly one row; the other Ticket's requests are 409 IDEMPOTENCY_KEY_REUSED; none 500 (C-199)`, async () => {
+      const a = await ticket();
+      const b = await ticket();
+      const key = uuid();
+      const agents = await Promise.all(Array.from({ length: 6 }, () => signIn(k.label === "Public Comment" ? reqA.email : staffA.email)));
+      let pending: Promise<Awaited<ReturnType<Entry>>[]> | undefined;
+      // Both row locks are held while the requests arrive: each passes the
+      // replay lookup (no row yet) and waits, so the losers can only be
+      // answered by the P2002 path.
+      await prisma.$transaction(async (tx) => {
+        await tx.$queryRaw`SELECT "id" FROM "Ticket" WHERE "id" IN (${a.id}, ${b.id}) ORDER BY "id" FOR UPDATE`;
+        pending = Promise.all(agents.map((ag, n) => k.send(ag, n % 2 === 0 ? a.id : b.id, { body: `API-${idRace}.`, clientRequestId: key })));
+        await new Promise((resolve) => setTimeout(resolve, 1500));
+      }, { timeout: 15_000 });
+      const responses = await (pending as NonNullable<typeof pending>);
+      const total = (await k.count(a.id)) + (await k.count(b.id));
+      expect(total).toBe(1);
+      const winner = (await k.count(a.id)) === 1 ? a.id : b.id;
+      responses.forEach((res, n) => {
+        const onTicket = n % 2 === 0 ? a.id : b.id;
+        if (onTicket === winner) expect([200, 201], JSON.stringify(res.body)).toContain(res.status);
+        else expectCode(res, 409, "IDEMPOTENCY_KEY_REUSED");
+      });
+      expect(responses.filter((r) => r.status === 201)).toHaveLength(1);
+    });
   });
 });

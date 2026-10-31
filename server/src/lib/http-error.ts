@@ -40,6 +40,7 @@ export type ErrorCode =
   | "RESOLUTION_GATE_NOT_MET"
   | "PLANNED_ACTIONS_OPEN"
   | "ACTION_NOT_PLANNED"
+  | "IDEMPOTENCY_KEY_REUSED"
   | "INTERNAL_ERROR";
 
 export function sendError(
@@ -64,6 +65,12 @@ export function sendGateNotMet(res: Response, reasons: readonly string[]): void 
 // resource travels with it; the client re-fetches the Ticket (BR-39).
 export function sendStale(res: Response): void {
   sendError(res, 409, "STALE_UPDATE", "Someone else changed this first. The latest version is shown, and your changes are kept so you can apply them again.");
+}
+
+// C-199: a replay key already used on another Ticket. The message names nothing
+// about that Ticket.
+export function sendKeyReused(res: Response): void {
+  sendError(res, 409, "IDEMPOTENCY_KEY_REUSED", "This request key was already used for another Ticket.");
 }
 
 export function sendInternalError(res: Response): void {
