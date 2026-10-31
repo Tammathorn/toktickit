@@ -220,10 +220,11 @@ describe("the authenticated shell", () => {
   });
 
   it("UI-50 navigation is derived from the role: Requester, IT Staff and Administrator each see exactly their destinations (AC-31..AC-33, BR-36)", async () => {
+    // Adapted for Lab 4 (C-144): Dashboard is every role's first destination.
     const expected: Array<[api.AuthUser, string[]]> = [
-      [REQUESTER, ["My Tickets", "Create Ticket"]],
-      [IT_STAFF, ["Ticket Queue"]],
-      [ADMINISTRATOR, ["Ticket Queue", "User Management"]],
+      [REQUESTER, ["Dashboard", "My Tickets", "Create Ticket"]],
+      [IT_STAFF, ["Dashboard", "Ticket Queue"]],
+      [ADMINISTRATOR, ["Dashboard", "Ticket Queue", "User Management"]],
     ];
     for (const [user, destinations] of expected) {
       signInAs(user);
@@ -239,11 +240,12 @@ describe("the authenticated shell", () => {
     }
   });
 
-  it("each role lands on its own screen: a Requester on My Tickets, IT Staff and Administrator on the Ticket Queue (ui-spec 9.1)", async () => {
+  // Adapted for Lab 4 (C-144): every role now lands on its Dashboard.
+  it("each role lands on its own Dashboard (ui-spec 9.1, Lab 4 C-144)", async () => {
     for (const [user, heading, pathname] of [
-      [REQUESTER, "My Tickets", "/tickets"],
-      [IT_STAFF, "Ticket Queue", "/queue"],
-      [ADMINISTRATOR, "Ticket Queue", "/queue"],
+      [REQUESTER, "Dashboard", "/dashboard"],
+      [IT_STAFF, "Dashboard", "/dashboard"],
+      [ADMINISTRATOR, "Dashboard", "/dashboard"],
     ] as const) {
       signInAs(user);
       renderAt("/");

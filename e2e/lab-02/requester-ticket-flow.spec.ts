@@ -266,7 +266,9 @@ test.describe("Responsive", () => {
     }
   });
 
-  test("RESP-04 at 390 px the toggler opens a panel with both nav items and Log Out (ui-spec 9)", async ({ page }) => {
+  // Title adapted for Lab 4 (C-144): the nav now has three items (Dashboard first);
+  // the assertions on My Tickets, Create Ticket and Log Out are unchanged.
+  test("RESP-04 at 390 px the toggler opens a panel with the nav items and Log Out (ui-spec 9)", async ({ page }) => {
     await page.goto("/tickets");
     const toggler = page.getByRole("button", { name: "Toggle navigation" });
     const banner = page.getByRole("banner");
