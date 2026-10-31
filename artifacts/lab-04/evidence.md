@@ -117,3 +117,18 @@ Requester dashboard screenshots (E2E-34, C-180) are rows of Issue 9.
 | Every registered route is in the `specification.md` 5.2 matrix and every matrix row is registered (36 rows) | SEC-09; AC-101; C-155, C-184 | `evidence/issue-68/green-requester-dashboard-server-verbose.txt` | 7 | captured |
 | Stale `toktickit_test` rows (pre-`1c688b5` seed) found by API-57; test DB rebuilt from migrations + seed, dev DB untouched | API-57 | `evidence/issue-68/first-run-api57-stale-test-db.txt`, `test-db-rebuild-drop.txt` | 7 | captured |
 | Labs 1-3 suites still pass | see `evidence/issue-68/README.md` | `evidence/issue-68/green-server-suite.txt`, `green-client-suite.txt` | 7 | captured |
+
+## Final hardening (reduced) and README - Issue 8 (#69)
+
+This Issue's folder is `evidence/issue-69/`. Cut for the 31 Oct deadline: the client audit and
+the focus-management, UI-50 and test-gap items are not done and are recorded as such in
+`docs/lab-04/tests.md` 6.1.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| Console-error fixture: fails on `console.error`, `pageerror`, a same-origin 5xx; allowlists only declared 401/403/404/409/422 lines and declared failures | E2E-28..E2E-32; AC-95; BR-66; C-149, C-182, C-185 | `evidence/issue-69/fixture-failure-messages.txt`, `green-e2e-suite.txt` | 8 | captured |
+| Dashboard loading placeholder: three skeleton panels (staff), ui-spec 12.1 | UI-09 | `evidence/issue-69/green-client-suite.txt` | 8 | captured |
+| Actions Taken cards at every width; ui-spec 8.1, 8.2, 13 and RESP-04 aligned | C-195 | `docs/lab-04/decisions.md`, `docs/lab-04/ui-spec.md` | 8 | captured |
+| Items not done for the deadline, recorded honestly | - | `docs/lab-04/tests.md` 6.1 | 8 | captured |
+| README Lab 4 section (what it adds, migration and seed steps, the three suites, `npm run test:perf`, demo per role) | - | `README.md` | 8 | captured |
+| Labs 1-3 suites still pass | see `evidence/issue-69/README.md` | `evidence/issue-69/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt` | 8 | captured |
