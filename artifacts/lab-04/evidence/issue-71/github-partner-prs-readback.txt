@@ -1,0 +1,45 @@
+# Command: gh api repos/PAKATO123/toktickit/pulls/N/reviews and .../issues/N/comments for N = 63, 64, 65, 70
+# Date: 2026-10-31 14:42 UTC. Read only; nothing was posted.
+
+=== PAKATO123/toktickit#63
+docs(lab-04): add Sprint 4 specifications, implementation plan, test + others | OPEN | lab4-staging <- feature/lab04-00-foundations | opened 2026-09-28T10:43:51Z
+review by Tammathorn APPROVED 2026-10-31T04:48:45Z
+Docs and test stubs match the handout structure. approve
+
+=== PAKATO123/toktickit#64
+Implemented Feature/lab04 01 actions taken | OPEN | lab4-staging <- feature/lab04-01-actions-taken | opened 2026-09-28T16:12:46Z
+review by Tammathorn APPROVED 2026-10-31T04:55:35Z
+Approved with follow-up required. Before merging to main, please:
+1. Commit the Prisma migration for ActionTaken (`npx prisma migrate dev --name add_actions_taken_lab04`).
+2. Add stale-update detection (409) for PUT /actions-taken/:actionId and status updates, with an API test.
+These can land in a follow-up commit on this stack (#65/#70) since the PRs are stacked.
+
+comment by PAKATO123 2026-10-31T07:44:20Z
+Understood, i will follow up in Clean up branch along with other fixes
+
+=== PAKATO123/toktickit#65
+Implemented Feature/lab04 02 role dashboards | OPEN | lab4-staging <- feature/lab04-02-role-dashboards | opened 2026-09-30T12:53:19Z
+review by Tammathorn CHANGES_REQUESTED 2026-10-31T04:46:53Z
+Request changes — 1 major bug:
+
+"Followed up" is derived from `!followUpRequired && followUpNote`, and the note is still sent when the checkbox is unchecked (ActionsTakenSection.tsx ~L175). The server also keeps the old note on PUT.
+
+Repro: Edit a Follow-Up Required action → uncheck → Save → it shows "Followed up" without the confirmation modal.
+
+Fix: add `isFollowedUp Boolean @default(false)` (as spec §7.1 / BR-05 describe), set it only on "Mark done", and render the badge from it.
+
+comment by PAKATO123 2026-10-31T07:45:42Z
+Fix now have been published alongside other fixes in newest branch
+
+=== PAKATO123/toktickit#70
+Implemented Feature/lab04 03 e2e and hardening | OPEN | lab4-staging <- feature/lab04-03-e2e-and-hardening | opened 2026-10-08T15:57:49Z
+review by Tammathorn CHANGES_REQUESTED 2026-10-31T04:44:31Z
+Request changes — 1 major issue:
+
+E2E tests can pass without testing anything. 11 assertions in e2e/lab-04 are wrapped in `if (await x.isVisible().catch(() => false))`, so they are silently skipped when the element is missing. Also, ticket-resolution.spec.ts:69 uses `locator('text=A, text=B')`, which Playwright reads as one literal string, so it fails whenever that block runs. Use `await expect(x).toBeVisible()` and `getByText(/Pending Verification|Requester consider/)`.
+
+Note: seed now sets mustChangePassword=false for every user (since #64), so no seeded account demonstrates the Lab 3 first-login password change. Please keep at least one user with `true` for regression evidence.
+
+comment by PAKATO123 2026-10-31T07:51:57Z
+Understood, i will fix all of it.
+

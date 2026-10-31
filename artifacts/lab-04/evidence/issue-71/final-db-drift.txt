@@ -1,0 +1,6 @@
+# Command: cd server; npx prisma migrate diff --from-url <toktickit_final> --to-schema-datamodel prisma/schema.prisma --exit-code   (URL and password not shown)
+# Date: 2026-10-31
+# Commit: 6ccf79d; exit code 0
+
+No difference detected.
+

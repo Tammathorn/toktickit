@@ -153,3 +153,21 @@ Lab 3 E2E-48 captures of `/dashboard`, written here instead of `artifacts/lab-03
 | Performance smoke: p95 under 500 ms for both dashboard endpoints on 2,000 Tickets | PERF-01, PERF-02; AC-102; C-148, C-183 | `evidence/issue-70/perf-smoke.txt` | 9 | captured |
 | Console-error fixture on every Lab 4 spec; the two sporadic ECONNRESET attempts kept | C-149, C-182 | `evidence/issue-70/e2e-attempt-1-econnreset.txt`, `e2e-attempt-2-econnreset.txt`, `e2e-capture-run.txt` | 9 | captured |
 | Labs 1-3 suites still pass | - | `evidence/issue-70/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt` | 9 | captured |
+
+## Release documentation - Issue 10 (#71)
+
+This Issue's folder is `evidence/issue-71/`; its README names every file. The runs are one
+green run of each suite on the code of Issue #70 (`6ccf79d`); the run on `lab4-staging` and on
+`main` after the release merge is Part 3's final evidence and is **pending** the release.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| `tests.md` `Final` column filled from real runs, with counts | all 304 planned rows | `docs/lab-04/tests.md` sections 2, 4.4, 6; `evidence/issue-71/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `perf-smoke.txt` | 10 | captured |
+| Zero drift and a fresh seed for the final browser run | MIG-12 | `evidence/issue-71/final-db-migrate-deploy.txt`, `final-db-drift.txt` | 10 | captured |
+| Decisions C-190 to C-194, C-197, C-198 (C-196 unused); specification, api-spec, ui-spec and tests.md aligned | - | `docs/lab-04/decisions.md` | 10 | captured |
+| Peer review record, both directions, only what GitHub shows | LS 14 Part 1 | `docs/lab-04/reviewer.md`; `evidence/issue-71/github-my-prs-readback.txt`, `github-partner-prs-readback.txt` | 10 | captured |
+| Reviews of my PRs #72-#80 | LS 14 Part 1 | none exists yet; `reviewer.md` says so | 10 | pending |
+| GitHub screenshots (board, PR pages, commit graph, merge times) | LS 14 Part 1, Part 2 | not captured: nothing is merged and no review has happened to photograph | 10 | pending |
+| AI use log with the key prompts of tasks 001-007; "My Reflection" left empty | LS 14 Part 4 | `docs/lab-04/ai-use.md` | 10 | captured (Reflection: manual, by the author) |
+| Lab 4 report, "Answer Part 1" to "Answer Part 9" | LS 14 | `report-lab04.md` | 10 | captured |
+| All suites on `main` after the release merge | MIG-22, AC-100 | - | 10 | pending |

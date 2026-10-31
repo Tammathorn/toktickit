@@ -1,0 +1,169 @@
+# Command: cd server; npm run test:perf   (DATABASE_URL names toktickit_perf; password not shown)
+# Date: 2026-10-31
+# Commit: 6ccf79d (branch feature/lab4-10-release-docs; Issue #71 changes only documents, so the code under test is the code of feature/lab4-9-e2e-visual)
+# ANSI stripped; session tokens and database URLs redacted
+
+
+> toktickit-server@1.0.0 test:perf
+> tsx tests/lab-04/perf-smoke.ts
+
+perf-smoke on toktickit_perf - 2026-10-31T14:22:52.223Z
+Fixture: 2009 Tickets (2000 perf), 5009 actions.
+
+EXPLAIN (ANALYZE, BUFFERS) - information only, never asserted (C-148)
+
+-- requester: card counts (Open tickets group)
+Aggregate  (cost=39.91..39.92 rows=1 width=8) (actual time=0.170..0.171 rows=1 loops=1)
+  Buffers: shared hit=22
+  ->  Index Only Scan using "Ticket_requesterId_currentStatus_idx" on "Ticket"  (cost=0.28..37.41 rows=1002 width=0) (actual time=0.052..0.121 rows=1051 loops=1)
+        Index Cond: (("requesterId" = 1) AND ("currentStatus" = ANY ('{NEW,OPEN,IN_PROGRESS,REOPENED,WAITING_FOR_REQUESTER}'::"TicketStatus"[])))
+        Heap Fetches: 0
+        Buffers: shared hit=22
+Planning:
+  Buffers: shared hit=24
+Planning Time: 0.223 ms
+Execution Time: 0.189 ms
+
+-- requester: Recently updated
+Limit  (cost=0.73..2.33 rows=5 width=48) (actual time=0.036..0.037 rows=5 loops=1)
+  Buffers: shared hit=11
+  ->  Incremental Sort  (cost=0.73..177.03 rows=549 width=48) (actual time=0.035..0.036 rows=5 loops=1)
+        Sort Key: "lastActivityAt" DESC, id DESC
+        Presorted Key: "lastActivityAt"
+        Full-sort Groups: 1  Sort Method: quicksort  Average Memory: 25kB  Peak Memory: 25kB
+        Buffers: shared hit=11
+        ->  Index Scan Backward using "Ticket_requesterId_lastActivityAt_idx" on "Ticket"  (cost=0.28..158.73 rows=549 width=48) (actual time=0.011..0.017 rows=6 loops=1)
+              Index Cond: (("requesterId" = 1) AND ("lastActivityAt" >= (now() - '168:00:00'::interval)))
+              Buffers: shared hit=8
+Planning:
+  Buffers: shared hit=11
+Planning Time: 0.155 ms
+Execution Time: 0.047 ms
+
+-- requester: Recently resolved
+Limit  (cost=2.58..10.95 rows=5 width=24) (actual time=0.038..0.039 rows=5 loops=1)
+  Buffers: shared hit=12
+  ->  Incremental Sort  (cost=2.58..186.88 rows=110 width=24) (actual time=0.037..0.038 rows=5 loops=1)
+        Sort Key: "resolvedAt" DESC, id DESC
+        Presorted Key: "resolvedAt"
+        Full-sort Groups: 1  Sort Method: quicksort  Average Memory: 25kB  Peak Memory: 25kB
+        Buffers: shared hit=12
+        ->  Index Scan Backward using "Ticket_resolvedAt_idx" on "Ticket"  (cost=0.28..182.98 rows=110 width=24) (actual time=0.017..0.027 rows=9 loops=1)
+              Index Cond: ("resolvedAt" >= (now() - '168:00:00'::interval))
+              Filter: ("requesterId" = 1)
+              Buffers: shared hit=12
+Planning Time: 0.101 ms
+Execution Time: 0.048 ms
+
+-- staff: Unassigned count
+Aggregate  (cost=39.00..39.01 rows=1 width=8) (actual time=0.038..0.038 rows=1 loops=1)
+  Buffers: shared hit=5
+  ->  Index Only Scan using "Ticket_currentStatus_ownerId_idx" on "Ticket"  (cost=0.28..38.52 rows=191 width=0) (actual time=0.010..0.028 rows=253 loops=1)
+        Index Cond: ("ownerId" IS NULL)
+        Filter: ("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[]))
+        Rows Removed by Filter: 1
+        Heap Fetches: 0
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.082 ms
+Execution Time: 0.048 ms
+
+-- staff: Mine count
+Aggregate  (cost=42.53..42.54 rows=1 width=8) (actual time=0.051..0.052 rows=1 loops=1)
+  Buffers: shared hit=5
+  ->  Index Only Scan using "Ticket_currentStatus_ownerId_idx" on "Ticket"  (cost=0.28..41.59 rows=375 width=0) (actual time=0.018..0.043 rows=250 loops=1)
+        Index Cond: ("ownerId" = 10)
+        Filter: ("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[]))
+        Rows Removed by Filter: 250
+        Heap Fetches: 0
+        Buffers: shared hit=5
+Planning Time: 0.072 ms
+Execution Time: 0.060 ms
+
+-- staff: status card count (New)
+Aggregate  (cost=9.30..9.31 rows=1 width=8) (actual time=0.029..0.029 rows=1 loops=1)
+  Buffers: shared hit=3
+  ->  Index Only Scan using "Ticket_currentStatus_categoryId_idx" on "Ticket"  (cost=0.28..8.67 rows=251 width=0) (actual time=0.012..0.021 rows=251 loops=1)
+        Index Cond: ("currentStatus" = 'NEW'::"TicketStatus")
+        Heap Fetches: 0
+        Buffers: shared hit=3
+Planning Time: 0.115 ms
+Execution Time: 0.039 ms
+
+-- staff: High IT Priority count
+Aggregate  (cost=44.96..44.97 rows=1 width=8) (actual time=0.106..0.106 rows=1 loops=1)
+  Buffers: shared hit=5
+  ->  Index Only Scan using "Ticket_currentStatus_itPriority_createdAt_idx" on "Ticket"  (cost=0.28..43.71 rows=502 width=0) (actual time=0.011..0.070 rows=502 loops=1)
+        Index Cond: ("itPriority" = 'HIGH'::"RequestedPriority")
+        Filter: ("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[]))
+        Rows Removed by Filter: 167
+        Heap Fetches: 0
+        Buffers: shared hit=5
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.069 ms
+Execution Time: 0.114 ms
+
+-- staff: My planned actions
+Sort  (cost=181.23..181.70 rows=188 width=12) (actual time=0.448..0.452 rows=125 loops=1)
+  Sort Key: a."actionAt", a.id
+  Sort Method: quicksort  Memory: 29kB
+  Buffers: shared hit=126
+  ->  Hash Join  (cost=93.72..174.13 rows=188 width=12) (actual time=0.188..0.423 rows=125 loops=1)
+        Hash Cond: (t.id = a."ticketId")
+        Buffers: shared hit=126
+        ->  Seq Scan on "Ticket" t  (cost=0.00..69.11 rows=1507 width=4) (actual time=0.005..0.182 rows=1507 loops=1)
+              Filter: ("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[]))
+              Rows Removed by Filter: 502
+              Buffers: shared hit=44
+        ->  Hash  (cost=90.59..90.59 rows=250 width=16) (actual time=0.167..0.167 rows=250 loops=1)
+              Buckets: 1024  Batches: 1  Memory Usage: 21kB
+              Buffers: shared hit=82
+              ->  Bitmap Heap Scan on "ActionTaken" a  (cost=6.84..90.59 rows=250 width=16) (actual time=0.021..0.127 rows=250 loops=1)
+                    Recheck Cond: (("assigneeId" = 10) AND (status = 'PLANNED'::"ActionStatus"))
+                    Heap Blocks: exact=80
+                    Buffers: shared hit=82
+                    ->  Bitmap Index Scan on "ActionTaken_assigneeId_status_idx"  (cost=0.00..6.78 rows=250 width=0) (actual time=0.013..0.013 rows=250 loops=1)
+                          Index Cond: (("assigneeId" = 10) AND (status = 'PLANNED'::"ActionStatus"))
+                          Buffers: shared hit=2
+Planning:
+  Buffers: shared hit=18
+Planning Time: 0.201 ms
+Execution Time: 0.478 ms
+
+-- staff: Recently updated
+Limit  (cost=92.77..92.78 rows=5 width=12) (actual time=0.289..0.290 rows=5 loops=1)
+  Buffers: shared hit=44
+  ->  Sort  (cost=92.77..94.06 rows=517 width=12) (actual time=0.288..0.289 rows=5 loops=1)
+        Sort Key: "lastActivityAt" DESC, id DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=44
+        ->  Seq Scan on "Ticket"  (cost=0.00..84.18 rows=517 width=12) (actual time=0.005..0.254 rows=516 loops=1)
+              Filter: (("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[])) AND ("lastActivityAt" >= (now() - '168:00:00'::interval)))
+              Rows Removed by Filter: 1493
+              Buffers: shared hit=44
+Planning Time: 0.086 ms
+Execution Time: 0.297 ms
+
+-- staff: Urgent
+Limit  (cost=82.47..82.49 rows=5 width=16) (actual time=0.219..0.219 rows=5 loops=1)
+  Buffers: shared hit=44
+  ->  Sort  (cost=82.47..83.73 rows=502 width=16) (actual time=0.218..0.218 rows=5 loops=1)
+        Sort Key: "createdAt", id DESC
+        Sort Method: top-N heapsort  Memory: 25kB
+        Buffers: shared hit=44
+        ->  Seq Scan on "Ticket"  (cost=0.00..74.13 rows=502 width=16) (actual time=0.003..0.173 rows=502 loops=1)
+              Filter: (("currentStatus" <> ALL ('{CLOSED,CANCELLED}'::"TicketStatus"[])) AND ("itPriority" = 'HIGH'::"RequestedPriority"))
+              Rows Removed by Filter: 1507
+              Buffers: shared hit=44
+Planning:
+  Buffers: shared hit=3
+Planning Time: 0.076 ms
+Execution Time: 0.226 ms
+
+Warm-up 10, timed 50 per endpoint, p95 by nearest rank, limit 500 ms
+PASS PERF-01 GET /api/dashboard/requester as the Requester with the most Tickets: p95 5.9 ms (limit 500 ms)
+PASS PERF-02 GET /api/dashboard/staff as the Administrator: p95 10.2 ms (limit 500 ms)
+
+2 passed, 0 failed

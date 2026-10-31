@@ -1,0 +1,22 @@
+# Command: gh pr list -R Tammathorn/toktickit --state open; gh api .../pulls/N/reviews, .../pulls/N/comments, .../issues/N/comments for N = 72..80
+# Date: 2026-10-31 14:42 UTC. Read only; nothing was posted.
+
+#80 feature/lab4-8-hardening <- feature/lab4-9-e2e-visual  2026-10-31T14:17:56Z  test: Lab 4 E2E specs, final screenshots, measured visual checklist and perf smoke (#70)
+#79 feature/lab4-7-requester-dashboard <- feature/lab4-8-hardening  2026-10-31T05:41:41Z  Lab 4 Issue 8: final hardening (reduced) and README
+#78 feature/lab4-6-staff-dashboard <- feature/lab4-7-requester-dashboard  2026-10-31T05:27:18Z  Requester dashboard API tests and SEC-09 route-matrix test (#68)
+#77 feature/lab4-5-ticket-workflow <- feature/lab4-6-staff-dashboard  2026-10-31T05:01:17Z  Lab 4 #67: IT Staff and Administrator dashboard
+#76 feature/lab4-4-actions-ui <- feature/lab4-5-ticket-workflow  2026-10-31T04:36:43Z  Lab 4 Issue 5: Ticket workflow - gate, stale updates, status history (#66)
+#75 feature/lab4-3-actions-api <- feature/lab4-4-actions-ui  2026-10-30T11:11:23Z  Lab 4 - Actions Taken UI and workflow UI (#65)
+#74 feature/lab4-2-data-model <- feature/lab4-3-actions-api  2026-10-30T10:32:09Z  Issue #64: Lab 4 Actions Taken API
+#73 feature/lab4-1-contract <- feature/lab4-2-data-model  2026-10-28T08:35:49Z  Issue #63: Lab 4 data model, migrations, backfill and seed
+#72 lab4-staging <- feature/lab4-1-contract  2026-10-28T08:01:13Z  Issue #62: Lab 4 engineering contract
+
+PR 72: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 73: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 74: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 75: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 76: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 77: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 78: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 79: reviews=0 inline=0 conversation=0 reviewRequests=0
+PR 80: reviews=0 inline=0 conversation=0 reviewRequests=0
