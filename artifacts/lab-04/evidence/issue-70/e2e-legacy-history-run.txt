@@ -1,0 +1,17 @@
+# Command: E2E_LEGACY_HISTORY=1 npx playwright test e2e/lab-04/ticket-resolution.spec.ts -g legacy-history   (servers and DATABASE_URL on toktickit_rehearsal, C-188)
+# Date: 2026-10-31
+# Commit: e1b4ba5 (branch feature/lab4-9-e2e-visual; the working tree of Issue #70 is on top of it, committed afterwards)
+# ANSI stripped; session tokens redacted
+
+
+Running 6 tests using 3 workers
+
+  ✓  3 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Requester and keep the session (277ms)
+  ✓  1 [setup] › e2e\auth.setup.ts:18:8 › sign in as the IT Staff and keep the session (277ms)
+  ✓  2 [setup] › e2e\auth.setup.ts:18:8 › sign in as the Administrator and keep the session (281ms)
+  ✓  4 [mobile] › e2e\lab-04\ticket-resolution.spec.ts:347:7 › Ticket workflow - captures › E2E-17 legacy-history: a Lab 3 Ticket shows the C-179 line and no date (AC-77; C-179, C-188) (1.6s)
+  ✓  6 [tablet] › e2e\lab-04\ticket-resolution.spec.ts:347:7 › Ticket workflow - captures › E2E-17 legacy-history: a Lab 3 Ticket shows the C-179 line and no date (AC-77; C-179, C-188) (1.6s)
+  ✓  5 [desktop] › e2e\lab-04\ticket-resolution.spec.ts:347:7 › Ticket workflow - captures › E2E-17 legacy-history: a Lab 3 Ticket shows the C-179 line and no date (AC-77; C-179, C-188) (1.7s)
+
+  6 passed (3.0s)
+EXIT 0

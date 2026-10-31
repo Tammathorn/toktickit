@@ -1,0 +1,33 @@
+{
+  "viewport": "desktop",
+  "pairs": [
+    {
+      "card": "Open tickets",
+      "href": "/tickets?statusGroup=open",
+      "cardCount": 15,
+      "listTotal": 15,
+      "reads": 1
+    },
+    {
+      "card": "Waiting for you Waiting for Requester",
+      "href": "/tickets?currentStatus=WAITING_FOR_REQUESTER",
+      "cardCount": 0,
+      "listTotal": 0,
+      "reads": 1
+    },
+    {
+      "card": "Resolved - awaiting closure",
+      "href": "/tickets?currentStatus=RESOLVED",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Closed",
+      "href": "/tickets?currentStatus=CLOSED",
+      "cardCount": 0,
+      "listTotal": 0,
+      "reads": 1
+    }
+  ]
+}

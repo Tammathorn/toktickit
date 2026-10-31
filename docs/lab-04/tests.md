@@ -903,6 +903,24 @@ Done in #69: the console-error fixture and its tests (E2E-28..E2E-32, C-149, C-1
 the dashboard loading placeholder (ui-spec 12.1), and C-195 with ui-spec 8.1, 8.2, 13 and
 RESP-04 aligned. `clientRequestId` on Ticket create stays cut (C-158).
 
+### 6.2 Issue #70 - what was done and how it differs from the rows
+
+| Item | What happened |
+|---|---|
+| E2E-01..E2E-27, E2E-33..E2E-35 | Written in the four named specs. E2E-17 (10 states) is one live test for nine states plus one `E2E-17 legacy-history` test that runs only with `E2E_LEGACY_HISTORY=1` and the servers on `toktickit_rehearsal` (C-188); in every other run it is skipped, so the Playwright total shows 37 skipped (34 before + 3). |
+| E2E-05, E2E-14 | The second context is a real second browser context (E2E-05, the Administrator editing through the UI) or the Administrator's API session (E2E-14, an IT Priority change); both produce the server's own 409. |
+| E2E-25 | The clock is advanced 15 minutes with `page.clock`, no dashboard request is sent while idle, and Refresh sends exactly one. The `Updated` line has minute resolution, so the Refresh response's `generatedAt` is shifted by the same 15 minutes in flight; the request is the real one. |
+| E2E-33 `-zero` | The seeded Administrator claims Tickets in other specs, so an Administrator is created for the test (POST /api/users, then the first password change) and deactivated again when the capture is taken, so Lab 3's E2E-23 precondition (one active Administrator) holds. |
+| E2E-17 `status-menu` | A native `<select>` dropdown is not drawn by a screenshot; the capture shows the control focused, and the test asserts the options equal the current status plus `allowedTransitions`. |
+| E2E-35 | 14 states from the real app. The nine `nav-<vp>-<role>-dashboard.png` files of Lab 3's adapted E2E-48 are written to `artifacts/lab-04/screenshots/regression/` as well (planner addendum), so that folder holds 51 files, not 42. |
+| Added, no tests.md row | `e2e/lab-04/visual-checklist.spec.ts`: one test per viewport that measures VIS-01..VIS-32 and asserts each row (3 runs). |
+| Harness | `apiAs` retries a *thrown* ECONNRESET up to three times (two of three full runs lost one API sign-in to it); a response is never retried. `expectNoHorizontalScroll` compares with the configured width, because a mobile browser widens `window.innerWidth` to fit overflow. |
+| Client CSS | Five defects found by the measurements are fixed in `client/src/theme.css` (see `evidence/issue-70/visual-checklist.md`): Bootstrap's blue links and checked boxes, Bootstrap's red field errors, Bootstrap's focus rings on checkboxes, invalid fields and the header, touch targets under 44 px at 390, and a badge that overflowed the staff dashboard by 23 px at 390. |
+| PERF-01, PERF-02 | `server/tests/lab-04/perf-smoke.ts`, `npm run test:perf`: 2 passed, p95 well under 500 ms on 2,000 Tickets and 5,000 actions. |
+
+Counts at this Issue (one run each, all green): server 510 passed, client 193 passed, Playwright
+413 passed + 37 skipped = 450 runs (299 + 34 = 333 before; +114 passed, +3 skipped).
+
 ---
 
 ## 7. Open Questions - settled

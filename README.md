@@ -411,9 +411,10 @@ npm run test:perf               # performance smoke against toktickit_perf (C-14
 ```
 
 `npm run test:perf` runs `server/tests/lab-04/perf-smoke.ts`, which fills `toktickit_perf` to
-about 2,000 Tickets and 5,000 actions and then measures; it is not part of `npm test`. The
-script and its `package.json` entry arrive with Issue #70 (the next PR in the stack), so on this
-branch the command does not exist yet.
+about 2,000 Tickets and 5,000 actions and then measures (ten warm-up and 50 timed requests per
+dashboard endpoint, p95 under 500 ms); it is not part of `npm test` and refuses to run unless
+`DATABASE_URL` names `toktickit_perf`. The root `package.json` forwards `npm run test:perf` to
+`server/`, where the script lives (`cd server; npm run test:perf` works too).
 
 After an e2e run, `git checkout -- artifacts/lab-02 artifacts/lab-03` restores the older Labs'
 tracked screenshots, which the Lab 2 and Lab 3 specs rewrite.

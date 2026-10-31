@@ -1,0 +1,96 @@
+{
+  "viewport": "desktop",
+  "pairs": [
+    {
+      "card": "Unassigned",
+      "href": "/queue?owner=unassigned",
+      "cardCount": 32,
+      "listTotal": 32,
+      "reads": 3
+    },
+    {
+      "card": "Mine",
+      "href": "/queue?owner=me",
+      "cardCount": 0,
+      "listTotal": 0,
+      "reads": 1
+    },
+    {
+      "card": "New New",
+      "href": "/queue?currentStatus=NEW",
+      "cardCount": 31,
+      "listTotal": 31,
+      "reads": 1
+    },
+    {
+      "card": "Open Open",
+      "href": "/queue?currentStatus=OPEN",
+      "cardCount": 2,
+      "listTotal": 2,
+      "reads": 1
+    },
+    {
+      "card": "In Progress In Progress",
+      "href": "/queue?currentStatus=IN_PROGRESS",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Waiting for Requester Waiting for Requester",
+      "href": "/queue?currentStatus=WAITING_FOR_REQUESTER",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Reopened Reopened",
+      "href": "/queue?currentStatus=REOPENED",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Resolved Resolved",
+      "href": "/queue?currentStatus=RESOLVED",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "High IT Priority",
+      "href": "/queue?itPriority=HIGH",
+      "cardCount": 8,
+      "listTotal": 8,
+      "reads": 1
+    },
+    {
+      "card": "Requester says resolved Requester says resolved",
+      "href": "/queue?requesterResolved=true",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Requesters",
+      "href": "/users?role=REQUESTER",
+      "cardCount": 6,
+      "listTotal": 6,
+      "reads": 1
+    },
+    {
+      "card": "IT Staff",
+      "href": "/users?role=IT_STAFF",
+      "cardCount": 4,
+      "listTotal": 4,
+      "reads": 1
+    },
+    {
+      "card": "Administrators",
+      "href": "/users?role=ADMINISTRATOR",
+      "cardCount": 2,
+      "listTotal": 2,
+      "reads": 1
+    }
+  ]
+}
