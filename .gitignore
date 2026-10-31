@@ -36,3 +36,6 @@ docs/lab-04/spec/*.pdf
 
 # local scratch output
 tmp/
+
+# Claude Code local settings and state (CLAUDE.md stays tracked)
+.claude/

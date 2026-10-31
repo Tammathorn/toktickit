@@ -169,6 +169,6 @@ green run of each suite on the code of Issue #70 (`6ccf79d`); the run on `lab4-s
 | Reviews of my PRs #72-#81 | LS 14 Part 1 | `docs/lab-04/reviewer.md`, table "Reviews received from PAKATO123" | 10 | captured |
 | Review fix for PR #74: a replay key reused on another Ticket (C-199), red then green | LS 14 Part 1; C-199 | `evidence/issue-74/` (`red-*.txt`, `green-*.txt`; README names each); `docs/lab-04/tests.md` 2.12 | 10 | captured |
 | GitHub screenshots (board, PR pages, commit graph, merge times) | LS 14 Part 1, Part 2 | not captured: nothing is merged and no review has happened to photograph | 10 | pending |
-| AI use log with the key prompts of tasks 001-007; "My Reflection" left empty | LS 14 Part 4 | `docs/lab-04/ai-use.md` | 10 | captured (Reflection: manual, by the author) |
+| AI use log with the key prompts of tasks 001-007; "My Reflection" heading points to the PDF report | LS 14 Part 4 | `docs/lab-04/ai-use.md` | 10 | captured (the Reflection itself is in the PDF report, by the author) |
 | Lab 4 report, "Answer Part 1" to "Answer Part 9" | LS 14 | `report-lab04.md` | 10 | captured |
 | All suites on `main` after the release merge | MIG-22, AC-100 | - | 10 | pending |

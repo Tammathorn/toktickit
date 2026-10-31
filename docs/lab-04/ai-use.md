@@ -136,4 +136,4 @@ not by my review of the documents.
 
 ## My Reflection
 
-<!-- Written by me, in my own words. -->
+My Reflection is in the submitted Lab 4 PDF report.
