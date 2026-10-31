@@ -10,14 +10,14 @@ TokTickIT - CPE 334 Individual Sprint 4 (LS 14 Part 1).
 | **Partner's repository** | <https://github.com/PAKATO123/toktickit> |
 | **Branch model** | `feature/lab4-N-slug` into `lab4-staging` (C-130); PRs 2-9 stacked on the branch directly below while it awaits review, per `CLAUDE.md` (the Issue #71 documentation PR is stacked on #80 as its task directed); then one release PR, `lab4-staging` into `main`, opened only after every feature PR has merged |
 
-This record is what GitHub shows, read back with `gh` on 31 October 2026 (about 14:40 UTC), not
-written from memory. Timestamps are UTC as GitHub records them. Where a review has not happened
-yet, this file says so; nothing here is filled in for a review that does not exist.
+This record is what GitHub shows, read back with `gh` on 31 October 2026 after PAKATO123's reviews
+(15:03 to 15:41 UTC); timestamps are UTC as GitHub records them. Nothing here is filled in for a
+review that does not exist.
 
-**Status in one line: nothing has been reviewed or merged on my side yet. All of my Lab 4
-PRs (#72-#80 and the Issue #71 PR) are open with no review, no comment and no requested reviewer. I reviewed four of
-@PAKATO123's Lab 4 PRs on 31 October; he replied to three of those reviews and has not
-re-reviewed.**
+**Status in one line: PAKATO123 reviewed all ten of my Lab 4 PRs (#72-#81) on 31 October. Eight
+are `APPROVED` (#72, #73, #75-#80) and two are `CHANGES_REQUESTED` (#74, #81). Both requests are
+fixed and pushed, and review is re-requested on both; nothing is merged yet. I also reviewed
+four of his Lab 4 PRs; he replied to three of those reviews and I have not re-reviewed.**
 
 ---
 
@@ -27,25 +27,24 @@ re-reviewed.**
 
 | PR | Issue | Branch -> base | Opened | Review received (PAKATO123) | Approval status | Merged |
 |---|---|---|---|---|---|---|
-| [#72](https://github.com/Tammathorn/toktickit/pull/72) | #62 contract | `feature/lab4-1-contract` -> `lab4-staging` | 2026-10-28 08:01:13 | None yet | Not reviewed | Not merged |
-| [#73](https://github.com/Tammathorn/toktickit/pull/73) | #63 data model | `feature/lab4-2-data-model` -> `feature/lab4-1-contract` | 2026-10-28 08:35:49 | None yet | Not reviewed | Not merged |
-| [#74](https://github.com/Tammathorn/toktickit/pull/74) | #64 Actions Taken API | `feature/lab4-3-actions-api` -> `feature/lab4-2-data-model` | 2026-10-30 10:32:09 | None yet | Not reviewed | Not merged |
-| [#75](https://github.com/Tammathorn/toktickit/pull/75) | #65 Actions Taken UI | `feature/lab4-4-actions-ui` -> `feature/lab4-3-actions-api` | 2026-10-30 11:11:23 | None yet | Not reviewed | Not merged |
-| [#76](https://github.com/Tammathorn/toktickit/pull/76) | #66 Ticket workflow | `feature/lab4-5-ticket-workflow` -> `feature/lab4-4-actions-ui` | 2026-10-31 04:36:43 | None yet | Not reviewed | Not merged |
-| [#77](https://github.com/Tammathorn/toktickit/pull/77) | #67 staff dashboard | `feature/lab4-6-staff-dashboard` -> `feature/lab4-5-ticket-workflow` | 2026-10-31 05:01:17 | None yet | Not reviewed | Not merged |
-| [#78](https://github.com/Tammathorn/toktickit/pull/78) | #68 Requester dashboard | `feature/lab4-7-requester-dashboard` -> `feature/lab4-6-staff-dashboard` | 2026-10-31 05:27:18 | None yet | Not reviewed | Not merged |
-| [#79](https://github.com/Tammathorn/toktickit/pull/79) | #69 hardening | `feature/lab4-8-hardening` -> `feature/lab4-7-requester-dashboard` | 2026-10-31 05:41:41 | None yet | Not reviewed | Not merged |
-| [#80](https://github.com/Tammathorn/toktickit/pull/80) | #70 E2E and visual | `feature/lab4-9-e2e-visual` -> `feature/lab4-8-hardening` | 2026-10-31 14:17:56 | None yet | Not reviewed | Not merged |
-| This Issue's PR (see the PR list) | #71 release documentation | `feature/lab4-10-release-docs` -> `feature/lab4-9-e2e-visual` | opened with this file | None yet | Not reviewed | Not merged |
+| [#72](https://github.com/Tammathorn/toktickit/pull/72) | #62 contract | `feature/lab4-1-contract` -> `lab4-staging` | 2026-10-28 08:01:13 | `APPROVED` 15:04 | Approved | Not merged |
+| [#73](https://github.com/Tammathorn/toktickit/pull/73) | #63 data model | `feature/lab4-2-data-model` -> `feature/lab4-1-contract` | 2026-10-28 08:35:49 | `APPROVED` 15:17 | Approved | Not merged |
+| [#74](https://github.com/Tammathorn/toktickit/pull/74) | #64 Actions Taken API | `feature/lab4-3-actions-api` -> `feature/lab4-2-data-model` | 2026-10-30 10:32:09 | `CHANGES_REQUESTED` 15:26 | Changes requested; fixed (C-199) | Not merged |
+| [#75](https://github.com/Tammathorn/toktickit/pull/75) | #65 Actions Taken UI | `feature/lab4-4-actions-ui` -> `feature/lab4-3-actions-api` | 2026-10-30 11:11:23 | `APPROVED` 15:28 | Approved | Not merged |
+| [#76](https://github.com/Tammathorn/toktickit/pull/76) | #66 Ticket workflow | `feature/lab4-5-ticket-workflow` -> `feature/lab4-4-actions-ui` | 2026-10-31 04:36:43 | `APPROVED` 15:30 | Approved | Not merged |
+| [#77](https://github.com/Tammathorn/toktickit/pull/77) | #67 staff dashboard | `feature/lab4-6-staff-dashboard` -> `feature/lab4-5-ticket-workflow` | 2026-10-31 05:01:17 | `APPROVED` 15:31 | Approved | Not merged |
+| [#78](https://github.com/Tammathorn/toktickit/pull/78) | #68 Requester dashboard | `feature/lab4-7-requester-dashboard` -> `feature/lab4-6-staff-dashboard` | 2026-10-31 05:27:18 | `APPROVED` 15:32 | Approved | Not merged |
+| [#79](https://github.com/Tammathorn/toktickit/pull/79) | #69 hardening | `feature/lab4-8-hardening` -> `feature/lab4-7-requester-dashboard` | 2026-10-31 05:41:41 | `APPROVED` 15:36 | Approved | Not merged |
+| [#80](https://github.com/Tammathorn/toktickit/pull/80) | #70 E2E and visual | `feature/lab4-9-e2e-visual` -> `feature/lab4-8-hardening` | 2026-10-31 14:17:56 | `APPROVED` 15:37 | Approved | Not merged |
+| [#81](https://github.com/Tammathorn/toktickit/pull/81) | #71 release documentation | `feature/lab4-10-release-docs` -> `feature/lab4-9-e2e-visual` | 2026-10-31 | `CHANGES_REQUESTED` 15:41 | Changes requested; fixed (reflection pointer, this file) | Not merged |
 | Release | - | `lab4-staging` -> `main` | **Not opened.** It opens only after every feature PR has merged | - | - | - |
 
-Read back for #72-#80 with `gh api repos/Tammathorn/toktickit/pulls/N/reviews`,
-`.../pulls/N/comments` and `.../issues/N/comments`: **0 reviews, 0 inline comments and 0
-conversation comments on each of the nine**, and `reviewRequests` is empty on each (no reviewer
-was assigned through GitHub's reviewer field). PR #72 is the contract PR; it has not merged,
-so **Part 2's "the specification existed before the code" is not yet shown by a merged PR
-page**. The code PRs #73-#80 are stacked on it, as `CLAUDE.md` allows while a PR awaits review,
-and each is to be retargeted to `lab4-staging` when the PR below it merges.
+Read back with `gh pr view N --json reviews,comments` and `gh api repos/Tammathorn/toktickit/pulls/N/comments`.
+Every one of the ten has exactly one review from PAKATO123; on #72-#80 the text is a conversation
+comment posted a few seconds before the review, and there is no inline comment. PR #72 is the
+contract PR; it has not merged, so **Part 2's "the specification existed before the code" is not
+yet shown by a merged PR page**. The code PRs #73-#81 are stacked on it, as `CLAUDE.md` allows while
+a PR awaits review, and each is to be retargeted to `lab4-staging` when the PR below it merges.
 
 ### Partner's PRs I reviewed (author: PAKATO123, repository `PAKATO123/toktickit`)
 
@@ -64,28 +63,34 @@ and none after #70.
 
 ## 2. Pull Requests I authored
 
-### PRs #72 to #80 - Issues #62 to #70
+### Reviews received from PAKATO123
 
-For every one of these, as of the read-back above:
+Every review he gave, quoted as GitHub shows it. My response was posted on GitHub first (rule 6 of
+`CLAUDE.md`) and is summarised here.
 
-- **Review received:** none.
-- **Comments received:** none, on the conversation or inline.
-- **My reply:** none, because there is nothing to reply to.
-- **Approval status:** not reviewed.
-- **Merged:** no.
+| PR | State | His comment (quoted) | My response | Fix commit |
+|---|---|---|---|---|
+| #72 contract | `APPROVED` 2026-10-31 15:04 | "I recommend adding Claude to gitignore but regardless, approved, no problems" | Agreed. `.claude/` is now in `.gitignore`; `CLAUDE.md` stays tracked | `47c42b5` (on `feature/lab4-10-release-docs`) |
+| #73 data model | `APPROVED` 15:17 | "All good, but this  branch is pretty hard to verify ithout looking at final product" | Noted. A data-model PR has no screen of its own; the seeded app and the #70 screenshots show it in use. No code change | None |
+| #74 Actions Taken API | `CHANGES_REQUESTED` 15:26 | "There is potentially a Idempotency Key Cross-Ticket Collision. In POST /api/tickets/:id/actions, the replay lookup does not assert that the found action matches the ticket specified in the path ... the server returns 200 OK with the DTO for Ticket 1" | A real bug. A key found on another Ticket now returns 409 `IDEMPOTENCY_KEY_REUSED` with no write and no data from the other Ticket (decision C-199, which supersedes C-194). The same rule is applied to Public Comments and Internal Notes, including the P2002 race path. Tests API-125 to API-132 were written first and failed, then passed | Tests `5e29bd1`, fix `0e21ac8` (actions); tests `81147fe`, fix `21e5e0c` (comments and notes); docs `1129e6f` |
+| #75 Actions Taken UI | `APPROVED` 15:28 | "No problems" | Thanks | None |
+| #76 Ticket workflow | `APPROVED` 15:30 | "No glaring flaws from what ive seen" | Thanks | None |
+| #77 staff dashboard | `APPROVED` 15:31 | "I dont understand why are you going back and changing lab 3 specs but alright, no problems" | Lab 4 changed the navigation and the landing screen, so some Lab 3 screens and specs had to change. Each edit cites the decision that required it (C-xxx) in `docs/lab-04/tests.md` section 4 | None |
+| #78 Requester dashboard | `APPROVED` 15:32 | "Why is this even a seperate branch?" | One Issue per PR (#68): the board rule gives each Issue its own branch and PR | None |
+| #79 hardening | `APPROVED` 15:36 | "In my opinion. overly detailed readme but no problems" | Acknowledged. The README stays detailed for the grader | None |
+| #80 E2E and visual | `APPROVED` 15:37 | "The UI from screenshot can really use some touch ups but is serviceable" | Acknowledged. VIS-01 to VIS-32 pass; visual polish beyond them is out of scope for this sprint | None |
+| #81 release documentation | `CHANGES_REQUESTED` 15:41 | "You are literally missing my reflection part in ai-use.md. And reviewer.md needs updating and fixing(on last part), dont forget to write down every review i gave!" | `reviewer.md` now records every review (this table) and its last section is rewritten. The reflection is not in `ai-use.md` by my decision: it is in the submitted Lab 4 PDF report, and `ai-use.md` says so under "My Reflection" | `47c42b5` (`ai-use.md`) and the commit that adds this file |
 
-The PR bodies state the stack and name the riskiest part of each PR (the row lock and replay
-race in #74, the gate and stale check in #76, count-equals-drill-down in #77). I have not
-recorded here that PAKATO123 has been sent these links: GitHub shows no reviewer request and no
-conversation, and I can verify nothing outside it. When he reviews, each review, comment and
-reply will be added to this file with its time, in the form of the Lab 3 record
-(`docs/lab-03/reviewer.md` section 2): the comment, my reply on GitHub first, what changed
-because of it, and the merge time.
+### Status of the two change requests
+
+- **#74:** the fix commits above are pushed to `feature/lab4-3-actions-api` and `feature/lab4-5-ticket-workflow`. Review is re-requested from @PAKATO123 once the fix is pushed.
+- **#81:** pushed on `feature/lab4-10-release-docs`; review re-requested from @PAKATO123.
+- Neither request is closed until he re-reviews. I do not record them as accepted.
 
 ### Fixing
 
-No card has entered the **Fixing** column, because no review has asked for a change on any of my
-PRs. A Fixing state will be captured only if one really happens.
+The Fixing column was used for #74 and #81, the only two change requests. A project-board capture of
+that state is taken only if the card really sits there.
 
 ---
 
@@ -159,18 +164,19 @@ My review text is quoted verbatim.
 
 ## 4. Honest assessment
 
-- **Nothing of mine has been reviewed.** The Lab 3 record could show nine approvals; this one cannot
-  show any. The PRs exist, are stacked and are described, but a review requires a reviewer,
-  and GitHub shows none requested. The review is still to come and the release PR is not
-  opened until it has happened and every feature PR has merged.
+- **All ten of my PRs have a review: eight approvals and two change requests.** The approvals
+  are short; two of them asked questions (#77, #78) and I answered both above. Nothing is merged
+  yet, and the release PR is not opened until every feature PR has merged.
+- **The one real defect came from review.** #74's replay lookup returned another Ticket's data for a
+  reused key. My own audit had accepted that as a documented assumption (C-194); the reviewer was
+  right that it leaks, and C-199 replaces it, with tests written first.
 - **The reviews I gave were substantive, and two are unresolved.** #65 and #70 are
   `CHANGES_REQUESTED`; he answered both on GitHub within three hours and said the fix was made or
   would be made, and I have not looked again. His #64 follow-up (the migration and a stale-update
   test) is a promise in a comment, not a commit I have checked.
-- **I answered review comments on GitHub first, in Lab 3, and this sprint's record has none to
-  answer yet.** Rule 6 of `CLAUDE.md` ("review comments are answered on GitHub first, then
-  recorded here") has not been exercised for my own PRs.
-- **Stacking has a cost.** All of #73-#80 sit on an unmerged contract PR. If the contract changes
+- **Review comments are answered on GitHub first, then recorded here.** Rule 6 of `CLAUDE.md` is now
+  exercised for #72, #74 and #81, the three PRs where a change or a decision was involved.
+- **Stacking has a cost.** All of #73-#81 sit on an unmerged contract PR. If the contract changes
   in review, the change is made in #72 and merged upward with `git merge`, never a rebase, with
   all three suites run at each level (`CLAUDE.md`).
 - **No self-merge.** Nothing has been merged on my side, and I will not repeat Lab 3's #60 and
