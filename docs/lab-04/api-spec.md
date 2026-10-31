@@ -77,7 +77,7 @@ BR-43), 400, 404 and 409.
 | 201 | Action Taken created |
 | 400 | Missing or non-integer `version`; an action field out of bounds; `actionAt` without an offset; `statusGroup` with `currentStatus` |
 | 404 | `ACTION_NOT_FOUND` |
-| 409 | `STALE_UPDATE`, `RESOLUTION_GATE_NOT_MET`, `PLANNED_ACTIONS_OPEN`, `TICKET_RESOLVED`, `ACTION_NOT_PLANNED` |
+| 409 | `STALE_UPDATE`, `RESOLUTION_GATE_NOT_MET`, `PLANNED_ACTIONS_OPEN`, `TICKET_RESOLVED`, `ACTION_NOT_PLANNED`, `IDEMPOTENCY_KEY_REUSED` |
 | 422 | `ASSIGNEE_NOT_ELIGIBLE` on an action's assignee |
 
 ### 1.3 Error code catalogue
@@ -109,6 +109,7 @@ Lab 4 widens. A code absent from this table is a defect.
 | **4** | `RESOLUTION_GATE_NOT_MET` | 409 | A move to `RESOLVED` with an owner, but the gate fails. `error.reasons` lists every applicable reason, in the fixed order `NO_COMPLETED_ACTION`, `PLANNED_ACTIONS_OPEN`, `FOLLOW_UP_REQUIRED`, `NO_ACTION_SINCE_REOPEN` (BR-29, C-167) |
 | **4** | `PLANNED_ACTIONS_OPEN` | 409 | A move to `CANCELLED` while the Ticket has a `PLANNED` action (BR-33, C-124). The same string is also a gate **reason**, never a top-level code on `-> RESOLVED` |
 | **4** | `ACTION_NOT_PLANNED` | 409 | Edit, complete or cancel on an action that is `COMPLETED` or `CANCELLED` (BR-14, C-162) |
+| **4** | `IDEMPOTENCY_KEY_REUSED` | 409 | A `clientRequestId` this author already used on another Ticket is sent on a create of an action, a Public Comment or an Internal Note. Message: "This request key was already used for another Ticket." Nothing is written and nothing about the other Ticket is returned (C-199) |
 | 3 | `RESOLUTION_NOT_PERMITTED_IN_STATUS` | 409 | The Requester's flag outside Open, In Progress, Waiting for Requester or Reopened |
 | 3 | `EMAIL_TAKEN` | 409 | Duplicate email |
 | 3 | `LAST_ADMINISTRATOR` | 409 | The change would leave no active Administrator |
@@ -149,9 +150,10 @@ One shared order, so the status for any request is deterministic. Steps 1 to 6 a
 6. **Ownership** - a Requester's Ticket that is not theirs -> 404 `TICKET_NOT_FOUND`.
 7. **Replay lookup** (the four creates only) - this author has already used this
    `clientRequestId` -> **200** with the original, same body shape as a first success. The
-   body is not compared (C-165, C-166). The key is scoped to the author and the resource
-   type, not the Ticket: a key reused on another Ticket answers with the original row
-   (C-194). Runs before step 8, so a replay succeeds on a Ticket that has since closed.
+   body is not compared (C-165, C-166). If the row found belongs to a different Ticket than
+   the path's, the answer is **409 `IDEMPOTENCY_KEY_REUSED`** and nothing is written (C-199,
+   which supersedes C-194). Runs before step 8, so a replay succeeds on a Ticket that has
+   since closed, and a reuse on a closed Ticket is still `IDEMPOTENCY_KEY_REUSED`.
 8. **Ticket state** - `CLOSED` or `CANCELLED` -> 409 `TICKET_CLOSED`; for an action write,
    `RESOLVED` -> 409 `TICKET_RESOLVED` (BR-24, C-159).
 9. **Body validation** -> 400 `VALIDATION_FAILED` with `fields`, including a missing or
@@ -269,6 +271,7 @@ row. **Response 200** on a replay - the same shape, with the original row (C-165
 |---|---|---|
 | 201 | - | Created |
 | 200 | - | Replay of this author's `clientRequestId` (section 2.1 step 7) |
+| 409 | `IDEMPOTENCY_KEY_REUSED` | The `clientRequestId` was first used by this author on another Ticket (C-199) |
 | 400 | `INVALID_QUERY_PARAM` | `:id` not a positive integer |
 | 400 | `VALIDATION_FAILED` | Any field rule above |
 | 401 | `AUTH_REQUIRED` | No session |
@@ -280,7 +283,8 @@ row. **Response 200** on a replay - the same shape, with the original row (C-165
 | 500 | `INTERNAL_ERROR` | Unexpected; nothing is half-written |
 
 A concurrent duplicate that hits the `(createdById, clientRequestId)` unique constraint (Prisma
-P2002) answers 200 with the original, never 500 (BR-43, AC-64).
+P2002) answers 200 with the original, never 500 (BR-43, AC-64). If the original is on another Ticket, the
+answer is 409 `IDEMPOTENCY_KEY_REUSED` (C-199).
 
 ### 3.2 `PATCH /api/actions/:id`
 
@@ -592,7 +596,8 @@ Each keeps its `L3 api` contract except what its box lists.
 
 > **Changed from Lab 3**
 > - Optional `clientRequestId`; a replay returns **200** with the original comment row, unique
->   per `(authorId, clientRequestId)` (C-139, C-165, C-166).
+>   per `(authorId, clientRequestId)` (C-139, C-165, C-166). A key first used on another Ticket is 409
+>   `IDEMPOTENCY_KEY_REUSED` (C-199).
 > - Sets the Ticket's `lastActivityAt` (BR-46); `version` unchanged (BR-37).
 
 ### 5.7 `POST /api/tickets/:id/internal-notes` (`L3 api 7.2`)

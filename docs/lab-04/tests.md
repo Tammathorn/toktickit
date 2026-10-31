@@ -114,6 +114,9 @@ e2e/lab-04/regression.spec.ts                         E2E    (C-185)
 **304 planned tests**, of which 298 are automated assertions and 6 are artifact rows (MIG-09 to
 MIG-13 and MIG-22), stated as such.
 
+The review fix of PR #74 adds API-125 to API-132 (section 2.12, C-199), 312 in all; the level table
+below is the original plan.
+
 | Level | Prefix | Planned | Suite |
 |---|---|---|---|
 | Unit | `UNIT` | 11 | 8 server, 3 client |
@@ -556,6 +559,28 @@ where the fixture must trip.
 | E2E-34 | E2E | `ui-spec.md` 15, C-180 | Captures `requester-dashboard/`, 5 states | `-populated` (Part 5 role evidence), `-zero` for nattapong.w; `-failure` by a declared mocked 500 (C-182) | `e2e/lab-04/dashboards.spec.ts` | Pass x3 (desktop, tablet, mobile) - `issue-71/green-e2e-suite.txt`, `6ccf79d` |
 | E2E-35 | E2E | `ui-spec.md` 15; FR-29, FR-30 | Captures `regression/`, 14 states | The 14 names, from the real app; `system-check` public | `e2e/lab-04/regression.spec.ts` | Pass x15 (5 declarations x 3 viewports) - `issue-71/green-e2e-suite.txt`, `6ccf79d` |
 
+### 2.12 Review fix - a replay key reused on another Ticket (C-199)
+
+Added after PAKATO123's review of PR #74. C-199 supersedes C-194: a key found on another Ticket
+is 409 `IDEMPOTENCY_KEY_REUSED`, never a 200 with the first Ticket's data. Eight rows join the
+plan (304 -> 312). Each was run red before the fix and green after it; the output is in
+`artifacts/lab-04/evidence/issue-74/`. "Nothing changes" means no row on the second Ticket and its
+`version` and `lastActivityAt` re-read unchanged.
+
+| ID | Level | Traces to | Scenario | Expected | File | Result |
+|---|---|---|---|---|---|---|
+| API-125 | API | C-199, C-165 | Action key K used on Ticket A, sent again on Ticket B by the same author | 409 `IDEMPOTENCY_KEY_REUSED`, the catalogue message, error envelope only, no text from A; no action on B; B's and A's `version` and `lastActivityAt` unchanged | `server/tests/lab-04/actions-taken.api.test.ts` | Red `5e29bd1` -> green `0e21ac8` (`issue-74/red-actions.txt`, `green-actions.txt`) |
+| API-126 | API | C-199, C-165 | The same key K on Ticket A after the refused reuse on B | 200 with A's DTO; one action on A, none on B | `server/tests/lab-04/actions-taken.api.test.ts` | Red `5e29bd1` -> green `0e21ac8` |
+| API-127 | API | C-166, C-199 | Key K used on A, sent on a `CLOSED` Ticket B | 409 `IDEMPOTENCY_KEY_REUSED`, not `TICKET_CLOSED`; nothing written | `server/tests/lab-04/actions-taken.api.test.ts` | Red `5e29bd1` -> green `0e21ac8` |
+| API-128 | API | C-199, BR-43 | Six concurrent action creates of one key split across two Tickets (P2002 path, both row locks held) | One row; the other Ticket's requests 409 `IDEMPOTENCY_KEY_REUSED`; the winner's 200 or 201; none 500 | `server/tests/lab-04/actions-taken.api.test.ts` | Red `5e29bd1` -> green `0e21ac8` |
+| API-129 | API | C-199 | Public Comment key K used on A, sent again on B; then K on A | 409 `IDEMPOTENCY_KEY_REUSED`, envelope only, no text from A; no comment on B, B's `version` and `lastActivityAt` unchanged; K on A is a 200 with the original | `server/tests/lab-04/ticket-workflow.api.test.ts` | Red `81147fe` -> green `21e5e0c` (`issue-74/red-comments-notes.txt`, `green-comments-notes.txt`) |
+| API-130 | API | C-199 | Internal Note key K used on A, sent again on B; then K on A | As API-129, for notes | `server/tests/lab-04/ticket-workflow.api.test.ts` | Red `81147fe` -> green `21e5e0c` |
+| API-131 | API | C-199, BR-43 | Six concurrent Public Comments of one key split across two Tickets (P2002 path) | One row; the other Ticket's requests 409 `IDEMPOTENCY_KEY_REUSED`; none 500 | `server/tests/lab-04/ticket-workflow.api.test.ts` | Red `81147fe` -> green `21e5e0c` |
+| API-132 | API | C-199, BR-43 | Six concurrent Internal Notes of one key split across two Tickets (P2002 path) | As API-131, for notes | `server/tests/lab-04/ticket-workflow.api.test.ts` | Red `81147fe` -> green `21e5e0c` |
+
+Ticket create is unchanged (it ignores `clientRequestId`, C-158; WF-64). API-45 to API-47 and
+WF-56 to WF-63 still pass unchanged: they use one Ticket per key.
+
 ---
 
 ## 3. Acceptance-Criterion Traceability
@@ -755,6 +780,9 @@ retirement**, so every "after" equals "before" plus the Lab 4 additions.
 | Client (`cd client; npm test`) | 128 tests, 11 files | +67 (UNIT-09..11, UI 52, STYLE 12), 4 files | **195 tests, 15 files** |
 | Playwright (`npm run test:e2e`) | 101 declarations, 103 tests (L3 E2E-48 loops over three roles): 278 passed + 34 skipped = 312 runs, with the 3 setup sign-ins | +46 tests (E2E 35, RESP 11) x 3 viewports = +138 runs, of which RESP-06, RESP-07, RESP-11 skip at 2 widths (+6 skipped) | **147 declarations, 149 tests: 410 passed + 40 skipped = 450 runs** |
 | Perf-smoke (`npm run test:perf`) | - | +2 timings | **2 passed** |
+
+After the review fix (section 2.12) the server expectation is 518 tests (510 + the 8 rows API-125 to
+API-132); no other figure moves.
 
 A drop below these numbers, or a change in any "before" figure, is a bug, and MIG-22 records it.
 Files added by C-184 and C-185 are counted here.
