@@ -145,6 +145,7 @@ first draft of this log left open.
 | C-187 | Re-sending the current IT Priority | 1.6 question 7 | 200, no write: `version` and `lastActivityAt` stay unchanged. | Same reasoning as a no-change action edit (C-175): nothing changed, so nothing is recorded. The Lab 3 test only asserts 200. | Extends C-138 |
 | C-188 | Seed and status history | 1.6 question 8 | Tickets the seed creates are created through the normal path and get their creation row. Tickets that already existed before the migration get none. The legacy-history screenshot comes from `toktickit_rehearsal` (the Lab 3 dump, migrated), a real legacy Ticket. | A fresh evidence database has no legacy Ticket; the rehearsal database is the honest source of one. | Extends C-146, C-179 |
 | C-189 | The adapted Lab 3 server test count | 1.6 question 9 | The adapted count is whatever the Issue #66 run shows, listed by test ID in tests.md 4.1; phase1-analysis's 32 is an estimate. | A run is the evidence, not a hand count. | - |
+| C-195 | Actions Taken cards at every width | Issue #65 audit; task 002 report (c) | The Actions Taken list is a card per action at every width. ui-spec 8.1, 8.2 and 13 and RESP-04 are aligned; the "table at `lg`" wording is withdrawn. | The screen as built (Issue #65) renders cards at every width, and the audit found ui-spec asked for a table at `lg`. With the deadline the contract is aligned to the working screen instead of rebuilding it; BR-22 fixes the order of the rows, not their shape, and all seven fields stay on each card. | Corrects ui-spec 8.1, 8.2, 13 |
 
 ---
 

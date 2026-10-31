@@ -234,7 +234,10 @@ function Header({ generatedAt, busy, onRefresh }: { generatedAt?: string; busy: 
   );
 }
 
-function Skeleton({ cards }: { cards: number }) {
+// Loading placeholder (ui-spec 12.1): the card grid, then one skeleton panel per
+// list the loaded dashboard shows - three for IT Staff, two for a Requester - in
+// the same two-column grid, so the page does not jump when the data arrives.
+function Skeleton({ cards, panels }: { cards: number; panels: number }) {
   return (
     <div aria-busy="true" role="region" aria-label="Dashboard loading">
       <div className="tk-metric-grid mb-3">
@@ -242,7 +245,13 @@ function Skeleton({ cards }: { cards: number }) {
           <div key={i} className="tk-metric-card tk-skeleton-row" />
         ))}
       </div>
-      <div className="card tk-card tk-skeleton"><div className="tk-skeleton-row" /><div className="tk-skeleton-row" /></div>
+      <div className="row g-3">
+        {Array.from({ length: panels }, (_, i) => (
+          <div key={i} className="col-12 col-lg-6">
+            <div className="card tk-card tk-skeleton tk-skeleton-panel"><div className="tk-skeleton-row" /><div className="tk-skeleton-row" /></div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -286,7 +295,7 @@ function StaffView() {
   return (
     <section aria-label="Dashboard">
       <Header generatedAt={state.kind === "ready" ? state.data.generatedAt : undefined} busy={busy} onRefresh={refresh} />
-      {state.kind === "loading" && <Skeleton cards={11} />}
+      {state.kind === "loading" && <Skeleton cards={11} panels={3} />}
       {state.kind === "error" && <Failure onRetry={refresh} />}
       {state.kind === "ready" && (
         <>
@@ -347,7 +356,7 @@ function RequesterView() {
   return (
     <section aria-label="Dashboard">
       <Header generatedAt={state.kind === "ready" ? state.data.generatedAt : undefined} busy={busy} onRefresh={refresh} />
-      {state.kind === "loading" && <Skeleton cards={4} />}
+      {state.kind === "loading" && <Skeleton cards={4} panels={2} />}
       {state.kind === "error" && <Failure onRetry={refresh} />}
       {state.kind === "ready" && (
         <>

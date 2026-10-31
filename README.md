@@ -11,7 +11,9 @@ three roles (Requester, IT Staff, Administrator) with server-enforced authorizat
 every protected route, an IT Staff Ticket Queue and Ticket Detail (claim, assign, IT
 Priority, status, Public Comments, Internal Notes), and minimalist Administrator user
 management. Ownership and role are enforced by the backend on every request, never by the
-client alone.
+client alone. Lab 4 adds Actions Taken, the final Ticket workflow with a resolution gate and
+stale-update protection, an IT Staff / Administrator dashboard and a Requester dashboard, and
+hardening across Labs 1-3 (see [Lab 4](#lab-4)).
 
 The Lab 1 Check System screen is kept at `/system-check`.
 
@@ -48,6 +50,8 @@ toktickit/
  │    └── uploads/            attachment files (gitignored, created on first run)
  ├── e2e/lab-02/              Playwright: the Requester flow and three screenshot specs
  ├── e2e/lab-03/              Playwright: authentication, the staff flow, user administration
+ ├── e2e/lab-04/, e2e/support/   Playwright: Lab 4 specs; support/ holds the sign-in helpers and the
+ │                            console-error fixture (console.ts)
  ├── artifacts/lab-02/screenshots/   tracked screenshot evidence (create-ticket, my-tickets, ticket-detail)
  ├── artifacts/lab-03/        evidence.md (the index), screenshots/, evidence/issue-N/ (terminal output),
  │                            report-lab03.md
@@ -348,6 +352,101 @@ acceptance-criterion matrix, the visual checklist and the final results are in
 [`docs/lab-02/tests.md`](docs/lab-02/tests.md) and
 [`docs/lab-03/tests.md`](docs/lab-03/tests.md).
 
+## Lab 4
+
+Lab 4 (Individual Sprint 4) builds on the Lab 3 product and adds:
+
+- **Actions Taken** on both Ticket Detail screens - IT Staff and Administrator record planned
+  and completed work (create, edit a planned action, complete, cancel); a Requester sees the
+  same list read-only. Uploads on actions are out of scope (C-134).
+- **The Ticket workflow, finished** - the resolution gate (Resolved is offered only after at
+  least one completed action, with none planned and no follow-up pending, C-137), stale-update
+  protection (a 409 `STALE_UPDATE` when the Ticket changed under you, C-138), an append-only
+  status history on both detail screens (C-141), and a row lock at the start of each workflow
+  write.
+- **Dashboards** - an IT Staff dashboard (eleven count cards, three lists, plus user counts for
+  the Administrator) and a Requester dashboard (four cards, two lists). Every count card links
+  to a list whose total equals the count (C-127). Dashboards refresh only on request, never by
+  polling (C-128).
+- **Hardening** - a Playwright console-error fixture (`e2e/support/console.ts`, C-149, C-182):
+  Lab 4 specs fail on `console.error`, an uncaught page exception or a same-origin 5xx; the only
+  allowances are the browser's "Failed to load resource" lines for a 401/403/404/409/422 the test
+  declares it expects, and a failure the test causes on purpose.
+
+The contract is in [`docs/lab-04/`](docs/lab-04/) (`specification.md`, `api-spec.md`,
+`ui-spec.md`, `tests.md`, `decisions.md` from C-122). Items cut for the deadline are listed
+honestly in `docs/lab-04/tests.md` section 6.1.
+
+### Migration and seed steps
+
+Three additive migrations (C-145) follow the Lab 3 ones:
+`20261028090000_lab04_action_status_enum`, `20261028090100_lab04_ticket_activity_columns`
+(`version`, `lastActivityAt` and `resolvedAt`, backfilled for existing Tickets, plus the
+replay-key column `clientRequestId`) and
+`20261028090200_lab04_actions_and_status_history` (`ActionTaken`, `TicketStatusChange`).
+
+```bash
+cd server
+npx prisma migrate deploy          # never migrate dev, never migrate reset
+npx prisma migrate diff --from-schema-datasource prisma/schema.prisma --to-schema-datamodel prisma/schema.prisma --exit-code   # zero drift: exit code 0
+npm run prisma:seed                # graded seed: idempotent, never overwrites a changed password
+npx tsx prisma/seed-demo.ts        # optional demo volume (14 / 3 / 0 Tickets for the three Requesters)
+```
+
+Tickets the seed creates get their creation row in the status history; Tickets that existed
+before the migration get none and show "History is recorded from <migration date>" (C-188).
+A migration is rehearsed first on `toktickit_rehearsal`, restored from the Lab 3 dump; recovery
+is restoring that dump, there is no down-migration. The seeded accounts and their local-only
+passwords are unchanged (table above).
+
+### The three suites and the performance smoke
+
+```bash
+npm test --prefix server        # Vitest + Supertest, database toktickit_test (rebuilt by global setup)
+npm test --prefix client        # Vitest + Testing Library, no database
+npm run test:e2e                # Playwright, three viewports; needs the API on :3000 and the client on :5173
+npx playwright test e2e/lab-04  # only the Lab 4 specs (the console-error fixture's own tests are
+                                #   e2e/lab-04/regression.spec.ts)
+npm run test:perf               # performance smoke against toktickit_perf (C-148, C-183)
+```
+
+`npm run test:perf` runs `server/tests/lab-04/perf-smoke.ts`, which fills `toktickit_perf` to
+about 2,000 Tickets and 5,000 actions and then measures; it is not part of `npm test`. The
+script and its `package.json` entry arrive with Issue #70 (the next PR in the stack), so on this
+branch the command does not exist yet.
+
+After an e2e run, `git checkout -- artifacts/lab-02 artifacts/lab-03` restores the older Labs'
+tracked screenshots, which the Lab 2 and Lab 3 specs rewrite.
+
+### Demo walk-through
+
+Sign in at <http://localhost:5173> (accounts and passwords above). Every role lands on
+**Dashboard**.
+
+**Requester** (`anucha.p@`, 14 Tickets; `nattapong.w@` has none, to show the zero state)
+1. Dashboard: four cards (Open tickets, Waiting for you, Resolved - awaiting closure, Closed);
+   click one and My Tickets opens already filtered, with the same total as the card.
+2. Recently updated and Recently resolved list the last seven days; **Create Ticket** is the
+   Quick Action.
+3. Open a Ticket: the Actions Taken card is read-only ("Shown to the Requester."), beside the
+   status history. On a Ticket in a working status, **Problem Appears Resolved** tells staff it
+   looks fixed.
+
+**IT Staff** (`araya.m@`)
+1. Dashboard: eleven cards (Unassigned, Mine, ..., My planned actions); a card opens the Ticket
+   Queue filtered; **My planned actions** scrolls to that panel on the same page.
+2. Open a Ticket from the queue, **Claim** it, then in **Actions Taken** add a planned action,
+   edit it, and complete it (tick "Follow-up required" to see the required note).
+3. Try **Resolved** before completing an action: it is disabled with the reasons beside it.
+   Complete one, and the move succeeds; the status history gains a row.
+4. Stale update: open the same Ticket in two tabs, change its status in one, then change
+   something in the other - the second tab shows the conflict panel and keeps your draft.
+
+**Administrator** (`panida.s@`)
+1. Dashboard: the same cards and lists as IT Staff, plus **User accounts** counts; a user card
+   opens User Management filtered to that role.
+2. The Administrator owns no Tickets, so "My planned actions" shows its empty state for real.
+
 ## API endpoints
 
 The full Lab 3 contract - every endpoint, the authentication and session model, the fixed
@@ -404,6 +503,11 @@ nothing at all, 410 for a removed file to its owner).
 | `npm run test:e2e` | root | Playwright, all of `e2e/` at three viewports |
 
 ## Documentation
+
+Lab 4:
+
+- [`docs/lab-04/specification.md`](docs/lab-04/specification.md), [`api-spec.md`](docs/lab-04/api-spec.md), [`ui-spec.md`](docs/lab-04/ui-spec.md), [`tests.md`](docs/lab-04/tests.md) — the contract; [`decisions.md`](docs/lab-04/decisions.md) records C-122 onward
+- [`artifacts/lab-04/evidence.md`](artifacts/lab-04/evidence.md) — the evidence index
 
 Lab 3:
 

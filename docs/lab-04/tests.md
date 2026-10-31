@@ -497,7 +497,7 @@ other two, counted in section 4.4).
 | RESP-01 | Responsive | AC-120; FR-33 | Both dashboards | `scrollWidth <= innerWidth`; no card count wraps below its label | `e2e/lab-04/dashboards.spec.ts` | |
 | RESP-02 | Responsive | AC-120; FR-33 | Staff and Requester Ticket Detail with actions, history and an open composer | No horizontal page scroll | `e2e/lab-04/actions-taken-flow.spec.ts` | |
 | RESP-03 | Responsive | `ui-spec.md` 13, VIS-32 | Card grid columns | Staff 4 / 3 / 2, Requester 4 / 2 / 2, measured from card positions | `e2e/lab-04/dashboards.spec.ts` | |
-| RESP-04 | Responsive | `ui-spec.md` 8.2, 13 | Actions Taken layout | A table at 1280; stacked cards at 834 and 390 | `e2e/lab-04/actions-taken-flow.spec.ts` | |
+| RESP-04 | Responsive | `ui-spec.md` 8.2, 13 | Actions Taken layout | Cards at 1280, 834 and 390 (C-195) | `e2e/lab-04/actions-taken-flow.spec.ts` | |
 | RESP-05 | Responsive | `ui-spec.md` 6, 13 | Dashboard panels | Two columns at 1280, one below | `e2e/lab-04/dashboards.spec.ts` | |
 | RESP-06 | Responsive | `ui-spec.md` 13, VIS-31 | Dashboard touch targets (mobile-only) | Every card, list link and Quick Action at least 44 px tall | `e2e/lab-04/dashboards.spec.ts` | |
 | RESP-07 | Responsive | `ui-spec.md` 13, VIS-31 | Actions Taken touch targets (mobile-only) | Row actions and composer buttons at least 44 px tall | `e2e/lab-04/actions-taken-flow.spec.ts` | |
@@ -885,6 +885,23 @@ empty in the PDF only.
 | Client | `cd client; npm test` | 128 | 195 | | |
 | Playwright | `npm run test:e2e` | 278 passed, 34 skipped | 410 passed, 40 skipped | | |
 | Perf-smoke | `npm run test:perf` | - | 2 passed | | |
+
+### 6.1 Not done - deadline (31 Oct)
+
+Issue #69 (final hardening) was cut to fit the 31 Oct deadline. These items from the Issue
+#65 audit (task 002's report) were **not done**, and nothing here claims them:
+
+| Item | Status | What is true today |
+|---|---|---|
+| Focus management in the Actions Taken row panels (Edit, Complete, Cancel): focus into the panel on open and back to the row action on close | not done - deadline | The panels open and close correctly with the keyboard; focus is not moved for the user |
+| `aria-describedby` / `aria-invalid` on the row panels' field errors | not done - deadline | Error text is shown directly below the field (ui-spec 14); it is not programmatically tied to the field |
+| UI-50 (Public Comment and Internal Note composers keep every typed value after 400, 409, 500 and a rejected `fetch`; C-147, C-181) | not done - deadline | No UI-50 test exists in `client/tests/lab-04/`; draft retention in the two note composers is untested. (The UI-50 row points to UI-49 for the action form, but UI-49 is the Last Updated row - a slip in this file, not fixed here) |
+| Test gaps: UI-21, UI-29, UI-32, UI-35..UI-39, STYLE-01, STYLE-02, STYLE-06 assert less than their rows above | not done - deadline | The tests exist and pass; they check less than the row says |
+| The Actions Taken composer's writable-status list copies BR-24 in the client (CLAUDE.md rule 3) | not done - deadline (client audit skipped) | The server still enforces BR-24 |
+
+Done in #69: the console-error fixture and its tests (E2E-28..E2E-32, C-149, C-182, C-185),
+the dashboard loading placeholder (ui-spec 12.1), and C-195 with ui-spec 8.1, 8.2, 13 and
+RESP-04 aligned. `clientRequestId` on Ticket create stays cut (C-158).
 
 ---
 
