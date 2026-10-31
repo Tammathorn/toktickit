@@ -886,6 +886,96 @@ describe("clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166)",
   });
 });
 
+// ---------------------------------------------------------------------------
+// C-199 (supersedes C-194): a key first used on one Ticket and sent again on
+// another is refused, not answered with the first Ticket's data.
+// ---------------------------------------------------------------------------
+describe("clientRequestId reused on another Ticket (C-199, supersedes C-194)", () => {
+  const KEY_REUSED_MESSAGE = "This request key was already used for another Ticket.";
+
+  it("API-125 key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged, nothing about A in the body (C-199)", async () => {
+    const a = await ticket({ summary: `${TAG} API-125 ticket A secret-summary` });
+    const b = await ticket({ summary: `${TAG} API-125 ticket B` });
+    const key = uuid();
+    const first = await create(staffA.agent, a.id, plannedBody({ clientRequestId: key }));
+    expect(first.status).toBe(201);
+    const beforeB = await ticketRow(b.id);
+    const beforeA = await ticketRow(a.id);
+
+    const reused = await create(staffA.agent, b.id, plannedBody({ clientRequestId: key }));
+    expectCode(reused, 409, "IDEMPOTENCY_KEY_REUSED");
+    expect(reused.body.error.message).toBe(KEY_REUSED_MESSAGE);
+    expect(Object.keys(reused.body)).toEqual(["error"]);
+    expect(Object.keys(reused.body.error).sort()).toEqual(["code", "message"]);
+    expect(JSON.stringify(reused.body)).not.toContain("secret-summary");
+    expect(JSON.stringify(reused.body)).not.toContain(a.ticketNumber);
+
+    expect(await actionsOf(b.id)).toHaveLength(0);
+    const afterB = await ticketRow(b.id);
+    expect(afterB.version).toBe(beforeB.version);
+    expect(afterB.lastActivityAt.getTime()).toBe(beforeB.lastActivityAt.getTime());
+    // A is untouched by the refused request too.
+    const afterA = await ticketRow(a.id);
+    expect(afterA.version).toBe(beforeA.version);
+    expect(afterA.lastActivityAt.getTime()).toBe(beforeA.lastActivityAt.getTime());
+    expect(await prisma.actionTaken.count({ where: { createdById: staffA.id, clientRequestId: key } })).toBe(1);
+  });
+
+  it("API-126 after the refused reuse on B, the same key K on Ticket A is still a replay: 200 with A's DTO, no new row (C-199, C-165)", async () => {
+    const a = await ticket();
+    const b = await ticket();
+    const key = uuid();
+    expect((await create(staffA.agent, a.id, plannedBody({ clientRequestId: key }))).status).toBe(201);
+    expectCode(await create(staffA.agent, b.id, plannedBody({ clientRequestId: key })), 409, "IDEMPOTENCY_KEY_REUSED");
+    const replay = await create(staffA.agent, a.id, plannedBody({ clientRequestId: key }));
+    expect(replay.status, JSON.stringify(replay.body)).toBe(200);
+    expect(replay.body.id).toBe(a.id);
+    expect(await actionsOf(a.id)).toHaveLength(1);
+    expect(await actionsOf(b.id)).toHaveLength(0);
+  });
+
+  it("API-127 the cross-Ticket reuse is checked before TICKET_CLOSED: B is CLOSED and K was used on A -> 409 IDEMPOTENCY_KEY_REUSED, not TICKET_CLOSED (C-166, C-199)", async () => {
+    const a = await ticket();
+    const b = await ticket({ currentStatus: "CLOSED" });
+    const key = uuid();
+    expect((await create(staffA.agent, a.id, plannedBody({ clientRequestId: key }))).status).toBe(201);
+    expectCode(await create(staffA.agent, b.id, plannedBody({ clientRequestId: key })), 409, "IDEMPOTENCY_KEY_REUSED");
+    expect(await actionsOf(b.id)).toHaveLength(0);
+  });
+
+  it("API-128 concurrent creates of one key on two Tickets (the P2002 path) -> exactly one row; every response is 201, 200 for the winning Ticket, or 409 IDEMPOTENCY_KEY_REUSED for the other; none 500 (C-199)", async () => {
+    const a = await ticket();
+    const b = await ticket();
+    const key = uuid();
+    const agents = await Promise.all(Array.from({ length: 6 }, () => signIn(staffA.email)));
+    // Hold both row locks while the requests arrive: each passes the replay
+    // lookup (no row yet) and waits on its Ticket's lock, so the losers can
+    // only be answered by the P2002 path.
+    let pending: Promise<Awaited<ReturnType<typeof create>>[]> | undefined;
+    await prisma.$transaction(async (tx) => {
+      await tx.$queryRaw`SELECT "id" FROM "Ticket" WHERE "id" IN (${a.id}, ${b.id}) ORDER BY "id" FOR UPDATE`;
+      pending = Promise.all(agents.map((ag, i) => create(ag, i % 2 === 0 ? a.id : b.id, plannedBody({ clientRequestId: key }))));
+      await new Promise((resolve) => setTimeout(resolve, 1500));
+    }, { timeout: 15_000 });
+    const responses = await (pending as NonNullable<typeof pending>);
+    const rows = await prisma.actionTaken.findMany({ where: { createdById: staffA.id, clientRequestId: key } });
+    expect(rows).toHaveLength(1);
+    const winner = rows[0].ticketId;
+    const loser = winner === a.id ? b.id : a.id;
+    expect(await actionsOf(loser)).toHaveLength(0);
+    responses.forEach((res, i) => {
+      const onTicket = i % 2 === 0 ? a.id : b.id;
+      if (onTicket === winner) {
+        expect([200, 201], JSON.stringify(res.body)).toContain(res.status);
+        expect(res.body.id).toBe(winner);
+      } else {
+        expectCode(res, 409, "IDEMPOTENCY_KEY_REUSED");
+      }
+    });
+    expect(responses.filter((r) => r.status === 201)).toHaveLength(1);
+  });
+});
+
 // ===========================================================================
 // 2.4 Authorization in this file
 // ===========================================================================
