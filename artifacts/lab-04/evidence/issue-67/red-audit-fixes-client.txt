@@ -1,0 +1,74 @@
+Command: cd client; npx vitest run tests/lab-04/StaffDashboard.test.tsx
+Date: 2026-10-31 11:55:06 +0700
+Commit: 2dc8f41 (feature/lab4-6-staff-dashboard; the audit's strengthened client tests applied, Dashboard.tsx temporarily WITHOUT the two audit fixes: aria-live on the Updated line, card href = drillDown)
+Exit code: 1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ❯ tests/lab-04/StaffDashboard.test.tsx (18 tests | 2 failed) 1942ms
+   × IT Staff and Administrator Dashboard > UI-01 renders one link card per API card, in API order, each with its count and drill-down (FR-18, BR-56) 249ms
+     → expected [ '/queue?owner=unassigned', …(10) ] to deeply equal [ '/queue?owner=unassigned', …(10) ]
+   × IT Staff and Administrator Dashboard > STYLE-10 the panels are labelled landmarks and the #my-actions heading is focusable 129ms
+     → expect(element).toHaveAttribute("aria-live", "polite") // element.getAttribute("aria-live") === "polite"
+
+Expected the element to have attribute:
+  aria-live="polite"
+Received:
+  null
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > UI-01 renders one link card per API card, in API order, each with its count and drill-down (FR-18, BR-56)
+AssertionError: expected [ '/queue?owner=unassigned', …(10) ] to deeply equal [ '/queue?owner=unassigned', …(10) ]
+
+- Expected
++ Received
+
+  Array [
+    "/queue?owner=unassigned",
+    "/queue?owner=me",
+    "/queue?currentStatus=NEW",
+    "/queue?currentStatus=OPEN",
+    "/queue?currentStatus=IN_PROGRESS",
+    "/queue?currentStatus=WAITING_FOR_REQUESTER",
+    "/queue?currentStatus=REOPENED",
+    "/queue?currentStatus=RESOLVED",
+    "/queue?itPriority=HIGH",
+    "/queue?requesterResolved=true",
+-   "/dashboard#my-actions",
++   "#my-actions",
+  ]
+
+ ❯ tests/lab-04/StaffDashboard.test.tsx:85:54
+     83|     const grid = await screen.findByRole("list", { name: "Ticket metri…
+     84|     const links = within(grid).getAllByRole("link");
+     85|     expect(links.map((l) => l.getAttribute("href"))).toEqual(CARDS.map…
+       |                                                      ^
+     86|     expect(links[0]).toHaveAccessibleName("Unassigned: 4. Open the Tic…
+     87|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  tests/lab-04/StaffDashboard.test.tsx > IT Staff and Administrator Dashboard > STYLE-10 the panels are labelled landmarks and the #my-actions heading is focusable
+Error: expect(element).toHaveAttribute("aria-live", "polite") // element.getAttribute("aria-live") === "polite"
+
+Expected the element to have attribute:
+  aria-live="polite"
+Received:
+  null
+ ❯ tests/lab-04/StaffDashboard.test.tsx:329:43
+    327|     // tests.md STYLE-10: the Updated line is a polite live region; on…
+    328|     // every card, list link and Quick Action has a non-empty accessib…
+    329|     expect(screen.getByText(/^Updated /)).toHaveAttribute("aria-live",…
+       |                                           ^
+    330|     expect(screen.getAllByRole("heading", { level: 1 })).toHaveLength(…
+    331|     const main = document.querySelector("main") as HTMLElement;
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 16 passed (18)
+   Start at  11:54:54
+   Duration  4.55s (transform 384ms, setup 186ms, collect 743ms, tests 1.94s, environment 880ms, prepare 108ms)
+

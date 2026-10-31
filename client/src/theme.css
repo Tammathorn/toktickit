@@ -178,6 +178,10 @@ h1, h2, h3 { line-height: 1.25; }
 /* Tablet band: the header is tight */
 @media (min-width: 768px) and (max-width: 991.98px) {
   .tk-nav-link { padding-left: 0.5rem; padding-right: 0.5rem; }
+  /* Lab 4 (C-144, #67): Dashboard joins the nav, so the Administrator's three
+     items plus the one-line identity no longer fit the 720 px md container
+     (RESP-12). In this band only, the header uses the full viewport width. */
+  .tk-header .container { max-width: none; }
 }
 .tk-btn-on-primary {
   --bs-btn-color: var(--tk-surface);

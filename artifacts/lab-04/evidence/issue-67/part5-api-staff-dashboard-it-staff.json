@@ -1,0 +1,202 @@
+{
+  "capturedAt": "2026-10-31T04:52:47.787Z",
+  "caller": "araya.m@example.ac.th (IT Staff)",
+  "request": "GET /api/dashboard/staff",
+  "status": 200,
+  "body": {
+    "generatedAt": "2026-10-31T04:52:47.795Z",
+    "timeZone": "Asia/Bangkok",
+    "cards": [
+      {
+        "key": "unassigned",
+        "label": "Unassigned",
+        "count": 1935,
+        "drillDown": "/queue?owner=unassigned"
+      },
+      {
+        "key": "mine",
+        "label": "Mine",
+        "count": 246,
+        "drillDown": "/queue?owner=me"
+      },
+      {
+        "key": "statusNew",
+        "label": "New",
+        "count": 2200,
+        "drillDown": "/queue?currentStatus=NEW"
+      },
+      {
+        "key": "statusOpen",
+        "label": "Open",
+        "count": 143,
+        "drillDown": "/queue?currentStatus=OPEN"
+      },
+      {
+        "key": "statusInProgress",
+        "label": "In Progress",
+        "count": 29,
+        "drillDown": "/queue?currentStatus=IN_PROGRESS"
+      },
+      {
+        "key": "statusWaitingForRequester",
+        "label": "Waiting for Requester",
+        "count": 1,
+        "drillDown": "/queue?currentStatus=WAITING_FOR_REQUESTER"
+      },
+      {
+        "key": "statusReopened",
+        "label": "Reopened",
+        "count": 1,
+        "drillDown": "/queue?currentStatus=REOPENED"
+      },
+      {
+        "key": "statusResolved",
+        "label": "Resolved",
+        "count": 63,
+        "drillDown": "/queue?currentStatus=RESOLVED"
+      },
+      {
+        "key": "highItPriority",
+        "label": "High IT Priority",
+        "count": 10,
+        "drillDown": "/queue?itPriority=HIGH"
+      },
+      {
+        "key": "requesterSaysResolved",
+        "label": "Requester says resolved",
+        "count": 49,
+        "drillDown": "/queue?requesterResolved=true"
+      },
+      {
+        "key": "myPlannedActions",
+        "label": "My planned actions",
+        "count": 2,
+        "drillDown": "/dashboard#my-actions"
+      }
+    ],
+    "lists": {
+      "myPlannedActions": {
+        "items": [
+          {
+            "id": 10,
+            "actionAt": "2026-10-29T04:12:36.727Z",
+            "description": "Re-test the VPN for 30 minutes after the gateway profile change.",
+            "ticket": {
+              "id": 722,
+              "ticketNumber": "TKT-2026-000722",
+              "summary": "VPN disconnects after roughly three minutes",
+              "currentStatus": "IN_PROGRESS"
+            }
+          },
+          {
+            "id": 18,
+            "actionAt": "2026-10-30T10:45:25.770Z",
+            "description": "Replace the toner cartridge and clean the drum.",
+            "ticket": {
+              "id": 2283,
+              "ticketNumber": "TKT-2026-002283",
+              "summary": "Task 002 step 5: Actions Taken check",
+              "currentStatus": "NEW"
+            }
+          }
+        ],
+        "viewAll": null
+      },
+      "recentlyUpdated": {
+        "items": [
+          {
+            "id": 3132,
+            "ticketNumber": "TKT-2026-003132",
+            "summary": "A11Y: requester dialogs (mobile)",
+            "currentStatus": "OPEN",
+            "itPriority": "MEDIUM",
+            "lastActivityAt": "2026-10-31T04:51:09.437Z"
+          },
+          {
+            "id": 3131,
+            "ticketNumber": "TKT-2026-003131",
+            "summary": "Marker: requester says resolved (mobile)",
+            "currentStatus": "OPEN",
+            "itPriority": "MEDIUM",
+            "lastActivityAt": "2026-10-31T04:51:08.218Z"
+          },
+          {
+            "id": 3129,
+            "ticketNumber": "TKT-2026-003129",
+            "summary": "State matrix: staff detail claim (mobile)",
+            "currentStatus": "NEW",
+            "itPriority": "MEDIUM",
+            "lastActivityAt": "2026-10-31T04:51:06.079Z"
+          },
+          {
+            "id": 3128,
+            "ticketNumber": "TKT-2026-003128",
+            "summary": "A11Y: confirm dialog (mobile)",
+            "currentStatus": "OPEN",
+            "itPriority": "MEDIUM",
+            "lastActivityAt": "2026-10-31T04:51:05.501Z"
+          },
+          {
+            "id": 3127,
+            "ticketNumber": "TKT-2026-003127",
+            "summary": "A11Y: staff detail (mobile)",
+            "currentStatus": "NEW",
+            "itPriority": "MEDIUM",
+            "lastActivityAt": "2026-10-31T04:51:04.383Z"
+          }
+        ],
+        "viewAll": "/queue?sort=lastActivityAt:desc"
+      },
+      "urgent": {
+        "items": [
+          {
+            "id": 7,
+            "ticketNumber": "TKT-2026-000007",
+            "summary": "Grade submission times out at the final step",
+            "currentStatus": "NEW",
+            "itPriority": "HIGH",
+            "lastActivityAt": "2026-09-08T10:45:34.190Z",
+            "createdAt": "2026-09-01T10:45:34.186Z"
+          },
+          {
+            "id": 3,
+            "ticketNumber": "TKT-2026-000003",
+            "summary": "VPN disconnects every few minutes",
+            "currentStatus": "NEW",
+            "itPriority": "HIGH",
+            "lastActivityAt": "2026-09-08T10:45:34.153Z",
+            "createdAt": "2026-09-05T10:45:34.149Z"
+          },
+          {
+            "id": 16,
+            "ticketNumber": "TKT-2026-000016",
+            "summary": "Cannot sign in to the LEB2 App on mobile",
+            "currentStatus": "NEW",
+            "itPriority": "HIGH",
+            "lastActivityAt": "2026-09-08T10:45:34.269Z",
+            "createdAt": "2026-09-05T10:45:34.266Z"
+          },
+          {
+            "id": 2,
+            "ticketNumber": "TKT-2026-000002",
+            "summary": "Cannot connect to campus Wi-Fi in Building 4",
+            "currentStatus": "NEW",
+            "itPriority": "HIGH",
+            "lastActivityAt": "2026-09-08T10:45:34.143Z",
+            "createdAt": "2026-09-06T10:45:34.139Z"
+          },
+          {
+            "id": 1,
+            "ticketNumber": "TKT-2026-000001",
+            "summary": "Laptop battery drains within an hour",
+            "currentStatus": "NEW",
+            "itPriority": "HIGH",
+            "lastActivityAt": "2026-09-08T10:45:34.133Z",
+            "createdAt": "2026-09-07T10:45:34.124Z"
+          }
+        ],
+        "viewAll": "/queue?itPriority=HIGH"
+      }
+    }
+  }
+}

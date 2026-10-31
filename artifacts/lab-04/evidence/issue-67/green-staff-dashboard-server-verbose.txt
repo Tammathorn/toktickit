@@ -1,0 +1,46 @@
+Command: cd server; npx vitest run tests/lab-04/staff-dashboard.api.test.ts --reporter=verbose
+Date: 2026-10-31 12:00:13 +0700
+Commit: 2dc8f41 (feature/lab4-6-staff-dashboard; the #67 work and audit fixes uncommitted)
+Exit code: 0
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - shape (API-60) > API-60 GET /api/dashboard/staff -> 200 with generatedAt, Asia/Bangkok, eleven cards in api-spec 4.2 order and three lists
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-61 card unassigned = GET /api/staff/tickets?owner=unassigned meta.total: an unowned OPEN counted, an unowned CLOSED not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-62 card mine = ?owner=me meta.total: only the caller's active Tickets; another user's and the caller's CLOSED excluded
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-63 card statusNew = ?currentStatus=NEW meta.total: only NEW counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-64 card statusOpen = ?currentStatus=OPEN meta.total: only OPEN counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-65 card statusInProgress = ?currentStatus=IN_PROGRESS meta.total: only IN_PROGRESS counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-66 card statusWaitingForRequester = ?currentStatus=WAITING_FOR_REQUESTER meta.total: only WAITING_FOR_REQUESTER counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-67 card statusReopened = ?currentStatus=REOPENED meta.total: only REOPENED counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-68 card statusResolved = ?currentStatus=RESOLVED meta.total: only RESOLVED counted
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-69 card highItPriority = ?itPriority=HIGH meta.total: an active High counted, a CLOSED High and an active Medium not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-70 card requesterSaysResolved = ?requesterResolved=true meta.total: a flagged active Ticket counted and listed, an unflagged one and a flagged CLOSED one not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - one count = drill-down test per card (C-127, BR-56) > API-71 card myPlannedActions = the panel's row count: the caller's PLANNED action on an active Ticket counted; another assignee's, a COMPLETED one and one on a CLOSED Ticket not
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-72 Administrator card requesters = GET /api/users?role=REQUESTER: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-73 Administrator card itStaff = GET /api/users?role=IT_STAFF: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - Administrator user cards (BR-87) > API-74 Administrator card administrators = GET /api/users?role=ADMINISTRATOR: count is the list length, inactive included; activeCount the active ones
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-75 seven PLANNED actions assigned to the caller -> all seven in the panel, actionAt asc then id asc, no cap; card 7
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-76 recentlyUpdated with seven recent active Tickets and a CLOSED one updated today -> five items, the CLOSED absent, equal to the first five rows of ?sort=lastActivityAt:desc
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-77 urgent with seven active High Tickets (two sharing createdAt), Medium ones and a CLOSED High -> five High items, createdAt asc then id desc, equal to the first five rows of ?itPriority=HIGH
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-78 staff recentlyUpdated with now injected: a row at exactly now - 168 h is included, one 1 ms earlier is excluded
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - list order, caps and the time boundary (C-161, C-169, C-142) > API-79 the Administrator who owns nothing -> mine 0 and myPlannedActions 0, both present; panel items []
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-80 queue sort=lastActivityAt:desc -> lastActivityAt desc then id desc, lastActivityAt on each row; sort=updatedAt:desc still 200
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 queue changes behind the staff cards (api-spec 5.8) > API-81 queue requesterResolved=true filters to flagged rows within the default status set; =false and =yes -> 400 INVALID_QUERY_PARAM
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-05 Requester GET /api/dashboard/staff -> 403 FORBIDDEN_ROLE, body exactly { error: { code, message } }, no metric content
+ ✓ tests/lab-04/staff-dashboard.api.test.ts > Lab 4 staff dashboard - authorization (SEC-05, SEC-07) > SEC-07 IT Staff and Administrator GET /api/dashboard/staff -> only the Administrator's body has userCounts; on IT Staff's the key is absent, not null
+
+ Test Files  1 passed (1)
+      Tests  24 passed (24)
+   Start at  12:00:08
+   Duration  5.38s (transform 218ms, setup 0ms, collect 484ms, tests 1.73s, environment 0ms, prepare 92ms)
+

@@ -28,6 +28,8 @@ import { useMediaQuery, MD_AND_UP } from "../useMediaQuery.js";
 
 const SORT_OPTIONS: Array<[string, string]> = [
   ["createdAt:desc", "Newest first"],
+  // Lab 4 (ui-spec 10, BR-48): the Requester dashboard's "View all".
+  ["lastActivityAt:desc", "Recently updated"],
   ["createdAt:asc", "Oldest first"],
   ["ticketNumber:asc", "Ticket Number, ascending"],
   ["ticketNumber:desc", "Ticket Number, descending"],
@@ -55,6 +57,8 @@ interface ListState {
   categoryId: string;
   relatedSystemId: string;
   currentStatus: string;
+  /** Lab 4, BR-88 - "open" or empty; never combined with currentStatus. */
+  statusGroup: string;
   sort: string;
   page: number;
   pageSize: number;
@@ -71,6 +75,7 @@ function readState(search: string): ListState {
     categoryId: p.get("categoryId") ?? "",
     relatedSystemId: p.get("relatedSystemId") ?? "",
     currentStatus: p.get("currentStatus") ?? "",
+    statusGroup: p.get("statusGroup") ?? "",
     sort: p.get("sort") ?? "createdAt:desc",
     page: int("page", 1),
     pageSize: int("pageSize", 10),
@@ -83,6 +88,7 @@ function toSearch(state: ListState): string {
   if (state.categoryId) p.set("categoryId", state.categoryId);
   if (state.relatedSystemId) p.set("relatedSystemId", state.relatedSystemId);
   if (state.currentStatus) p.set("currentStatus", state.currentStatus);
+  if (state.statusGroup) p.set("statusGroup", state.statusGroup);
   if (state.sort !== "createdAt:desc") p.set("sort", state.sort);
   if (state.page !== 1) p.set("page", String(state.page));
   if (state.pageSize !== 10) p.set("pageSize", String(state.pageSize));
@@ -91,7 +97,7 @@ function toSearch(state: ListState): string {
 }
 
 function filtersActive(state: ListState): boolean {
-  return Boolean(state.search || state.categoryId || state.relatedSystemId || state.currentStatus);
+  return Boolean(state.search || state.categoryId || state.relatedSystemId || state.currentStatus || state.statusGroup);
 }
 
 type LoadState =
@@ -139,6 +145,7 @@ export default function MyTickets() {
       categoryId: state.categoryId,
       relatedSystemId: state.relatedSystemId,
       currentStatus: state.currentStatus,
+      statusGroup: state.statusGroup,
       sort: state.sort,
       page: state.page,
       pageSize: state.pageSize,
@@ -223,8 +230,20 @@ export default function MyTickets() {
           </div>
           <div className="col-12 col-md-4 col-lg-2">
             <label htmlFor="list-status" className="form-label tk-label">Current Status</label>
-            <select id="list-status" className="form-select" value={state.currentStatus} onChange={(e) => apply({ currentStatus: e.target.value, page: 1 })}>
+            <select
+              id="list-status"
+              className="form-select"
+              value={state.statusGroup === "open" ? "__open" : state.currentStatus}
+              onChange={(e) =>
+                apply(
+                  e.target.value === "__open"
+                    ? { statusGroup: "open", currentStatus: "", page: 1 }
+                    : { statusGroup: "", currentStatus: e.target.value, page: 1 },
+                )
+              }
+            >
               <option value="">All statuses</option>
+              <option value="__open">Open tickets</option>
               {STATUS_OPTIONS.map(([value, label]) => (
                 <option key={value} value={value}>{label}</option>
               ))}
@@ -327,7 +346,7 @@ export default function MyTickets() {
                         <PriorityBadge value={t.itPriority} it />
                       </span>
                     </div>
-                    <div className="tk-muted">Last Updated {formatDisplayTimestamp(t.updatedAt)}</div>
+                    <div className="tk-muted">Last Updated {formatDisplayTimestamp(t.lastActivityAt)}</div>
                   </Link>
                 </li>
               ))}
@@ -386,7 +405,7 @@ function TicketRow({ ticket: t, onOpen }: { ticket: TicketListRow; onOpen: () =>
             this cell; from lg it has its own column and this copy is hidden. */}
         <span className="d-lg-none ms-1"><PriorityBadge value={t.itPriority} it /></span>
       </td>
-      <td className="tk-nowrap">{formatDisplayTimestamp(t.updatedAt)}</td>
+      <td className="tk-nowrap">{formatDisplayTimestamp(t.lastActivityAt)}</td>
     </tr>
   );
 }
