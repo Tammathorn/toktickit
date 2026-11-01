@@ -1,0 +1,880 @@
+﻿Command: cd server; npx vitest run tests/lab-04/migration.db.test.ts
+Date: 2026-10-28 15:09:41 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; test file uncommitted, implementation not yet applied)
+Exit code: 1
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+6 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/migration.db.test.ts (41 tests | 33 failed) 6877ms
+   × MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > holds exactly PLANNED, COMPLETED, CANCELLED in declaration order 25ms
+     → expected [] to deeply equal [ 'PLANNED', 'COMPLETED', 'CANCELLED' ]
+   × MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > is created by a migration whose only statement is CREATE TYPE "ActionStatus" 3ms
+     → expected [] to have a length of 1 but got +0
+   × MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) > is ordered before the migration that creates the ActionTaken table 1ms
+     → expected -1 to be greater than or equal to 0
+   × MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > has each column with its type and nullability 15ms
+     → id type: expected undefined to be 'int4' // Object.is equality
+   × MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > defaults followUpRequired to false, version to 0 and createdAt to now 3ms
+     → expected undefined to be 'false' // Object.is equality
+   × MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > references exactly one Ticket and the assignee, creator and performer Users 19ms
+     → expected [] to deeply equal ArrayContaining{…}
+   × MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > has a nullable fromStatus, a NOT NULL toStatus, both TicketStatus, and changedAt defaulting to now 2ms
+     → expected undefined to be 'TicketStatus' // Object.is equality
+   × MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > references the Ticket and the User who made the change 8ms
+     → expected [ { from: 'Ticket', …(2) }, …(9) ] to deeply equal ArrayContaining{…}
+   × MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds version INT NOT NULL DEFAULT 0 6ms
+     → expected undefined to be 'int4' // Object.is equality
+   × MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds lastActivityAt NOT NULL DEFAULT now() 2ms
+     → expected undefined to be 'timestamp' // Object.is equality
+   × MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, BR-35) > adds a nullable resolvedAt 1ms
+     → expected undefined to be 'timestamp' // Object.is equality
+   × MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > makes Ticket(requesterId, clientRequestId), PublicComment and InternalNote (authorId, clientRequestId) and ActionTaken(createdById, clientRequestId) unique 4ms
+     → expected false to be true // Object.is equality
+   × MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > lets one author insert two rows with a NULL key into each of the four tables 23ms
+     → Cannot read properties of undefined (reading 'create')
+   × MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes ActionTaken([ 'ticketId', 'actionAt', 'id' ]) 2ms
+     → expected false to be true // Object.is equality
+   × MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes ActionTaken([ 'assigneeId', 'status' ]) 2ms
+     → expected false to be true // Object.is equality
+   × MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes Ticket([ 'requesterId', 'lastActivityAt' ]) 3ms
+     → expected false to be true // Object.is equality
+   × MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes Ticket([ 'resolvedAt' ]) 2ms
+     → expected false to be true // Object.is equality
+   × MIG-06 — the five named indexes exist with their column order (spec 7.5, C-145) > indexes TicketStatusChange([ 'ticketId', 'changedAt', 'id' ]) 2ms
+     → expected false to be true // Object.is equality
+   × MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > finds the Lab 4 migrations to inspect 1ms
+     → expected 0 to be greater than or equal to 1
+   × MIG-08 — a Ticket created without any Lab 4 field gets the defaults (C-145) > creates with version 0, lastActivityAt set and resolvedAt null 9ms
+     → expected undefined to be +0 // Object.is equality
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > leaves the Ticket, Public Comment, Internal Note, ActionTaken and TicketStatusChange counts unchanged 13ms
+     → Cannot read properties of undefined (reading 'count')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keys actions by (Ticket, description): each seeded action exists exactly once 1ms
+     → SEED_ACTIONS is not iterable
+   ✓ Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keeps a password that was changed after seeding 1997ms
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed composition: action counts (AC-99, BR-02, C-146) > holds Tickets with zero, one and several actions 29ms
+     → Cannot read properties of undefined (reading 'count')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed composition: action counts (AC-99, BR-02, C-146) > holds one Ticket whose actions were created or performed by three different staff users 29ms
+     → Cannot read properties of undefined (reading 'findMany')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-16 — seed composition: action states (C-146) > holds at least one PLANNED, COMPLETED, CANCELLED and follow-up-required action 1ms
+     → Cannot read properties of undefined (reading 'count')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-17 — seed composition: the resolution gate (AC-99, C-146) > holds one open Ticket whose gate is met and one whose gate is not 25ms
+     → Cannot read properties of undefined (reading 'findMany')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-18 — seeded RESOLVED and CLOSED Tickets (C-146, BR-32, BR-49) > gives each a resolvedAt and completed actions that satisfy the gate 23ms
+     → Cannot read properties of undefined (reading 'count')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-19 — the zero-metric accounts (AC-99, C-146) > leaves the Administrator owning zero Tickets and assigned zero planned actions 6ms
+     → Cannot read properties of undefined (reading 'count')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > fills the staff Recently updated list (BR-85) 15ms
+     → 
+Invalid `fresh.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-04\migration.db.test.ts:586:28
+
+  583 it("fills the staff Recently updated list (BR-85)", async () => {
+  584   const since = new Date(Date.now() - 168 * HOUR);
+  585   expect(
+→ 586     await fresh.ticket.count({
+            select: {
+              _count: {
+                select: {
+                  _all: true
+                }
+              }
+            },
+            where: {
+              currentStatus: {
+                notIn: [
+                  "CLOSED",
+                  "CANCELLED"
+                ]
+              },
+              lastActivityAt: {
+              ~~~~~~~~~~~~~~
+                gte: new Date("2026-10-21T08:09:39.618Z")
+              },
+          ?   AND?: TicketWhereInput | TicketWhereInput[],
+          ?   OR?: TicketWhereInput[],
+          ?   NOT?: TicketWhereInput | TicketWhereInput[],
+          ?   id?: IntFilter | Int,
+          ?   ticketNumber?: StringNullableFilter | String | Null,
+          ?   requesterId?: IntFilter | Int,
+          ?   categoryId?: IntFilter | Int,
+          ?   relatedSystemId?: IntFilter | Int,
+          ?   ownerId?: IntNullableFilter | Int | Null,
+          ?   summary?: StringFilter | String,
+          ?   description?: StringFilter | String,
+          ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+          ?   itPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+          ?   requesterResolvedAt?: DateTimeNullableFilter | DateTime | Null,
+          ?   createdAt?: DateTimeFilter | DateTime,
+          ?   updatedAt?: DateTimeFilter | DateTime,
+          ?   requester?: UserRelationFilter | UserWhereInput,
+          ?   owner?: UserNullableRelationFilter | UserWhereInput | Null,
+          ?   category?: CategoryRelationFilter | CategoryWhereInput,
+          ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+          ?   attachments?: AttachmentListRelationFilter,
+          ?   publicComments?: PublicCommentListRelationFilter,
+          ?   internalNotes?: InternalNoteListRelationFilter
+            }
+          })
+
+Unknown argument `lastActivityAt`. Available options are marked with ?.
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > fills a seeded Requester's Recently updated and Recently resolved lists (BR-77, BR-78) 8ms
+     → 
+Invalid `fresh.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-04\migration.db.test.ts:600:44
+
+  597 const requesters = await fresh.user.findMany({ where: { role: "REQUESTER" } });
+  598 const both = [];
+  599 for (const r of requesters) {
+→ 600   const updated = await fresh.ticket.count({
+          select: {
+            _count: {
+              select: {
+                _all: true
+              }
+            }
+          },
+          where: {
+            requesterId: 2,
+            lastActivityAt: {
+            ~~~~~~~~~~~~~~
+              gte: new Date("2026-10-21T08:09:39.633Z")
+            },
+        ?   AND?: TicketWhereInput | TicketWhereInput[],
+        ?   OR?: TicketWhereInput[],
+        ?   NOT?: TicketWhereInput | TicketWhereInput[],
+        ?   id?: IntFilter | Int,
+        ?   ticketNumber?: StringNullableFilter | String | Null,
+        ?   categoryId?: IntFilter | Int,
+        ?   relatedSystemId?: IntFilter | Int,
+        ?   ownerId?: IntNullableFilter | Int | Null,
+        ?   summary?: StringFilter | String,
+        ?   description?: StringFilter | String,
+        ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   itPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   currentStatus?: EnumTicketStatusFilter | TicketStatus,
+        ?   requesterResolvedAt?: DateTimeNullableFilter | DateTime | Null,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   requester?: UserRelationFilter | UserWhereInput,
+        ?   owner?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   category?: CategoryRelationFilter | CategoryWhereInput,
+        ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+        ?   attachments?: AttachmentListRelationFilter,
+        ?   publicComments?: PublicCommentListRelationFilter,
+        ?   internalNotes?: InternalNoteListRelationFilter
+          }
+        })
+
+Unknown argument `lastActivityAt`. Available options are marked with ?.
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > never dates an action before its Ticket, nor a completed one after now + 5 min 2ms
+     → Cannot read properties of undefined (reading 'findMany')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > carries a followUpNote if and only if followUpRequired 0ms
+     → Cannot read properties of undefined (reading 'findMany')
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded actions obey their own rules (BR-04 to BR-07, C-146) > keeps every text field within its bounds after trim 0ms
+     → Cannot read properties of undefined (reading 'findMany')
+
+node.exe : ⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (⎯⎯⎯⎯⎯⎯ Failed Tests 33 ⎯⎯⎯⎯⎯⎯⎯:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) 
+> holds exactly PLANNED, COMPLETED, CANCELLED in declaration order
+AssertionError: expected [] to deeply equal [ 'PLANNED', 'COMPLETED', 'CANCELLED' ]
+
+- Expected
++ Received
+
+- Array [
+-   "PLANNED",
+-   "COMPLETED",
+-   "CANCELLED",
+- ]
++ Array []
+
+ ❯ tests/lab-04/migration.db.test.ts:166:46
+    164| describe("MIG-01 — the ActionStatus enum, alone in its own migration (…
+    165|   it("holds exactly PLANNED, COMPLETED, CANCELLED in declaration order…
+    166|     expect(await enumLabels("ActionStatus")).toEqual(["PLANNED", "COMP…
+       |                                              ^
+    167|   });
+    168| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) 
+> is created by a migration whose only statement is CREATE TYPE "ActionStatus"
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/lab-04/migration.db.test.ts:173:43
+    171|       /CREATE\s+TYPE\s+"ActionStatus"/i.test(f.sql),
+    172|     );
+    173|     expect(creators.map((f) => f.folder)).toHaveLength(1);
+       |                                           ^
+    174|     expect(statements(creators[0].sql)).toHaveLength(1);
+    175|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-01 — the ActionStatus enum, alone in its own migration (C-145, L3 C-70) 
+> is ordered before the migration that creates the ActionTaken table
+AssertionError: expected -1 to be greater than or equal to 0
+ ❯ tests/lab-04/migration.db.test.ts:181:20
+    179|     const enumAt = files.findIndex((f) => /CREATE\s+TYPE\s+"ActionStat…
+    180|     const tableAt = files.findIndex((f) => /CREATE\s+TABLE\s+"ActionTa…
+    181|     expect(enumAt).toBeGreaterThanOrEqual(0);
+       |                    ^
+    182|     expect(tableAt).toBeGreaterThan(enumAt);
+    183|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > has each 
+column with its type and nullability
+AssertionError: id type: expected undefined to be 'int4' // Object.is equality
+
+- Expected: 
+"int4"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:208:52
+    206|     ];
+    207|     for (const [name, udt, nullable] of expected) {
+    208|       expect(cols[name]?.udt_name, `${name} type`).toBe(udt);
+       |                                                    ^
+    209|       expect(cols[name]?.is_nullable, `${name} nullability`).toBe(null…
+    210|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > defaults 
+followUpRequired to false, version to 0 and createdAt to now
+AssertionError: expected undefined to be 'false' // Object.is equality
+
+- Expected: 
+"false"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:216:51
+    214|   it("defaults followUpRequired to false, version to 0 and createdAt t…
+    215|     const cols = await columns("ActionTaken");
+    216|     expect(cols.followUpRequired?.column_default).toBe("false");
+       |                                                   ^
+    217|     expect(cols.version?.column_default).toBe("0");
+    218|     expect(cols.createdAt?.column_default).toBe("CURRENT_TIMESTAMP");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-02 — ActionTaken carries every spec 7.2 column (BR-01) > references 
+exactly one Ticket and the assignee, creator and performer Users
+AssertionError: expected [] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
+-   Object {
+-     "column": "ticketId",
+-     "from": "ActionTaken",
+-     "to": "Ticket",
+-   },
+-   Object {
+-     "column": "assigneeId",
+-     "from": "ActionTaken",
+-     "to": "User",
+-   },
+-   Object {
+-     "column": "createdById",
+-     "from": "ActionTaken",
+-     "to": "User",
+-   },
+-   Object {
+-     "column": "performedById",
+-     "from": "ActionTaken",
+-     "to": "User",
+-   },
+- ]
++ Array []
+
+ ❯ tests/lab-04/migration.db.test.ts:223:18
+    221|   it("references exactly one Ticket and the assignee, creator and perf…
+    222|     const keys = (await foreignKeys()).filter((k) => k.from === "Actio…
+    223|     expect(keys).toEqual(
+       |                  ^
+    224|       expect.arrayContaining([
+    225|         { from: "ActionTaken", column: "ticketId", to: "Ticket" },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > 
+has a nullable fromStatus, a NOT NULL toStatus, both TicketStatus, and changedAt defaulting to now
+AssertionError: expected undefined to be 'TicketStatus' // Object.is equality
+
+- Expected: 
+"TicketStatus"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:238:39
+    236|   it("has a nullable fromStatus, a NOT NULL toStatus, both TicketStatu…
+    237|     const cols = await columns("TicketStatusChange");
+    238|     expect(cols.fromStatus?.udt_name).toBe("TicketStatus");
+       |                                       ^
+    239|     expect(cols.fromStatus?.is_nullable).toBe("YES");
+    240|     expect(cols.toStatus?.udt_name).toBe("TicketStatus");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-03 — TicketStatusChange is append-only by absence (spec 7.3, C-167) > 
+references the Ticket and the User who made the change
+AssertionError: expected [ { from: 'Ticket', …(2) }, …(9) ] to deeply equal ArrayContaining{…}
+
+- Expected
++ Received
+
+- ArrayContaining [
++ Array [
++   Object {
++     "column": "requesterId",
++     "from": "Ticket",
++     "to": "User",
++   },
++   Object {
++     "column": "categoryId",
++     "from": "Ticket",
++     "to": "Category",
++   },
++   Object {
++     "column": "relatedSystemId",
++     "from": "Ticket",
++     "to": "RelatedSystem",
++   },
+    Object {
+      "column": "ticketId",
+-     "from": "TicketStatusChange",
++     "from": "Attachment",
+      "to": "Ticket",
+    },
+    Object {
+-     "column": "changedById",
+-     "from": "TicketStatusChange",
++     "column": "ownerId",
++     "from": "Ticket",
++     "to": "User",
++   },
++   Object {
++     "column": "userId",
++     "from": "Session",
++     "to": "User",
++   },
++   Object {
++     "column": "ticketId",
++     "from": "PublicComment",
++     "to": "Ticket",
++   },
++   Object {
++     "column": "authorId",
++     "from": "PublicComment",
++     "to": "User",
++   },
++   Object {
++     "column": "ticketId",
++     "from": "InternalNote",
++     "to": "Ticket",
++   },
++   Object {
++     "column": "authorId",
++     "from": "InternalNote",
+      "to": "User",
+    },
+  ]
+
+ ❯ tests/lab-04/migration.db.test.ts:248:33
+    246| 
+    247|   it("references the Ticket and the User who made the change", async (…
+    248|     expect(await foreignKeys()).toEqual(
+       |                                 ^
+    249|       expect.arrayContaining([
+    250|         { from: "TicketStatusChange", column: "ticketId", to: "Ticket"…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, 
+BR-35) > adds version INT NOT NULL DEFAULT 0
+AssertionError: expected undefined to be 'int4' // Object.is equality
+
+- Expected: 
+"int4"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:264:36
+    262|   it("adds version INT NOT NULL DEFAULT 0", async () => {
+    263|     const cols = await columns("Ticket");
+    264|     expect(cols.version?.udt_name).toBe("int4");
+       |                                    ^
+    265|     expect(cols.version?.is_nullable).toBe("NO");
+    266|     expect(cols.version?.column_default).toBe("0");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, 
+BR-35) > adds lastActivityAt NOT NULL DEFAULT now()
+AssertionError: expected undefined to be 'timestamp' // Object.is equality
+
+- Expected: 
+"timestamp"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:271:43
+    269|   it("adds lastActivityAt NOT NULL DEFAULT now()", async () => {
+    270|     const cols = await columns("Ticket");
+    271|     expect(cols.lastActivityAt?.udt_name).toBe("timestamp");
+       |                                           ^
+    272|     expect(cols.lastActivityAt?.is_nullable).toBe("NO");
+    273|     expect(cols.lastActivityAt?.column_default).toBe("CURRENT_TIMESTAM…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-04 — Ticket gains version, lastActivityAt and resolvedAt (spec 7.4, 
+BR-35) > adds a nullable resolvedAt
+AssertionError: expected undefined to be 'timestamp' // Object.is equality
+
+- Expected: 
+"timestamp"
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:278:39
+    276|   it("adds a nullable resolvedAt", async () => {
+    277|     const cols = await columns("Ticket");
+    278|     expect(cols.resolvedAt?.udt_name).toBe("timestamp");
+       |                                       ^
+    279|     expect(cols.resolvedAt?.is_nullable).toBe("YES");
+    280|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > makes 
+Ticket(requesterId, clientRequestId), PublicComment and InternalNote (authorId, clientRequestId) and 
+ActionTaken(createdById, clientRequestId) unique
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-04/migration.db.test.ts:285:80
+    283| describe("MIG-05 — the four clientRequestId composite uniques (BR-42, …
+    284|   it("makes Ticket(requesterId, clientRequestId), PublicComment and In…
+    285|     expect(await hasIndex("Ticket", ["requesterId", "clientRequestId"]…
+       |                                                                                ^
+    286|     expect(await hasIndex("PublicComment", ["authorId", "clientRequest…
+    287|     expect(await hasIndex("InternalNote", ["authorId", "clientRequestI…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-05 — the four clientRequestId composite uniques (BR-42, C-145) > lets 
+one author insert two rows with a NULL key into each of the four tables
+TypeError: Cannot read properties of undefined (reading 'create')
+ ❯ tests/lab-04/migration.db.test.ts:324:30
+    322|           data: { ticketId, authorId: staff.id, body: `MIG-05 note ${n…
+    323|         });
+    324|         await tx.actionTaken.create({
+       |                              ^
+    325|           data: {
+    326|             ticketId,
+ ❯ tests/lab-04/migration.db.test.ts:156:7
+ ❯ Proxy._transactionWithCallback node_modules/@prisma/client/runtime/library.js:130:8000
+ ❯ inRolledBackTransaction tests/lab-04/migration.db.test.ts:155:5
+ ❯ tests/lab-04/migration.db.test.ts:300:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, 
+C-145) > indexes ActionTaken([ 'ticketId', 'actionAt', 'id' ])
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, 
+C-145) > indexes ActionTaken([ 'assigneeId', 'status' ])
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, 
+C-145) > indexes Ticket([ 'requesterId', 'lastActivityAt' ])
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, 
+C-145) > indexes Ticket([ 'resolvedAt' ])
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-06 — the five named indexes exist with their column order (spec 7.5, 
+C-145) > indexes TicketStatusChange([ 'ticketId', 'changedAt', 'id' ])
+AssertionError: expected false to be true // Object.is equality
+
+- Expected
++ Received
+
+- true
++ false
+
+ ❯ tests/lab-04/migration.db.test.ts:354:46
+    352|     ["TicketStatusChange", ["ticketId", "changedAt", "id"]],
+    353|   ] as const)("indexes %s(%s)", async (table, cols) => {
+    354|     expect(await hasIndex(table, [...cols])).toBe(true);
+       |                                              ^
+    355|   });
+    356| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-07 — every Lab 4 migration is additive (BR-67, C-145) > finds the Lab 4 
+migrations to inspect
+AssertionError: expected 0 to be greater than or equal to 1
+ ❯ tests/lab-04/migration.db.test.ts:362:27
+    360| 
+    361|   it("finds the Lab 4 migrations to inspect", () => {
+    362|     expect(lab4().length).toBeGreaterThanOrEqual(1);
+       |                           ^
+    363|   });
+    364| 
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > MIG-08 — a Ticket created without any Lab 4 field gets the defaults (C-145) 
+> creates with version 0, lastActivityAt set and resolvedAt null
+AssertionError: expected undefined to be +0 // Object.is equality
+
+- Expected: 
+0
+
++ Received: 
+undefined
+
+ ❯ tests/lab-04/migration.db.test.ts:396:30
+    394|     });
+    395|     try {
+    396|       expect(ticket.version).toBe(0);
+       |                              ^
+    397|       expect(ticket.lastActivityAt).toBeInstanceOf(Date);
+    398|       expect(ticket.lastActivityAt.getTime()).toBeGreaterThanOrEqual(b…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed 
+run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > leaves the Ticket, Public Comment, Internal Note, 
+ActionTaken and TicketStatusChange counts unchanged
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ counts tests/lab-04/migration.db.test.ts:452:42
+    450|         publicComments: await fresh.publicComment.count(),
+    451|         internalNotes: await fresh.internalNote.count(),
+    452|         actions: await fresh.actionTaken.count(),
+       |                                          ^
+    453|         statusChanges: await fresh.ticketStatusChange.count(),
+    454|       });
+ ❯ tests/lab-04/migration.db.test.ts:455:22
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed 
+run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keys actions by (Ticket, description): each seeded 
+action exists exactly once
+TypeError: SEED_ACTIONS is not iterable
+ ❯ tests/lab-04/migration.db.test.ts:464:23
+    462| 
+    463|     it("keys actions by (Ticket, description): each seeded action exis…
+    464|       for (const a of SEED_ACTIONS) {
+       |                       ^
+    465|         const plan = SEED_TICKETS.find((t) => t.summary === a.ticketSu…
+    466|         expect(plan, a.ticketSummary).toBeDefined();
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed 
+composition: action counts (AC-99, BR-02, C-146) > holds Tickets with zero, one and several actions
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-04/migration.db.test.ts:494:29
+    492|       const perTicket = await Promise.all(
+    493|         (await seededTickets()).map(({ ticket }) =>
+    494|           fresh.actionTaken.count({ where: { ticketId: ticket.id } }),
+       |                             ^
+    495|         ),
+    496|       );
+ ❯ tests/lab-04/migration.db.test.ts:493:33
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-15 — seed 
+composition: action counts (AC-99, BR-02, C-146) > holds one Ticket whose actions were created or performed by three 
+different staff users
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ tests/lab-04/migration.db.test.ts:505:49
+    503|       let widest = 0;
+    504|       for (const { ticket } of await seededTickets()) {
+    505|         const actions = await fresh.actionTaken.findMany({
+       |                                                 ^
+    506|           where: { ticketId: ticket.id },
+    507|           include: { creator: true, performer: true },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-16 — seed 
+composition: action states (C-146) > holds at least one PLANNED, COMPLETED, CANCELLED and follow-up-required action
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-04/migration.db.test.ts:524:40
+    522|     it("holds at least one PLANNED, COMPLETED, CANCELLED and follow-up…
+    523|       for (const status of ["PLANNED", "COMPLETED", "CANCELLED"] as co…
+    524|         expect(await fresh.actionTaken.count({ where: { status } }), s…
+       |                                        ^
+    525|       }
+    526|       expect(await fresh.actionTaken.count({ where: { followUpRequired…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-17 — seed 
+composition: the resolution gate (AC-99, C-146) > holds one open Ticket whose gate is met and one whose gate is not
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ gateReasons tests/lab-04/migration.db.test.ts:123:40
+    121| // rows: owner absence is not a reason (BR-28), and met means no reaso…
+    122| async function gateReasons(db: PrismaClient, ticketId: number): Promis…
+    123|   const actions = await db.actionTaken.findMany({ where: { ticketId } …
+       |                                        ^
+    124|   const completed = actions
+    125|     .filter((a) => a.status === "COMPLETED")
+ ❯ tests/lab-04/migration.db.test.ts:535:64
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-18 — seeded 
+RESOLVED and CLOSED Tickets (C-146, BR-32, BR-49) > gives each a resolvedAt and completed actions that satisfy the gate
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-04/migration.db.test.ts:554:35
+    552|         expect(ticket.resolvedAt, ticket.summary).not.toBeNull();
+    553|         expect(
+    554|           await fresh.actionTaken.count({ where: { ticketId: ticket.id…
+       |                                   ^
+    555|           ticket.summary,
+    556|         ).toBeGreaterThan(0);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-19 — the 
+zero-metric accounts (AC-99, C-146) > leaves the Administrator owning zero Tickets and assigned zero planned actions
+TypeError: Cannot read properties of undefined (reading 'count')
+ ❯ tests/lab-04/migration.db.test.ts:577:33
+    575|       expect(await fresh.ticket.count({ where: { ownerId: admin.id } }…
+    576|       expect(
+    577|         await fresh.actionTaken.count({ where: { assigneeId: admin.id,…
+       |                                 ^
+    578|       ).toBe(0);
+    579|     });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity 
+times are relative to the run (C-146) > fills the staff Recently updated list (BR-85)
+PrismaClientValidationError: 
+Invalid `fresh.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-04\migration.db.test.ts:586:28
+
+  583 it("fills the staff Recently updated list (BR-85)", async () => {
+  584   const since = new Date(Date.now() - 168 * HOUR);
+  585   expect(
+→ 586     await fresh.ticket.count({
+            select: {
+              _count: {
+                select: {
+                  _all: true
+                }
+              }
+            },
+            where: {
+              currentStatus: {
+                notIn: [
+                  "CLOSED",
+                  "CANCELLED"
+                ]
+              },
+              lastActivityAt: {
+              ~~~~~~~~~~~~~~
+                gte: new Date("2026-10-21T08:09:39.618Z")
+              },
+          ?   AND?: TicketWhereInput | TicketWhereInput[],
+          ?   OR?: TicketWhereInput[],
+          ?   NOT?: TicketWhereInput | TicketWhereInput[],
+          ?   id?: IntFilter | Int,
+          ?   ticketNumber?: StringNullableFilter | String | Null,
+          ?   requesterId?: IntFilter | Int,
+          ?   categoryId?: IntFilter | Int,
+          ?   relatedSystemId?: IntFilter | Int,
+          ?   ownerId?: IntNullableFilter | Int | Null,
+          ?   summary?: StringFilter | String,
+          ?   description?: StringFilter | String,
+          ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+          ?   itPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+          ?   requesterResolvedAt?: DateTimeNullableFilter | DateTime | Null,
+          ?   createdAt?: DateTimeFilter | DateTime,
+          ?   updatedAt?: DateTimeFilter | DateTime,
+          ?   requester?: UserRelationFilter | UserWhereInput,
+          ?   owner?: UserNullableRelationFilter | UserWhereInput | Null,
+          ?   category?: CategoryRelationFilter | CategoryWhereInput,
+          ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+          ?   attachments?: AttachmentListRelationFilter,
+          ?   publicComments?: PublicCommentListRelationFilter,
+          ?   internalNotes?: InternalNoteListRelationFilter
+            }
+          })
+
+Unknown argument `lastActivityAt`. Available options are marked with ?.
+ ❯ wn node_modules/@prisma/client/runtime/library.js:29:1363
+ ❯ $n.handleRequestError node_modules/@prisma/client/runtime/library.js:121:6958
+ ❯ $n.handleAndLogRequestError node_modules/@prisma/client/runtime/library.js:121:6623
+ ❯ $n.request node_modules/@prisma/client/runtime/library.js:121:6307
+ ❯ l node_modules/@prisma/client/runtime/library.js:130:9633
+ ❯ tests/lab-04/migration.db.test.ts:586:9
+    584|       const since = new Date(Date.now() - 168 * HOUR);
+    585|       expect(
+    586|         await fresh.ticket.count({
+       |         ^
+    587|           where: {
+    588|             currentStatus: { notIn: [...ACTIVE_EXCLUDED] },
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity 
+times are relative to the run (C-146) > fills a seeded Requester's Recently updated and Recently resolved lists 
+(BR-77, BR-78)
+PrismaClientValidationError: 
+Invalid `fresh.ticket.count()` invocation in
+C:\Downloads\Lab1_Starter_Scaffold\toktickit\server\tests\lab-04\migration.db.test.ts:600:44
+
+  597 const requesters = await fresh.user.findMany({ where: { role: "REQUESTER" } });
+  598 const both = [];
+  599 for (const r of requesters) {
+→ 600   const updated = await fresh.ticket.count({
+          select: {
+            _count: {
+              select: {
+                _all: true
+              }
+            }
+          },
+          where: {
+            requesterId: 2,
+            lastActivityAt: {
+            ~~~~~~~~~~~~~~
+              gte: new Date("2026-10-21T08:09:39.633Z")
+            },
+        ?   AND?: TicketWhereInput | TicketWhereInput[],
+        ?   OR?: TicketWhereInput[],
+        ?   NOT?: TicketWhereInput | TicketWhereInput[],
+        ?   id?: IntFilter | Int,
+        ?   ticketNumber?: StringNullableFilter | String | Null,
+        ?   categoryId?: IntFilter | Int,
+        ?   relatedSystemId?: IntFilter | Int,
+        ?   ownerId?: IntNullableFilter | Int | Null,
+        ?   summary?: StringFilter | String,
+        ?   description?: StringFilter | String,
+        ?   requestedPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   itPriority?: EnumRequestedPriorityFilter | RequestedPriority,
+        ?   currentStatus?: EnumTicketStatusFilter | TicketStatus,
+        ?   requesterResolvedAt?: DateTimeNullableFilter | DateTime | Null,
+        ?   createdAt?: DateTimeFilter | DateTime,
+        ?   updatedAt?: DateTimeFilter | DateTime,
+        ?   requester?: UserRelationFilter | UserWhereInput,
+        ?   owner?: UserNullableRelationFilter | UserWhereInput | Null,
+        ?   category?: CategoryRelationFilter | CategoryWhereInput,
+        ?   relatedSystem?: RelatedSystemRelationFilter | RelatedSystemWhereInput,
+        ?   attachments?: AttachmentListRelationFilter,
+        ?   publicComments?: PublicCommentListRelationFilter,
+        ?   internalNotes?: InternalNoteListRelationFilter
+          }
+        })
+
+Unknown argument `lastActivityAt`. Available options are marked with ?.
+ ❯ wn node_modules/@prisma/client/runtime/library.js:29:1363
+ ❯ $n.handleRequestError node_modules/@prisma/client/runtime/library.js:121:6958
+ Test Files  1 failed (1)
+      Tests  33 failed | 8 passed (41)
+   Start at  15:09:19
+   Duration  20.29s (transform 337ms, setup 0ms, collect 250ms, tests 6.88s, environment 0ms, prepare 622ms)
+
+ ❯ $n.handleAndLogRequestError node_modules/@prisma/client/runtime/library.js:121:6623
+ ❯ $n.request node_modules/@prisma/client/runtime/library.js:121:6307
+ ❯ l node_modules/@prisma/client/runtime/library.js:130:9633
+ ❯ tests/lab-04/migration.db.test.ts:600:25
+    598|       const both = [];
+    599|       for (const r of requesters) {
+    600|         const updated = await fresh.ticket.count({
+       |                         ^
+    601|           where: { requesterId: r.id, lastActivityAt: { gte: since } },
+    602|         });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded 
+actions obey their own rules (BR-04 to BR-07, C-146) > never dates an action before its Ticket, nor a completed one 
+after now + 5 min
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ tests/lab-04/migration.db.test.ts:615:47
+    613|     it("never dates an action before its Ticket, nor a completed one a…
+    614|       const latest = Date.now() + 5 * 60 * 1000;
+    615|       const actions = await fresh.actionTaken.findMany({ include: { ti…
+       |                                               ^
+    616|       expect(actions.length).toBeGreaterThan(0);
+    617|       for (const a of actions) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded 
+actions obey their own rules (BR-04 to BR-07, C-146) > carries a followUpNote if and only if followUpRequired
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ tests/lab-04/migration.db.test.ts:628:47
+    626| 
+    627|     it("carries a followUpNote if and only if followUpRequired", async…
+    628|       for (const a of await fresh.actionTaken.findMany()) {
+       |                                               ^
+    629|         expect(a.followUpNote !== null, a.description).toBe(a.followUp…
+    630|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/33]⎯
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-21 — seeded 
+actions obey their own rules (BR-04 to BR-07, C-146) > keeps every text field within its bounds after trim
+TypeError: Cannot read properties of undefined (reading 'findMany')
+ ❯ tests/lab-04/migration.db.test.ts:636:47
+    634|       const within = (value: string | null, min: number, max: number) …
+    635|         value === null || (value.trim().length >= min && value.trim().…
+    636|       for (const a of await fresh.actionTaken.findMany()) {
+       |                                               ^
+    637|         expect(within(a.description, 1, 2000), `description: ${a.descr…
+    638|         expect(a.description.trim()).toBe(a.description);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/33]⎯
+
+npm notice
+npm notice New minor version of npm available! 11.9.0 -> 11.21.1
+npm notice Changelog: https://github.com/npm/cli/releases/tag/v11.21.1
+npm notice To update run: npm install -g npm@11.21.1
+npm notice
+

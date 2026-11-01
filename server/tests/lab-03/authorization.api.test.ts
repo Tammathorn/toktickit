@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR } from "../../src/lib/uploads.js";
@@ -103,7 +104,7 @@ afterAll(async () => {
   const mine = { OR: [{ ticket: { requesterId: { in: ids } } }, { authorId: { in: ids } }] };
   await prisma.publicComment.deleteMany({ where: mine });
   await prisma.internalNote.deleteMany({ where: mine });
-  await prisma.ticket.deleteMany({ where: { requesterId: { in: ids } } });
+  await deleteTickets(prisma, { requesterId: { in: ids } });
   await removeUsers(prisma, ids);
 });
 

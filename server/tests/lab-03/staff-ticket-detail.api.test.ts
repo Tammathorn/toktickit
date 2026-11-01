@@ -3,6 +3,7 @@ import fs from "node:fs";
 import path from "node:path";
 import type { Prisma, TicketStatus } from "@prisma/client";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber, type NewTicket } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR } from "../../src/lib/uploads.js";
@@ -102,7 +103,7 @@ afterAll(async () => {
   const written = { OR: [{ ticket: mine }, { authorId: { in: userIds } }] };
   await prisma.publicComment.deleteMany({ where: written });
   await prisma.internalNote.deleteMany({ where: written });
-  await prisma.ticket.deleteMany({ where: mine });
+  await deleteTickets(prisma, mine);
   await removeUsers(prisma, userIds);
 });
 

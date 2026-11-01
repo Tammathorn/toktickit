@@ -1,0 +1,15 @@
+﻿Command: cd server; npx prisma generate
+Date: 2026-10-28 15:11:12 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; Issue 2 implementation applied, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+
+✔ Generated Prisma Client (v5.22.0) to .\node_modules\@prisma\client in 123ms
+
+Start by importing your Prisma Client (See: https://pris.ly/d/importing-client)
+
+Tip: Want to turn off tips and other hints? https://pris.ly/tip-4-nohints
+
+

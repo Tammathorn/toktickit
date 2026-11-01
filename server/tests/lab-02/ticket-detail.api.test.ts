@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import fs from "node:fs";
 import path from "node:path";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR } from "../../src/lib/uploads.js";
@@ -53,7 +54,7 @@ afterAll(async () => {
     if (fs.existsSync(file)) fs.unlinkSync(file);
   }
   await prisma.attachment.deleteMany({ where: { id: { in: rows.map((r) => r.id) } } });
-  await prisma.ticket.deleteMany({ where: { requesterId: { in: [owner.id, other.id] } } });
+  await deleteTickets(prisma, { requesterId: { in: [owner.id, other.id] } });
   await removeUsers(prisma, [owner.id, other.id]);
 });
 
