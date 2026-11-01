@@ -82,3 +82,21 @@ Playwright specs of Issue 9.
 | `resolvedAt` set/kept/cleared; history row per change in the same transaction; legacy Tickets | WF-50..WF-55; AC-36, AC-74..AC-77, AC-129, AC-147 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
 | Replays on Public Comments and Internal Notes, concurrent and after closing; Ticket create ignores the key | WF-56..WF-64; AC-63, AC-65, AC-66, AC-127, AC-128; C-139, C-158 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
 | Labs 1-3 suites still pass; adaptations per `tests.md` 4.1/4.3 | see `evidence/issue-66/README.md` | `evidence/issue-66/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-before-adaptation.txt` | 5 | captured |
+
+## IT Staff and Administrator dashboard - Issue 6 (#67)
+
+This Issue's folder is `evidence/issue-67/`, named by the GitHub number like the three above.
+Dashboard screenshots (E2E-33, C-180) are rows of Issue 9, which writes `e2e/lab-04/dashboards.spec.ts`.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| Tests written first and shown failing | API-60..API-81, SEC-05, SEC-07; UI-01..UI-12, STYLE-09, STYLE-10, STYLE-12 | `evidence/issue-67/red-staff-dashboard-server.txt`, `red-dashboards-client.txt`, `red-audit-fixes-client.txt` | 6 | captured |
+| Staff dashboard shape: eleven cards in api-spec order, three lists | API-60; AC-78, BR-52 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| Every staff card's count equals its drill-down's total, one test per card | API-61..API-71; AC-81, AC-109..AC-114; C-127, C-143, C-169 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| Administrator user cards equal `GET /api/users?role=`, inactive included | API-72..API-74; AC-81, AC-117; BR-87 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| List order and tie-breaks; My planned actions uncapped; 168 h inclusive boundary with `now` injected; zero Administrator | API-75..API-79; AC-79, AC-82, AC-83, AC-115, AC-116, AC-133, AC-137; C-142, C-161, C-169 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| Queue `sort=lastActivityAt` and `requesterResolved=true` | API-80, API-81; AC-72, AC-73; C-143 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| Part 5 role restriction: Requester -> 403, no metric content; `userCounts` only for the Administrator | SEC-05, SEC-07; AC-86, AC-87; C-180 | `evidence/issue-67/green-staff-dashboard-server-verbose.txt` | 6 | captured |
+| Part 5 metrics match database queries (dev database, one psql query per staff card, beside the API JSON of the same moment) | AC-81; BR-56, C-127 | `evidence/issue-67/part5-staff-cards.sql`, `part5-psql-staff-cards.txt`, `part5-api-staff-dashboard-it-staff.json`, `part5-api-staff-dashboard-administrator.json`, `part5-api-drilldown-totals.json` | 6 | captured |
+| Staff Dashboard UI: cards, user row, zero/empty, Refresh without polling, no deltas, Quick Actions, `#my-actions`, list rows, loading/failure, drill-down landings, nav | UI-01..UI-12, STYLE-09, STYLE-10, STYLE-12; AC-80, AC-82..AC-84, AC-88, AC-90; C-128, C-144 | `evidence/issue-67/green-client-suite.txt` | 6 | captured |
+| Labs 1-3 suites still pass; C-144 adaptations per `tests.md` 4.2/4.3 | see `evidence/issue-67/README.md` | `evidence/issue-67/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-resp12-header.txt` | 6 | captured |

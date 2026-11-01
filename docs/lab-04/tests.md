@@ -706,6 +706,7 @@ Issue 5 meets it.
 |---|---|---|---|---|
 | `client/tests/lab-03/Login.test.tsx` | L3 UI-50 | Adapted | C-144 | Per-role nav gains `Dashboard` first |
 | same | untitled "each role lands on its own screen" (L242) | Adapted | C-144 | Every role lands on `/dashboard` |
+| `client/tests/lab-03/ChangePassword.test.tsx` | L3 UI-13 (success continues into the app) | Adapted (Issue #67) | C-144 | After the change the app continues to the `Dashboard` heading, not `My Tickets`; the panel, icon and banner assertions are unchanged |
 | `client/tests/lab-03/StaffTicketDetail.test.tsx` | shared fixture (~L30) | Fixture, not a test | C-138, C-171, C-140 | Gains `version`, `allowedTransitions`, `resolutionGate`, `actions`, `statusHistory`, `historyComplete`, `lastActivityAt` |
 | same | L3 UI-29 | Adapted | `CLAUDE.md` rule 3, C-171 | Offered moves come from the fixture's `allowedTransitions` |
 | same | L3 UI-31 | Adapted | C-138 | The confirmed request body carries `version` |
@@ -722,6 +723,7 @@ fixture is checked by eye for `Invalid Date` and blank renders (1.1 report cauti
 |---|---|---|---|---|
 | `e2e/lab-03/authentication.spec.ts` | L3 E2E-03, E2E-01, E2E-05 | Adapted | C-144 | Post-login and post-change landing is `/dashboard`; the nav table gains `Dashboard` |
 | same | untitled Forbidden test (L252) | Adapted | C-144 | Link reads `Go to Dashboard` |
+| same | L3 E2E-06, RESP-08 | Adapted (Issue #67) | C-144 | Both wait for sign-in on the landing screen's heading, now `Dashboard` instead of `My Tickets`; the storage and focus-ring assertions are unchanged. RESP-07 reads the same `ROLES` table as E2E-05, so it now also expects `Dashboard` first |
 | `e2e/lab-03/staff-ticket-flow.spec.ts` | L3 E2E-11 | Adapted | C-137, C-138 | An action is completed before Resolve |
 | same | L3 E2E-12, E2E-15, E2E-26 | Adapted | C-138, C-137, C-156 | Raw fixture PATCHes send `version` and now assert their status first (C-156) |
 | `e2e/lab-03/visual-evidence.spec.ts` | `staffMoves` helper | Helper, not a test | C-138, C-137, C-156 | Sends `version` (read from the staff GET by `e2e/support/lab4.ts` `moveStatus`) and asserts 200; a `RESOLVED` step records a completed action first (Issue #66) |

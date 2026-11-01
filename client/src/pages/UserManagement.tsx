@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState, type FormEvent, type KeyboardEvent, type ReactNode } from "react";
+import { useRouter } from "../router.js";
 import {
   ApiError,
   createUser,
@@ -50,7 +51,11 @@ export default function UserManagement() {
   const currentUser = useCurrentUser();
   const [search, setSearch] = useState("");
   const [searchText, setSearchText] = useState("");
-  const [role, setRole] = useState("");
+  // Lab 4 (FR-24): the role filter lives in the address, so the
+  // Administrator's user cards land filtered (/users?role=IT_STAFF).
+  const { search: locationSearch, navigate } = useRouter();
+  const role = new URLSearchParams(locationSearch).get("role") ?? "";
+  const setRole = (value: string) => navigate(value ? `/users?role=${encodeURIComponent(value)}` : "/users", { replace: true });
   const [load, setLoad] = useState<LoadState>({ kind: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
   const [panel, setPanel] = useState<Panel>({ kind: "none" });

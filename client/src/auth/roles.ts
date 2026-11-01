@@ -6,21 +6,23 @@ import type { UserRole } from "../api.js";
 // (BR-36, FR-10). The guard is feedback; the server's 403 is the control
 // (BR-40).
 
-export type Destination = "myTickets" | "createTicket" | "ticketDetail" | "queue" | "staffTicketDetail" | "users";
+export type Destination = "dashboard" | "myTickets" | "createTicket" | "ticketDetail" | "queue" | "staffTicketDetail" | "users";
 
+// Lab 4 (C-144, ui-spec 2): every role lands on its Dashboard.
 export const LANDING: Record<UserRole, string> = {
-  REQUESTER: "/tickets",
-  IT_STAFF: "/queue",
-  ADMINISTRATOR: "/queue",
+  REQUESTER: "/dashboard",
+  IT_STAFF: "/dashboard",
+  ADMINISTRATOR: "/dashboard",
 };
 
 export const LANDING_LABEL: Record<UserRole, string> = {
-  REQUESTER: "My Tickets",
-  IT_STAFF: "the Ticket Queue",
-  ADMINISTRATOR: "the Ticket Queue",
+  REQUESTER: "Dashboard",
+  IT_STAFF: "Dashboard",
+  ADMINISTRATOR: "Dashboard",
 };
 
 const ALLOWED: Record<Destination, readonly UserRole[]> = {
+  dashboard: ["REQUESTER", "IT_STAFF", "ADMINISTRATOR"],
   myTickets: ["REQUESTER"],
   createTicket: ["REQUESTER"],
   ticketDetail: ["REQUESTER"],
@@ -41,11 +43,16 @@ export interface NavItem {
 
 export const NAV_ITEMS: Record<UserRole, NavItem[]> = {
   REQUESTER: [
+    { to: "/dashboard", label: "Dashboard", matches: (p) => p === "/dashboard" },
     { to: "/tickets", label: "My Tickets", matches: (p) => p.startsWith("/tickets") && p !== "/tickets/new" },
     { to: "/tickets/new", label: "Create Ticket", matches: (p) => p === "/tickets/new" },
   ],
-  IT_STAFF: [{ to: "/queue", label: "Ticket Queue", matches: (p) => p.startsWith("/queue") }],
+  IT_STAFF: [
+    { to: "/dashboard", label: "Dashboard", matches: (p) => p === "/dashboard" },
+    { to: "/queue", label: "Ticket Queue", matches: (p) => p.startsWith("/queue") },
+  ],
   ADMINISTRATOR: [
+    { to: "/dashboard", label: "Dashboard", matches: (p) => p === "/dashboard" },
     { to: "/queue", label: "Ticket Queue", matches: (p) => p.startsWith("/queue") },
     { to: "/users", label: "User Management", matches: (p) => p.startsWith("/users") },
   ],

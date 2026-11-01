@@ -1,0 +1,67 @@
+Command: docker exec toktickit-db psql -U toktickit -d toktickit -f /tmp/part5-staff-cards.sql   (the file is part5-staff-cards.sql beside this one, copied in with docker cp)
+Date: 2026-10-31 11:52:48 +0700
+Commit: 2dc8f41 (feature/lab4-6-staff-dashboard; #67 uncommitted). Run straight after the capture that wrote the part5-api-*.json files; no e2e run in progress.
+
+-- card unassigned: active Tickets with no owner
+    card    | count 
+------------+-------
+ unassigned |  1935
+
+-- card mine: active Tickets owned by the caller
+ card | count 
+------+-------
+ mine |   246
+
+-- card statusNew: Tickets in New
+   card    | count 
+-----------+-------
+ statusNew |  2200
+
+-- card statusOpen: Tickets in Open
+    card    | count 
+------------+-------
+ statusOpen |   143
+
+-- card statusInProgress: Tickets in In Progress
+       card       | count 
+------------------+-------
+ statusInProgress |    29
+
+-- card statusWaitingForRequester: Tickets in Waiting for Requester
+           card            | count 
+---------------------------+-------
+ statusWaitingForRequester |     1
+
+-- card statusReopened: Tickets in Reopened
+      card      | count 
+----------------+-------
+ statusReopened |     1
+
+-- card statusResolved: Tickets in Resolved
+      card      | count 
+----------------+-------
+ statusResolved |    63
+
+-- card highItPriority: active Tickets with IT Priority High
+      card      | count 
+----------------+-------
+ highItPriority |    10
+
+-- card requesterSaysResolved: active Tickets with requesterResolvedAt set
+         card          | count 
+-----------------------+-------
+ requesterSaysResolved |    49
+
+-- card myPlannedActions: PLANNED actions assigned to the caller on active Tickets
+       card       | count 
+------------------+-------
+ myPlannedActions |     2
+
+-- Administrator userCounts: every account by role, and the active ones
+     role      | count | active_count 
+---------------+-------+--------------
+ REQUESTER     |   143 |          142
+ IT_STAFF      |    49 |           48
+ ADMINISTRATOR |     1 |            1
+
+Exit code: 0
