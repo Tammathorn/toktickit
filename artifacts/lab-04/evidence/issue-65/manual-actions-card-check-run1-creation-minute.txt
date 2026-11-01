@@ -1,0 +1,11 @@
+Command: cd /c/Downloads/Lab1_Starter_Scaffold/toktickit; node tmp/lab4/step5-actions-check.cjs
+Date: 2026-10-30 17:43:42 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; Issue 4 work uncommitted; script kept in tmp/, not committed)
+Exit code: 1
+------------------------------------------------------------------------
+ticket 2280 TKT-2026-002280 (201)
+staff: empty card shown
+FAILED: locator.waitFor: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByText('Action added.').first() to be visible
+

@@ -1,0 +1,65 @@
+﻿Command: docker exec toktickit-db createdb -U toktickit toktickit_restore_check; docker exec toktickit-db pg_restore -U toktickit -d toktickit_restore_check --no-owner /tmp/lab4-pre-migration.dump; docker exec toktickit-db psql -U toktickit -d toktickit_restore_check -f /tmp/lab4-counts.sql
+Date: 2026-10-28 15:10:47 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; Issue 2 implementation applied, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+      tbl      | count 
+---------------+-------
+ Attachment    |   722
+ Category      |     4
+ InternalNote  |    39
+ PublicComment |    45
+ RelatedSystem |     7
+ Session       |  2185
+ Ticket        |   999
+ User          |    65
+(8 rows)
+
+                    email                    | tickets 
+---------------------------------------------+---------
+ anucha.p@example.ac.th                      |      16
+ created-1791168899939-1@e2e.test            |       0
+ created-1791168962930-1@e2e.test            |       0
+ created-1791169046527-1@e2e.test            |       0
+ created-1791169163478-1@e2e.test            |       0
+ created-1791169188807-1@e2e.test            |       0
+ created-1791169935309-1@e2e.test            |       0
+ created-1791190508732-1@e2e.test            |       0
+ created-1791216891626-1@e2e.test            |       0
+ created-1791216938635-1@e2e.test            |       0
+ dup-1791167812063-1@e2e.test                |       0
+ dup-1791168899950-1@e2e.test                |       0
+ dup-1791168962804-1@e2e.test                |       0
+ dup-1791169045935-1@e2e.test                |       0
+ dup-1791169046372-1@e2e.test                |       0
+ dup-1791169049015-1@e2e.test                |       0
+ dup-1791169163741-1@e2e.test                |       0
+ dup-1791169164003-1@e2e.test                |       0
+ dup-1791169166838-1@e2e.test                |       0
+ dup-1791169188897-1@e2e.test                |       0
+ dup-1791169191652-1@e2e.test                |       0
+ dup-1791169192296-1@e2e.test                |       0
+ dup-1791169935605-1@e2e.test                |       0
+ dup-1791169935620-1@e2e.test                |       0
+ dup-1791169940494-1@e2e.test                |       0
+ dup-1791190508753-1@e2e.test                |       0
+ dup-1791190518729-1@e2e.test                |       0
+ dup-1791190528742-1@e2e.test                |       0
+ dup-1791216891676-1@e2e.test                |       0
+ dup-1791216900326-1@e2e.test                |       0
+ dup-1791216910156-1@e2e.test                |       0
+ dup-1791216938671-1@e2e.test                |       0
+ dup-1791216944250-1@e2e.test                |       0
+ dup-1791216949749-1@e2e.test                |       0
+ edit-target-1791169050406-1@e2e.test        |       0
+ first.login@example.ac.th                   |      81
+ kanya.s@example.ac.th                       |       6
+ nattapong.w@example.ac.th                   |       0
+ prasit.b@example.ac.th                      |       1
+ siriporn.c@example.ac.th                    |     895
+ state-matrix-desktop-1791224176527@e2e.test |       0
+ state-matrix-mobile-1791224216052@e2e.test  |       0
+ state-matrix-tablet-1791224211564@e2e.test  |       0
+(43 rows)
+
+

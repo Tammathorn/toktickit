@@ -14,6 +14,7 @@ import {
   signIn,
   withFirstLoginAccount,
 } from "../support/auth";
+import { addCompletedAction, moveStatus } from "../support/lab4";
 
 // Issue #12 (feature/lab3-12-ui-evidence) - the visual checklist, ui-spec.md
 // section 24, made provable at all three C-90 viewports.
@@ -37,14 +38,17 @@ import {
 
 const vp = () => test.info().project.name;
 const STATES = path.resolve(__dirname, "../../artifacts/lab-03/screenshots/states");
+// Lab 4 (Issue #70): the Dashboard route is new in Lab 4, so E2E-48's captures of it
+// belong to Lab 4's tree and never to artifacts/lab-03.
+const LAB4_REGRESSION = path.resolve(__dirname, "../../artifacts/lab-04/screenshots/regression");
 const A11Y = path.resolve(__dirname, "../../artifacts/lab-03/a11y");
 const FAILURE_TEXT = "Something went wrong on our side. Your work has not been lost - please try again.";
 const SIGNED_OUT = { cookies: [], origins: [] };
 
-async function shot(page: Page, name: string, fullPage = true) {
+async function shot(page: Page, name: string, fullPage = true, dir = STATES) {
   await settle(page);
-  fs.mkdirSync(STATES, { recursive: true });
-  await page.screenshot({ path: path.join(STATES, `${name.replace("<vp>", vp())}.png`), fullPage });
+  fs.mkdirSync(dir, { recursive: true });
+  await page.screenshot({ path: path.join(dir, `${name.replace("<vp>", vp())}.png`), fullPage });
 }
 
 function writeJson(name: string, data: unknown) {
@@ -110,11 +114,16 @@ async function staffMoves(id: number, steps: Array<"claim" | "OPEN" | "IN_PROGRE
   const staff = await apiAs(IT_STAFF);
   try {
     for (const step of steps) {
-      const res =
-        step === "claim"
-          ? await staff.post(`/api/staff/tickets/${id}/claim`)
-          : await staff.patch(`/api/staff/tickets/${id}/status`, { data: { currentStatus: step } });
-      expect(res.status(), `${step} on ticket ${id}`).toBe(200);
+      if (step === "claim") {
+        const res = await staff.post(`/api/staff/tickets/${id}/claim`);
+        expect(res.status(), `${step} on ticket ${id}`).toBe(200);
+        continue;
+      }
+      // Adapted for Lab 4: Resolved needs the resolution gate met, so a
+      // completed action is recorded first (C-137); every move sends the
+      // Ticket's current version and asserts 200 (C-138, C-156).
+      if (step === "RESOLVED") await addCompletedAction(staff, id);
+      await moveStatus(staff, id, step);
     }
   } finally {
     await staff.dispose();
@@ -391,8 +400,12 @@ test.describe("State matrix (ui-spec 20) - Requester screens", () => {
     await staffMoves(ticket.id, ["RESOLVED"]);
     await page.getByRole("dialog").getByRole("button", { name: "Report it" }).click();
     await expect(page.locator(".tk-conflict")).toBeVisible();
-    // refreshed: the header shows the status the server now holds
-    await expect(page.getByRole("region", { name: "Ticket information" }).locator(".tk-badge", { hasText: "Resolved" })).toBeVisible();
+    // refreshed: the header shows the status the server now holds. Adapted for
+    // Lab 4 (BR-50, C-167): the recorded move also puts a Resolved badge in the
+    // Status history list (ui-spec 9.4), so the header badge is named apart.
+    await expect(
+      page.getByRole("region", { name: "Ticket information" }).locator(".tk-badge:not(.tk-history .tk-badge)", { hasText: "Resolved" }),
+    ).toBeVisible();
     await shot(page, "requester-detail-<vp>-conflict");
 
     await staffMoves(ticket.id, ["CLOSED"]);
@@ -640,13 +653,27 @@ async function focusWalk(page: Page, screen: string) {
       const cs = getComputedStyle(el);
       return r.width > 0 && r.height > 0 && cs.visibility !== "hidden" && cs.display !== "none";
     };
-    return Array.from(document.querySelectorAll(sel)).filter(visible).length;
+    // A named radio group is one Tab stop (arrow keys move inside it), so it
+    // counts once. Adapted for Lab 4: the Actions Taken composer (ui-spec 8.3,
+    // C-123) brings the first radio pair onto a walked screen.
+    const groups = new Set<string>();
+    return Array.from(document.querySelectorAll(sel))
+      .filter(visible)
+      .filter((el) => {
+        const r = el as HTMLInputElement;
+        if (r.tagName !== "INPUT" || r.type !== "radio" || !r.name) return true;
+        const key = `${r.form ? Array.from(document.forms).indexOf(r.form) : -1}:${r.name}`;
+        if (groups.has(key)) return false;
+        groups.add(key);
+        return true;
+      }).length;
   }, FOCUSABLE);
   await page.evaluate(() => (document.activeElement as HTMLElement | null)?.blur());
   const stops: Array<{ element: string; name: string; ring: string | null }> = [];
   const seen = new Set<string>();
   let captured = false;
   let completedCycle = false;
+  let lastKey: string | null = null;
   for (let i = 0; i < expected * 3 + 20; i++) {
     await page.keyboard.press("Tab");
     await settle(page);
@@ -667,6 +694,10 @@ async function focusWalk(page: Page, screen: string) {
       };
     });
     if (!info) continue;
+    // Tab inside a datetime-local input (ui-spec 8.3) moves between its date
+    // and time segments, so the same element repeats: one stop, not a cycle.
+    if (info.key === lastKey) continue;
+    lastKey = info.key;
     if (seen.has(info.key)) {
       completedCycle = true;
       break;
@@ -805,6 +836,11 @@ test.describe("Accessibility proof - IT Staff", () => {
   test("E2E-46 the status confirmation traps focus, closes on Escape and restores focus (ui-spec 16.2, 22)", async ({ page }) => {
     const ticket = await e2eTicket("A11Y: confirm dialog");
     await staffMoves(ticket.id, ["claim", "OPEN"]);
+    // Adapted for Lab 4 (C-137): Resolved is offered only once the resolution
+    // gate is met, so one completed action is recorded first.
+    const staff = await apiAs(IT_STAFF);
+    await addCompletedAction(staff, ticket.id);
+    await staff.dispose();
     await page.goto(`/queue/${ticket.id}`);
     await page.locator("#status-select").selectOption({ label: "Resolved" });
     const save = page.getByRole("group", { name: "Current Status controls" }).getByRole("button", { name: "Save Changes" });
@@ -818,6 +854,11 @@ test.describe("Accessibility proof - Administrator", () => {
   test.use({ storageState: STATE.administrator });
 
   test("E2E-47 User Management: accessible names and focus rings; the Create User panel traps and restores focus", async ({ page }) => {
+    // test.slow(): the focus walk visits every Edit button of the unpaginated
+    // user list (user-list pagination is out of scope, L3 CLAUDE.md never-add
+    // list); each full e2e run adds users to the dev database, so the walk's
+    // length grows run by run. Not a Lab 4 behaviour change.
+    test.slow();
     await page.goto("/users");
     await a11yScreen(page, "users", page.getByRole("button", { name: /^Edit / }).first());
     const opener = page.getByRole("button", { name: "Create User" });
@@ -827,10 +868,12 @@ test.describe("Accessibility proof - Administrator", () => {
   });
 });
 
+// Adapted for Lab 4 (C-144): each role's nav gains Dashboard first, so the
+// aria-current walk starts at /dashboard.
 const NAV_CASES = [
-  { role: "requester", state: STATE.requester, pages: [["/tickets", "My Tickets"], ["/tickets/new", "Create Ticket"]] },
-  { role: "it-staff", state: STATE.itStaff, pages: [["/queue", "Ticket Queue"]] },
-  { role: "administrator", state: STATE.administrator, pages: [["/queue", "Ticket Queue"], ["/users", "User Management"]] },
+  { role: "requester", state: STATE.requester, pages: [["/dashboard", "Dashboard"], ["/tickets", "My Tickets"], ["/tickets/new", "Create Ticket"]] },
+  { role: "it-staff", state: STATE.itStaff, pages: [["/dashboard", "Dashboard"], ["/queue", "Ticket Queue"]] },
+  { role: "administrator", state: STATE.administrator, pages: [["/dashboard", "Dashboard"], ["/queue", "Ticket Queue"], ["/users", "User Management"]] },
 ] as const;
 
 for (const c of NAV_CASES) {
@@ -856,7 +899,7 @@ for (const c of NAV_CASES) {
           }),
         );
         expect(links.filter((l) => l.ariaCurrent === "page").map((l) => l.label), `${route}: the one active item`).toEqual([active]);
-        await shot(page, `nav-<vp>-${c.role}-${route.slice(1).replace(/\//g, "-")}`, false);
+        await shot(page, `nav-<vp>-${c.role}-${route.slice(1).replace(/\//g, "-")}`, false, route === "/dashboard" ? LAB4_REGRESSION : STATES);
         records.push({ route, links });
       }
       writeJson(`aria-current-${c.role}-<vp>`, { role: c.role, viewport: vp(), pages: records });

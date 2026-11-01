@@ -1,0 +1,924 @@
+﻿Command: cd server; npx vitest run tests/lab-04/ticket-workflow.api.test.ts
+Date: 2026-10-30 18:23:35 +07:00
+Commit: 5617a2c (feature/lab4-5-ticket-workflow; the new test file uncommitted, the #66 patch NOT applied - Lab 4 tests first)
+Exit code: 1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/ticket-workflow.api.test.ts (67 tests | 44 failed) 2939ms
+   × the gate and the matrix as functions (UNIT) > UNIT-05 gate reasons as a pure function over all 16 combinations: every reason that applies, in the fixed order; NO_COMPLETED_ACTION and FOLLOW_UP_REQUIRED never together (BR-29, C-167) 9ms
+     → expected 'undefined' to be 'function' // Object.is equality
+   × the gate and the matrix as functions (UNIT) > UNIT-07 allowedTransitions(status) equals the section 5.1 Y targets for all eight statuses; [] for CLOSED and CANCELLED (BR-27, C-125) 2ms
+     → expected 'undefined' to be 'function' // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-02 a client bypassing the UI PATCHes RESOLVED on a Ticket with no actions at all -> 409 RESOLUTION_GATE_NOT_MET, reasons exactly [NO_COMPLETED_ACTION] 27ms
+     → {"id":7723,"ticketNumber":"TKT-2026-007723","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.398Z","updatedAt":"2026-10-30T11:23:32.413Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.398Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2919,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.398Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-03 a completed action without follow-up plus a PLANNED one -> reasons exactly [PLANNED_ACTIONS_OPEN] 28ms
+     → {"id":7724,"ticketNumber":"TKT-2026-007724","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.426Z","updatedAt":"2026-10-30T11:23:32.444Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.426Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1279,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.432Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.438Z","finishedAt":null,"version":0,"allowedOperations":[]},{"id":1278,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.430Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.436Z","finishedAt":"2026-10-30T10:23:32.430Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2920,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.426Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-04 the latest completed action has follow-up required -> reasons exactly [FOLLOW_UP_REQUIRED] 23ms
+     → {"id":7725,"ticketNumber":"TKT-2026-007725","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.452Z","updatedAt":"2026-10-30T11:23:32.468Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.452Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1280,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.456Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":true,"followUpNote":"Replace the cable next week.","attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.463Z","finishedAt":"2026-10-30T10:23:32.456Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2921,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.452Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["FOLLOW_UP_REQUIRED"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-05 resolved, reopened, no action finished since -> reasons exactly [NO_ACTION_SINCE_REOPEN]; after a new completed action, 200 62ms
+     → {"id":7726,"ticketNumber":"TKT-2026-007726","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.476Z","updatedAt":"2026-10-30T11:23:32.530Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.476Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1281,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.481Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.487Z","finishedAt":"2026-10-30T10:23:32.481Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2922,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.476Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":true,"reasons":[]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-06 two combined: no completed action and a PLANNED one -> reasons exactly [NO_COMPLETED_ACTION, PLANNED_ACTIONS_OPEN] 25ms
+     → {"id":7727,"ticketNumber":"TKT-2026-007727","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.538Z","updatedAt":"2026-10-30T11:23:32.555Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.538Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1282,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.543Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.549Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2923,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.538Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-07 the fixed order with three reasons, both possible triples 42ms
+     → {"id":7728,"ticketNumber":"TKT-2026-007728","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.563Z","updatedAt":"2026-10-30T11:23:32.598Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.563Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1283,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.568Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.575Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[],"historyComplete":false,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-09 a reopened Ticket whose only post-reopen action is CANCELLED (it has a finishedAt) -> still NO_ACTION_SINCE_REOPEN: a cancelled action does not count (C-186) 48ms
+     → {"id":7730,"ticketNumber":"TKT-2026-007730","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.634Z","updatedAt":"2026-10-30T11:23:32.672Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.634Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1287,"status":"CANCELLED","actionAt":"2026-10-30T12:23:32.660Z","description":"[workflow-test] planned work","result":"Not needed after all.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.666Z","finishedAt":"2026-10-30T11:13:32.660Z","version":0,"allowedOperations":[]},{"id":1286,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.640Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.647Z","finishedAt":"2026-10-30T10:23:32.640Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2926,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.634Z"},{"id":2927,"fromStatus":"RESOLVED","toStatus":"REOPENED","changedBy":{"id":4500,"name":"[workflow-test] Staff A"},"changedAt":"2026-10-30T10:53:32.657Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_ACTION_SINCE_REOPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-10 an owned Ticket meeting the gate -> RESOLVED: 200, resolvedAt set, Requester flag cleared, one history row, version + 1 25ms
+     → expected null not to be null
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-11 the staff DTO of a Ticket failing the gate: resolutionGate.met false with the refusal's reasons; allowedTransitions still lists RESOLVED (C-171) 24ms
+     → {"id":7732,"ticketNumber":"TKT-2026-007732","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.706Z","updatedAt":"2026-10-30T11:23:32.723Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.706Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1289,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.711Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.717Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2929,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.706Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the resolution gate and the cancel rule (C-137, C-124) > WF-13 -> CANCELLED with a PLANNED action is 409 PLANNED_ACTIONS_OPEN and nothing changes; after that action is cancelled, 200 (BR-33, C-124) 24ms
+     → {"id":7734,"ticketNumber":"TKT-2026-007734","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"CANCELLED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.753Z","updatedAt":"2026-10-30T11:23:32.770Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.753Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1290,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.758Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.764Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2931,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.753Z"}],"historyComplete":true,"allowedTransitions":[],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × the status route's seven-step order (BR-89) > WF-18 step 4: a non-terminal Ticket, a permitted target, version missing, "3" and 1.5 -> 400 VALIDATION_FAILED with fields.version 19ms
+     → {"id":7749,"ticketNumber":"TKT-2026-007749","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.982Z","updatedAt":"2026-10-30T11:23:32.995Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.982Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2946,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.982Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+   × the status route's seven-step order (BR-89) > WF-19 step 5: a non-terminal Ticket, a stale version, a target the matrix forbids -> 409 STALE_UPDATE, not INVALID_STATUS_TRANSITION 10ms
+     → expected 'INVALID_STATUS_TRANSITION' to be 'STALE_UPDATE' // Object.is equality
+   × the status route's seven-step order (BR-89) > WF-21 step 7 with the current version: unowned -> RESOLVED failing the gate is OWNER_REQUIRED; owned -> RESOLVED failing it is RESOLUTION_GATE_NOT_MET; -> CANCELLED with a planned action is PLANNED_ACTIONS_OPEN 33ms
+     → {"id":7753,"ticketNumber":"TKT-2026-007753","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.034Z","updatedAt":"2026-10-30T11:23:33.049Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.034Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1292,"status":"PLANNED","actionAt":"2026-10-30T12:23:33.037Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:33.044Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2950,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.034Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × stale updates (C-138) > WF-22 an owner PATCH without version -> 400 fields.version; the owner unchanged 20ms
+     → {"id":7754,"ticketNumber":"TKT-2026-007754","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.054Z","updatedAt":"2026-10-30T11:23:33.070Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.054Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2951,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.054Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+   × stale updates (C-138) > WF-23 an IT Priority PATCH without version -> 400 fields.version; the priority unchanged 26ms
+     → {"id":7755,"ticketNumber":"TKT-2026-007755","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"HIGH","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.075Z","updatedAt":"2026-10-30T11:23:33.091Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.075Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2952,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.075Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+   × stale updates (C-138) > WF-24 a status PATCH with the version read before another user's change -> 409 STALE_UPDATE; nothing changes 34ms
+     → {"id":7756,"ticketNumber":"TKT-2026-007756","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"WAITING_FOR_REQUESTER","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.101Z","updatedAt":"2026-10-30T11:23:33.129Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.101Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2953,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.101Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+   × stale updates (C-138) > WF-25 an owner PATCH with an old version -> 409 STALE_UPDATE; nothing changes 35ms
+     → {"id":7757,"ticketNumber":"TKT-2026-007757","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"HIGH","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.134Z","updatedAt":"2026-10-30T11:23:33.163Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.134Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2954,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.134Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+   × stale updates (C-138) > WF-26 an IT Priority PATCH with an old version -> 409 STALE_UPDATE; nothing changes 33ms
+     → {"id":7758,"ticketNumber":"TKT-2026-007758","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"LOW","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.169Z","updatedAt":"2026-10-30T11:23:33.198Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.169Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2955,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.169Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+   × stale updates (C-138) > WF-28 the STALE_UPDATE body is exactly { error: { code, message } }: no fields, no reasons (C-173) 20ms
+     → {"id":7760,"ticketNumber":"TKT-2026-007760","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.245Z","updatedAt":"2026-10-30T11:23:33.259Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.245Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2957,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.245Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+   × stale updates (C-138) > WF-29 race on status: two agents read version v, then send OPEN -> IN_PROGRESS and OPEN -> WAITING_FOR_REQUESTER concurrently -> exactly one 200, the other 409 STALE_UPDATE; version v + 1; one new history row 36ms
+     → [{"id":7761,"ticketNumber":"TKT-2026-007761","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.265Z","updatedAt":"2026-10-30T11:23:33.280Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.265Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2958,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.265Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}},{"id":7761,"ticketNumber":"TKT-2026-007761","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"WAITING_FOR_REQUESTER","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.265Z","updatedAt":"2026-10-30T11:23:33.289Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.265Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2958,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.265Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}]: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+   × stale updates (C-138) > WF-30 race on owner: two concurrent owner PATCHes with v, to different users -> one 200, one STALE_UPDATE; the owner is the winner's choice; version v + 1 29ms
+     → [{"id":7762,"ticketNumber":"TKT-2026-007762","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.301Z","updatedAt":"2026-10-30T11:23:33.321Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.301Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2959,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.301Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}},{"id":7762,"ticketNumber":"TKT-2026-007762","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.301Z","updatedAt":"2026-10-30T11:23:33.321Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.301Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2959,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.301Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}]: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+   × stale updates (C-138) > WF-32 a planned-action create and -> RESOLVED sent concurrently on a gate-met Ticket, 20 runs: no run ends RESOLVED with a PLANNED action (BR-34) 341ms
+     → run 13: expected true to be false // Object.is equality
+   × stale updates (C-138) > WF-34 owner PATCH order: CLOSED with no version -> 409 TICKET_CLOSED (not 400); a stale version with a Requester as owner -> 409 STALE_UPDATE (not 422) 18ms
+     → {"error":{"code":"ASSIGNEE_NOT_ELIGIBLE","message":"That user cannot own a ticket. Choose an active IT Staff or Administrator user."}}: expected 422 to be 409 // Object.is equality
+   × lastActivityAt and version per write path (C-140, C-138) > WF-36 a status change advances lastActivityAt; version + 1 22ms
+     → expected 1793352213741 to be greater than 1793352213741
+   × lastActivityAt and version per write path (C-140, C-138) > WF-37 an owner change advances lastActivityAt; version + 1 20ms
+     → expected 1793352213762 to be greater than 1793352213762
+   × lastActivityAt and version per write path (C-140, C-138) > WF-38 an IT Priority change to a new value advances lastActivityAt, version + 1; re-sending the current value is 200 with version and lastActivityAt unchanged (C-187) 19ms
+     → expected 1793352213782 to be greater than 1793352213782
+   × lastActivityAt and version per write path (C-140, C-138) > WF-39 claim with no body is 200, advances lastActivityAt; version + 1 (BR-38) 21ms
+     → expected 1793352213801 to be greater than 1793352213801
+   × lastActivityAt and version per write path (C-140, C-138) > WF-44 a Public Comment advances lastActivityAt; version unchanged 16ms
+     → expected 1793352213922 to be greater than 1793352213922
+   × lastActivityAt and version per write path (C-140, C-138) > WF-45 an Attachment upload advances lastActivityAt; version unchanged 22ms
+     → expected 1793352213938 to be greater than 1793352213938
+   × lastActivityAt and version per write path (C-140, C-138) > WF-46 an Attachment soft removal advances lastActivityAt; version unchanged 23ms
+     → expected 1793352213961 to be greater than 1793352213961
+   × lastActivityAt and version per write path (C-140, C-138) > WF-47 the Requester's "Problem Appears Resolved" with no version sent is 200, advances lastActivityAt; version + 1 (BR-38) 19ms
+     → expected 1793352213983 to be greater than 1793352213983
+   × lastActivityAt and version per write path (C-140, C-138) > WF-48 an Internal Note leaves lastActivityAt and version both unchanged; the Requester's My Tickets row shows the same lastActivityAt as before (BR-47) 13ms
+     → expected undefined to be '2026-10-30T09:23:34.002Z' // Object.is equality
+   × lastActivityAt and version per write path (C-140, C-138) > WF-49 the flag set a second time: 200; requesterResolvedAt overwritten; version and lastActivityAt move again (C-178) 39ms
+     → expected 1793352214014 to be greater than 1793352214014
+   × resolvedAt and status history (BR-49, BR-50) > WF-51 RESOLVED -> REOPENED sets resolvedAt to NULL 22ms
+     → expected 2026-10-30T10:53:34.080Z to be null
+   × resolvedAt and status history (BR-49, BR-50) > WF-54 three moves: both DTOs list the creation row and the three changes, changedAt then id ascending; Requester rows carry changedBy { name } only 67ms
+     → expected [ [ null, 'NEW' ] ] to deeply equal [ [ null, 'NEW' ], …(3) ]
+   × resolvedAt and status history (BR-49, BR-50) > WF-55 a status change whose transaction fails (a temporary trigger raising on INSERT INTO TicketStatusChange) -> 500 INTERNAL_ERROR with no stack or SQL; status, version, lastActivityAt and history unchanged 28ms
+     → {"id":7801,"ticketNumber":"TKT-2026-007801","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:34.227Z","updatedAt":"2026-10-30T11:23:34.247Z","version":0,"lastActivityAt":"2026-10-30T09:23:34.227Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2998,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:34.227Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 500 // Object.is equality
+   × replays on Public Comments and Internal Notes (C-139) > WF-56 a Public Comment posted twice by one author with key K: the second is 200 with the original comment; one row 23ms
+     → {"id":836,"body":"WF-56 once.","author":{"id":4502,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-30T11:23:34.278Z"}: expected 201 to be 200 // Object.is equality
+   × replays on Public Comments and Internal Notes (C-139) > WF-57 an Internal Note replayed with K and a different body: 200 with the original note; no new row; the body is not compared (C-166) 23ms
+     → {"id":718,"body":"WF-57 different.","author":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-30T11:23:34.301Z"}: expected 201 to be 200 // Object.is equality
+   × replays on Public Comments and Internal Notes (C-139) > WF-58 five concurrent Public Comments with one K (the P2002 path): one row; every response 200 or 201 with it; none 500 256ms
+     → expected [ …(5) ] to have a length of 1 but got 5
+   × replays on Public Comments and Internal Notes (C-139) > WF-59 five concurrent Internal Notes with one K (the P2002 path): one row; none 500 271ms
+     → expected [ …(5) ] to have a length of 1 but got 5
+   × replays on Public Comments and Internal Notes (C-139) > WF-60 a Public Comment replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED 23ms
+     → {"error":{"code":"TICKET_CLOSED","message":"This ticket is closed - create a new ticket if the problem returns."}}: expected 409 to be 200 // Object.is equality
+   × replays on Public Comments and Internal Notes (C-139) > WF-61 an Internal Note replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED 18ms
+     → {"error":{"code":"TICKET_CLOSED","message":"This ticket is closed - create a new ticket if the problem returns."}}: expected 409 to be 200 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 44 ⎯⎯⎯⎯⎯⎯⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the gate and the matrix as functions (UNIT) > UNIT-05 gate reasons as a pure function over all 16 combinations: every reason that applies, in the fixed order; NO_COMPLETED_ACTION and FOLLOW_UP_REQUIRED never together (BR-29, C-167)
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+System.Management.Automation.RemoteException
+Expected: "function"
+Received: "undefined"
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:181:39
+System.Management.Automation.RemoteException
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the gate and the matrix as functions (UNIT) > UNIT-07 allowedTransitions(status) equals the section 5.1 Y targets for all eight statuses; [] for CLOSED and CANCELLED (BR-27, C-125)
+AssertionError: expected 'undefined' to be 'function' // Object.is equality
+System.Management.Automation.RemoteException
+Expected: "function"
+Received: "undefined"
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:242:42
+    240|   it("UNIT-07 allowedTransitions(status) equals the section 5.1 Y targ…
+    241|     const st = await import(TRANSITIONS);
+    242|     expect(typeof st.allowedTransitions).toBe("function");
+       |                                          ^
+    243|     for (const from of STATUSES) expect(st.allowedTransitions(from), f…
+    244|     expect(st.allowedTransitions("CLOSED")).toEqual([]);
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-02 a client bypassing the UI PATCHes RESOLVED on a Ticket with no actions at all -> 409 RESOLUTION_GATE_NOT_MET, reasons exactly [NO_COMPLETED_ACTION]
+AssertionError: {"id":7723,"ticketNumber":"TKT-2026-007723","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.398Z","updatedAt":"2026-10-30T11:23:32.413Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.398Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2919,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.398Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:263:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-03 a completed action without follow-up plus a PLANNED one -> reasons exactly [PLANNED_ACTIONS_OPEN]
+AssertionError: {"id":7724,"ticketNumber":"TKT-2026-007724","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.426Z","updatedAt":"2026-10-30T11:23:32.444Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.426Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1279,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.432Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.438Z","finishedAt":null,"version":0,"allowedOperations":[]},{"id":1278,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.430Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.436Z","finishedAt":"2026-10-30T10:23:32.430Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2920,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.426Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:271:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-04 the latest completed action has follow-up required -> reasons exactly [FOLLOW_UP_REQUIRED]
+AssertionError: {"id":7725,"ticketNumber":"TKT-2026-007725","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.452Z","updatedAt":"2026-10-30T11:23:32.468Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.452Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1280,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.456Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":true,"followUpNote":"Replace the cable next week.","attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.463Z","finishedAt":"2026-10-30T10:23:32.456Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2921,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.452Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["FOLLOW_UP_REQUIRED"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:278:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-05 resolved, reopened, no action finished since -> reasons exactly [NO_ACTION_SINCE_REOPEN]; after a new completed action, 200
+AssertionError: {"id":7726,"ticketNumber":"TKT-2026-007726","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.476Z","updatedAt":"2026-10-30T11:23:32.530Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.476Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1281,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.481Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.487Z","finishedAt":"2026-10-30T10:23:32.481Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2922,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.476Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":true,"reasons":[]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:288:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-06 two combined: no completed action and a PLANNED one -> reasons exactly [NO_COMPLETED_ACTION, PLANNED_ACTIONS_OPEN]
+AssertionError: {"id":7727,"ticketNumber":"TKT-2026-007727","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.538Z","updatedAt":"2026-10-30T11:23:32.555Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.538Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1282,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.543Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.549Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2923,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.538Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:302:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-07 the fixed order with three reasons, both possible triples
+AssertionError: {"id":7728,"ticketNumber":"TKT-2026-007728","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.563Z","updatedAt":"2026-10-30T11:23:32.598Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.563Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1283,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.568Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.575Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[],"historyComplete":false,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:312:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-09 a reopened Ticket whose only post-reopen action is CANCELLED (it has a finishedAt) -> still NO_ACTION_SINCE_REOPEN: a cancelled action does not count (C-186)
+AssertionError: {"id":7730,"ticketNumber":"TKT-2026-007730","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.634Z","updatedAt":"2026-10-30T11:23:32.672Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.634Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1287,"status":"CANCELLED","actionAt":"2026-10-30T12:23:32.660Z","description":"[workflow-test] planned work","result":"Not needed after all.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.666Z","finishedAt":"2026-10-30T11:13:32.660Z","version":0,"allowedOperations":[]},{"id":1286,"status":"COMPLETED","actionAt":"2026-10-30T10:23:32.640Z","description":"[workflow-test] planned work","result":"Done.","followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdAt":"2026-10-30T11:23:32.647Z","finishedAt":"2026-10-30T10:23:32.640Z","version":0,"allowedOperations":[]}],"statusHistory":[{"id":2926,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.634Z"},{"id":2927,"fromStatus":"RESOLVED","toStatus":"REOPENED","changedBy":{"id":4500,"name":"[workflow-test] Staff A"},"changedAt":"2026-10-30T10:53:32.657Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_ACTION_SINCE_REOPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:339:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-10 an owned Ticket meeting the gate -> RESOLVED: 200, resolvedAt set, Requester flag cleared, one history row, version + 1
+AssertionError: expected null not to be null
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:352:34
+    350|     const after = await row(t.id);
+    351|     expect(after.currentStatus).toBe("RESOLVED");
+    352|     expect(after.resolvedAt).not.toBeNull();
+       |                                  ^
+    353|     expect(after.resolvedAt!.getTime()).toBeGreaterThanOrEqual(started…
+    354|     expect(after.requesterResolvedAt).toBeNull();
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-11 the staff DTO of a Ticket failing the gate: resolutionGate.met false with the refusal's reasons; allowedTransitions still lists RESOLVED (C-171)
+AssertionError: {"id":7732,"ticketNumber":"TKT-2026-007732","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.706Z","updatedAt":"2026-10-30T11:23:32.723Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.706Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1289,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.711Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.717Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2929,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.706Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:365:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the resolution gate and the cancel rule (C-137, C-124) > WF-13 -> CANCELLED with a PLANNED action is 409 PLANNED_ACTIONS_OPEN and nothing changes; after that action is cancelled, 200 (BR-33, C-124)
+AssertionError: {"id":7734,"ticketNumber":"TKT-2026-007734","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"CANCELLED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.753Z","updatedAt":"2026-10-30T11:23:32.770Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.753Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1290,"status":"PLANNED","actionAt":"2026-10-30T12:23:32.758Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:32.764Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2931,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.753Z"}],"historyComplete":true,"allowedTransitions":[],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:382:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-18 step 4: a non-terminal Ticket, a permitted target, version missing, "3" and 1.5 -> 400 VALIDATION_FAILED with fields.version
+AssertionError: {"id":7749,"ticketNumber":"TKT-2026-007749","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:32.982Z","updatedAt":"2026-10-30T11:23:32.995Z","version":0,"lastActivityAt":"2026-10-30T09:23:32.982Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2946,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:32.982Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 400
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:437:7
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-19 step 5: a non-terminal Ticket, a stale version, a target the matrix forbids -> 409 STALE_UPDATE, not INVALID_STATUS_TRANSITION
+AssertionError: expected 'INVALID_STATUS_TRANSITION' to be 'STALE_UPDATE' // Object.is equality
+System.Management.Automation.RemoteException
+Expected: "STALE_UPDATE"
+Received: "INVALID_STATUS_TRANSITION"
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:137:32
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+    137|   expect(res.body.error?.code).toBe(code);
+       |                                ^
+    138| }
+    139| 
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:445:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > the status route's seven-step order (BR-89) > WF-21 step 7 with the current version: unowned -> RESOLVED failing the gate is OWNER_REQUIRED; owned -> RESOLVED failing it is RESOLUTION_GATE_NOT_MET; -> CANCELLED with a planned action is PLANNED_ACTIONS_OPEN
+AssertionError: {"id":7753,"ticketNumber":"TKT-2026-007753","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"RESOLVED","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.034Z","updatedAt":"2026-10-30T11:23:33.049Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.034Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":1292,"status":"PLANNED","actionAt":"2026-10-30T12:23:33.037Z","description":"[workflow-test] planned work","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"createdBy":{"id":4500,"name":"[workflow-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-30T11:23:33.044Z","finishedAt":null,"version":0,"allowedOperations":[]}],"statusHistory":[{"id":2950,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.034Z"}],"historyComplete":true,"allowedTransitions":["CLOSED","REOPENED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ expectReasons tests/lab-04/ticket-workflow.api.test.ts:141:3
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:463:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-22 an owner PATCH without version -> 400 fields.version; the owner unchanged
+AssertionError: {"id":7754,"ticketNumber":"TKT-2026-007754","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.054Z","updatedAt":"2026-10-30T11:23:33.070Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.054Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2951,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.054Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 400
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:478:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-23 an IT Priority PATCH without version -> 400 fields.version; the priority unchanged
+AssertionError: {"id":7755,"ticketNumber":"TKT-2026-007755","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"HIGH","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.075Z","updatedAt":"2026-10-30T11:23:33.091Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.075Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2952,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.075Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 400 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 400
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:487:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-24 a status PATCH with the version read before another user's change -> 409 STALE_UPDATE; nothing changes
+AssertionError: {"id":7756,"ticketNumber":"TKT-2026-007756","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"WAITING_FOR_REQUESTER","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.101Z","updatedAt":"2026-10-30T11:23:33.129Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.101Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2953,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.101Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:498:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-25 an owner PATCH with an old version -> 409 STALE_UPDATE; nothing changes
+AssertionError: {"id":7757,"ticketNumber":"TKT-2026-007757","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"HIGH","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.134Z","updatedAt":"2026-10-30T11:23:33.163Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.134Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2954,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.134Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:506:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-26 an IT Priority PATCH with an old version -> 409 STALE_UPDATE; nothing changes
+AssertionError: {"id":7758,"ticketNumber":"TKT-2026-007758","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"LOW","currentStatus":"OPEN","owner":{"id":4501,"name":"[workflow-test] Staff B","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.169Z","updatedAt":"2026-10-30T11:23:33.198Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.169Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2955,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.169Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:515:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-28 the STALE_UPDATE body is exactly { error: { code, message } }: no fields, no reasons (C-173)
+AssertionError: {"id":7760,"ticketNumber":"TKT-2026-007760","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.245Z","updatedAt":"2026-10-30T11:23:33.259Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.245Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2957,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.245Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:535:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-29 race on status: two agents read version v, then send OPEN -> IN_PROGRESS and OPEN -> WAITING_FOR_REQUESTER concurrently -> exactly one 200, the other 409 STALE_UPDATE; version v + 1; one new history row
+AssertionError: [{"id":7761,"ticketNumber":"TKT-2026-007761","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.265Z","updatedAt":"2026-10-30T11:23:33.280Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.265Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2958,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.265Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}},{"id":7761,"ticketNumber":"TKT-2026-007761","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"WAITING_FOR_REQUESTER","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.265Z","updatedAt":"2026-10-30T11:23:33.289Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.265Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2958,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.265Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}]: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+  Array [
+    200,
+-   409,
++   200,
+  ]
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:549:56
+    547|     ]);
+    548|     const statuses = [a.status, b.status].sort();
+    549|     expect(statuses, JSON.stringify([a.body, b.body])).toEqual([200, 4…
+       |                                                        ^
+    550|     const loser = a.status === 409 ? a : b;
+    551|     expect(loser.body.error.code).toBe("STALE_UPDATE");
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-30 race on owner: two concurrent owner PATCHes with v, to different users -> one 200, one STALE_UPDATE; the owner is the winner's choice; version v + 1
+AssertionError: [{"id":7762,"ticketNumber":"TKT-2026-007762","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.301Z","updatedAt":"2026-10-30T11:23:33.321Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.301Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2959,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.301Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}},{"id":7762,"ticketNumber":"TKT-2026-007762","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:33.301Z","updatedAt":"2026-10-30T11:23:33.321Z","version":0,"lastActivityAt":"2026-10-30T09:23:33.301Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2959,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:33.301Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}]: expected [ 200, 200 ] to deeply equal [ 200, 409 ]
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+  Array [
+    200,
+-   409,
++   200,
+  ]
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:565:75
+    563|       setOwner(staffB.agent, t.id, { ownerId: staffB.id, version: v }),
+    564|     ]);
+    565|     expect([a.status, b.status].sort(), JSON.stringify([a.body, b.body…
+       |                                                                           ^
+    566|     const loser = a.status === 409 ? a : b;
+    567|     expect(loser.body.error.code).toBe("STALE_UPDATE");
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-32 a planned-action create and -> RESOLVED sent concurrently on a gate-met Ticket, 20 runs: no run ends RESOLVED with a PLANNED action (BR-34)
+AssertionError: run 13: expected true to be false // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- false
++ true
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:599:79
+    597|       const after = await row(t.id);
+    598|       const planned = await prisma.actionTaken.count({ where: { ticket…
+    599|       expect(after.currentStatus === "RESOLVED" && planned > 0, `run $…
+       |                                                                               ^
+    600|       if (resolved.status === 200) {
+    601|         expectCode(created, 409, "TICKET_RESOLVED");
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > stale updates (C-138) > WF-34 owner PATCH order: CLOSED with no version -> 409 TICKET_CLOSED (not 400); a stale version with a Requester as owner -> 409 STALE_UPDATE (not 422)
+AssertionError: {"error":{"code":"ASSIGNEE_NOT_ELIGIBLE","message":"That user cannot own a ticket. Choose an active IT Staff or Administrator user."}}: expected 422 to be 409 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 409
++ 422
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:624:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-36 a status change advances lastActivityAt; version + 1
+AssertionError: expected 1793352213741 to be greater than 1793352213741
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:662:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-37 an owner change advances lastActivityAt; version + 1
+AssertionError: expected 1793352213762 to be greater than 1793352213762
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:669:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-38 an IT Priority change to a new value advances lastActivityAt, version + 1; re-sending the current value is 200 with version and lastActivityAt unchanged (C-187)
+AssertionError: expected 1793352213782 to be greater than 1793352213782
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:676:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-39 claim with no body is 200, advances lastActivityAt; version + 1 (BR-38)
+AssertionError: expected 1793352213801 to be greater than 1793352213801
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:688:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-44 a Public Comment advances lastActivityAt; version unchanged
+AssertionError: expected 1793352213922 to be greater than 1793352213922
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:730:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-45 an Attachment upload advances lastActivityAt; version unchanged
+AssertionError: expected 1793352213938 to be greater than 1793352213938
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:738:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-46 an Attachment soft removal advances lastActivityAt; version unchanged
+AssertionError: expected 1793352213961 to be greater than 1793352213961
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:748:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-47 the Requester's "Problem Appears Resolved" with no version sent is 200, advances lastActivityAt; version + 1 (BR-38)
+AssertionError: expected 1793352213983 to be greater than 1793352213983
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:756:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-48 an Internal Note leaves lastActivityAt and version both unchanged; the Requester's My Tickets row shows the same lastActivityAt as before (BR-47)
+AssertionError: expected undefined to be '2026-10-30T09:23:34.002Z' // Object.is equality
+System.Management.Automation.RemoteException
+- Expected: 
+"2026-10-30T09:23:34.002Z"
+System.Management.Automation.RemoteException
++ Received: 
+undefined
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:768:38
+    766|     const before = await snapshot(t.id);
+    767|     const rowBefore = await listRow();
+    768|     expect(rowBefore.lastActivityAt).toBe(new Date(before.lastActivity…
+       |                                      ^
+    769|     expect((await note(staffA.agent, t.id, { body: "WF-48 private note…
+    770|     expect(await snapshot(t.id)).toEqual(before);
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > lastActivityAt and version per write path (C-140, C-138) > WF-49 the flag set a second time: 200; requesterResolvedAt overwritten; version and lastActivityAt move again (C-178)
+AssertionError: expected 1793352214014 to be greater than 1793352214014
+ ❯ expectMoved tests/lab-04/ticket-workflow.api.test.ts:640:34
+    638|   async function expectMoved(id: number, before: { lastActivityAt: num…
+    639|     const after = await snapshot(id);
+    640|     expect(after.lastActivityAt).toBeGreaterThan(before.lastActivityAt…
+       |                                  ^
+    641|     expect(after.version).toBe(before.version + versionDelta);
+    642|   }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:784:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-51 RESOLVED -> REOPENED sets resolvedAt to NULL
+AssertionError: expected 2026-10-30T10:53:34.080Z to be null
+System.Management.Automation.RemoteException
+- Expected: 
+null
+System.Management.Automation.RemoteException
++ Received: 
+2026-10-30T10:53:34.080Z
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:808:30
+    806|     const after = await row(t.id);
+    807|     expect(after.currentStatus).toBe("REOPENED");
+    808|     expect(after.resolvedAt).toBeNull();
+       |                              ^
+    809|   });
+    810| 
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-54 three moves: both DTOs list the creation row and the three changes, changedAt then id ascending; Requester rows carry changedBy { name } only
+AssertionError: expected [ [ null, 'NEW' ] ] to deeply equal [ [ null, 'NEW' ], …(3) ]
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+  Array [
+    Array [
+      null,
+      "NEW",
+    ],
+-   Array [
+-     "NEW",
+-     "OPEN",
+-   ],
+-   Array [
+-     "OPEN",
+-     "IN_PROGRESS",
+-   ],
+-   Array [
+-     "IN_PROGRESS",
+-     "WAITING_FOR_REQUESTER",
+-   ],
+  ]
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:845:77
+    843|     const staffDto = (await staffDetail(t.id)).body;
+    844|     for (const dto of [requesterDto, staffDto]) {
+    845|       expect(dto.statusHistory.map((h: any) => [h.fromStatus, h.toStat…
+       |                                                                             ^
+    846|       const keys = dto.statusHistory.map((h: any) => `${new Date(h.cha…
+    847|       expect(keys).toEqual([...keys].sort());
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > resolvedAt and status history (BR-49, BR-50) > WF-55 a status change whose transaction fails (a temporary trigger raising on INSERT INTO TicketStatusChange) -> 500 INTERNAL_ERROR with no stack or SQL; status, version, lastActivityAt and history unchanged
+AssertionError: {"id":7801,"ticketNumber":"TKT-2026-007801","requester":{"id":4502,"name":"[workflow-test] Requester A","email":"wf-reqa-1793359412193-3@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[workflow-test] fixture","description":"Fixture row for ticket-workflow.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"IN_PROGRESS","owner":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF","isActive":true},"requesterResolvedAt":null,"createdAt":"2026-10-30T09:23:34.227Z","updatedAt":"2026-10-30T11:23:34.247Z","version":0,"lastActivityAt":"2026-10-30T09:23:34.227Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[],"statusHistory":[{"id":2998,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":4502,"name":"[workflow-test] Requester A"},"changedAt":"2026-10-30T09:23:34.227Z"}],"historyComplete":true,"allowedTransitions":["OPEN","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION"]}}: expected 200 to be 500 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 500
++ 200
+System.Management.Automation.RemoteException
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:866:5
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-56 a Public Comment posted twice by one author with key K: the second is 200 with the original comment; one row
+AssertionError: {"id":836,"body":"WF-56 once.","author":{"id":4502,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-30T11:23:34.278Z"}: expected 201 to be 200 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 200
++ 201
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:887:56
+    885|     expect(first.status).toBe(201);
+    886|     const second = await comment(reqA.agent, t.id, { body: "WF-56 once…
+    887|     expect(second.status, JSON.stringify(second.body)).toBe(200);
+       |                                                        ^
+    888|     expect(second.body).toEqual(first.body);
+    889|     expect(await prisma.publicComment.count({ where: { ticketId: t.id …
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-57 an Internal Note replayed with K and a different body: 200 with the original note; no new row; the body is not compared (C-166)
+AssertionError: {"id":718,"body":"WF-57 different.","author":{"id":4500,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-30T11:23:34.301Z"}: expected 201 to be 200 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 200
++ 201
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:898:56
+    896|     expect(first.status).toBe(201);
+    897|     const second = await note(staffA.agent, t.id, { body: "WF-57 diffe…
+    898|     expect(second.status, JSON.stringify(second.body)).toBe(200);
+       |                                                        ^
+    899|     expect(second.body).toEqual(first.body);
+    900|     expect(await prisma.internalNote.count({ where: { ticketId: t.id }…
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-58 five concurrent Public Comments with one K (the P2002 path): one row; every response 200 or 201 with it; none 500
+AssertionError: expected [ …(5) ] to have a length of 1 but got 5
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 1
++ 5
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:909:18
+    907|     const responses = await Promise.all(agents.map((ag) => comment(ag,…
+    908|     const rows = await prisma.publicComment.findMany({ where: { ticket…
+    909|     expect(rows).toHaveLength(1);
+       |                  ^
+    910|     for (const r of responses) {
+    911|       expect([200, 201], JSON.stringify(r.body)).toContain(r.status);
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-59 five concurrent Internal Notes with one K (the P2002 path): one row; none 500
+AssertionError: expected [ …(5) ] to have a length of 1 but got 5
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 1
++ 5
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:922:18
+    920|     const responses = await Promise.all(agents.map((ag) => note(ag, t.…
+    921|     const rows = await prisma.internalNote.findMany({ where: { ticketI…
+    922|     expect(rows).toHaveLength(1);
+       |                  ^
+    923|     for (const r of responses) {
+    924|       expect([200, 201], JSON.stringify(r.body)).toContain(r.status);
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-60 a Public Comment replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED
+AssertionError: {"error":{"code":"TICKET_CLOSED","message":"This ticket is closed - create a new ticket if the problem returns."}}: expected 409 to be 200 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 200
++ 409
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:936:56
+    934|     await prisma.ticket.update({ where: { id: t.id }, data: { currentS…
+    935|     const replay = await comment(reqA.agent, t.id, { body: "WF-60.", c…
+    936|     expect(replay.status, JSON.stringify(replay.body)).toBe(200);
+       |                                                        ^
+    937|     expect(replay.body).toEqual(first.body);
+    938|     // Without the key the closed Ticket still refuses (L3 C-109).
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/44]⎯
+System.Management.Automation.RemoteException
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > replays on Public Comments and Internal Notes (C-139) > WF-61 an Internal Note replayed after the Ticket moved to CLOSED: 200 with the original, not TICKET_CLOSED
+AssertionError: {"error":{"code":"TICKET_CLOSED","message":"This ticket is closed - create a new ticket if the problem returns."}}: expected 409 to be 200 // Object.is equality
+System.Management.Automation.RemoteException
+- Expected
++ Received
+System.Management.Automation.RemoteException
+- 200
++ 409
+System.Management.Automation.RemoteException
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:949:56
+    947|     await prisma.ticket.update({ where: { id: t.id }, data: { currentS…
+    948|     const replay = await note(staffA.agent, t.id, { body: "WF-61.", cl…
+    949|     expect(replay.status, JSON.stringify(replay.body)).toBe(200);
+       |                                                        ^
+    950|     expect(replay.body).toEqual(first.body);
+    951|     expectCode(await note(staffA.agent, t.id, { body: "WF-61 new." }),…
+System.Management.Automation.RemoteException
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/44]⎯
+System.Management.Automation.RemoteException
+ Test Files  1 failed (1)
+      Tests  44 failed | 23 passed (67)
+   Start at  18:23:29
+   Duration  5.93s (transform 231ms, setup 0ms, collect 538ms, tests 2.94s, environment 0ms, prepare 79ms)
+

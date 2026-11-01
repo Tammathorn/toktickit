@@ -1,0 +1,15 @@
+Command: cd /c/Downloads/Lab1_Starter_Scaffold/toktickit; node tmp/lab4/step5-actions-check.cjs
+Date: 2026-10-30 17:47:46 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; Issue 4 work uncommitted, with both fixes; script kept in tmp/, not committed)
+Exit code: 1
+------------------------------------------------------------------------
+ticket 2284 TKT-2026-002284 (201)
+staff: empty card shown
+1 create planned: ok
+2 edit: ok
+3 complete: ok
+4 cancel: ok
+requester: 2 rows, 0 buttons in the card
+PROBLEMS:
+requester console.error: Failed to load resource: the server responded with a status of 401 (Unauthorized)
+requester console.error: Failed to load resource: the server responded with a status of 401 (Unauthorized)

@@ -1,0 +1,96 @@
+{
+  "viewport": "mobile",
+  "pairs": [
+    {
+      "card": "Unassigned",
+      "href": "/queue?owner=unassigned",
+      "cardCount": 68,
+      "listTotal": 68,
+      "reads": 2
+    },
+    {
+      "card": "Mine",
+      "href": "/queue?owner=me",
+      "cardCount": 0,
+      "listTotal": 0,
+      "reads": 1
+    },
+    {
+      "card": "New New",
+      "href": "/queue?currentStatus=NEW",
+      "cardCount": 66,
+      "listTotal": 66,
+      "reads": 1
+    },
+    {
+      "card": "Open Open",
+      "href": "/queue?currentStatus=OPEN",
+      "cardCount": 13,
+      "listTotal": 13,
+      "reads": 1
+    },
+    {
+      "card": "In Progress In Progress",
+      "href": "/queue?currentStatus=IN_PROGRESS",
+      "cardCount": 3,
+      "listTotal": 3,
+      "reads": 1
+    },
+    {
+      "card": "Waiting for Requester Waiting for Requester",
+      "href": "/queue?currentStatus=WAITING_FOR_REQUESTER",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Reopened Reopened",
+      "href": "/queue?currentStatus=REOPENED",
+      "cardCount": 3,
+      "listTotal": 3,
+      "reads": 1
+    },
+    {
+      "card": "Resolved Resolved",
+      "href": "/queue?currentStatus=RESOLVED",
+      "cardCount": 9,
+      "listTotal": 9,
+      "reads": 1
+    },
+    {
+      "card": "High IT Priority",
+      "href": "/queue?itPriority=HIGH",
+      "cardCount": 14,
+      "listTotal": 14,
+      "reads": 1
+    },
+    {
+      "card": "Requester says resolved Requester says resolved",
+      "href": "/queue?requesterResolved=true",
+      "cardCount": 1,
+      "listTotal": 1,
+      "reads": 1
+    },
+    {
+      "card": "Requesters",
+      "href": "/users?role=REQUESTER",
+      "cardCount": 6,
+      "listTotal": 6,
+      "reads": 1
+    },
+    {
+      "card": "IT Staff",
+      "href": "/users?role=IT_STAFF",
+      "cardCount": 4,
+      "listTotal": 4,
+      "reads": 1
+    },
+    {
+      "card": "Administrators",
+      "href": "/users?role=ADMINISTRATOR",
+      "cardCount": 3,
+      "listTotal": 3,
+      "reads": 1
+    }
+  ]
+}

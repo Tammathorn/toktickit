@@ -54,8 +54,18 @@ export async function signIn(page: Page, account: Account = REQUESTER): Promise<
 // evidence the Lab 2 and Lab 3 specs assert). Dispose it when done.
 export async function apiAs(account: Account): Promise<APIRequestContext> {
   const context = await playwrightRequest.newContext({ baseURL: API_URL });
-  const res = await context.post("/api/auth/login", { data: account });
-  expect(res.status(), `API sign-in as ${account.email}`).toBe(200);
+  // Issue #70: a sporadic ECONNRESET (the socket closed before any response, seen about once
+  // per full run against the dev server) is retried, up to three attempts. Only a thrown
+  // network error is retried; a response, whatever its status, is asserted as before.
+  let res: Awaited<ReturnType<typeof context.post>> | undefined;
+  for (let attempt = 1; attempt <= 3 && !res; attempt++) {
+    try {
+      res = await context.post("/api/auth/login", { data: account });
+    } catch (error) {
+      if (attempt === 3 || !/ECONNRESET|socket hang up/i.test(String(error))) throw error;
+    }
+  }
+  expect(res!.status(), `API sign-in as ${account.email}`).toBe(200);
   return context;
 }
 

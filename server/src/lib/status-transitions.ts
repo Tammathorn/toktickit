@@ -55,6 +55,13 @@ export function isPermittedTransition(from: TicketStatus, to: TicketStatus): boo
   return PERMITTED[from].includes(to);
 }
 
+// C-125, C-171: every move the matrix permits from a status, in the
+// TICKET_STATUSES order - what the staff DTO's allowedTransitions carries
+// (UNIT-07). [] for Closed and Cancelled.
+export function allowedTransitions(from: TicketStatus): TicketStatus[] {
+  return TICKET_STATUSES.filter((to) => isPermittedTransition(from, to));
+}
+
 export function isTerminal(status: TicketStatus): boolean {
   return TERMINAL_STATUSES.includes(status);
 }

@@ -110,11 +110,24 @@ function parseSortToken<F extends string>(
   return null;
 }
 
+// Lab 4 (BR-55, BR-88, C-170): statusGroup=open is the Requester's "Open
+// tickets" set. Any other value is 400; combining it with currentStatus is 400.
+export const OPEN_GROUP: readonly TicketStatus[] = ["NEW", "OPEN", "IN_PROGRESS", "WAITING_FOR_REQUESTER", "REOPENED"];
+
+function parseStatusGroupParam(raw: Raw, fields: Fields): "open" | null {
+  const v = one(raw, "statusGroup");
+  if (v === undefined || v === "") return null;
+  if (v === "open") return "open";
+  fields.statusGroup = 'statusGroup must be "open".';
+  return null;
+}
+
 // ---------------------------------------------------------------------------
 // api-spec.md 4.2 - GET /api/tickets, the Requester's own list (C-27, C-43).
 // ---------------------------------------------------------------------------
 
-export const TICKET_SORT_FIELDS = ["createdAt", "ticketNumber", "summary", "currentStatus"] as const;
+// Lab 4 adds lastActivityAt (C-143): "Recently updated"'s View all.
+export const TICKET_SORT_FIELDS = ["createdAt", "ticketNumber", "summary", "currentStatus", "lastActivityAt"] as const;
 export type TicketSortField = (typeof TICKET_SORT_FIELDS)[number];
 
 export interface ListQuery {
@@ -122,6 +135,7 @@ export interface ListQuery {
   categoryId: number | null;
   relatedSystemId: number | null;
   currentStatus: TicketStatus | null;
+  statusGroup: "open" | null;
   sortField: TicketSortField;
   sortDirection: SortDirection;
   sort: string;
@@ -135,6 +149,10 @@ export function parseListQuery(raw: Raw): { ok: true; query: ListQuery } | { ok:
   const categoryId = parseIdParam(raw, "categoryId", fields);
   const relatedSystemId = parseIdParam(raw, "relatedSystemId", fields);
   const currentStatus = parseStatusParam(raw, fields);
+  const statusGroup = parseStatusGroupParam(raw, fields);
+  if (statusGroup !== null && one(raw, "currentStatus")) {
+    fields.statusGroup = "statusGroup cannot be combined with currentStatus.";
+  }
   const sortToken = parseSortToken(raw, fields, TICKET_SORT_FIELDS);
   const sortField = sortToken?.field ?? "createdAt";
   const sortDirection = sortToken?.direction ?? "desc";
@@ -143,7 +161,7 @@ export function parseListQuery(raw: Raw): { ok: true; query: ListQuery } | { ok:
   if (Object.keys(fields).length > 0) return { ok: false, fields };
   return {
     ok: true,
-    query: { search, categoryId, relatedSystemId, currentStatus, sortField, sortDirection, sort: `${sortField}:${sortDirection}`, page, pageSize },
+    query: { search, categoryId, relatedSystemId, currentStatus, statusGroup, sortField, sortDirection, sort: `${sortField}:${sortDirection}`, page, pageSize },
   };
 }
 
@@ -155,6 +173,7 @@ export function listWhere(requesterId: number, q: ListQuery): Prisma.TicketWhere
   if (q.categoryId !== null) where.categoryId = q.categoryId;
   if (q.relatedSystemId !== null) where.relatedSystemId = q.relatedSystemId;
   if (q.currentStatus !== null) where.currentStatus = q.currentStatus;
+  if (q.statusGroup === "open") where.currentStatus = { in: [...OPEN_GROUP] };
   if (q.search !== null) {
     const like = escapeLikeWildcards(q.search);
     where.OR = [
@@ -178,7 +197,8 @@ export function listOrderBy(q: ListQuery): Prisma.TicketOrderByWithRelationInput
 // own, so `sortField`/`sortDirection` are null until a caller supplies one.
 // ---------------------------------------------------------------------------
 
-export const QUEUE_SORT_FIELDS = ["createdAt", "updatedAt", "itPriority", "ticketNumber", "currentStatus"] as const;
+// Lab 4 adds lastActivityAt; updatedAt stays for the Lab 3 test (BR-48).
+export const QUEUE_SORT_FIELDS = ["createdAt", "updatedAt", "itPriority", "ticketNumber", "currentStatus", "lastActivityAt"] as const;
 export type QueueSortField = (typeof QUEUE_SORT_FIELDS)[number];
 
 export type OwnerFilter = { kind: "me" } | { kind: "unassigned" } | { kind: "user"; id: number };
@@ -191,6 +211,7 @@ export interface QueueQuery {
   currentStatus: TicketStatus | null;
   itPriority: RequestedPriority | null;
   owner: OwnerFilter | null;
+  requesterResolved: boolean;
   sortField: QueueSortField | null;
   sortDirection: SortDirection | null;
   sort: string;
@@ -226,6 +247,10 @@ export function parseQueueQuery(raw: Raw): { ok: true; query: QueueQuery } | { o
   const currentStatus = parseStatusParam(raw, fields);
   const itPriority = parseItPriorityParam(raw, fields);
   const owner = parseOwnerParam(raw, fields);
+  // Lab 4 (BR-83, C-143): requesterResolved=true is the only accepted value.
+  const rrRaw = one(raw, "requesterResolved");
+  const requesterResolved = rrRaw === "true";
+  if (rrRaw !== undefined && rrRaw !== "" && rrRaw !== "true") fields.requesterResolved = 'requesterResolved must be "true".';
   const sortToken = parseSortToken(raw, fields, QUEUE_SORT_FIELDS);
   const { page, pageSize } = parsePaging(raw, fields);
 
@@ -238,6 +263,7 @@ export function parseQueueQuery(raw: Raw): { ok: true; query: QueueQuery } | { o
       currentStatus,
       itPriority,
       owner,
+      requesterResolved,
       sortField: sortToken?.field ?? null,
       sortDirection: sortToken?.direction ?? null,
       sort: sortToken ? `${sortToken.field}:${sortToken.direction}` : DEFAULT_QUEUE_SORT_REPORT,
@@ -255,6 +281,7 @@ export function queueWhere(callerId: number, q: QueueQuery): Prisma.TicketWhereI
   where.currentStatus = q.currentStatus !== null ? q.currentStatus : { notIn: ["CLOSED", "CANCELLED"] };
   if (q.itPriority !== null) where.itPriority = q.itPriority;
   if (q.categoryId !== null) where.categoryId = q.categoryId;
+  if (q.requesterResolved) where.requesterResolvedAt = { not: null };
   if (q.owner !== null) {
     if (q.owner.kind === "me") where.ownerId = callerId;
     else if (q.owner.kind === "unassigned") where.ownerId = null;

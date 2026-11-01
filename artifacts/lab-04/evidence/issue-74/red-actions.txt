@@ -1,0 +1,113 @@
+Command: cd server; npx vitest run tests/lab-04/actions-taken.api.test.ts -t 'reused on another Ticket'
+Date: 2026-10-31
+Branch: feature/lab4-3-actions-api  Commit: 5e29bd1
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/actions-taken.api.test.ts (61 tests | 4 failed | 57 skipped) 2423ms
+   × clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-125 key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged, nothing about A in the body (C-199) 86ms
+     → {"id":1824,"ticketNumber":"TKT-2026-001824","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] API-125 ticket A secret-summary","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.254Z","updatedAt":"2026-10-31T15:49:37.287Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.284Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":596,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.269Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.284Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2094,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.254Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-126 after the refused reuse on B, the same key K on Ticket A is still a replay: 200 with A's DTO, no new row (C-199, C-165) 46ms
+     → {"id":1826,"ticketNumber":"TKT-2026-001826","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.340Z","updatedAt":"2026-10-31T15:49:37.360Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.358Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":597,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.351Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.358Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2096,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.340Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-127 the cross-Ticket reuse is checked before TICKET_CLOSED: B is CLOSED and K was used on A -> 409 IDEMPOTENCY_KEY_REUSED, not TICKET_CLOSED (C-166, C-199) 42ms
+     → {"id":1828,"ticketNumber":"TKT-2026-001828","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.386Z","updatedAt":"2026-10-31T15:49:37.403Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.401Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":598,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.395Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.401Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2098,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.386Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+   × clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-128 concurrent creates of one key on two Tickets (the P2002 path) -> exactly one row; every response is 201, 200 for the winning Ticket, or 409 IDEMPOTENCY_KEY_REUSED for the other; none 500 (C-199) 1759ms
+     → {"id":1831,"ticketNumber":"TKT-2026-001831","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.433Z","updatedAt":"2026-10-31T15:49:39.142Z","version":0,"lastActivityAt":"2026-10-31T15:49:39.139Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":599,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.611Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:39.139Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2101,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.433Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-125 key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged, nothing about A in the body (C-199)
+AssertionError: {"id":1824,"ticketNumber":"TKT-2026-001824","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] API-125 ticket A secret-summary","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.254Z","updatedAt":"2026-10-31T15:49:37.287Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.284Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":596,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.269Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.284Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2094,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.254Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:906:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-126 after the refused reuse on B, the same key K on Ticket A is still a replay: 200 with A's DTO, no new row (C-199, C-165)
+AssertionError: {"id":1826,"ticketNumber":"TKT-2026-001826","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.340Z","updatedAt":"2026-10-31T15:49:37.360Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.358Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":597,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.351Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.358Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2096,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.340Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:929:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-127 the cross-Ticket reuse is checked before TICKET_CLOSED: B is CLOSED and K was used on A -> 409 IDEMPOTENCY_KEY_REUSED, not TICKET_CLOSED (C-166, C-199)
+AssertionError: {"id":1828,"ticketNumber":"TKT-2026-001828","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.386Z","updatedAt":"2026-10-31T15:49:37.403Z","version":0,"lastActivityAt":"2026-10-31T15:49:37.401Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":598,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.395Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:37.401Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2098,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.386Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:942:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId reused on another Ticket (C-199, supersedes C-194) > API-128 concurrent creates of one key on two Tickets (the P2002 path) -> exactly one row; every response is 201, 200 for the winning Ticket, or 409 IDEMPOTENCY_KEY_REUSED for the other; none 500 (C-199)
+AssertionError: {"id":1831,"ticketNumber":"TKT-2026-001831","requester":{"id":651,"name":"[actions-test] Requester A","email":"actions-reqa-1793461777060-5@example.test"},"category":{"id":1,"name":"Account and Access"},"relatedSystem":{"id":1,"name":"Email"},"summary":"[actions-test] fixture","description":"Fixture row for actions-taken.api.test.ts.","requestedPriority":"MEDIUM","itPriority":"MEDIUM","currentStatus":"OPEN","owner":null,"requesterResolvedAt":null,"createdAt":"2026-10-31T13:49:37.433Z","updatedAt":"2026-10-31T15:49:39.142Z","version":0,"lastActivityAt":"2026-10-31T15:49:39.139Z","resolvedAt":null,"attachments":[],"publicComments":[],"internalNotes":[],"actions":[{"id":599,"status":"PLANNED","actionAt":"2026-10-31T16:49:37.611Z","description":"Replace the laptop battery.","result":null,"followUpRequired":false,"followUpNote":null,"attachmentNotes":null,"assignee":{"id":647,"name":"[actions-test] Staff A","isActive":true},"createdBy":{"id":647,"name":"[actions-test] Staff A","isActive":true},"performedBy":null,"createdAt":"2026-10-31T15:49:39.139Z","finishedAt":null,"version":0,"allowedOperations":["EDIT","COMPLETE","CANCEL"]}],"statusHistory":[{"id":2101,"fromStatus":null,"toStatus":"NEW","changedBy":{"id":651,"name":"[actions-test] Requester A"},"changedAt":"2026-10-31T13:49:37.433Z"}],"historyComplete":true,"allowedTransitions":["IN_PROGRESS","WAITING_FOR_REQUESTER","RESOLVED","CANCELLED"],"resolutionGate":{"met":false,"reasons":["NO_COMPLETED_ACTION","PLANNED_ACTIONS_OPEN"]}}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:972:9
+ ❯ tests/lab-04/actions-taken.api.test.ts:966:15
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 57 skipped (61)
+   Start at  22:49:33
+   Duration  5.41s (transform 204ms, setup 0ms, collect 503ms, tests 2.42s, environment 0ms, prepare 80ms)
+

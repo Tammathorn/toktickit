@@ -128,7 +128,8 @@ describe("Change Password", () => {
     const panel = (await screen.findByText(MSG.success)).closest(".tk-panel") as HTMLElement;
     expect(panel).toHaveClass("tk-panel-pale");
     expect(panel.querySelector("svg[aria-hidden='true']")).not.toBeNull();
-    expect(await screen.findByRole("heading", { name: "My Tickets" }, { timeout: 4000 })).toBeInTheDocument();
+    // Adapted for Lab 4 (C-144): the app continues to the Dashboard.
+    expect(await screen.findByRole("heading", { name: "Dashboard" }, { timeout: 4000 })).toBeInTheDocument();
     expect(screen.getByRole("banner")).toBeInTheDocument();
   });
 

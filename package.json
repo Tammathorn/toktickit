@@ -7,7 +7,8 @@
     "doc": "docs"
   },
   "scripts": {
-    "test:e2e": "playwright test"
+    "test:e2e": "playwright test",
+    "test:perf": "npm run test:perf --prefix server"
   },
   "repository": {
     "type": "git",

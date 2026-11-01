@@ -24,6 +24,10 @@ import ConfirmDialog from "../components/ConfirmDialog.js";
 import Forbidden from "../components/Forbidden.js";
 import NotFound from "../components/NotFound.js";
 import SuccessPanel from "../components/SuccessPanel.js";
+import ConflictPanel, { STALE_MESSAGE, gateLines } from "../components/ConflictPanel.js";
+import { StaffActionsCard } from "../components/ActionsTaken.js";
+import StatusHistory from "../components/StatusHistory.js";
+import { useCurrentUser } from "../auth/AuthContext.js";
 
 // IT Staff Ticket Detail - ui-spec.md section 16, LS 8.4. Four cards: Card 1
 // (read-only Ticket information), Card 2 (Ticket Operations - the only
@@ -33,22 +37,14 @@ import SuccessPanel from "../components/SuccessPanel.js";
 // Ticket. The check order (C-63) and every refusal code are the server's;
 // this screen only offers the moves the matrix permits (FR-48).
 
-// specification.md section 5.1, mirrored client-side (as status-transitions.ts
-// mirrors it server-side) so the status select never offers a move the
-// server would refuse as INVALID_STATUS_TRANSITION.
-const PERMITTED_STATUS_TRANSITIONS: Record<TicketStatus, readonly TicketStatus[]> = {
-  NEW: ["OPEN", "IN_PROGRESS", "CANCELLED"],
-  OPEN: ["IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CANCELLED"],
-  IN_PROGRESS: ["OPEN", "WAITING_FOR_REQUESTER", "RESOLVED", "CANCELLED"],
-  WAITING_FOR_REQUESTER: ["IN_PROGRESS", "RESOLVED", "CANCELLED"],
-  RESOLVED: ["CLOSED", "REOPENED"],
-  CLOSED: [],
-  REOPENED: ["IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED", "CANCELLED"],
-  CANCELLED: [],
-};
+// Lab 4 (ui-spec 9.1, C-171): the status select lists exactly the server's
+// allowedTransitions. The client holds no copy of the matrix.
 const TERMINAL_STATUSES: readonly TicketStatus[] = ["CLOSED", "CANCELLED"];
-// A move into one of these needs a Ticket Owner (C-93, BR-97).
-const NEEDS_OWNER: readonly TicketStatus[] = ["IN_PROGRESS", "WAITING_FOR_REQUESTER", "RESOLVED"];
+// The Operations group a STALE_UPDATE landed in (ui-spec 11): every write that
+// sends `version`, Unassign included, gets the two-button panel.
+type StaleGroup = "owner" | "unassign" | "priority" | "status";
+// ui-spec 11.4: a status draft the fresh state no longer offers gets no Apply;
+// the panel says why with the Lab 3 transition message (server staff.ts).
 // Moving into one of these needs a confirmation step first (BR-57, FR-48).
 const CONFIRM_TARGETS: readonly TicketStatus[] = ["RESOLVED", "CLOSED", "CANCELLED"];
 
@@ -101,6 +97,7 @@ type LoadState =
   | { kind: "error" };
 
 export default function StaffTicketDetail({ id }: { id: number }) {
+  const me = useCurrentUser();
   const [load, setLoad] = useState<LoadState>({ kind: "loading" });
   const [reloadToken, setReloadToken] = useState(0);
   const [ticket, setTicket] = useState<StaffTicket | null>(null);
@@ -182,6 +179,16 @@ export default function StaffTicketDetail({ id }: { id: number }) {
 
   const t = ticket;
   const isTerminal = TERMINAL_STATUSES.includes(t.currentStatus);
+  // BR-39: a conflict re-fetches the Ticket so every card shows fresh values.
+  async function refetch(): Promise<StaffTicket | null> {
+    try {
+      const fresh = await fetchStaffTicket(t.id);
+      setTicket(fresh);
+      return fresh;
+    } catch {
+      return null;
+    }
+  }
 
   return (
     <section aria-labelledby="staff-detail-title">
@@ -199,10 +206,21 @@ export default function StaffTicketDetail({ id }: { id: number }) {
               setTicket(next);
               setSuccess(message);
             }}
-            onRefetch={() => fetchStaffTicket(t.id).then(setTicket, () => {})}
+            onRefetch={refetch}
           />
         </div>
       </div>
+
+      <StaffActionsCard
+        ticket={t}
+        assignableUsers={assignableUsers}
+        currentUserId={me.id}
+        onUpdated={(next, message) => {
+          setTicket(next);
+          setSuccess(message);
+        }}
+        onRefetch={refetch}
+      />
 
       <AttachmentsCard attachments={t.attachments} />
 
@@ -251,10 +269,11 @@ function InfoCard({ ticket: t }: { ticket: StaffTicket }) {
         <div className="col-12 col-md-6 col-lg-4"><dt>Category</dt><dd className="tk-readonly-value">{t.category.name}</dd></div>
         <div className="col-12 col-md-6 col-lg-4"><dt>Related System</dt><dd className="tk-readonly-value">{t.relatedSystem.name}</dd></div>
         <div className="col-12 col-md-6 col-lg-4"><dt>Requested Priority</dt><dd className="tk-readonly-value">{titleCase(t.requestedPriority)}</dd></div>
-        <div className="col-12 col-md-6 col-lg-4"><dt>Last Updated</dt><dd className="tk-readonly-value">{formatDisplayTimestamp(t.updatedAt)}</dd></div>
+        <div className="col-12 col-md-6 col-lg-4"><dt>Last Updated</dt><dd className="tk-readonly-value">{formatDisplayTimestamp(t.lastActivityAt)}</dd></div>
         <div className="col-12"><dt>Ticket Summary</dt><dd className="tk-readonly-value">{t.summary}</dd></div>
         <div className="col-12"><dt>Description</dt><dd className="tk-readonly-value tk-prewrap">{t.description}</dd></div>
       </dl>
+      <StatusHistory rows={t.statusHistory} complete={t.historyComplete} />
     </div>
   );
 }
@@ -273,11 +292,16 @@ function OperationsCard({
   isTerminal: boolean;
   assignableUsers: AssignableUser[];
   onUpdated: (t: StaffTicket, message: string) => void;
-  onRefetch: () => void;
+  onRefetch: () => Promise<StaffTicket | null>;
 }) {
   const [ownerSelect, setOwnerSelect] = useState("");
   const [ownerBusy, setOwnerBusy] = useState<"claim" | "save" | "unassign" | null>(null);
   const [ownerConflict, setOwnerConflict] = useState<string | null>(null);
+  // Lab 4 (ui-spec 11): which group a STALE_UPDATE landed in, so that group
+  // shows the two-button panel and keeps the draft.
+  const [stale, setStale] = useState<StaleGroup | null>(null);
+  const [gateRefusal, setGateRefusal] = useState<string[] | null>(null);
+  const [plannedOpen, setPlannedOpen] = useState(false);
 
   const [priorityValue, setPriorityValue] = useState<RequestedPriority>(t.itPriority);
   const [priorityBusy, setPriorityBusy] = useState(false);
@@ -288,18 +312,42 @@ function OperationsCard({
   const [statusConflict, setStatusConflict] = useState<string | null>(null);
   const [confirmTarget, setConfirmTarget] = useState<TicketStatus | null>(null);
 
-  function handleWriteError(err: unknown, setMessage: (m: string) => void) {
-    if (err instanceof ApiError && err.code === "TICKET_CLOSED") {
+  async function handleWriteError(err: unknown, setMessage: (m: string) => void, group?: StaleGroup) {
+    if (err instanceof ApiError && err.code === "STALE_UPDATE" && group) {
+      // BR-39: re-fetch, keep the draft, offer to apply it again - only once
+      // the fresh version is on screen, so Apply never re-sends the old one.
+      await onRefetch();
+      setStale(group);
+      return;
+    }
+    if (err instanceof ApiError && err.code === "RESOLUTION_GATE_NOT_MET") {
+      onRefetch();
+      setGateRefusal(err.reasons ?? []);
+      return;
+    }
+    if (err instanceof ApiError && err.code === "PLANNED_ACTIONS_OPEN") {
+      onRefetch();
+      setPlannedOpen(true);
+      return;
+    }
+    if (err instanceof ApiError && err.status === 409) {
       onRefetch();
       setMessage(err.message);
       return;
     }
-    setMessage(err instanceof ApiError ? err.message : messageForCode("INTERNAL_ERROR"));
+    setMessage(err instanceof ApiError && err.status !== 500 && err.status !== 0 ? err.message : messageForCode("INTERNAL_ERROR"));
+  }
+
+  function clearConflicts() {
+    setStale(null);
+    setGateRefusal(null);
+    setPlannedOpen(false);
   }
 
   async function claim() {
     setOwnerBusy("claim");
     setOwnerConflict(null);
+    clearConflicts();
     try {
       onUpdated(await claimTicket(t.id), "Ticket claimed.");
     } catch (err) {
@@ -314,11 +362,12 @@ function OperationsCard({
     if (ownerSelect === "") return;
     setOwnerBusy("save");
     setOwnerConflict(null);
+    clearConflicts();
     try {
-      onUpdated(await setTicketOwner(t.id, Number(ownerSelect)), "Owner changed.");
+      onUpdated(await setTicketOwner(t.id, Number(ownerSelect), t.version), "Owner changed.");
       setOwnerSelect("");
     } catch (err) {
-      handleWriteError(err, setOwnerConflict);
+      await handleWriteError(err, setOwnerConflict, "owner");
     } finally {
       setOwnerBusy(null);
     }
@@ -327,10 +376,11 @@ function OperationsCard({
   async function unassign() {
     setOwnerBusy("unassign");
     setOwnerConflict(null);
+    clearConflicts();
     try {
-      onUpdated(await setTicketOwner(t.id, null), "Owner changed.");
+      onUpdated(await setTicketOwner(t.id, null, t.version), "Owner changed.");
     } catch (err) {
-      handleWriteError(err, setOwnerConflict);
+      await handleWriteError(err, setOwnerConflict, "unassign");
     } finally {
       setOwnerBusy(null);
     }
@@ -339,10 +389,11 @@ function OperationsCard({
   async function savePriority() {
     setPriorityBusy(true);
     setPriorityError(null);
+    clearConflicts();
     try {
-      onUpdated(await setItPriority(t.id, priorityValue), "IT Priority saved.");
+      onUpdated(await setItPriority(t.id, priorityValue, t.version), "IT Priority saved.");
     } catch (err) {
-      handleWriteError(err, setPriorityError);
+      await handleWriteError(err, setPriorityError, "priority");
     } finally {
       setPriorityBusy(false);
     }
@@ -351,10 +402,11 @@ function OperationsCard({
   async function sendStatus(target: TicketStatus) {
     setStatusBusy(true);
     setStatusConflict(null);
+    clearConflicts();
     try {
-      onUpdated(await setTicketStatus(t.id, target), `Status changed to ${STATUS_LABELS[target]}.`);
+      onUpdated(await setTicketStatus(t.id, target, t.version), `Status changed to ${STATUS_LABELS[target]}.`);
     } catch (err) {
-      handleWriteError(err, setStatusConflict);
+      await handleWriteError(err, setStatusConflict, "status");
     } finally {
       setStatusBusy(false);
     }
@@ -391,7 +443,16 @@ function OperationsCard({
     );
   }
 
-  const permittedTargets = PERMITTED_STATUS_TRANSITIONS[t.currentStatus];
+  const permittedTargets = t.allowedTransitions;
+  // ui-spec 9.2: Resolved is offered but disabled while the gate is not met.
+  const gateBlocked = permittedTargets.includes("RESOLVED") && !t.resolutionGate.met;
+  const staleApply = (group: StaleGroup) => {
+    setStale(null);
+    if (group === "owner") saveOwner();
+    else if (group === "unassign") unassign();
+    else if (group === "priority") savePriority();
+    else saveStatus();
+  };
   const confirmCopy = confirmTarget && confirmTarget in CONFIRM_COPY ? CONFIRM_COPY[confirmTarget as keyof typeof CONFIRM_COPY] : null;
 
   return (
@@ -438,6 +499,12 @@ function OperationsCard({
           )}
         </div>
         {ownerConflict && <p className="tk-conflict" role="alert" aria-live="assertive">{ownerConflict}</p>}
+        {stale === "unassign" && (
+          <ConflictPanel stale message={STALE_MESSAGE} onApply={t.owner ? () => staleApply("unassign") : undefined} onDiscard={() => setStale(null)} />
+        )}
+        {stale === "owner" && (
+          <ConflictPanel stale message={STALE_MESSAGE} onApply={ownerSelect !== "" ? () => staleApply("owner") : undefined} onDiscard={() => { setOwnerSelect(""); setStale(null); }} />
+        )}
       </div>
 
       {/* IT Priority */}
@@ -455,6 +522,9 @@ function OperationsCard({
           </button>
         </div>
         {priorityError && <p className="tk-conflict" role="alert" aria-live="assertive">{priorityError}</p>}
+        {stale === "priority" && (
+          <ConflictPanel stale message={STALE_MESSAGE} onApply={() => staleApply("priority")} onDiscard={() => { setPriorityValue(t.itPriority); setStale(null); }} />
+        )}
       </div>
 
       {/* Current Status */}
@@ -466,17 +536,52 @@ function OperationsCard({
         )}
         <label htmlFor="status-select" className="form-label tk-label">Current Status</label>
         <div className="d-flex gap-2">
-          <select id="status-select" className="form-select" value={statusValue} onChange={(e) => setStatusValue(e.target.value as TicketStatus)} disabled={statusBusy}>
+          <select id="status-select" className="form-select" value={statusValue} onChange={(e) => setStatusValue(e.target.value as TicketStatus)} disabled={statusBusy} aria-describedby={gateBlocked ? "gate-callout" : undefined}>
             <option value={t.currentStatus} disabled>{STATUS_LABELS[t.currentStatus]}</option>
-            {permittedTargets.map((target) => (
-              <option key={target} value={target}>{STATUS_LABELS[target]}</option>
-            ))}
+            {permittedTargets.map((target) =>
+              target === "RESOLVED" && gateBlocked ? (
+                <option key={target} value={target} disabled>Resolved - not available yet</option>
+              ) : (
+                <option key={target} value={target}>{STATUS_LABELS[target]}</option>
+              ),
+            )}
           </select>
           <button type="button" className="btn btn-secondary" onClick={saveStatus} disabled={statusBusy || statusValue === t.currentStatus} aria-busy={statusBusy ? "true" : undefined}>
             {statusBusy ? "Saving…" : "Save Changes"}
           </button>
         </div>
+        {gateBlocked && (
+          <div id="gate-callout" className="tk-callout tk-callout-info mt-2" role="note">
+            <p className="mb-1">
+              <svg className="me-1" viewBox="0 0 16 16" width="14" height="14" aria-hidden="true" focusable="false">
+                <circle cx="8" cy="8" r="6.5" fill="none" stroke="currentColor" strokeWidth="1.5" />
+                <path d="M8 7v4.5M8 4.75v.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" />
+              </svg>
+              Resolved is not available yet:
+            </p>
+            <ul className="mb-0">
+              {gateLines(t.resolutionGate.reasons).map((line) => (
+                <li key={line}>{line}</li>
+              ))}
+            </ul>
+          </div>
+        )}
         {statusConflict && <p className="tk-conflict" role="alert" aria-live="assertive">{statusConflict}</p>}
+        {gateRefusal && <ConflictPanel message="This ticket cannot be resolved yet." lines={gateLines(gateRefusal)} />}
+        {plannedOpen && (
+          <ConflictPanel message="This ticket still has planned actions. Complete or cancel them before cancelling the ticket.">
+            <p className="mb-0"><a href="#actions-taken">Go to Actions Taken</a></p>
+          </ConflictPanel>
+        )}
+        {stale === "status" && (
+          <ConflictPanel
+            stale
+            message={STALE_MESSAGE}
+            lines={permittedTargets.includes(statusValue) ? undefined : [`That status change is not allowed from ${STATUS_LABELS[t.currentStatus]}.`]}
+            onApply={permittedTargets.includes(statusValue) ? () => staleApply("status") : undefined}
+            onDiscard={() => { setStatusValue(t.currentStatus); setStale(null); }}
+          />
+        )}
       </div>
 
       {confirmCopy && (

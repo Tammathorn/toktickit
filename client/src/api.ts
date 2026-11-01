@@ -40,6 +40,8 @@ export class ApiError extends Error {
     message: string,
     /** Per-field catalogue messages on a 400 VALIDATION_FAILED (api-spec 1.1). */
     public readonly fields?: Record<string, string>,
+    /** Lab 4, C-173 - the gate reasons on RESOLUTION_GATE_NOT_MET. */
+    public readonly reasons?: string[],
   ) {
     super(message);
     this.name = "ApiError";
@@ -79,7 +81,9 @@ async function toApiError(res: Response): Promise<ApiError> {
   try {
     const body = await res.json();
     if (body?.error?.code) {
-      return reportIfSessionLost(new ApiError(res.status, body.error.code, body.error.message, body.error.fields));
+      return reportIfSessionLost(
+        new ApiError(res.status, body.error.code, body.error.message, body.error.fields, body.error.reasons),
+      );
     }
   } catch {
     // non-JSON body: fall through to the generic error
@@ -232,6 +236,61 @@ export interface Ticket {
   attachments: AttachmentMeta[];
   publicComments: Entry[];
   // No Internal Note key exists here, under any name (api-spec.md 10.2, FR-29).
+  // Lab 4 (api-spec.md 6.1).
+  version: number;
+  lastActivityAt: string;
+  resolvedAt: string | null;
+  actions: RequesterAction[];
+  statusHistory: HistoryRow[];
+  historyComplete: boolean;
+}
+
+// ---------------------------------------------------------------------------
+// Lab 4 - Actions Taken and status history (api-spec.md 6.1, 6.2).
+// ---------------------------------------------------------------------------
+export type ActionStatus = "PLANNED" | "COMPLETED" | "CANCELLED";
+export type ActionOperation = "EDIT" | "COMPLETE" | "CANCEL";
+
+interface ActionBase {
+  id: number;
+  status: ActionStatus;
+  actionAt: string;
+  description: string;
+  result: string | null;
+  followUpRequired: boolean;
+  followUpNote: string | null;
+  attachmentNotes: string | null;
+  createdAt: string;
+  finishedAt: string | null;
+}
+
+// The Requester sees every field, people by name only (BR-20, C-123).
+export interface RequesterAction extends ActionBase {
+  assignee: { name: string };
+  createdBy: { name: string };
+  performedBy: { name: string } | null;
+}
+
+export interface ActionPerson {
+  id: number;
+  name: string;
+  isActive: boolean;
+}
+
+export interface StaffAction extends ActionBase {
+  assignee: ActionPerson;
+  createdBy: ActionPerson;
+  performedBy: ActionPerson | null;
+  version: number;
+  allowedOperations: ActionOperation[];
+}
+
+export interface HistoryRow {
+  id: number;
+  fromStatus: TicketStatus | null;
+  toStatus: TicketStatus;
+  changedBy: { id?: number; name: string };
+  changedAt: string;
 }
 
 // No identity field at all: the Ticket belongs to the signed-in user (C-64).
@@ -299,7 +358,10 @@ export function uploadAttachment(
 
 // api-spec.md 10.3 - the 10.2 shape minus description, attachments,
 // publicComments, owner and requester.
-export type TicketListRow = Omit<Ticket, "requester" | "description" | "attachments" | "publicComments" | "owner">;
+export type TicketListRow = Omit<
+  Ticket,
+  "requester" | "description" | "attachments" | "publicComments" | "owner" | "version" | "resolvedAt" | "actions" | "statusHistory" | "historyComplete"
+>;
 
 export interface TicketListMeta {
   page: number;
@@ -321,6 +383,8 @@ export interface TicketListQuery {
   categoryId?: string;
   relatedSystemId?: string;
   currentStatus?: string;
+  /** Lab 4, BR-88 - "open", never combined with currentStatus. */
+  statusGroup?: string;
   sort?: string;
   page?: number;
   pageSize?: number;
@@ -392,6 +456,7 @@ export interface QueueRow {
   requesterResolvedAt: string | null;
   createdAt: string;
   updatedAt: string;
+  lastActivityAt: string;
 }
 
 export interface QueuePage {
@@ -408,6 +473,8 @@ export interface QueueListQuery {
   /** "me", "unassigned", or a user id as a string. */
   owner?: string;
   categoryId?: string;
+  /** Lab 4, BR-83 - "true" only. */
+  requesterResolved?: string;
   sort?: string;
   page?: number;
   pageSize?: number;
@@ -467,6 +534,15 @@ export interface StaffTicket {
   attachments: AttachmentMeta[];
   publicComments: Entry[];
   internalNotes: Entry[];
+  // Lab 4 (api-spec.md 6.2).
+  version: number;
+  lastActivityAt: string;
+  resolvedAt: string | null;
+  actions: StaffAction[];
+  statusHistory: HistoryRow[];
+  historyComplete: boolean;
+  allowedTransitions: TicketStatus[];
+  resolutionGate: { met: boolean; reasons: string[] };
 }
 
 async function postJson<T>(path: string, body?: unknown): Promise<T> {
@@ -495,18 +571,142 @@ export function claimTicket(id: number): Promise<StaffTicket> {
 }
 
 // PATCH /api/staff/tickets/:id/owner - api-spec.md 8.4. null unassigns.
-export function setTicketOwner(id: number, ownerId: number | null): Promise<StaffTicket> {
-  return patchJson(`/api/staff/tickets/${id}/owner`, { ownerId });
+// Lab 4: every Ticket PATCH carries the version last read (BR-36, C-138).
+export function setTicketOwner(id: number, ownerId: number | null, version: number): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/owner`, { ownerId, version });
 }
 
 // PATCH /api/staff/tickets/:id/it-priority - api-spec.md 8.5.
-export function setItPriority(id: number, itPriority: RequestedPriority): Promise<StaffTicket> {
-  return patchJson(`/api/staff/tickets/${id}/it-priority`, { itPriority });
+export function setItPriority(id: number, itPriority: RequestedPriority, version: number): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/it-priority`, { itPriority, version });
 }
 
 // PATCH /api/staff/tickets/:id/status - api-spec.md 8.6.
-export function setTicketStatus(id: number, currentStatus: TicketStatus): Promise<StaffTicket> {
-  return patchJson(`/api/staff/tickets/${id}/status`, { currentStatus });
+export function setTicketStatus(id: number, currentStatus: TicketStatus, version: number): Promise<StaffTicket> {
+  return patchJson(`/api/staff/tickets/${id}/status`, { currentStatus, version });
+}
+
+// ---------------------------------------------------------------------------
+// Lab 4 - Actions Taken writes (api-spec.md section 3). Every one returns the
+// full IT Staff Ticket DTO (C-136).
+// ---------------------------------------------------------------------------
+export interface NewActionInput {
+  status: "PLANNED" | "COMPLETED";
+  actionAt: string;
+  description: string;
+  assigneeId?: number;
+  attachmentNotes?: string;
+  result?: string;
+  followUpRequired?: boolean;
+  followUpNote?: string;
+  clientRequestId?: string;
+}
+
+export function createAction(ticketId: number, input: NewActionInput): Promise<StaffTicket> {
+  return postJson(`/api/tickets/${ticketId}/actions`, input);
+}
+
+export interface EditActionInput {
+  version: number;
+  description?: string;
+  actionAt?: string;
+  assigneeId?: number;
+  attachmentNotes?: string;
+}
+
+export function editAction(actionId: number, input: EditActionInput): Promise<StaffTicket> {
+  return patchJson(`/api/actions/${actionId}`, input);
+}
+
+export interface CompleteActionInput {
+  version: number;
+  result: string;
+  followUpRequired: boolean;
+  followUpNote?: string;
+  actionAt?: string;
+}
+
+export function completeAction(actionId: number, input: CompleteActionInput): Promise<StaffTicket> {
+  return postJson(`/api/actions/${actionId}/complete`, input);
+}
+
+export function cancelAction(actionId: number, input: { version: number; result: string }): Promise<StaffTicket> {
+  return postJson(`/api/actions/${actionId}/cancel`, input);
+}
+
+// ---------------------------------------------------------------------------
+// Lab 4 - the dashboards (api-spec.md section 4).
+// ---------------------------------------------------------------------------
+export interface DashboardCard {
+  key: string;
+  label: string;
+  count: number;
+  drillDown: string;
+}
+
+export interface DashboardTicketItem {
+  id: number;
+  ticketNumber: string;
+  summary: string;
+  currentStatus: TicketStatus;
+  itPriority: RequestedPriority;
+  lastActivityAt: string;
+  createdAt?: string;
+  resolvedAt?: string;
+}
+
+export interface DashboardList<T> {
+  items: T[];
+  viewAll: string | null;
+}
+
+export interface PlannedActionItem {
+  id: number;
+  actionAt: string;
+  description: string;
+  ticket: { id: number; ticketNumber: string; summary: string; currentStatus: TicketStatus };
+}
+
+export interface UserCountCard extends DashboardCard {
+  activeCount: number;
+}
+
+export interface RequesterDashboard {
+  generatedAt: string;
+  timeZone: string;
+  cards: DashboardCard[];
+  lists: { recentlyUpdated: DashboardList<DashboardTicketItem>; recentlyResolved: DashboardList<DashboardTicketItem> };
+}
+
+export interface StaffDashboard {
+  generatedAt: string;
+  timeZone: string;
+  cards: DashboardCard[];
+  lists: {
+    myPlannedActions: DashboardList<PlannedActionItem>;
+    recentlyUpdated: DashboardList<DashboardTicketItem>;
+    urgent: DashboardList<DashboardTicketItem>;
+  };
+  userCounts?: UserCountCard[];
+}
+
+export function fetchRequesterDashboard(): Promise<RequesterDashboard> {
+  return getJson("/api/dashboard/requester");
+}
+
+export function fetchStaffDashboard(): Promise<StaffDashboard> {
+  return getJson("/api/dashboard/staff");
+}
+
+// BR-42 - a fresh replay key per form opening and after every success.
+export function newClientRequestId(): string {
+  const c = (globalThis as { crypto?: Crypto }).crypto;
+  if (c && typeof c.randomUUID === "function") return c.randomUUID();
+  // RFC 4122 v4 from Math.random, for environments without randomUUID.
+  return "xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx".replace(/[xy]/g, (ch) => {
+    const r = (Math.random() * 16) | 0;
+    return (ch === "x" ? r : (r & 0x3) | 0x8).toString(16);
+  });
 }
 
 // ---------------------------------------------------------------------------
@@ -520,8 +720,8 @@ export function fetchPublicComments(ticketId: number): Promise<Entry[]> {
   return getJson(`/api/tickets/${ticketId}/public-comments`);
 }
 
-export function postPublicComment(ticketId: number, body: string): Promise<Entry> {
-  return postJson(`/api/tickets/${ticketId}/public-comments`, { body });
+export function postPublicComment(ticketId: number, body: string, clientRequestId?: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/public-comments`, clientRequestId ? { body, clientRequestId } : { body });
 }
 
 // IT Staff and Administrator only - a Requester never calls this (FR-29).
@@ -529,8 +729,8 @@ export function fetchInternalNotes(ticketId: number): Promise<Entry[]> {
   return getJson(`/api/tickets/${ticketId}/internal-notes`);
 }
 
-export function postInternalNote(ticketId: number, body: string): Promise<Entry> {
-  return postJson(`/api/tickets/${ticketId}/internal-notes`, { body });
+export function postInternalNote(ticketId: number, body: string, clientRequestId?: string): Promise<Entry> {
+  return postJson(`/api/tickets/${ticketId}/internal-notes`, clientRequestId ? { body, clientRequestId } : { body });
 }
 
 // POST /api/tickets/:id/requester-resolved - api-spec.md 4.4, C-76. Requester

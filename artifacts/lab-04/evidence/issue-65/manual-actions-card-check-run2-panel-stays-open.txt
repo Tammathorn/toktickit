@@ -1,0 +1,13 @@
+Command: cd /c/Downloads/Lab1_Starter_Scaffold/toktickit; node tmp/lab4/step5-actions-check.cjs
+Date: 2026-10-30 17:45:58 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; Issue 4 work uncommitted, with the creation-minute fix; script kept in tmp/, not committed)
+Exit code: 1
+------------------------------------------------------------------------
+ticket 2283 TKT-2026-002283 (201)
+staff: empty card shown
+1 create planned: ok
+2 edit: ok
+FAILED: locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for getByRole('region', { name: 'Actions Taken' }).locator('li.tk-action-row').first().getByRole('button', { name: 'Complete' })
+

@@ -139,9 +139,15 @@ attachmentsRouter.delete("/api/attachments/:id", ...requesterOnly, async (req: R
       sendError(res, 422, "REMOVAL_REASON_REQUIRED", MESSAGES.removalReason);
       return;
     }
-    const updated = await getPrisma().attachment.update({
-      where: { id: row.id },
-      data: { isRemoved: true, removedAt: new Date(), removalReason: reason },
+    // Lab 4 (BR-46): a soft removal moves the Ticket's activity time.
+    const removedAt = new Date();
+    const updated = await getPrisma().$transaction(async (tx) => {
+      const a = await tx.attachment.update({
+        where: { id: row.id },
+        data: { isRemoved: true, removedAt, removalReason: reason },
+      });
+      await tx.ticket.update({ where: { id: a.ticketId }, data: { lastActivityAt: removedAt } });
+      return a;
     });
     res.status(200).json(toAttachmentDto(updated));
   } catch {

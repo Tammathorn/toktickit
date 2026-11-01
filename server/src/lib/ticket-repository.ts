@@ -35,7 +35,17 @@ export async function createTicketWithNumber(
     // C-71 — IT Priority starts as a copy of Requested Priority, for a new
     // Ticket exactly as for the Tickets the migration backfilled.
     const created = await tx.ticket.create({
-      data: { ...input, itPriority: input.itPriority ?? input.requestedPriority },
+      data: {
+        ...input,
+        itPriority: input.itPriority ?? input.requestedPriority,
+        // Lab 4 (BR-46): a new Ticket's activity time is its creation time.
+        lastActivityAt: input.createdAt ?? new Date(),
+      },
+    });
+    // Lab 4 (C-167, C-188): every Ticket created from now on carries its
+    // creation history row, null -> NEW, made by the Requester.
+    await tx.ticketStatusChange.create({
+      data: { ticketId: created.id, fromStatus: null, toStatus: "NEW", changedById: created.requesterId, changedAt: created.createdAt },
     });
     return tx.ticket.update({
       where: { id: created.id },

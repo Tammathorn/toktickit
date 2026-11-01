@@ -1,0 +1,14 @@
+﻿Command: docker exec toktickit-db pg_dump -U toktickit -Fc -d toktickit -f /tmp/lab4-pre-migration.dump; docker cp toktickit-db:/tmp/lab4-pre-migration.dump C:\Users\Tamat\Downloads\lab4-pre-migration.dump
+Date: 2026-10-28 15:10:41 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; Issue 2 implementation applied, uncommitted)
+Exit code: 0
+------------------------------------------------------------------------
+
+
+FullName      : C:\Users\Tamat\Downloads\lab4-pre-migration.dump
+Length        : 201765
+LastWriteTime : 10/28/2026 3:10:41 PM
+
+
+
+

@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { ADMINISTRATOR, IT_STAFF, REQUESTER_A, signInAs } from "../support/auth.js";
 
 // Issue #12 (feature/lab3-12-ui-evidence): the visual-checklist defects whose
@@ -26,12 +27,13 @@ function row(id: number, summary: string, extra: Partial<api.TicketListRow> = {}
     requesterResolvedAt: null,
     createdAt: "2026-09-05T04:12:33.000Z",
     updatedAt: "2026-09-05T04:12:33.041Z",
+    lastActivityAt: "2026-09-05T04:12:33.041Z",
     ...extra,
   };
 }
 
 function staffTicket(): api.StaffTicket {
-  return {
+  return withStaffLab4({
     id: 77,
     ticketNumber: "TKT-2026-000077",
     requester: { id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" },
@@ -49,7 +51,8 @@ function staffTicket(): api.StaffTicket {
     attachments: [],
     publicComments: [],
     internalNotes: [],
-  };
+    ...lab4Fields("2026-09-05T05:02:44.000Z"),
+  });
 }
 
 function requesterTicket(): api.Ticket {
@@ -59,6 +62,7 @@ function requesterTicket(): api.Ticket {
     category: s.category, relatedSystem: s.relatedSystem, summary: s.summary, description: s.description,
     requestedPriority: s.requestedPriority, itPriority: s.itPriority, currentStatus: "OPEN", owner: null,
     requesterResolvedAt: null, createdAt: s.createdAt, updatedAt: s.updatedAt, attachments: [], publicComments: [],
+    ...lab4Fields(s.updatedAt),
   };
 }
 

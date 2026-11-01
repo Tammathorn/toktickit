@@ -1,0 +1,7 @@
+Command: cd server; node --env-file=.env <one-off script>  ->  DROP DATABASE IF EXISTS "toktickit_test"  (run on the maintenance DB postgres)
+Date: 2026-10-31 12:23:28 +0700
+Commit: e48da97 (feature/lab4-7-requester-dashboard)
+Exit code: 0
+
+SQL: DROP DATABASE IF EXISTS "toktickit_test" on maintenance DB postgres
+remaining: [{"datname":"toktickit"},{"datname":"toktickit_evidence"},{"datname":"toktickit_perf"},{"datname":"toktickit_rehearsal"},{"datname":"toktickit_restore_check"}]

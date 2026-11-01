@@ -14,6 +14,7 @@ import StaffTicketQueue from "./pages/StaffTicketQueue.js";
 import StaffTicketDetail from "./pages/StaffTicketDetail.js";
 import UserManagement from "./pages/UserManagement.js";
 import SystemCheck from "./pages/SystemCheck.js";
+import Dashboard from "./pages/Dashboard.js";
 
 // Route table and guards (ui-spec.md 1, 9; C-85). /system-check is the Lab 1
 // screen and stays public (C-87). Every other address passes three guards, in
@@ -30,6 +31,7 @@ import SystemCheck from "./pages/SystemCheck.js";
 type Match = { destination: Destination; ticketId?: number } | null;
 
 function match(path: string): Match {
+  if (path === "/dashboard") return { destination: "dashboard" };
   if (path === "/tickets") return { destination: "myTickets" };
   if (path === "/tickets/new") return { destination: "createTicket" };
   const detail = /^\/tickets\/(\d+)$/.exec(path);
@@ -62,6 +64,7 @@ function Screen() {
 
   let screen;
   if (!mayReach(user.role, found.destination)) screen = <Forbidden />;
+  else if (found.destination === "dashboard") screen = <Dashboard />;
   else if (found.destination === "myTickets") screen = <MyTickets />;
   else if (found.destination === "createTicket") screen = <CreateTicket />;
   else if (found.destination === "ticketDetail") screen = <TicketDetail id={found.ticketId!} />;

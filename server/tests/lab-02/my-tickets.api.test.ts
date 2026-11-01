@@ -2,6 +2,7 @@ import { describe, it, expect, beforeAll, afterAll } from "vitest";
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { removeUsers, signedInUser, type Agent } from "../support/agents.js";
@@ -70,7 +71,7 @@ beforeAll(async () => {
 });
 
 afterAll(async () => {
-  await prisma.ticket.deleteMany({ where: { requesterId: { in: [owner.id, other.id] } } });
+  await deleteTickets(prisma, { requesterId: { in: [owner.id, other.id] } });
   await removeUsers(prisma, [owner.id, other.id]);
 });
 
@@ -92,7 +93,8 @@ describe("GET /api/tickets", () => {
     expect(res.status).toBe(200);
     expect(res.body.meta).toEqual({ page: 1, pageSize: 10, total: OWNER_ROWS, totalPages: 2, sort: "createdAt:desc" });
     expect(Object.keys(res.body.data[0]).sort()).toEqual(
-      ["category", "createdAt", "currentStatus", "id", "itPriority", "relatedSystem", "requestedPriority", "summary", "ticketNumber", "updatedAt"].sort(),
+      // Adapted for Lab 4 (C-140, tests.md 4.1): the row gains lastActivityAt.
+      ["category", "createdAt", "currentStatus", "id", "itPriority", "lastActivityAt", "relatedSystem", "requestedPriority", "summary", "ticketNumber", "updatedAt"].sort(),
     );
   });
 

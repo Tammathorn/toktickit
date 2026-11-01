@@ -3,6 +3,7 @@ import { render, screen, within, waitFor, cleanup } from "@testing-library/react
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { REQUESTER_A, signInAs } from "../support/auth.js";
 
 // UI-24, UI-25, STYLE-07 and STYLE-09 from tests.md. The detail is reached
@@ -34,6 +35,7 @@ const TICKET: api.Ticket = {
   requesterResolvedAt: null,
   createdAt: "2026-09-05T04:12:33.000Z",
   updatedAt: "2026-09-05T05:02:44.000Z",
+  ...lab4Fields("2026-09-05T05:02:44.000Z"),
   attachments: [
     {
       id: 7, originalFilename: "battery-report.pdf", mimeType: "application/pdf", sizeBytes: 184320,
@@ -76,8 +78,10 @@ describe("Requester Ticket Detail", () => {
     expect(within(info).queryByRole("button")).not.toBeInTheDocument();
     expect(within(info).getByText(/Second line kept/)).toHaveClass("tk-prewrap");
 
-    // BR-63: nothing of the IT Staff workflow, not even as a placeholder
-    expect(document.body.textContent).not.toMatch(/internal note|actions taken|change status|claim|reassign/i);
+    // BR-63: nothing of the IT Staff workflow, not even as a placeholder.
+    // Adapted for Lab 4 (C-123, BR-20): Actions Taken is now shown to the
+    // Requester read-only, so it leaves this list; no write control may appear.
+    expect(document.body.textContent).not.toMatch(/internal note|change status|claim|reassign|add action|record an action/i);
     expect(screen.queryByRole("button", { name: /status|edit|save/i })).not.toBeInTheDocument();
   });
 

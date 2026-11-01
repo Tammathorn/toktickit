@@ -44,6 +44,14 @@ enum UserRole {
   ADMINISTRATOR
 }
 
+// Lab 4 - an Action Taken's lifecycle (C-131). PLANNED is editable; COMPLETED
+// and CANCELLED are final (C-133). Added in its own migration (C-145).
+enum ActionStatus {
+  PLANNED
+  COMPLETED
+  CANCELLED
+}
+
 // ---------------------------------------------------------------------------
 // Issue 3 (Lab 1) — IT request categories. Seeded by prisma/seed.ts.
 // Lab 2 adds isActive (C-05). GET /api/categories keeps its {id, name} shape
@@ -97,6 +105,12 @@ model User {
   sessions      Session[]
   publicComments PublicComment[]
   internalNotes InternalNote[]
+
+  // Lab 4 - an action names up to three users (C-131); a status change names one.
+  assignedActions  ActionTaken[]        @relation("ActionAssignee")
+  performedActions ActionTaken[]        @relation("ActionPerformer")
+  createdActions   ActionTaken[]        @relation("ActionCreator")
+  statusChanges    TicketStatusChange[]
 }
 
 // ---------------------------------------------------------------------------
@@ -149,6 +163,14 @@ model Ticket {
   requesterResolvedAt DateTime?
   createdAt           DateTime          @default(now())
   updatedAt           DateTime          @updatedAt
+  // Lab 4 (spec 7.4). version is the stale-update check (C-138); lastActivityAt
+  // is written on the BR-46 paths and never by an Internal Note (C-140);
+  // resolvedAt is NULL for legacy rows (C-126); clientRequestId is the replay
+  // key (C-139), kept but unused on Ticket create under C-158.
+  version             Int               @default(0)
+  lastActivityAt      DateTime          @default(now())
+  resolvedAt          DateTime?
+  clientRequestId     String?
 
   requester      User            @relation("TicketRequester", fields: [requesterId], references: [id])
   owner          User?           @relation("TicketOwner", fields: [ownerId], references: [id])
@@ -157,6 +179,8 @@ model Ticket {
   attachments    Attachment[]
   publicComments PublicComment[]
   internalNotes  InternalNote[]
+  actions        ActionTaken[]
+  statusChanges  TicketStatusChange[]
 
   // Every My Tickets query is scoped to one Requester before anything else
   // happens (BR-22), so each Lab 2 index is led by requesterId. They are kept:
@@ -171,6 +195,11 @@ model Ticket {
   @@index([currentStatus, itPriority, createdAt])
   @@index([currentStatus, ownerId])
   @@index([currentStatus, categoryId])
+  // Lab 4 (spec 7.5): the Requester's Recently updated and the lastActivityAt
+  // sort, both Requester-scoped first; Recently resolved is a resolvedAt range.
+  @@index([requesterId, lastActivityAt])
+  @@index([resolvedAt])
+  @@unique([requesterId, clientRequestId])
 }
 
 // ---------------------------------------------------------------------------
@@ -213,12 +242,15 @@ model PublicComment {
   authorId  Int
   body      String   @db.Text
   createdAt DateTime @default(now())
+  // Lab 4 replay key (C-139); NULL on legacy rows, repeated NULLs allowed.
+  clientRequestId String?
 
   ticket Ticket @relation(fields: [ticketId], references: [id])
   author User   @relation(fields: [authorId], references: [id])
 
   // Read per Ticket, newest first (BR-67).
   @@index([ticketId, createdAt])
+  @@unique([authorId, clientRequestId])
 }
 
 model InternalNote {
@@ -227,10 +259,66 @@ model InternalNote {
   authorId  Int
   body      String   @db.Text
   createdAt DateTime @default(now())
+  // Lab 4 replay key (C-139); NULL on legacy rows, repeated NULLs allowed.
+  clientRequestId String?
 
   ticket Ticket @relation(fields: [ticketId], references: [id])
   author User   @relation(fields: [authorId], references: [id])
 
   // Read per Ticket, newest first (BR-67).
   @@index([ticketId, createdAt])
+  @@unique([authorId, clientRequestId])
+}
+
+// ---------------------------------------------------------------------------
+// Lab 4 - an Action Taken (spec 7.2, C-131..C-134, C-160). Exactly one Ticket
+// (BR-01); any active staff user may record one (BR-02). No delete path, and
+// no edit once COMPLETED or CANCELLED (C-133).
+// ---------------------------------------------------------------------------
+model ActionTaken {
+  id               Int          @id @default(autoincrement())
+  ticketId         Int
+  status           ActionStatus
+  actionAt         DateTime
+  description      String       @db.Text
+  result           String?      @db.Text
+  followUpRequired Boolean      @default(false)
+  followUpNote     String?
+  attachmentNotes  String?
+  assigneeId       Int
+  performedById    Int?
+  finishedAt       DateTime?
+  createdById      Int
+  createdAt        DateTime     @default(now())
+  version          Int          @default(0)
+  clientRequestId  String?
+
+  ticket    Ticket @relation(fields: [ticketId], references: [id])
+  assignee  User   @relation("ActionAssignee", fields: [assigneeId], references: [id])
+  performer User?  @relation("ActionPerformer", fields: [performedById], references: [id])
+  creator   User   @relation("ActionCreator", fields: [createdById], references: [id])
+
+  // Display order and every gate count start from ticketId (spec 7.5).
+  @@index([ticketId, actionAt, id])
+  // "My planned actions" (BR-84).
+  @@index([assigneeId, status])
+  @@unique([createdById, clientRequestId])
+}
+
+// ---------------------------------------------------------------------------
+// Lab 4 - status history (C-141, C-167). Append-only: no updatedAt and no
+// update or delete path. fromStatus is NULL only on a Ticket's creation row.
+// ---------------------------------------------------------------------------
+model TicketStatusChange {
+  id          Int           @id @default(autoincrement())
+  ticketId    Int
+  fromStatus  TicketStatus?
+  toStatus    TicketStatus
+  changedById Int
+  changedAt   DateTime      @default(now())
+
+  ticket    Ticket @relation(fields: [ticketId], references: [id])
+  changedBy User   @relation(fields: [changedById], references: [id])
+
+  @@index([ticketId, changedAt, id])
 }

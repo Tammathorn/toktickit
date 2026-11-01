@@ -1,5 +1,6 @@
 import { describe, it, expect, beforeAll } from "vitest";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { TICKET_NUMBER_PATTERN } from "../../src/lib/ticket-number.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
@@ -195,7 +196,7 @@ describe("DB-06 — Ticket Number is assigned inside the creation transaction (C
       `TKT-${ticket.createdAt.getUTCFullYear()}-${String(ticket.id).padStart(6, "0")}`,
     );
 
-    await prisma.ticket.delete({ where: { id: ticket.id } });
+    await deleteTickets(prisma, { id: ticket.id });
   });
 
   it("applies the defaults: status NEW and IT Priority copied from Requested Priority (BR-02, C-71)", async () => {
@@ -219,7 +220,7 @@ describe("DB-06 — Ticket Number is assigned inside the creation transaction (C
     expect(ticket.itPriority).toBe("MEDIUM");
     expect(ticket.itPriority).toBe(ticket.requestedPriority);
 
-    await prisma.ticket.delete({ where: { id: ticket.id } });
+    await deleteTickets(prisma, { id: ticket.id });
   });
 
   it("leaves no Ticket without a number visible outside the transaction (BR-01)", async () => {

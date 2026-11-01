@@ -3,6 +3,7 @@ import { render, screen, within, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { REQUESTER_A, signInAs } from "../support/auth.js";
 
 // UI-26..UI-31 from tests.md: the attachment lifecycle on Ticket Detail
@@ -42,6 +43,7 @@ function ticket(attachments: api.AttachmentMeta[]): api.Ticket {
     updatedAt: "2026-09-05T05:02:44.000Z",
     attachments,
     publicComments: [],
+    ...lab4Fields("2026-09-05T05:02:44.000Z"),
   };
 }
 

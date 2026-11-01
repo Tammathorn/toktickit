@@ -5,6 +5,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
+import { deleteTickets } from "../support/cleanup.js";
 import { seedGraded } from "../../src/seed/graded-seed.js";
 import { createTicketWithNumber } from "../../src/lib/ticket-repository.js";
 import { UPLOAD_DIR } from "../../src/lib/uploads.js";
@@ -103,7 +104,7 @@ afterAll(async () => {
   const mine = { OR: [{ ticket: { requesterId: { in: ids } } }, { authorId: { in: ids } }] };
   await prisma.publicComment.deleteMany({ where: mine });
   await prisma.internalNote.deleteMany({ where: mine });
-  await prisma.ticket.deleteMany({ where: { requesterId: { in: ids } } });
+  await deleteTickets(prisma, { requesterId: { in: ids } });
   await removeUsers(prisma, ids);
 });
 
@@ -291,10 +292,12 @@ describe("Internal Notes are staff-only (BR-70)", () => {
     const res = await a.agent.get(`/api/tickets/${ticketA.id}`);
     expect(res.status).toBe(200);
     expect(Array.isArray(res.body.publicComments)).toBe(true);
+    // Lab 4 adaptation (tests.md 4.1; C-136, C-140, C-141): the Lab 4 keys
+    // join the key set; still no key carrying note data.
     expect(Object.keys(res.body).sort()).toEqual(
       ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description", "requestedPriority",
         "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt", "attachments",
-        "publicComments"].sort(),
+        "publicComments", "version", "lastActivityAt", "resolvedAt", "actions", "statusHistory", "historyComplete"].sort(),
     );
     // Over every key at every depth, not a guessed name.
     const keys: string[] = [];
@@ -382,9 +385,11 @@ describe("staff ticket operations are refused to a Requester (C-63, C-65)", () =
     record("queue", 200, await admin.agent.get("/api/staff/tickets"));
     record("detail", 200, await admin.agent.get(`/api/staff/tickets/${t.id}`));
     record("claim", 200, await admin.agent.post(`/api/staff/tickets/${t.id}/claim`));
-    record("owner", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/owner`).send({ ownerId: staff.id }));
-    record("it-priority", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ itPriority: "HIGH" }));
-    record("status", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/status`).send({ currentStatus: "OPEN" }));
+    // Adapted for Lab 4 (C-138, tests.md 4.1): each PATCH sends the current version.
+    const version = async () => (await prisma.ticket.findUniqueOrThrow({ where: { id: t.id } })).version;
+    record("owner", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/owner`).send({ ownerId: staff.id, version: await version() }));
+    record("it-priority", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ itPriority: "HIGH", version: await version() }));
+    record("status", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/status`).send({ currentStatus: "OPEN", version: await version() }));
     record("comment", 201, await admin.agent.post(`/api/tickets/${t.id}/public-comments`).send({ body: "An Administrator reply." }));
     record("note", 201, await admin.agent.post(`/api/tickets/${t.id}/internal-notes`).send({ body: "An Administrator note." }));
     expect(results.filter(([, expected, got]) => expected !== got)).toEqual([]);

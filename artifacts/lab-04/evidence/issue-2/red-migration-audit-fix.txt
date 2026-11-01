@@ -1,0 +1,50 @@
+Command: cd server; npx vitest run tests/lab-04/migration.db.test.ts
+Date: 2026-10-28 15:33:44 +07:00
+Commit: 3bfade9 (feature/lab4-2-data-model; audit fix: seed lastActivityAt WITHOUT Public Comments, i.e. the patch as applied)
+Exit code: 1
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/migration.db.test.ts (42 tests | 1 failed) 5732ms
+   ✓ Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > leaves the Ticket, Public Comment, Internal Note, ActionTaken and TicketStatusChange counts unchanged 1031ms
+   ✓ Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-14 — the seed run a second time duplicates nothing (AC-98, BR-69, L3 C-72) > keeps a password that was changed after seeding 961ms
+   × Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity times are relative to the run (C-146) > never dates a seeded Ticket's lastActivityAt before its latest Public Comment or action (BR-46) 21ms
+     → Lecture hall projector loses the laptop signal: expected 1793046821402 to be greater than or equal to 1793176421418
+
+node.exe : ⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+At line:1 char:1
++ & "C:\Program Files\nodejs/node.exe" "C:\Program Files\nodejs/node_mo ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+
+ FAIL  tests/lab-04/migration.db.test.ts > Lab 4 seed on a fresh database (spec 7.9, C-146, C-188) > MIG-20 — activity 
+times are relative to the run (C-146) > never dates a seeded Ticket's lastActivityAt before its latest Public Comment 
+or action (BR-46)
+AssertionError: Lecture hall projector loses the laptop signal: expected 1793046821402 to be greater than or equal to 
+1793176421418
+ ❯ tests/lab-04/migration.db.test.ts:595:75
+    593|         ]);
+    594|         for (const at of [comment?.createdAt, action?.createdAt]) {
+    595|           if (at) expect(ticket.lastActivityAt.getTime(), ticket.summa…
+       |                                                                           ^
+    596|         }
+    597|       }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 41 passed (42)
+   Start at  15:33:34
+   Duration  9.01s (transform 74ms, setup 0ms, collect 110ms, tests 5.73s, environment 0ms, prepare 69ms)
+

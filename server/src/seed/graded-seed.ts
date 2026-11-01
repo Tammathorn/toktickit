@@ -117,6 +117,124 @@ export type SeedTicket = {
   internalNotes?: { authorEmail: string; body: string }[];
 };
 
+// ---------------------------------------------------------------------------
+// Lab 4 (C-146, C-188, spec 7.9) - Actions Taken, keyed by (Ticket summary,
+// description). Times are hours before the run, so the rolling 7-day metrics
+// never go empty a week after seeding. The plan gives Tickets with zero, one
+// and several actions; one Ticket with actions by three different staff
+// (BR-02); planned, completed, cancelled and follow-up-required actions; one
+// open Ticket that passes the gate (Grade submission) and one that fails it
+// (Campus Wi-Fi: its only post-reopen action was cancelled, C-186); and
+// completed actions behind every seeded Resolved and Closed Ticket. Nothing is
+// assigned to the Administrator, so her "My planned actions" stays a real 0.
+// ---------------------------------------------------------------------------
+export type SeedAction = {
+  ticketSummary: string;
+  description: string;
+  status: "PLANNED" | "COMPLETED" | "CANCELLED";
+  hoursAgo: number;
+  byEmail: string;
+  assigneeEmail?: string;
+  result?: string;
+  followUpRequired?: boolean;
+  followUpNote?: string;
+  attachmentNotes?: string;
+};
+
+export const SEED_ACTIONS: readonly SeedAction[] = [
+  {
+    ticketSummary: "VPN disconnects after roughly three minutes",
+    description: "Checked the VPN client logs on the Requester's laptop.",
+    status: "COMPLETED",
+    hoursAgo: 80,
+    byEmail: "araya.m@example.ac.th",
+    result: "The client drops the tunnel when the idle timer fires at 180 seconds.",
+  },
+  {
+    ticketSummary: "VPN disconnects after roughly three minutes",
+    description: "Compared the gateway idle timeout with the campus profile.",
+    status: "COMPLETED",
+    hoursAgo: 50,
+    byEmail: "decha.i@example.ac.th",
+    result: "The gateway profile still has the old 3-minute timeout.",
+    followUpRequired: true,
+    followUpNote: "Ask the network team to raise the idle timeout to 30 minutes.",
+  },
+  {
+    ticketSummary: "VPN disconnects after roughly three minutes",
+    description: "Re-test the VPN for 30 minutes after the gateway profile change.",
+    status: "PLANNED",
+    hoursAgo: -20,
+    // The third staff user on this Ticket (BR-02), planning work for the owner.
+    byEmail: "fonthip.c@example.ac.th",
+    assigneeEmail: "araya.m@example.ac.th",
+    attachmentNotes: "The log excerpt from the first check is attachment 1, if the Requester uploads it.",
+  },
+  {
+    ticketSummary: "Grade submission form times out at the final step",
+    description: "Reproduced the timeout with a 60-row grade sheet.",
+    status: "COMPLETED",
+    hoursAgo: 100,
+    byEmail: "decha.i@example.ac.th",
+    result: "Raised the form's request limit; a 60-row sheet now submits in 4 seconds.",
+  },
+  {
+    ticketSummary: "Shared departmental mailbox missing from Outlook",
+    description: "Checked the mailbox permissions in the admin console.",
+    status: "COMPLETED",
+    hoursAgo: 150,
+    byEmail: "fonthip.c@example.ac.th",
+    result: "Full Access had been removed during the semester clean-up.",
+    followUpRequired: true,
+    followUpNote: "Restore Full Access and wait for Outlook to resync.",
+  },
+  {
+    ticketSummary: "Shared departmental mailbox missing from Outlook",
+    description: "Restored Full Access and restarted Outlook with the Requester.",
+    status: "COMPLETED",
+    hoursAgo: 100,
+    byEmail: "fonthip.c@example.ac.th",
+    result: "The shared mailbox appears in Outlook again.",
+  },
+  {
+    ticketSummary: "Printer on the third floor jams on every duplex job",
+    description: "Replaced the duplex unit's pickup roller.",
+    status: "COMPLETED",
+    hoursAgo: 460,
+    byEmail: "araya.m@example.ac.th",
+    result: "Twenty duplex test pages printed without a jam.",
+  },
+  {
+    ticketSummary: "Campus Wi-Fi drops when moving between buildings",
+    description: "Enabled fast roaming on the building access points.",
+    status: "COMPLETED",
+    hoursAgo: 260,
+    byEmail: "decha.i@example.ac.th",
+    result: "Roaming between buildings A and B held the connection in a walk test.",
+  },
+  {
+    ticketSummary: "Campus Wi-Fi drops when moving between buildings",
+    description: "Walk test from building C to the library.",
+    status: "CANCELLED",
+    hoursAgo: 40,
+    byEmail: "decha.i@example.ac.th",
+    result: "The library access points are being replaced next week; test after that.",
+  },
+];
+
+// The status path a seeded Ticket took, written as history only for Tickets
+// this seed creates (C-188). Legacy rows get none.
+const STATUS_PATH: Record<TicketStatus, TicketStatus[]> = {
+  NEW: [],
+  OPEN: ["OPEN"],
+  IN_PROGRESS: ["IN_PROGRESS"],
+  WAITING_FOR_REQUESTER: ["IN_PROGRESS", "WAITING_FOR_REQUESTER"],
+  RESOLVED: ["IN_PROGRESS", "RESOLVED"],
+  CLOSED: ["IN_PROGRESS", "RESOLVED", "CLOSED"],
+  REOPENED: ["IN_PROGRESS", "RESOLVED", "REOPENED"],
+  CANCELLED: ["CANCELLED"],
+};
+
 // All eight statuses, all three Requested Priorities, owned and unassigned.
 // A status that means work is in hand - IN_PROGRESS, WAITING_FOR_REQUESTER,
 // RESOLVED - always carries an owner, because C-93 requires somebody
@@ -401,6 +519,7 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
       where: { requesterId, summary: t.summary },
       select: { id: true },
     });
+    const isNew = !existing;
     const ticketId =
       existing?.id ??
       (
@@ -418,6 +537,28 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
           createdAt,
         })
       ).id;
+
+    // Lab 4 (C-188): a Ticket created here gets its path as status history,
+    // spread evenly from creation to a day ago, by the owner (or the
+    // Administrator for a Ticket nobody owned), and resolvedAt on Resolved and
+    // Closed (BR-49). Re-running finds the Ticket and writes nothing.
+    if (isNew) {
+      const path = STATUS_PATH[t.currentStatus];
+      const changer = t.ownerEmail ? userId(t.ownerEmail) : userId("panida.s@example.ac.th");
+      const span = Math.max(createdAt.getTime() + 60_000, Date.now() - 24 * 60 * 60 * 1000) - createdAt.getTime();
+      let from: TicketStatus = "NEW";
+      let resolvedAt: Date | null = null;
+      for (let i = 0; i < path.length; i += 1) {
+        const at = new Date(createdAt.getTime() + (span * (i + 1)) / (path.length + 1));
+        await prisma.ticketStatusChange.create({
+          data: { ticketId, fromStatus: from, toStatus: path[i], changedById: changer, changedAt: at },
+        });
+        if (path[i] === "RESOLVED") resolvedAt = at;
+        if (path[i] === "REOPENED") resolvedAt = null;
+        from = path[i];
+      }
+      if (resolvedAt) await prisma.ticket.update({ where: { id: ticketId }, data: { resolvedAt } });
+    }
 
     for (const c of t.publicComments ?? []) {
       const found = await prisma.publicComment.findFirst({
@@ -442,6 +583,64 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
       }
     }
   }
+
+  // Lab 4 - Actions Taken (spec 7.9), keyed by (Ticket, description).
+  for (const a of SEED_ACTIONS) {
+    const plan = SEED_TICKETS.find((t) => t.summary === a.ticketSummary);
+    if (!plan) throw new Error(`Graded seed: action for unknown Ticket "${a.ticketSummary}".`);
+    const ticket = await prisma.ticket.findFirst({
+      where: { requesterId: userId(plan.requesterEmail), summary: plan.summary },
+      select: { id: true, createdAt: true },
+    });
+    if (!ticket) continue;
+    const exists = await prisma.actionTaken.findFirst({ where: { ticketId: ticket.id, description: a.description }, select: { id: true } });
+    if (exists) continue;
+    const by = userId(a.byEmail);
+    // Never before the Ticket itself (BR-07), even on a legacy dev row.
+    const at = new Date(Math.max(ticket.createdAt.getTime() + 60_000, Date.now() - a.hoursAgo * 60 * 60 * 1000));
+    const finished = a.status !== "PLANNED";
+    await prisma.actionTaken.create({
+      data: {
+        ticketId: ticket.id,
+        status: a.status,
+        actionAt: at,
+        description: a.description,
+        result: a.result ?? null,
+        followUpRequired: a.followUpRequired ?? false,
+        followUpNote: a.followUpNote ?? null,
+        attachmentNotes: a.attachmentNotes ?? null,
+        assigneeId: a.assigneeEmail ? userId(a.assigneeEmail) : by,
+        createdById: by,
+        createdAt: finished ? at : new Date(),
+        performedById: finished ? by : null,
+        finishedAt: finished ? at : null,
+      },
+    });
+  }
+
+  // BR-46: every seeded Ticket's activity time is its latest recorded event.
+  for (const t of SEED_TICKETS) {
+    const ticket = await prisma.ticket.findFirst({ where: { requesterId: userId(t.requesterEmail), summary: t.summary }, select: { id: true } });
+    if (!ticket) continue;
+    // Public Comments and Attachments count, as in the M2 backfill; Internal
+    // Notes never do (BR-47).
+    const [lastHistory, lastAction, lastComment, attachments] = await Promise.all([
+      prisma.ticketStatusChange.findFirst({ where: { ticketId: ticket.id }, orderBy: { changedAt: "desc" }, select: { changedAt: true } }),
+      prisma.actionTaken.findFirst({ where: { ticketId: ticket.id }, orderBy: { createdAt: "desc" }, select: { createdAt: true, finishedAt: true } }),
+      prisma.publicComment.findFirst({ where: { ticketId: ticket.id }, orderBy: { createdAt: "desc" }, select: { createdAt: true } }),
+      prisma.attachment.aggregate({ where: { ticketId: ticket.id }, _max: { uploadedAt: true, removedAt: true } }),
+    ]);
+    const candidates = [
+      lastHistory?.changedAt,
+      lastAction?.finishedAt ?? lastAction?.createdAt,
+      lastComment?.createdAt,
+      attachments._max.uploadedAt,
+      attachments._max.removedAt,
+    ].filter((d): d is Date => !!d);
+    if (candidates.length === 0) continue;
+    const latest = new Date(Math.max(...candidates.map((d) => d.getTime())));
+    await prisma.ticket.updateMany({ where: { id: ticket.id, lastActivityAt: { lt: latest } }, data: { lastActivityAt: latest } });
+  }
 }
 
 export function gradedSeedSummary() {
@@ -459,5 +658,6 @@ export function gradedSeedSummary() {
     tickets: SEED_TICKETS.length,
     publicComments: SEED_TICKETS.reduce((n, t) => n + (t.publicComments?.length ?? 0), 0),
     internalNotes: SEED_TICKETS.reduce((n, t) => n + (t.internalNotes?.length ?? 0), 0),
+    actions: SEED_ACTIONS.length,
   };
 }
