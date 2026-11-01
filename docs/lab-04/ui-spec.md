@@ -213,16 +213,15 @@ because the work record drives the status decision beside it.
 | Edge | none | 1 px ivory border all round | **4 px `--tk-primary` bar on the left** |
 | Icon | speech bubble | padlock | **clipboard-check** |
 | Standing label | `Visible to the Requester.` | `Not visible to the Requester.` | **`Shown to the Requester.`** (BR-21), always present, 600 weight, above the composer |
-| Layout | chronological thread | chronological thread | **a table at `lg`, cards below** |
+| Layout | chronological thread | chronological thread | **cards at every width** (C-195) |
 
 Five differences, at least three of which survive greyscale (bar, icon, label).
 
 ### 8.2 The list
 
 Heading `Actions Taken`, the standing label, then the rows in `actionAt desc, id desc` order
-(BR-22). At `lg` a table: `Status`, `Action Date/Time`, `Description`, `Assignee`, `Result`,
-`Follow-up`, `Finished`. At `md` and below each action is a card with the same fields as a
-definition list.
+(BR-22). At every width each action is a card, its fields a definition list: `Status`,
+`Action Date/Time`, `Description`, `Assignee`, `Result`, `Follow-up`, `Finished` (C-195).
 
 **Action status badge** - square-cornered like a Ticket status, with an icon and text, so it
 reads without colour:
@@ -392,7 +391,7 @@ NF = `That item does not exist.` with a link back.
 
 | State | Presentation |
 |---|---|
-| Loading | Skeleton cards and three skeleton panels; `Refresh` disabled |
+| Loading | Skeleton cards, then one skeleton panel per list in the same two-column grid (three for IT Staff and Administrator, two for a Requester); `Refresh` disabled |
 | Success | - (no write). After Refresh, the `Updated …` line changes |
 | Validation | - |
 | Empty | Per list: `No planned actions are assigned to you.` / `No tickets were updated in the last 7 days.` / `No High IT Priority tickets are open.` Each with the outline document icon; `View all` stays. The first is captured for real (the Administrator who owns nothing); the other two only from a mocked response (C-180) |
@@ -462,7 +461,7 @@ At 1280, 834 and 390 px on every Lab 4 screen (FR-33, AC-120):
 - **No horizontal page scroll**: `document.documentElement.scrollWidth <= window.innerWidth`.
 - Card grids: staff 4 / 3 / 2 columns, Requester 4 / 2 / 2; the count never wraps below its
   label.
-- Actions Taken: a table at `lg`; stacked cards at `md` and below.
+- Actions Taken: cards at every width (C-195).
 - Dashboard panels: two columns at `lg`, one below.
 - Touch targets at least 44 px below `md` (L3 ui 4), including card links and row actions.
 

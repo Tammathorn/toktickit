@@ -1,0 +1,47 @@
+Command: npx playwright test e2e/lab-04/regression.spec.ts --project=desktop --reporter=json (digest: test, expected status, actual status, the fixture's failure message)
+Date: 2026-10-31 (servers on :3000 and :5173)
+Commit: fe44fd9 + uncommitted #69 changes (feature/lab4-8-hardening)
+
+A test with expected=failed passes because the console-error fixture failed it (test.fail()); the message below is why.
+
+E2E-28 a page that calls console.error fails the test
+  expected=failed actual=failed
+  | Error: Console-error fixture: 1 problem(s) (C-149):
+  |   [console.error] E2E-28: deliberate console.error
+  | 
+  |    at support\console.ts:111
+
+E2E-29 an uncaught page exception fails the test
+  expected=failed actual=failed
+  | Error: Console-error fixture: 1 problem(s) (C-149):
+  |   [pageerror] Error: E2E-29: deliberate uncaught exception
+  | 
+  |    at support\console.ts:111
+
+E2E-30 a same-origin 500 fails the test
+  expected=failed actual=failed
+  | Error: Console-error fixture: 2 problem(s) (C-149):
+  |   [console.error] Failed to load resource: the server responded with a status of 500 (Internal Server Error) (http://localhost:5173/api/health)
+  |   [5xx] 500 from http://localhost:5173/api/health
+  | 
+
+E2E-31 a declared expected 404 passes: the Failed to load resource line is allowlisted
+  expected=passed actual=passed
+
+E2E-32 the same 404 undeclared fails the test
+  expected=failed actual=failed
+  | Error: Console-error fixture: 2 problem(s) (C-149):
+  |   [console.error] Failed to load resource: the server responded with a status of 404 (Not Found) (http://localhost:5173/api/tickets/999999)
+  |   [console.error] Failed to load resource: the server responded with a status of 404 (Not Found) (http://localhost:5173/api/tickets/999999)
+  | 
+
+E2E-30b a declared mocked 500 passes (C-182)
+  expected=passed actual=passed
+
+E2E-30c a 500 declared for one URL does not excuse another (C-182)
+  expected=failed actual=failed
+  | Error: Console-error fixture: 2 problem(s) (C-149):
+  |   [console.error] Failed to load resource: the server responded with a status of 500 (Internal Server Error) (http://localhost:5173/api/health)
+  |   [5xx] 500 from http://localhost:5173/api/health
+  | 
+

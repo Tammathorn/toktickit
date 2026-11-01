@@ -230,6 +230,13 @@ describe("IT Staff and Administrator Dashboard", () => {
     expect(await screen.findByRole("button", { name: "Refresh" })).toBeEnabled();
   });
 
+  it("UI-09 loading skeleton draws three list panels beside the cards (ui-spec 12.1)", async () => {
+    vi.spyOn(api, "fetchStaffDashboard").mockImplementationOnce(() => new Promise(() => {}));
+    await renderDashboard();
+    const region = screen.getByRole("region", { name: "Dashboard loading" });
+    expect(region.querySelectorAll(".tk-skeleton-panel")).toHaveLength(3);
+  });
+
   it("UI-10 a card opens the queue already filtered (FR-16, BR-56)", async () => {
     vi.spyOn(api, "fetchStaffDashboard").mockResolvedValue(dashboard());
     await renderDashboard();
