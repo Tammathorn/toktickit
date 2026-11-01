@@ -1,14 +1,9 @@
 # Lab 4 Report - TokTickIT
 
 CPE 334 Individual Sprint 4 (LS 14). Author: Tammathorn Kananurak (67070503489).
-Repository: <https://github.com/Tammathorn/toktickit>. State at writing: **31 October 2026, before
-review and before the release.** The Lab 4 PRs (#72 to #80 and the documentation PR of Issue #71)
-are open and stacked on each other; nothing has been merged, `lab4-staging` has no Lab 4 code and `main`
-is still the Lab 3 release. So every figure below is for the stack's tip, `feature/lab4-9-e2e-visual` at
-`6ccf79d` (the documentation branch adds only documents), and **the Part 3 run on `main` after the release
-merge is not yet done and is not claimed.** Where something was not done or not proven, the row says so.
+Repository: <https://github.com/Tammathorn/toktickit>. State: **after peer review and the release** (1 November 2026). PAKATO123 reviewed and approved all ten Lab 4 PRs (#72-#81); they were merged in order into `lab4-staging`, and the release PR #82 merged `lab4-staging` into `main` at `5b118f4`. The final run on `main` is in P3-08 and `evidence/final-main/`; the per-Issue figures below come from the runs on each branch before the merge. Where something was not done or not proven, the row says so.
 
-One green run of each suite on that code: server **510** passed (21 files), client **193** passed (15 files),
+One green run of each suite on the stack's tip before the release: server **510** passed (21 files), client **193** passed (15 files),
 Playwright **413** passed and **37** skipped (450 runs), performance smoke **2** passed
 ([`evidence/issue-71/`](evidence/issue-71/README.md)). Paths in this Markdown file are relative to
 `artifacts/lab-04/`; [`evidence.md`](evidence.md) is the index that maps every row to its file.
@@ -22,10 +17,10 @@ Playwright **413** passed and **37** skipped (450 runs), performance smoke **2**
 | P1-01 | Branches `feature/lab4-1-contract` to `feature/lab4-10-release-docs`, one per Issue, each PR's base the branch below it (the stack is stated in each body): [`evidence/issue-71/github-my-prs-readback.txt`](evidence/issue-71/github-my-prs-readback.txt); history with dates: [`evidence/issue-71/git-log-contract-to-release.txt`](evidence/issue-71/git-log-contract-to-release.txt) |
 | P1-02 | Short prefixed commits (`test:` first, then `feat:`, then `docs:`) per Issue, each subject carrying the Issue number; no co-author trailer (`CLAUDE.md`) |
 | P1-03 | Peer review in both directions, read back from GitHub: [`../../docs/lab-04/reviewer.md`](../../docs/lab-04/reviewer.md); raw: [`evidence/issue-71/github-partner-prs-readback.txt`](evidence/issue-71/github-partner-prs-readback.txt) |
-| P1-04 | **Reviews of my PRs: none yet.** #72-#80 have 0 reviews, 0 comments and no requested reviewer. Nothing is merged, and I have not self-merged anything |
+| P1-04 | **Reviews of my PRs:** PAKATO123 reviewed all ten (#72-#81). #74 (cross-Ticket replay key) and #81 (reviewer.md, reflection) were CHANGES_REQUESTED, fixed (C-199; reviewer.md updated) and then APPROVED; the other eight were approved first time. Every review and my response: [`../../docs/lab-04/reviewer.md`](../../docs/lab-04/reviewer.md). I did not self-merge before approval |
 | P1-05 | **Reviews I gave:** PAKATO123/toktickit #63 and #64 approved, #65 and #70 changes requested (31 Oct 04:44 to 04:55 UTC). He replied to #64, #65 and #70 on GitHub; I have not re-reviewed. Comments and replies are quoted in `reviewer.md` section 3 |
-| P1-06 | Board columns: **no GitHub board screenshot is in the repository**; none was taken for Lab 4. No card has entered **Fixing**, since no review has asked for a change on my PRs. This is a gap |
-| P1-07 | The release PR (`lab4-staging` into `main`) is **not opened**; it waits for every feature PR to merge |
+| P1-06 | Board: Issues #62-#71 are closed and in **Done**. #74 and #81 went back for fixes after review. **No GitHub board screenshot is in the repository**; this is a gap |
+| P1-07 | The release PR #82 (`lab4-staging` into `main`) is merged; `main` is at `5b118f4`. The final-run evidence is in the docs PR #83 |
 | P1-08 | [`../../README.md`](../../README.md) has a Lab 4 section; `.gitignore` keeps `tmp/`, uploads, `e2e/.auth/` and test output out of the repository |
 
 ## Answer Part 2
@@ -34,10 +29,10 @@ Playwright **413** passed and **37** skipped (450 runs), performance smoke **2**
 
 | Row | Evidence |
 |---|---|
-| P2-01 | The contract: [`specification.md`](../../docs/lab-04/specification.md) (148 acceptance criteria), [`api-spec.md`](../../docs/lab-04/api-spec.md), [`ui-spec.md`](../../docs/lab-04/ui-spec.md), [`tests.md`](../../docs/lab-04/tests.md) (304 planned tests), [`decisions.md`](../../docs/lab-04/decisions.md) (C-122 to C-198; C-196 unused) |
+| P2-01 | The contract: [`specification.md`](../../docs/lab-04/specification.md) (148 acceptance criteria), [`api-spec.md`](../../docs/lab-04/api-spec.md), [`ui-spec.md`](../../docs/lab-04/ui-spec.md), [`tests.md`](../../docs/lab-04/tests.md) (304 planned tests), [`decisions.md`](../../docs/lab-04/decisions.md) (C-122 to C-199; C-196 unused) |
 | P2-02 | The contract was committed before any code: its commits are dated 12 to 15 October and 28 October 07:53 UTC; the first code commit, `2b7e2b0`, is 28 October 15:35 +07:00 and has the contract's last commit, `3bfade9`, as an ancestor ([`evidence/issue-71/git-log-contract-to-release.txt`](evidence/issue-71/git-log-contract-to-release.txt)) |
-| P2-03 | **The contract PR #72 is not merged.** `CLAUDE.md` rule 1 (contract merged into `lab4-staging` before Issue 2 starts) was relaxed for the deadline: #73 to #80 are stacked on the unmerged #72. A merged PR page that proves "spec before code" does not exist yet |
-| P2-04 | Decisions made after the contract, each a row with its reason: C-190 to C-195, C-197 and C-198. They also correct `specification.md`, `api-spec.md`, `ui-spec.md` and `tests.md` where the built system differed (C-190 the row lock, C-191 the 422 envelope, C-192 the empty-edit message, C-193 `updatedAt`, C-194 the replay scope) |
+| P2-03 | The contract PR #72 was merged first into `lab4-staging`, then #73-#81 in order. During development #73-#81 were stacked on the unmerged #72, which relaxed `CLAUDE.md` rule 1 for the deadline |
+| P2-04 | Decisions made after the contract, each a row with its reason: C-190 to C-195, C-197 and C-198. They also correct `specification.md`, `api-spec.md`, `ui-spec.md` and `tests.md` where the built system differed (C-190 the row lock, C-191 the 422 envelope, C-192 the empty-edit message, C-193 `updatedAt`, C-194 the replay scope); C-199 (from PAKATO's review of #74): a replay key reused on another Ticket returns 409 `IDEMPOTENCY_KEY_REUSED` for actions, Public Comments and Internal Notes |
 | P2-05 | Conflicts between an instruction and the code were recorded rather than resolved silently, e.g. C-158's cut (Ticket create ignores `clientRequestId`, WF-64) against a later instruction that it keeps the key: `decisions.md` C-158 and C-194 |
 
 ## Answer Part 3
@@ -53,7 +48,7 @@ Playwright **413** passed and **37** skipped (450 runs), performance smoke **2**
 | P3-05 | Labs 1-3 regression: the counts before Lab 4 (297 / 128 / 278 + 34) are unchanged and nothing was deleted or skipped; 28 server, 9 client and 20 e2e Lab 2/3 tests were adapted, each citing its decision: `tests.md` section 4 |
 | P3-06 | Migration: rehearsal on the Lab 3 dump, counts equal before and after, backfill all zero, zero drift, backup restore test: [`evidence/issue-2/`](evidence/issue-2/README.md); zero drift again on the fresh database of the final run: [`evidence/issue-71/final-db-drift.txt`](evidence/issue-71/final-db-drift.txt) |
 | P3-07 | Flake evidence kept: the sporadic e2e sign-in `ECONNRESET` (six runs over #64 to #70, each rerun green) and the 4.7-hour host stall in #66, beside the green runs; `tests.md` 6.3 lists the files |
-| P3-08 | **All suites on `main` after the release merge: not done.** It can only run once the release PR has merged |
+| P3-08 | All suites on `main` after the release merge (`5b118f4`, release PR #82, 1 Nov 2026): server **518** passed (21 files; +8 are API-125..API-132, C-199), client **193** passed (15 files), Playwright **413** passed and **37** skipped (450 runs, three viewports), performance smoke **2** passed (p95 7.8 and 13.8 ms); zero drift on the fresh database: [`evidence/final-main/`](evidence/final-main/README.md) |
 
 ## Answer Part 4
 
@@ -62,7 +57,7 @@ Playwright **413** passed and **37** skipped (450 runs), performance smoke **2**
 | Row | Evidence |
 |---|---|
 | P4-01 | [`../../docs/lab-04/ai-use.md`](../../docs/lab-04/ai-use.md): the two Claude roles (planner and executor), the key prompts marked **(key)** with what I did with each result, the prompts of the seven bridge tasks and what went wrong in each (section 2.8), and what the AI could not do |
-| P4-02 | **"My Reflection" is an empty heading**, to be written by me in my own words before submission. It is not yet written |
+| P4-02 | **My Reflection** is in the submitted Lab 4 PDF report (my decision); `ai-use.md` points there |
 
 ## Answer Part 5
 

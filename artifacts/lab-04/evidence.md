@@ -158,7 +158,7 @@ Lab 3 E2E-48 captures of `/dashboard`, written here instead of `artifacts/lab-03
 
 This Issue's folder is `evidence/issue-71/`; its README names every file. The runs are one
 green run of each suite on the code of Issue #70 (`6ccf79d`); the run on `lab4-staging` and on
-`main` after the release merge is Part 3's final evidence and is **pending** the release.
+`main` after the release merge is Part 3's final evidence: captured in `evidence/final-main/` (`5b118f4`, see its README).
 
 | Requirement | Test ID / AC | Evidence | Issue | Status |
 |---|---|---|---|---|
