@@ -5,8 +5,8 @@ Repository: <https://github.com/Tammathorn/toktickit>. State at writing: **31 Oc
 review and before the release.** The Lab 4 PRs (#72 to #80 and the documentation PR of Issue #71)
 are open and stacked on each other; nothing has been merged, `lab4-staging` has no Lab 4 code and `main`
 is still the Lab 3 release. So every figure below is for the stack's tip, `feature/lab4-9-e2e-visual` at
-`6ccf79d` (the documentation branch adds only documents), and **the Part 3 run on `main` after the release
-merge is not yet done and is not claimed.** Where something was not done or not proven, the row says so.
+`6ccf79d` (the documentation branch adds only documents), and the Part 3 run on `main` after the release
+merge (`5b118f4`) is in P3-08 and `evidence/final-main/`. Where something was not done or not proven, the row says so.
 
 One green run of each suite on that code: server **510** passed (21 files), client **193** passed (15 files),
 Playwright **413** passed and **37** skipped (450 runs), performance smoke **2** passed
@@ -53,7 +53,7 @@ Playwright **413** passed and **37** skipped (450 runs), performance smoke **2**
 | P3-05 | Labs 1-3 regression: the counts before Lab 4 (297 / 128 / 278 + 34) are unchanged and nothing was deleted or skipped; 28 server, 9 client and 20 e2e Lab 2/3 tests were adapted, each citing its decision: `tests.md` section 4 |
 | P3-06 | Migration: rehearsal on the Lab 3 dump, counts equal before and after, backfill all zero, zero drift, backup restore test: [`evidence/issue-2/`](evidence/issue-2/README.md); zero drift again on the fresh database of the final run: [`evidence/issue-71/final-db-drift.txt`](evidence/issue-71/final-db-drift.txt) |
 | P3-07 | Flake evidence kept: the sporadic e2e sign-in `ECONNRESET` (six runs over #64 to #70, each rerun green) and the 4.7-hour host stall in #66, beside the green runs; `tests.md` 6.3 lists the files |
-| P3-08 | **All suites on `main` after the release merge: not done.** It can only run once the release PR has merged |
+| P3-08 | All suites on `main` after the release merge (`5b118f4`, release PR #82, 1 Nov 2026): server **518** passed (21 files; +8 are API-125..API-132, C-199), client **193** passed (15 files), Playwright **413** passed and **37** skipped (450 runs, three viewports), performance smoke **2** passed (p95 7.8 and 13.8 ms); zero drift on the fresh database: [`evidence/final-main/`](evidence/final-main/README.md) |
 
 ## Answer Part 4
 

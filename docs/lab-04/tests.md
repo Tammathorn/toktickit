@@ -923,8 +923,8 @@ with the command, the date and the commit hash, and named in
 
 Filled at Issue #71 from the one green run of each suite on `feature/lab4-10-release-docs`, code commit `6ccf79d`
 (output in `artifacts/lab-04/evidence/issue-71/`, headed with the command, date and commit). The final run on
-`lab4-staging` (C-157) and on `main` after the release merge is Part 3's evidence and is **not yet run**; this
-table does not claim it. After the release merge `git diff lab4-staging main` is shown empty in the PDF only.
+`lab4-staging` (C-157) and on `main` after the release merge is Part 3's evidence and is in 6.4 below; this
+table stays the Issue #71 run. After the release merge `git diff lab4-staging main` is shown empty in the PDF only.
 
 | Suite | Command | Before Lab 4 | Expected | Actual | Result |
 |---|---|---|---|---|---|
@@ -978,6 +978,20 @@ Counts at this Issue (one run each, all green): server 510 passed, client 193 pa
 - **`Ticket.updatedAt` and the queue.** Comment, attachment and action writes now move `Ticket.updatedAt`; the queue's default order does not read it, so only an explicit `sort=updatedAt` is affected (C-193).
 - **SEC-23 correction (Issue #66).** The plan listed L3 SEC-23 as adapted; it makes no staff Ticket PATCH, so it is unchanged (4.1).
 - **Test database rebuild (Issue #68).** `toktickit_test` was dropped and rebuilt once because Tickets left by the pre-`1c688b5` seed broke API-57 (C-198).
+
+---
+
+### 6.4 Final numbers - run on `main` after the release merge
+
+Run on `main` at `5b118f4c69996362d7e96e3ec623b327582fb386` (release PR #82), 1 November 2026. Output in
+`artifacts/lab-04/evidence/final-main/` (README there).
+
+| Suite | Command | Result | Note |
+|---|---|---|---|
+| Server | `cd server; npm test` | 518 passed, 21 files | +8 on section 6: API-125..API-132 (C-199, section 2.12) |
+| Client | `cd client; npm test` | 193 passed, 15 files | unchanged |
+| Playwright | `npm run test:e2e` | 413 passed, 37 skipped = 450 runs | unchanged; fresh `toktickit_mainfinal2`, zero drift, `prisma:seed` and `seed-demo`. A first attempt had 4 failures from a run-setup error (`DATABASE_URL` not exported to the Playwright process), see the README |
+| Perf-smoke | `npm run test:perf` | 2 passed, p95 7.8 ms and 13.8 ms | limit 500 ms |
 
 ---
 

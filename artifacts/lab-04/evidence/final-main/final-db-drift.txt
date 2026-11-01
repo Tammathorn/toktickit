@@ -1,0 +1,7 @@
+# Command: cd server; npx prisma migrate diff --from-url <toktickit_mainfinal2> --to-schema-datamodel prisma/schema.prisma --exit-code   (exit 0)
+# Date: 2026-11-01
+# Commit: 5b118f4 (main, merge of release PR #82)
+# ANSI stripped; session tokens and database URLs redacted
+
+No difference detected.
+
