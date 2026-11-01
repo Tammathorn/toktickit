@@ -45,8 +45,8 @@ Claude Code read everything in plan mode and was told not to agree to be agreeab
 what the plan got wrong: My Tickets already read its filters from the URL; the route-inventory
 test only checked anonymous 401; the client duplicated the status matrix; the gate's "latest
 action" by `actionAt` had a hole; `clientRequestId` minted once per form would swallow a second
-comment; the plan was too large for the days left. **What I did:** answered its 15 questions,
-accepting most and changing three.
+comment; the plan was too large for the days left. **What I did:** answered its questions,
+accepting most and changing a few.
 
 ### 2.3 Prompt 1.2 - the decision log, in my words
 
@@ -102,8 +102,7 @@ type into Claude Code. I asked it to run the two sessions through text files ins
   `server/tests/support/cleanup.ts`; `tests.md` 4.1 lists the 8 `afterAll` blocks and 4 inline
   deletes it replaced.
 - **Two suites at once.** The executor ran two server suites against the same database and
-  left 449 Tickets behind, then said so and cleaned up (the count is as recalled when this was
-  drafted; it is not in any file). Every task file from 001 to 005 now says "Never run two server
+  left leftover Tickets behind, then said so and cleaned up. Every task file from 001 to 005 now says "Never run two server
   suites at once".
 
 ### 2.8 The bridge tasks 001-007 - the prompts that mattered **(key)**
