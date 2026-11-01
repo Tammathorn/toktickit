@@ -1,4 +1,6 @@
 import { describe, it, expect, beforeAll, afterAll } from "vitest";
+import { readFileSync } from "node:fs";
+import { fileURLToPath } from "node:url";
 import request from "supertest";
 import { app } from "../../src/app.js";
 import { getPrisma } from "../../src/prisma.js";
@@ -22,6 +24,23 @@ const prisma = getPrisma();
 const TAG = "[lab4-authz-test]";
 const MISSING_ID = 99999999;
 const HOUR = 60 * 60 * 1000;
+const SPECIFICATION = fileURLToPath(new URL("../../../docs/lab-04/specification.md", import.meta.url));
+
+// The "Method and path" cells of the specification.md 5.2 table, read from the
+// contract itself so the matrix and this test can never drift apart silently.
+function matrixRoutes(): string[] {
+  const text = readFileSync(SPECIFICATION, "utf8");
+  const start = text.indexOf("### 5.2 Authorization matrix");
+  const end = text.indexOf("### 5.3", start);
+  expect(start, "specification.md has a 5.2 Authorization matrix section").toBeGreaterThan(-1);
+  expect(end).toBeGreaterThan(start);
+  const rows: string[] = [];
+  for (const line of text.slice(start, end).split(/\r?\n/)) {
+    const m = line.match(/^\|[^|]*\|\s*`(GET|POST|PUT|PATCH|DELETE) (\/api\/[^`\s]*)`/);
+    if (m) rows.push(`${m[1]} ${m[2]}`);
+  }
+  return rows;
+}
 
 type Call = (agent: request.Agent | ReturnType<typeof request>, id: number) => request.Test;
 
@@ -103,6 +122,22 @@ describe("SEC-10 the specification.md 5.2 cells of the four action routes", () =
       expect(["TICKET_NOT_FOUND", "ACTION_NOT_FOUND"]).toContain(reached.body.error.code);
     });
   }
+});
+
+describe("SEC-09 the route inventory versus the specification.md 5.2 matrix (AC-101, BR-71, FR-31, C-155, C-184)", () => {
+  it("SEC-09 every method and path registered on the Express app is a 5.2 matrix row and every matrix row is registered: 36 rows, none missing either way", () => {
+    const { routes, unwalked } = routesOf(app);
+    expect(unwalked).toEqual([]);
+    const registered = [...new Set(routes.map((r) => `${r.method} ${r.path}`))].sort();
+    const matrix = matrixRoutes();
+    expect(new Set(matrix).size, "no matrix row is listed twice").toBe(matrix.length);
+    expect(matrix).toHaveLength(36);
+    const notInMatrix = registered.filter((r) => !matrix.includes(r));
+    const notRegistered = matrix.filter((r) => !registered.includes(r));
+    expect(notInMatrix, "registered routes missing from the matrix").toEqual([]);
+    expect(notRegistered, "matrix rows with no registered route").toEqual([]);
+    expect(registered).toEqual([...matrix].sort());
+  });
 });
 
 describe("SEC-11 append-only records (AC-24, BR-15, BR-50, C-151)", () => {
