@@ -52,7 +52,7 @@ not `issue-3/` by the convention above.
 
 This Issue's folder is `evidence/issue-65/`, named by the GitHub number as its task directed.
 No screenshots are committed in this Issue; the `actions-taken/` and `ticket-workflow/` captures
-belong to the Playwright specs of Issue 9.
+belong to the Playwright specs of Issue 9, captured there (see the Issue 9 section).
 
 | Requirement | Test ID / AC | Evidence | Issue | Status |
 |---|---|---|---|---|
@@ -86,7 +86,7 @@ Playwright specs of Issue 9.
 ## IT Staff and Administrator dashboard - Issue 6 (#67)
 
 This Issue's folder is `evidence/issue-67/`, named by the GitHub number like the three above.
-Dashboard screenshots (E2E-33, C-180) are rows of Issue 9, which writes `e2e/lab-04/dashboards.spec.ts`.
+Dashboard screenshots (E2E-33, C-180) are rows of Issue 9, which writes `e2e/lab-04/dashboards.spec.ts`; captured there.
 
 | Requirement | Test ID / AC | Evidence | Issue | Status |
 |---|---|---|---|---|
@@ -105,7 +105,7 @@ Dashboard screenshots (E2E-33, C-180) are rows of Issue 9, which writes `e2e/lab
 
 This Issue's folder is `evidence/issue-68/`. The Requester dashboard code and its client tests
 came with #67's patch, so the #68 API tests had no code-caused red run; the README says so.
-Requester dashboard screenshots (E2E-34, C-180) are rows of Issue 9.
+Requester dashboard screenshots (E2E-34, C-180) are rows of Issue 9; captured there.
 
 | Requirement | Test ID / AC | Evidence | Issue | Status |
 |---|---|---|---|---|
@@ -132,3 +132,24 @@ the focus-management, UI-50 and test-gap items are not done and are recorded as 
 | Items not done for the deadline, recorded honestly | - | `docs/lab-04/tests.md` 6.1 | 8 | captured |
 | README Lab 4 section (what it adds, migration and seed steps, the three suites, `npm run test:perf`, demo per role) | - | `README.md` | 8 | captured |
 | Labs 1-3 suites still pass | see `evidence/issue-69/README.md` | `evidence/issue-69/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt` | 8 | captured |
+
+## E2E, screenshots and the visual checklist - Issue 9 (#70)
+
+This Issue's folder is `evidence/issue-70/`. Every screenshot below was written by a Playwright
+spec in `e2e/lab-04/` against a freshly migrated and seeded `toktickit_evidence` (the legacy-history
+capture against `toktickit_rehearsal`, C-188); none is edited. Each screenshot folder has its own
+`README.md` naming every file. The nine `nav-<vp>-<role>-dashboard.png` files in `regression/` are the
+Lab 3 E2E-48 captures of `/dashboard`, written here instead of `artifacts/lab-03` (planner addendum).
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| Actions Taken: 15 states x 3 viewports | E2E-08; `ui-spec.md` 15 | `screenshots/actions-taken/` (45 files) | 9 | captured |
+| Ticket workflow: 10 states x 3 viewports, the legacy history from `toktickit_rehearsal` | E2E-17; AC-77; C-179, C-188 | `screenshots/ticket-workflow/` (30 files), `evidence/issue-70/e2e-legacy-history-run.txt` | 9 | captured |
+| IT Staff and Administrator dashboard: 8 states x 3, `-lists-empty-mocked` named mocked, `-failure` a declared mocked 500 | E2E-33; C-180, C-182 | `screenshots/staff-dashboard/` (24 files) | 9 | captured |
+| Requester dashboard: 5 states x 3 (Part 5's role evidence is `-populated`) | E2E-34; C-180, C-182 | `screenshots/requester-dashboard/` (15 files) | 9 | captured |
+| Labs 2-3 regression: 14 states x 3 from the real app, plus the nine E2E-48 dashboard captures | E2E-35; FR-29, FR-30; C-185 | `screenshots/regression/` (51 files) | 9 | captured |
+| Two-role creation to closure; the gate, conflicts, history; the three role walks; count equals list; no polling; Forbidden | E2E-01..E2E-27 | `evidence/issue-70/green-e2e-suite.txt` | 9 | captured |
+| Visual and accessibility checklist, VIS-01..VIS-32, measured at 1280, 834 and 390 | `ui-spec.md` 16 | `evidence/issue-70/visual-checklist.md`, `visual-measurements-<viewport>.json`, `card-vs-list-<account>-<viewport>.json` | 9 | captured |
+| Performance smoke: p95 under 500 ms for both dashboard endpoints on 2,000 Tickets | PERF-01, PERF-02; AC-102; C-148, C-183 | `evidence/issue-70/perf-smoke.txt` | 9 | captured |
+| Console-error fixture on every Lab 4 spec; the two sporadic ECONNRESET attempts kept | C-149, C-182 | `evidence/issue-70/e2e-attempt-1-econnreset.txt`, `e2e-attempt-2-econnreset.txt`, `e2e-capture-run.txt` | 9 | captured |
+| Labs 1-3 suites still pass | - | `evidence/issue-70/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt` | 9 | captured |

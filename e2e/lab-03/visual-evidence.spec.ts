@@ -38,14 +38,17 @@ import { addCompletedAction, moveStatus } from "../support/lab4";
 
 const vp = () => test.info().project.name;
 const STATES = path.resolve(__dirname, "../../artifacts/lab-03/screenshots/states");
+// Lab 4 (Issue #70): the Dashboard route is new in Lab 4, so E2E-48's captures of it
+// belong to Lab 4's tree and never to artifacts/lab-03.
+const LAB4_REGRESSION = path.resolve(__dirname, "../../artifacts/lab-04/screenshots/regression");
 const A11Y = path.resolve(__dirname, "../../artifacts/lab-03/a11y");
 const FAILURE_TEXT = "Something went wrong on our side. Your work has not been lost - please try again.";
 const SIGNED_OUT = { cookies: [], origins: [] };
 
-async function shot(page: Page, name: string, fullPage = true) {
+async function shot(page: Page, name: string, fullPage = true, dir = STATES) {
   await settle(page);
-  fs.mkdirSync(STATES, { recursive: true });
-  await page.screenshot({ path: path.join(STATES, `${name.replace("<vp>", vp())}.png`), fullPage });
+  fs.mkdirSync(dir, { recursive: true });
+  await page.screenshot({ path: path.join(dir, `${name.replace("<vp>", vp())}.png`), fullPage });
 }
 
 function writeJson(name: string, data: unknown) {
@@ -896,7 +899,7 @@ for (const c of NAV_CASES) {
           }),
         );
         expect(links.filter((l) => l.ariaCurrent === "page").map((l) => l.label), `${route}: the one active item`).toEqual([active]);
-        await shot(page, `nav-<vp>-${c.role}-${route.slice(1).replace(/\//g, "-")}`, false);
+        await shot(page, `nav-<vp>-${c.role}-${route.slice(1).replace(/\//g, "-")}`, false, route === "/dashboard" ? LAB4_REGRESSION : STATES);
         records.push({ route, links });
       }
       writeJson(`aria-current-${c.role}-<vp>`, { role: c.role, viewport: vp(), pages: records });
