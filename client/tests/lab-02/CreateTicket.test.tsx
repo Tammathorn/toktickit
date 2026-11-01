@@ -5,6 +5,7 @@ import fs from "node:fs";
 import path from "node:path";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { REQUESTER_A, signInAs } from "../support/auth.js";
 import { MESSAGES } from "../../src/validation.js";
 
@@ -43,6 +44,7 @@ const CREATED = {
   updatedAt: "2026-09-05T04:12:33.041Z",
   attachments: [],
   publicComments: [],
+  ...lab4Fields("2026-09-05T04:12:33.041Z"),
 };
 
 function mockReferenceData() {

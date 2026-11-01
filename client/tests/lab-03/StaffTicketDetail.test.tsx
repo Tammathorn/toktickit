@@ -3,6 +3,7 @@ import { render, screen, within, waitFor, cleanup, fireEvent } from "@testing-li
 import userEvent from "@testing-library/user-event";
 import App from "../../src/App.js";
 import * as api from "../../src/api.js";
+import { lab4Fields, withStaffLab4 } from "../support/lab4.js";
 import { IT_STAFF, signInAs } from "../support/auth.js";
 
 // Planned rows UI-25..UI-37 (tests.md section 2.3, Issue #42/#6). The screen
@@ -13,7 +14,7 @@ import { IT_STAFF, signInAs } from "../support/auth.js";
 // Playwright's job (staff-ticket-flow.spec.ts).
 
 function ticket(overrides: Partial<api.StaffTicket> = {}): api.StaffTicket {
-  return {
+  return withStaffLab4({
     id: 77,
     ticketNumber: "TKT-2026-000077",
     requester: { id: 1, name: "Anucha Prasert", email: "anucha.p@example.ac.th" },
@@ -31,8 +32,9 @@ function ticket(overrides: Partial<api.StaffTicket> = {}): api.StaffTicket {
     attachments: [],
     publicComments: [],
     internalNotes: [],
+    ...lab4Fields("2026-09-05T05:02:44.000Z"),
     ...overrides,
-  };
+  });
 }
 
 const USERS: api.AssignableUser[] = [
@@ -178,7 +180,8 @@ describe("IT Staff Ticket Detail", () => {
     await user.selectOptions(screen.getByLabelText("Current Status"), "RESOLVED");
     await user.click(within(screen.getByRole("group", { name: "Current Status controls" })).getByRole("button", { name: "Save Changes" }));
     await user.click(await screen.findByRole("button", { name: "Resolve" }));
-    expect(setStatus).toHaveBeenCalledWith(77, "RESOLVED");
+    // Adapted for Lab 4 (C-138): every status PATCH carries the version read.
+    expect(setStatus).toHaveBeenCalledWith(77, "RESOLVED", 0);
     await waitFor(() => expect(screen.getByRole("heading", { level: 1 }).parentElement).toHaveTextContent("Resolved"));
   });
 

@@ -672,3 +672,91 @@ textarea.form-control { height: auto; resize: vertical; }
 .tk-link-button:hover { text-decoration: underline; }
 .tk-user-card { gap: 0.25rem; }
 .tk-char-counter-danger { color: var(--tk-danger); }
+
+/* ===========================================================================
+   Lab 4 - Dashboard, Actions Taken, status history, conflicts (ui-spec 6-11).
+   Zen Green tokens only; no new visual system.
+   =========================================================================== */
+
+.tk-metric-grid {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+@media (min-width: 768px) {
+  .tk-metric-grid-staff { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+  .tk-metric-grid-users { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (min-width: 992px) {
+  .tk-metric-grid-staff,
+  .tk-metric-grid-requester { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+}
+.tk-metric-card {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  min-height: 44px;
+  height: 100%;
+  padding: 0.875rem 1rem;
+  background: var(--tk-surface);
+  border: 1px solid var(--tk-border);
+  border-radius: 0.5rem;
+  box-shadow: var(--tk-shadow);
+  color: var(--tk-text);
+  text-decoration: none;
+}
+.tk-metric-card:hover,
+.tk-metric-card:focus-visible {
+  border-color: var(--tk-secondary);
+  color: var(--tk-text);
+}
+.tk-metric-card:focus-visible { outline: none; box-shadow: var(--tk-focus-ring); }
+.tk-metric-label { font-size: 0.875rem; font-weight: 600; display: flex; flex-wrap: wrap; gap: 0.25rem; align-items: center; }
+.tk-metric-count { font-size: 2rem; font-weight: 600; line-height: 1.1; color: var(--tk-primary); white-space: nowrap; }
+.tk-metric-more { font-size: 0.8125rem; }
+
+.tk-dash-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.tk-dash-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  padding: 0.5rem 0;
+  border-bottom: 1px solid var(--tk-border);
+  min-width: 0;
+}
+.tk-dash-row:last-child { border-bottom: none; }
+.tk-dash-summary { overflow-wrap: anywhere; }
+.tk-clamp-2 { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+.tk-quick-action { min-height: 44px; display: inline-flex; align-items: center; }
+
+/* Actions Taken (ui-spec 8.1): a 4 px primary bar on the left, clipboard icon. */
+.tk-actions-card { border-left: 4px solid var(--tk-primary); }
+.tk-action-list { display: flex; flex-direction: column; gap: 0.5rem; }
+.tk-action-row {
+  padding: 0.75rem;
+  border: 1px solid var(--tk-border);
+  border-radius: 0.375rem;
+  background: var(--tk-surface);
+}
+.tk-action-row-completed,
+.tk-action-row-cancelled { background: var(--tk-readonly-bg); }
+.tk-action-fields { display: grid; gap: 0.25rem 1rem; grid-template-columns: 1fr; }
+@media (min-width: 992px) {
+  .tk-action-fields { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+.tk-action-fields dt { font-size: 0.8125rem; font-weight: 600; color: var(--tk-text-muted); }
+.tk-action-fields dd { margin-bottom: 0.25rem; overflow-wrap: anywhere; }
+.tk-action-badge { display: inline-flex; align-items: center; gap: 0.25rem; }
+.tk-action-planned { background: var(--tk-surface); color: var(--tk-warning); border: 1px dashed var(--tk-warning); }
+.tk-action-completed { background: var(--tk-pale); color: var(--tk-primary); border: 1px solid var(--tk-pale); }
+.tk-action-cancelled { background: var(--tk-readonly-bg); color: var(--tk-text-muted); border: 1px solid var(--tk-border); }
+.tk-action-panel { background: var(--tk-surface); }
+.tk-action-composer { border-top: 1px solid var(--tk-border); padding-top: 1rem; }
+
+/* Status history (ui-spec 9.4). */
+.tk-history-list { padding-left: 1.25rem; margin-bottom: 0; }
+.tk-history-list li { margin-bottom: 0.25rem; }
+
+/* Conflict panel (ui-spec 11): warning border and icon, never colour alone. */
+.tk-panel-warning { border: 1px solid var(--tk-warning); background: var(--tk-surface); color: var(--tk-text); }
+.tk-conflict-panel { margin-top: 0.5rem; }

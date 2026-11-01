@@ -1,0 +1,13 @@
+Command: cd /c/Downloads/Lab1_Starter_Scaffold/toktickit; node tmp/lab4/step5-actions-check.cjs
+Date: 2026-10-30 18:09:22 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; Issue 4 work uncommitted, with the audit fixes; script copied beside this file)
+Exit code: 0
+------------------------------------------------------------------------
+ticket 2526 TKT-2026-002526 (201)
+staff: empty card shown
+1 create planned: ok
+2 edit: ok
+3 complete: ok
+4 cancel: ok
+requester: 2 rows, 0 buttons in the card
+console: no error, no pageerror, no 5xx

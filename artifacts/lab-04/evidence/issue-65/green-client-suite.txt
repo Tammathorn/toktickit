@@ -1,0 +1,320 @@
+Command: cd client; npx vitest run
+Date: 2026-10-30 18:07:53 +0700
+Commit: fdd6131 (feature/lab4-4-actions-ui; Issue 4 work uncommitted, with the audit fixes)
+Exit code: 0
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/client
+
+ ✓ tests/lab-01/App.test.tsx (3 tests) 193ms
+ ✓ tests/lab-02/RequesterTicketDetail.test.tsx (12 tests) 1165ms
+   ✓ Requester Ticket Detail > UI-34 a comment body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 409ms
+stderr | tests/lab-03/StaffTicketQueue.test.tsx > IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56)
+Warning: An update to RouterProvider inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:90:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketQueue inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketQueue (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketQueue.tsx:90:70)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ✓ tests/lab-02/MyTickets.test.tsx (11 tests) 1887ms
+   ✓ My Tickets > UI-10 clears A's rows and fetches B's when A signs out and B signs in (AC-11, BR-14) 835ms
+   ✓ My Tickets > debounces the search box into the request and resets to page 1 447ms
+ ✓ tests/lab-04/TicketWorkflow.test.tsx (13 tests) 2043ms
+   ✓ Ticket workflow - IT Staff Ticket Detail > UI-51 the note composer sends a replay key and mints a new one after success (BR-42) 609ms
+ ✓ tests/lab-03/StaffTicketDetail.test.tsx (19 tests) 2086ms
+   ✓ IT Staff Ticket Detail > UI-34 a comment or note body containing markup renders as visible text, no element from it in the DOM (AC-51, BR-66) 436ms
+ ✓ tests/lab-03/StaffTicketQueue.test.tsx (13 tests) 2120ms
+   ✓ IT Staff Ticket Queue > UI-23 each toolbar control issues a request carrying its matching parameter, and search resets page to 1 (FR-35, FR-36, FR-37) 948ms
+   ✓ IT Staff Ticket Queue > clearing the search then picking a status within 300 ms keeps the status: the debounced search uses current state (E2E-07, issue #56) 585ms
+ ✓ tests/lab-02/AttachmentSection.test.tsx (7 tests) 2135ms
+   ✓ Attachment section > UI-27 / UI-28 removal dialog: Cancel issues no request; Remove is gated on a reason and then removes (AC-33) 1419ms
+ ✓ tests/lab-03/UiDefects.test.tsx (9 tests) 2646ms
+   ✓ Visual-checklist defects (Issue #12) > UI-57 IT Staff Ticket Detail confirms each write with the ui-spec 20.1 success panel - pale, check icon, sentence, polite (C-119) 1025ms
+   ✓ Visual-checklist defects (Issue #12) > UI-58 Requester Ticket Detail confirms a posted comment with the success panel (C-119) 648ms
+   ✓ Visual-checklist defects (Issue #12) > UI-61 User Management's Empty and No results states carry the ui-spec 20.1 icon and body, and differ from each other (17.3, C-121) 399ms
+stderr | tests/lab-04/ActionsTaken.test.tsx > Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44)
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to StaffTicketDetail inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+Warning: An update to Composer inside a test was not wrapped in act(...).
+
+When testing, code that causes React state updates should be wrapped into act(...):
+
+act(() => {
+  /* fire events that update state */
+});
+/* assert on the output */
+
+This ensures that you're testing the behavior the user would see in the browser. Learn more at https://reactjs.org/link/wrap-tests-with-act
+    at Composer (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:351:21)
+    at section
+    at StaffActionsCard (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\ActionsTaken.tsx:289:29)
+    at section
+    at StaffTicketDetail (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\pages\StaffTicketDetail.tsx:64:30)
+    at main
+    at AppShell (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\components\AppShell.tsx:14:21)
+    at Screen (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\App.tsx:50:42)
+    at AuthProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\auth\AuthContext.tsx:8:25)
+    at RouterProvider (C:\Downloads\Lab1_Starter_Scaffold\toktickit\client\src\router.tsx:9:27)
+    at App
+
+ ✓ tests/lab-03/UserManagement.test.tsx (15 tests) 3767ms
+   ✓ User Management > UI-40 search and the role filter each issue a request carrying their parameter (AC-83, AC-84) 587ms
+   ✓ User Management > UI-42 a duplicate email on create renders at the Email Address field, not as a banner (AC-87, FR-62) 815ms
+   ✓ User Management > creating a user shows Creating… then the success panel and refetches the list (BR-16) 1042ms
+   ✓ User Management > empty and no-results states are distinguished by whether a filter is active (L2 C-28) 457ms
+ ✓ tests/lab-03/Login.test.tsx (18 tests) 4227ms
+   ✓ Login > UI-03 while signing in the button shows Signing in…, is disabled, and a second click sends nothing (FR-01) 693ms
+   ✓ Login > UI-04 invalid credentials: the generic banner above the fields, password cleared, email kept, not tied to the email field (AC-05) 776ms
+   ✓ Login > UI-05 an inactive account shows its own message, in the warning treatment, not the generic one (AC-08) 758ms
+   ✓ Login > UI-06 an API failure shows the INTERNAL_ERROR banner with Retry, and keeps the email (FR-67) 822ms
+   ✓ Login > UI-08 after a successful sign-in nothing is written to localStorage or sessionStorage (AC-34, BR-25) 643ms
+ ✓ tests/lab-04/ActionsTaken.test.tsx (25 tests) 6212ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-24 Result and Follow-Up show only for Completed; the note only when ticked, and unticking clears it (BR-05, AC-09) 564ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-25 the request body: trimmed text, +07:00 time, the replay key, and no follow-up note when unticked (BR-04, BR-07, BR-42) 1074ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-27 success shows Action added., resets the form and mints a new key (FR-08, BR-44) 784ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-28 while in flight the button is busy and disabled, so a second click sends nothing (BR-44) 313ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-29 a failure keeps every typed value (BR-63, C-147) 653ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-31 Edit sends only the changed fields with the action's version; Save is disabled until something differs (BR-90, C-175) 389ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-32 Complete sends result, follow-up and version; the stored time is not re-sent unless changed (BR-11, C-168) 507ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-33 Cancel needs a Reason, warns it is final, and sends it as the result (BR-12) 521ms
+   ✓ Actions Taken - IT Staff Ticket Detail > UI-34 STALE_UPDATE on an edit: re-fetch, keep the draft, apply again with the fresh version (BR-39, C-153) 379ms
+ ✓ tests/lab-03/ChangePassword.test.tsx (9 tests) 10994ms
+   ✓ Change Password > UI-11 a confirmation mismatch shows the catalogue message and sends no request (AC-26, BR-13) 853ms
+   ✓ Change Password > UI-12 each policy failure renders the BR-12 message directly below New Password, with aria-invalid (AC-23, AC-24) 3540ms
+   ✓ Change Password > UI-13 success shows the panel with an icon and a sentence, then continues into the application (AC-28, FR-18) 2411ms
+   ✓ Change Password > UI-15 no password survives in the DOM: a wrong current password clears only that field, a failure clears all three (BR-88) 1272ms
+   ✓ Change Password > STYLE-09 every validation message the screen renders exists verbatim in the ui-spec.md section 6 catalogue (BR-87) 378ms
+   ✓ Change Password > STYLE-10 the success panel is not colour alone: it carries an icon and a sentence (CLAUDE.md) 2383ms
+ ✓ tests/lab-02/CreateTicket.test.tsx (12 tests) 11562ms
+   ✓ Create Ticket > UI-12 blocks submit on an empty Ticket Summary and makes no API call (AC-17) 684ms
+   ✓ Create Ticket > UI-13 renders exactly the ui-spec.md catalogue string for each BR-31..BR-34 violation (AC-23) 2432ms
+   ✓ Create Ticket > UI-14 / STYLE-03 prevents a double submit and shows the busy state (AC-21, BR-36) 1975ms
+   ✓ Create Ticket > UI-15 shows the safe banner and keeps every value and the attachment selection on failure (AC-22, BR-37) 2081ms
+   ✓ Create Ticket > UI-17 / STYLE-05 shows the Ticket Number, per-file outcomes and next actions on success (AC-01, AC-59) 2060ms
+   ✓ Create Ticket > STYLE-03 (hierarchy) keeps one primary action and the ui-spec 7 levels on Create Ticket 1927ms
+
+ Test Files  13 passed (13)
+      Tests  166 passed (166)
+   Start at  18:07:39
+   Duration  14.53s (transform 852ms, setup 3.22s, collect 10.60s, tests 51.04s, environment 17.95s, prepare 2.45s)
+
