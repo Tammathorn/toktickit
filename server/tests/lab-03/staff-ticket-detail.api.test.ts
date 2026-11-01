@@ -135,10 +135,13 @@ describe("GET /api/staff/tickets/:id", () => {
 
     const res = await detail(staffY.agent, t.id);
     expect(res.status).toBe(200);
+    // Lab 4 adaptation (tests.md 4.1; C-136, C-138, C-140, C-126, C-141,
+    // C-171, C-179): the staff DTO key set gains the eight Lab 4 keys.
     expect(Object.keys(res.body).sort()).toEqual(
       ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description", "requestedPriority",
         "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt", "attachments",
-        "publicComments", "internalNotes"].sort(),
+        "publicComments", "internalNotes", "version", "lastActivityAt", "resolvedAt", "actions", "statusHistory",
+        "historyComplete", "allowedTransitions", "resolutionGate"].sort(),
     );
     expect(res.body.requester).toEqual({ id: reqA.id, name: reqA.name, email: reqA.email });
     expect(res.body.owner).toEqual({ id: staffX.id, name: staffX.name, role: "IT_STAFF", isActive: true });

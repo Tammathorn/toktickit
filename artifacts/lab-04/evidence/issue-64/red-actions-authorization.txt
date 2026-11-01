@@ -1,0 +1,1368 @@
+Command: cd server; npx vitest run tests/lab-04/actions-taken.api.test.ts tests/lab-04/authorization.api.test.ts
+Date: 2026-10-30 17:06:32 +0700
+Commit: 6378a7a (feature/lab4-3-actions-api; tests written, implementation not applied)
+Exit code: 1
+------------------------------------------------------------------------
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+┌─────────────────────────────────────────────────────────┐
+│  Update available 5.22.0 -> 8.0.0-rc.28                 │
+│                                                         │
+│  This is a major update - please follow the guide at    │
+│  https://pris.ly/d/major-version-upgrade                │
+│                                                         │
+│  Run the following to update                            │
+│    npm i --save-dev prisma@latest                       │
+│    npm i @prisma/client@latest                          │
+└─────────────────────────────────────────────────────────┘
+ ❯ tests/lab-04/actions-taken.api.test.ts (57 tests | 56 failed) 2003ms
+   × action field rules as functions (UNIT) > UNIT-01 description/result: whitespace-only and 2001 fail, 1 and 2000 pass, after trim, with the L3 C-74 validator itself; follow-up note and attachment notes bounds (BR-04..BR-06) 14ms
+     → Failed to load url ../../src/lib/workflow.js (resolved id: ../../src/lib/workflow.js). Does the file exist?
+   × action field rules as functions (UNIT) > UNIT-02 actionAt: no offset fails, +07:00 and Z parse, before createdAt fails, completed now + 5 min passes and 1 ms later fails (BR-07, now injected) 3ms
+     → Failed to load url ../../src/lib/workflow.js (resolved id: ../../src/lib/workflow.js). Does the file exist?
+   × action field rules as functions (UNIT) > UNIT-03 each operation accepts exactly its api-spec 3.1-3.4 fields; server-set and identity fields are ignored; anything else is refused (BR-90, C-175) 2ms
+     → Failed to load url ../../src/lib/workflow.js (resolved id: ../../src/lib/workflow.js). Does the file exist?
+   × action field rules as functions (UNIT) > UNIT-04 allowedOperations(actionStatus, ticketStatus) over 3 x 8: EDIT, COMPLETE, CANCEL only for PLANNED on the five writable statuses (FR-09, C-174, BR-24) 2ms
+     → Failed to load url ../../src/lib/workflow.js (resolved id: ../../src/lib/workflow.js). Does the file exist?
+   × POST /api/tickets/:id/actions > API-01 IT Staff A creates a PLANNED action assigned to IT Staff B -> 201 staff DTO, one row, version 0, no performer; lastActivityAt moves, Ticket version unchanged (AC-01) 35ms
+     → {}: expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-02 IT Staff C creates an action already COMPLETED -> performedById C, finishedAt = createdAt, actionAt as submitted (AC-22, C-160) 15ms
+     → {}: expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-03 IT Staff B creates an action on a Ticket owned by IT Staff A -> 201, createdById B, the owner is still A (AC-04) 21ms
+     → expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-04 createdById, createdAt, performedById, finishedAt and version in the body are ignored: the row holds the session user, server times, version 0, no 400 (AC-05, BR-03) 11ms
+     → {}: expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-05 requesterId and createdById in the body are ignored; the action is created by the session user (AC-141, L3 C-64) 14ms
+     → {}: expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-06 a create with no assigneeId assigns the caller (AC-29, BR-18) 13ms
+     → expected 404 to be 201 // Object.is equality
+   × POST /api/tickets/:id/actions > API-07 a Requester named as assignee, on create and on edit -> 422 ASSIGNEE_NOT_ELIGIBLE, nothing changes (AC-27) 26ms
+     → {}: expected 404 to be 422 // Object.is equality
+   × POST /api/tickets/:id/actions > API-08 an inactive IT Staff user and an unknown id as assignee, on create and on an edit that changes the assignee -> 422 each, nothing changes (AC-28, C-177) 22ms
+     → {}: expected 404 to be 422 // Object.is equality
+   × POST /api/tickets/:id/actions > API-09 description whitespace-only and 2001 characters -> 400 at description, nothing saved; 2000 accepted (AC-06, BR-04) 13ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-10 result missing and 2001 characters, on a completed create and on complete -> 400 at result, nothing saved, the action stays PLANNED (BR-04, BR-11) 17ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-11 followUpRequired true with no followUpNote, and with 1001 characters -> 400 at followUpNote, nothing saved (AC-07, BR-05) 13ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-12 followUpNote sent with followUpRequired false -> 400 at followUpNote, nothing saved (AC-08, BR-05) 14ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-13 attachmentNotes of 501 characters -> 400 at attachmentNotes; 500 accepted (AC-10, BR-06) 14ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-14 actionAt 1 minute before the Ticket's createdAt -> 400 at actionAt, 'cannot be before the ticket was created' (AC-11, BR-07) 11ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-15 a COMPLETED create with actionAt now + 10 min -> 400 at actionAt; a PLANNED create for tomorrow -> 201 (AC-12, BR-07) 13ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-16 actionAt 2026-10-16T10:00 with no offset -> 400 at actionAt (AC-13, BR-07) 13ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-17 status CANCELLED, and status absent -> 400 at status, nothing saved (AC-17, BR-09) 14ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × POST /api/tickets/:id/actions > API-18 create on a Ticket in each of NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER and REOPENED -> 201 on each (AC-39, BR-24) 12ms
+     → NEW: expected 404 to be 201 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-19 an edit of description, actionAt, assignee and attachment notes with the current version -> 200, stored, action version + 1; Ticket version unchanged, lastActivityAt moves (AC-18, BR-10, BR-37) 17ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-20 IT Staff C completes a planned action with a result -> 200, COMPLETED, performedById C, finishedAt within 2 s of now, version + 1; lastActivityAt moves, Ticket version unchanged (AC-19, BR-11) 21ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-21 complete sending actionAt now + 10 min -> 400 at actionAt; the action stays PLANNED (AC-131, C-168) 19ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-22 complete without actionAt on an action stored for tomorrow -> 400 at actionAt with the 'in the future' text; then complete sending a past actionAt -> 200 (AC-132, C-168) 16ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-23 cancel with no result -> 400 at result (the reason); the action stays PLANNED (AC-20, BR-12) 21ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-24 IT Staff C cancels with a reason -> 200, CANCELLED, the reason in result, performedById C, finishedAt set; lastActivityAt moves, Ticket version unchanged (AC-21, BR-12) 18ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-25 edit, complete and cancel on a COMPLETED and on a CANCELLED action, current version -> 409 ACTION_NOT_PLANNED each, the action unchanged (AC-23, BR-14, C-162) 23ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-26 IT Staff B, neither owner nor assignee, completes an action assigned to IT Staff A -> 200 (AC-26, BR-19) 16ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-27 two planned actions whose assignee is deactivated afterwards: another staff user completes one and cancels the other -> both 200 (AC-30, C-132) 100ms
+     → expected [ 404, 404 ] to deeply equal [ 201, 201 ]
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-28 an edit changing only the description and re-sending the stored, since-deactivated assigneeId -> 200; the description changes, the assignee is kept (AC-145, C-177) 20ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-29 an edit of a COMPLETED action naming an inactive assignee, current version -> 409 ACTION_NOT_PLANNED, not 422 (AC-144, C-176) 24ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-30 STALE_UPDATE on an action edit: an old version on a PLANNED action, and on a COMPLETED one -> 409 STALE_UPDATE, not ACTION_NOT_PLANNED; nothing changes (AC-121, AC-55, BR-40) 42ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-31 a known field the operation does not accept - result on an edit, result on a planned create, assigneeId on complete -> 400 '<name> is not accepted here.', nothing changes (AC-139, C-175) 25ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-32 an undefined field (priority) on create and on edit -> 400 naming priority, nothing created or changed (AC-140, C-175) 20ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-33 an edit carrying only version -> 400 VALIDATION_FAILED (AC-142, BR-90) 22ms
+     → expected 404 to be 400 // Object.is equality
+   × PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-34 an edit re-sending every stored value unchanged -> 200 with no write: action version and the Ticket's lastActivityAt unchanged (AC-143, C-175) 24ms
+     → {}: expected 404 to be 200 // Object.is equality
+   × Ticket state and the check order (BR-24, BR-40, C-159) > API-35 create, edit, complete and cancel on a RESOLVED Ticket -> 409 TICKET_RESOLVED each, nothing changes (AC-37, C-122) 23ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × Ticket state and the check order (BR-24, BR-40, C-159) > API-36 the four writes on a CLOSED and on a CANCELLED Ticket -> 409 TICKET_CLOSED each, nothing changes (AC-38, L3 C-109) 23ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × Ticket state and the check order (BR-24, BR-40, C-159) > API-37 a create on a RESOLVED Ticket with an empty description -> 409 TICKET_RESOLVED, not 400 (AC-62, C-159) 12ms
+     → {}: expected 404 to be 409 // Object.is equality
+   × Ticket state and the check order (BR-24, BR-40, C-159) > API-38 a missing action id on edit, complete and cancel -> 404 ACTION_NOT_FOUND x 3; create on a missing Ticket -> 404 TICKET_NOT_FOUND; abc as :id -> 400 INVALID_QUERY_PARAM (AC-148, C-172) 3ms
+     → expected undefined to be 'ACTION_NOT_FOUND' // Object.is equality
+   × Ticket state and the check order (BR-24, BR-40, C-159) > API-41 creating and completing an action on an IN_PROGRESS Ticket leaves it IN_PROGRESS with its version unchanged (AC-25, BR-16) 14ms
+     → expected 404 to be 201 // Object.is equality
+   × the action arrays in both Ticket DTOs > API-39 the body of each of the four writes is exactly the api-spec 6.2 staff Ticket DTO, with the written action reflected (AC-118, C-136) 17ms
+     → expected 404 to be 201 // Object.is equality
+   × the action arrays in both Ticket DTOs > API-40 two actions with the same actionAt come back in the same order twice, higher id first, on the staff and the Requester DTO (AC-35, BR-22) 52ms
+     → Cannot read properties of undefined (reading 'map')
+   × the action arrays in both Ticket DTOs > API-42 a Requester reads their own Ticket with actions by three staff: every action and field, people as { name } only, no email key, no @ anywhere, no version on an action (AC-31, BR-20, C-123) 33ms
+     → Target cannot be null or undefined.
+   × the action arrays in both Ticket DTOs > API-44 allowedOperations in the staff DTO: EDIT, COMPLETE, CANCEL on a planned action of an OPEN Ticket; [] on finished actions and on a planned action of a RESOLVED Ticket (FR-09, C-174) 35ms
+     → Cannot read properties of undefined (reading 'find')
+   × clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-45 the same author replaying a create with key K -> 200 with the staff Ticket DTO, the same key set as the first 201; one row for K (AC-126, C-165) 14ms
+     → expected 404 to be 201 // Object.is equality
+   × clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-46 five concurrent creates by one author with the same K (the P2002 path) -> exactly one row; every response 200 or 201 carrying that row; none 500 (AC-64, C-139) 175ms
+     → expected [] to have a length of 1 but got +0
+   × clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-47 a replay of K after the Ticket has moved to CLOSED -> 200 with the original action, not TICKET_CLOSED; no new row (C-166) 19ms
+     → expected 404 to be 201 // Object.is equality
+   × clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-48 clientRequestId not-a-uuid -> 400 at clientRequestId, nothing created (BR-42) 14ms
+     → {}: expected 404 to be 400 // Object.is equality
+   × Requester and foreign-Origin refusals on the action writes > SEC-01 Requester POST /api/tickets/:id/actions on their own Ticket and on a missing id -> 403 FORBIDDEN_ROLE, byte-identical, no action created, no action content (AC-03, BR-17) 15ms
+     → {}: expected 404 to be 403 // Object.is equality
+   × Requester and foreign-Origin refusals on the action writes > SEC-02 Requester PATCH /api/actions/:id on an existing and a missing action -> 403, byte-identical; the action unchanged (AC-148, BR-17) 30ms
+     → {}: expected 404 to be 403 // Object.is equality
+   × Requester and foreign-Origin refusals on the action writes > SEC-03 Requester POST /api/actions/:id/complete, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17) 18ms
+     → {}: expected 404 to be 403 // Object.is equality
+   × Requester and foreign-Origin refusals on the action writes > SEC-04 Requester POST /api/actions/:id/cancel, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17) 23ms
+     → {}: expected 404 to be 403 // Object.is equality
+   × Requester and foreign-Origin refusals on the action writes > SEC-14 the four action writes with a foreign Origin -> 403 ORIGIN_NOT_ALLOWED each, nothing written; the same create without it -> 201 (L3 C-58) 55ms
+     → expected 404 to be 201 // Object.is equality
+ ❯ tests/lab-04/authorization.api.test.ts (6 tests | 6 failed) 331ms
+   × SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/tickets/:id/actions: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61) 11ms
+     → <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/tickets/99999999/actions</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+   × SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 PATCH /api/actions/:id: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61) 4ms
+     → <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PATCH /api/actions/99999999</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+   × SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/complete: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61) 2ms
+     → <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/actions/99999999/complete</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+   × SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/cancel: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61) 2ms
+     → <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/actions/99999999/cancel</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+   × SEC-11 append-only records (AC-24, BR-15, BR-50, C-151) > SEC-11 no PUT, PATCH or DELETE addresses a Public Comment, Internal Note or status-history row; no DELETE or PUT on /api/actions/:id; the one action edit route is PATCH /api/actions/:id 3ms
+     → expected [] to deeply equal [ { method: 'PATCH', …(1) } ]
+   × SEC-12 no secret in any action-route response (CLAUDE.md security rules, L3 BR-88) > SEC-12 every success and error body from the four action routes carries no password, passwordHash, scrypt$ string or session token 20ms
+     → <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/tickets/5836/actions</pre>
+</body>
+</html>
+: expected 404 to be 201 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯ Failed Tests 62 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-01 description/result: whitespace-only and 2001 fail, 1 and 2000 pass, after trim, with the L3 C-74 validator itself; follow-up note and attachment notes bounds (BR-04..BR-06)
+ FAIL  tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-02 actionAt: no offset fails, +07:00 and Z parse, before createdAt fails, completed now + 5 min passes and 1 ms later fails (BR-07, now injected)
+ FAIL  tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-03 each operation accepts exactly its api-spec 3.1-3.4 fields; server-set and identity fields are ignored; anything else is refused (BR-90, C-175)
+ FAIL  tests/lab-04/actions-taken.api.test.ts > action field rules as functions (UNIT) > UNIT-04 allowedOperations(actionStatus, ticketStatus) over 3 x 8: EDIT, COMPLETE, CANCEL only for PLANNED on the five writable statuses (FR-09, C-174, BR-24)
+Error: Failed to load url ../../src/lib/workflow.js (resolved id: ../../src/lib/workflow.js). Does the file exist?
+ ❯ loadAndTransform node_modules/vite/dist/node/chunks/dep-BK3b2jBa.js:51969:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-01 IT Staff A creates a PLANNED action assigned to IT Staff B -> 201 staff DTO, one row, version 0, no performer; lastActivityAt moves, Ticket version unchanged (AC-01)
+AssertionError: {}: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:300:50
+    298|     const before = await ticketRow(t.id);
+    299|     const res = await create(staffA.agent, t.id, plannedBody({ assigne…
+    300|     expect(res.status, JSON.stringify(res.body)).toBe(201);
+       |                                                  ^
+    301|     expect(res.body.id).toBe(t.id);
+    302|     const rows = await actionsOf(t.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-02 IT Staff C creates an action already COMPLETED -> performedById C, finishedAt = createdAt, actionAt as submitted (AC-22, C-160)
+AssertionError: {}: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:315:50
+    313|     const at = fromNow(-40 * MINUTE);
+    314|     const res = await create(staffC.agent, t.id, completedBody({ actio…
+    315|     expect(res.status, JSON.stringify(res.body)).toBe(201);
+       |                                                  ^
+    316|     const [row] = await actionsOf(t.id);
+    317|     expect(row.status).toBe("COMPLETED");
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-03 IT Staff B creates an action on a Ticket owned by IT Staff A -> 201, createdById B, the owner is still A (AC-04)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:326:24
+    324|     const t = await ticket({ ownerId: staffA.id, currentStatus: "IN_PR…
+    325|     const res = await create(staffB.agent, t.id, plannedBody());
+    326|     expect(res.status).toBe(201);
+       |                        ^
+    327|     const [row] = await actionsOf(t.id);
+    328|     expect(row.createdById).toBe(staffB.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-04 createdById, createdAt, performedById, finishedAt and version in the body are ignored: the row holds the session user, server times, version 0, no 400 (AC-05, BR-03)
+AssertionError: {}: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:338:50
+    336|       createdById: staffB.id, createdAt: longAgo, performedById: staff…
+    337|     }));
+    338|     expect(res.status, JSON.stringify(res.body)).toBe(201);
+       |                                                  ^
+    339|     const [row] = await actionsOf(t.id);
+    340|     expect(row.createdById).toBe(staffA.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[5/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-05 requesterId and createdById in the body are ignored; the action is created by the session user (AC-141, L3 C-64)
+AssertionError: {}: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:350:50
+    348|     const t = await ticket();
+    349|     const res = await create(staffB.agent, t.id, plannedBody({ request…
+    350|     expect(res.status, JSON.stringify(res.body)).toBe(201);
+       |                                                  ^
+    351|     const [row] = await actionsOf(t.id);
+    352|     expect(row.createdById).toBe(staffB.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[6/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-06 a create with no assigneeId assigns the caller (AC-29, BR-18)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:359:24
+    357|     const t = await ticket();
+    358|     const res = await create(admin.agent, t.id, plannedBody());
+    359|     expect(res.status).toBe(201);
+       |                        ^
+    360|     expect((await actionsOf(t.id))[0].assigneeId).toBe(admin.id);
+    361|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[7/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-07 a Requester named as assignee, on create and on edit -> 422 ASSIGNEE_NOT_ELIGIBLE, nothing changes (AC-27)
+AssertionError: {}: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:367:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[8/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-08 an inactive IT Staff user and an unknown id as assignee, on create and on an edit that changes the assignee -> 422 each, nothing changes (AC-28, C-177)
+AssertionError: {}: expected 404 to be 422 // Object.is equality
+
+- Expected
++ Received
+
+- 422
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:377:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[9/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-09 description whitespace-only and 2001 characters -> 400 at description, nothing saved; 2000 accepted (AC-06, BR-04)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:387:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[10/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-10 result missing and 2001 characters, on a completed create and on complete -> 400 at result, nothing saved, the action stays PLANNED (BR-04, BR-11)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:397:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[11/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-11 followUpRequired true with no followUpNote, and with 1001 characters -> 400 at followUpNote, nothing saved (AC-07, BR-05)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:408:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[12/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-12 followUpNote sent with followUpRequired false -> 400 at followUpNote, nothing saved (AC-08, BR-05)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:420:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[13/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-13 attachmentNotes of 501 characters -> 400 at attachmentNotes; 500 accepted (AC-10, BR-06)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:431:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[14/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-14 actionAt 1 minute before the Ticket's createdAt -> 400 at actionAt, 'cannot be before the ticket was created' (AC-11, BR-07)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:439:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[15/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-15 a COMPLETED create with actionAt now + 10 min -> 400 at actionAt; a PLANNED create for tomorrow -> 201 (AC-12, BR-07)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:445:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[16/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-16 actionAt 2026-10-16T10:00 with no offset -> 400 at actionAt (AC-13, BR-07)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:452:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[17/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-17 status CANCELLED, and status absent -> 400 at status, nothing saved (AC-17, BR-09)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:459:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[18/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > POST /api/tickets/:id/actions > API-18 create on a Ticket in each of NEW, OPEN, IN_PROGRESS, WAITING_FOR_REQUESTER and REOPENED -> 201 on each (AC-39, BR-24)
+AssertionError: NEW: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:468:34
+    466|       const t = await ticket({ currentStatus: status, ownerId: staffA.…
+    467|       const res = await create(staffA.agent, t.id, plannedBody());
+    468|       expect(res.status, status).toBe(201);
+       |                                  ^
+    469|       expect(res.body.currentStatus).toBe(status);
+    470|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[19/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-19 an edit of description, actionAt, assignee and attachment notes with the current version -> 200, stored, action version + 1; Ticket version unchanged, lastActivityAt moves (AC-18, BR-10, BR-37)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:486:50
+    484|       version: 0, description: "Replace the battery and recalibrate.",…
+    485|     });
+    486|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    487|     const row = await actionRow(planned.id);
+    488|     expect(row).toMatchObject({ description: "Replace the battery and …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[20/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-20 IT Staff C completes a planned action with a result -> 200, COMPLETED, performedById C, finishedAt within 2 s of now, version + 1; lastActivityAt moves, Ticket version unchanged (AC-19, BR-11)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:498:50
+    496|     const before = await ticketRow(t.id);
+    497|     const res = await complete(staffC.agent, planned.id, { version: 0,…
+    498|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    499|     const row = await actionRow(planned.id);
+    500|     expect(row).toMatchObject({ status: "COMPLETED", performedById: st…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[21/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-21 complete sending actionAt now + 10 min -> 400 at actionAt; the action stays PLANNED (AC-131, C-168)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:510:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[22/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-22 complete without actionAt on an action stored for tomorrow -> 400 at actionAt with the 'in the future' text; then complete sending a past actionAt -> 200 (AC-132, C-168)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:518:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[23/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-23 cancel with no result -> 400 at result (the reason); the action stays PLANNED (AC-20, BR-12)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:532:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[24/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-24 IT Staff C cancels with a reason -> 200, CANCELLED, the reason in result, performedById C, finishedAt set; lastActivityAt moves, Ticket version unchanged (AC-21, BR-12)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:541:50
+    539|     const before = await ticketRow(t.id);
+    540|     const res = await cancel(staffC.agent, planned.id, { version: 0, r…
+    541|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    542|     const row = await actionRow(planned.id);
+    543|     expect(row).toMatchObject({ status: "CANCELLED", result: "Requeste…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[25/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-25 edit, complete and cancel on a COMPLETED and on a CANCELLED action, current version -> 409 ACTION_NOT_PLANNED each, the action unchanged (AC-23, BR-14, C-162)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:554:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[26/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-26 IT Staff B, neither owner nor assignee, completes an action assigned to IT Staff A -> 200 (AC-26, BR-19)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:565:50
+    563|     const planned = await action(t.id, { assigneeId: staffA.id, action…
+    564|     const res = await complete(staffB.agent, planned.id, { version: 0,…
+    565|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    566|     expect((await actionRow(planned.id)).performedById).toBe(staffB.id…
+    567|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[27/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-27 two planned actions whose assignee is deactivated afterwards: another staff user completes one and cancels the other -> both 200 (AC-30, C-132)
+AssertionError: expected [ 404, 404 ] to deeply equal [ 201, 201 ]
+
+- Expected
++ Received
+
+  Array [
+-   201,
+-   201,
++   404,
++   404,
+  ]
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:575:38
+    573|     const one = await create(staffA.agent, t.id, plannedBody({ assigne…
+    574|     const two = await create(staffA.agent, t.id, plannedBody({ assigne…
+    575|     expect([one.status, two.status]).toEqual([201, 201]);
+       |                                      ^
+    576|     await prisma.user.update({ where: { id: leaver.id }, data: { isAct…
+    577|     const [a1, a2] = await actionsOf(t.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[28/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-28 an edit changing only the description and re-sending the stored, since-deactivated assigneeId -> 200; the description changes, the assignee is kept (AC-145, C-177)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:586:50
+    584|     const planned = await action(t.id, { assigneeId: inactiveStaff.id …
+    585|     const res = await edit(staffA.agent, planned.id, { version: 0, des…
+    586|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    587|     expect(await actionRow(planned.id)).toMatchObject({ description: "…
+    588|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[29/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-29 an edit of a COMPLETED action naming an inactive assignee, current version -> 409 ACTION_NOT_PLANNED, not 422 (AC-144, C-176)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:594:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[30/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-30 STALE_UPDATE on an action edit: an old version on a PLANNED action, and on a COMPLETED one -> 409 STALE_UPDATE, not ACTION_NOT_PLANNED; nothing changes (AC-121, AC-55, BR-40)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:604:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[31/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-31 a known field the operation does not accept - result on an edit, result on a planned create, assigneeId on complete -> 400 '<name> is not accepted here.', nothing changes (AC-139, C-175)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:616:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[32/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-32 an undefined field (priority) on create and on edit -> 400 naming priority, nothing created or changed (AC-140, C-175)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:630:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[33/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-33 an edit carrying only version -> 400 VALIDATION_FAILED (AC-142, BR-90)
+AssertionError: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:640:24
+    638|     const before = await snapshot(t.id);
+    639|     const res = await edit(staffA.agent, planned.id, { version: 0 });
+    640|     expect(res.status).toBe(400);
+       |                        ^
+    641|     expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    642|     expect(await snapshot(t.id)).toEqual(before);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[34/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > PATCH /api/actions/:id, POST /api/actions/:id/complete and /cancel > API-34 an edit re-sending every stored value unchanged -> 200 with no write: action version and the Ticket's lastActivityAt unchanged (AC-143, C-175)
+AssertionError: {}: expected 404 to be 200 // Object.is equality
+
+- Expected
++ Received
+
+- 200
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:656:50
+    654|       attachmentNotes: planned.attachmentNotes,
+    655|     });
+    656|     expect(res.status, JSON.stringify(res.body)).toBe(200);
+       |                                                  ^
+    657|     expect(await snapshot(t.id)).toEqual(before);
+    658|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[35/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-35 create, edit, complete and cancel on a RESOLVED Ticket -> 409 TICKET_RESOLVED each, nothing changes (AC-37, C-122)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:680:34
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[36/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-36 the four writes on a CLOSED and on a CANCELLED Ticket -> 409 TICKET_CLOSED each, nothing changes (AC-38, L3 C-109)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:688:36
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[37/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-37 a create on a RESOLVED Ticket with an empty description -> 409 TICKET_RESOLVED, not 400 (AC-62, C-159)
+AssertionError: {}: expected 404 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:695:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[38/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-38 a missing action id on edit, complete and cancel -> 404 ACTION_NOT_FOUND x 3; create on a missing Ticket -> 404 TICKET_NOT_FOUND; abc as :id -> 400 INVALID_QUERY_PARAM (AC-148, C-172)
+AssertionError: expected undefined to be 'ACTION_NOT_FOUND' // Object.is equality
+
+- Expected: 
+"ACTION_NOT_FOUND"
+
++ Received: 
+undefined
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:160:32
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+    160|   expect(res.body.error?.code).toBe(code);
+       |                                ^
+    161| }
+    162| 
+ ❯ tests/lab-04/actions-taken.api.test.ts:700:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[39/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Ticket state and the check order (BR-24, BR-40, C-159) > API-41 creating and completing an action on an IN_PROGRESS Ticket leaves it IN_PROGRESS with its version unchanged (AC-25, BR-16)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:713:28
+    711|     const t = await ticket({ currentStatus: "IN_PROGRESS", ownerId: st…
+    712|     const created = await create(staffA.agent, t.id, plannedBody({ act…
+    713|     expect(created.status).toBe(201);
+       |                            ^
+    714|     const [row] = await actionsOf(t.id);
+    715|     expect((await complete(staffA.agent, row.id, { version: 0, result:…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[40/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-39 the body of each of the four writes is exactly the api-spec 6.2 staff Ticket DTO, with the written action reflected (AC-118, C-136)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:729:28
+    727|     const t = await ticket();
+    728|     const created = await create(staffA.agent, t.id, plannedBody({ act…
+    729|     expect(created.status).toBe(201);
+       |                            ^
+    730|     const [row] = await actionsOf(t.id);
+    731|     const second = await action(t.id);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[41/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-40 two actions with the same actionAt come back in the same order twice, higher id first, on the staff and the Requester DTO (AC-35, BR-22)
+TypeError: Cannot read properties of undefined (reading 'map')
+ ❯ tests/lab-04/actions-taken.api.test.ts:761:33
+    759|       const staff = await staffA.agent.get(`/api/staff/tickets/${t.id}…
+    760|       const own = await reqA.agent.get(`/api/tickets/${t.id}`);
+    761|       expect(staff.body.actions.map((a: { id: number }) => a.id)).toEq…
+       |                                 ^
+    762|       expect(own.body.actions.map((a: { id: number }) => a.id)).toEqua…
+    763|     }
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[42/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-42 a Requester reads their own Ticket with actions by three staff: every action and field, people as { name } only, no email key, no @ anywhere, no version on an action (AC-31, BR-20, C-123)
+AssertionError: Target cannot be null or undefined.
+ ❯ tests/lab-04/actions-taken.api.test.ts:773:30
+    771|     const res = await reqA.agent.get(`/api/tickets/${t.id}`);
+    772|     expect(res.status).toBe(200);
+    773|     expect(res.body.actions).toHaveLength(3);
+       |                              ^
+    774|     for (const a of res.body.actions) {
+    775|       expect(Object.keys(a).sort()).toEqual(REQUESTER_ACTION_KEYS);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[43/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > the action arrays in both Ticket DTOs > API-44 allowedOperations in the staff DTO: EDIT, COMPLETE, CANCEL on a planned action of an OPEN Ticket; [] on finished actions and on a planned action of a RESOLVED Ticket (FR-09, C-174)
+TypeError: Cannot read properties of undefined (reading 'find')
+ ❯ ops tests/lab-04/actions-taken.api.test.ts:810:50
+    808|     const dropped = await action(open.id, { status: "CANCELLED", resul…
+    809|     const res = await staffA.agent.get(`/api/staff/tickets/${open.id}`…
+    810|     const ops = (id: number) => res.body.actions.find((a: { id: number…
+       |                                                  ^
+    811|     expect(ops(planned.id)).toEqual(["EDIT", "COMPLETE", "CANCEL"]);
+    812|     expect(ops(done.id)).toEqual([]);
+ ❯ tests/lab-04/actions-taken.api.test.ts:811:12
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[44/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-45 the same author replaying a create with key K -> 200 with the staff Ticket DTO, the same key set as the first 201; one row for K (AC-126, C-165)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:831:26
+    829|     const first = await create(staffA.agent, t.id, plannedBody({ clien…
+    830|     const replay = await create(staffA.agent, t.id, plannedBody({ clie…
+    831|     expect(first.status).toBe(201);
+       |                          ^
+    832|     expect(replay.status).toBe(200);
+    833|     expect(Object.keys(replay.body).sort()).toEqual(Object.keys(first.…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[45/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-46 five concurrent creates by one author with the same K (the P2002 path) -> exactly one row; every response 200 or 201 carrying that row; none 500 (AC-64, C-139)
+AssertionError: expected [] to have a length of 1 but got +0
+
+- Expected
++ Received
+
+- 1
++ 0
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:845:18
+    843|     const responses = await Promise.all(agents.map((ag) => create(ag, …
+    844|     const rows = await prisma.actionTaken.findMany({ where: { createdB…
+    845|     expect(rows).toHaveLength(1);
+       |                  ^
+    846|     expect(await actionsOf(t.id)).toHaveLength(1);
+    847|     for (const res of responses) {
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[46/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-47 a replay of K after the Ticket has moved to CLOSED -> 200 with the original action, not TICKET_CLOSED; no new row (C-166)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:857:94
+    855|     const t = await ticket();
+    856|     const key = uuid();
+    857|     expect((await create(staffA.agent, t.id, plannedBody({ clientReque…
+       |                                                                                              ^
+    858|     await prisma.ticket.update({ where: { id: t.id }, data: { currentS…
+    859|     const replay = await create(staffA.agent, t.id, plannedBody({ clie…
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[47/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > clientRequestId replay on create (BR-42, BR-43, C-139, C-165, C-166) > API-48 clientRequestId not-a-uuid -> 400 at clientRequestId, nothing created (BR-42)
+AssertionError: {}: expected 404 to be 400 // Object.is equality
+
+- Expected
++ Received
+
+- 400
++ 404
+
+ ❯ expectFieldError tests/lab-04/actions-taken.api.test.ts:152:48
+    150| 
+    151| function expectFieldError(res: { status: number; body: any }, field: s…
+    152|   expect(res.status, JSON.stringify(res.body)).toBe(400);
+       |                                                ^
+    153|   expect(res.body.error.code).toBe("VALIDATION_FAILED");
+    154|   expect(Object.keys(res.body.error.fields ?? {})).toContain(field);
+ ❯ tests/lab-04/actions-taken.api.test.ts:870:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[48/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-01 Requester POST /api/tickets/:id/actions on their own Ticket and on a missing id -> 403 FORBIDDEN_ROLE, byte-identical, no action created, no action content (AC-03, BR-17)
+AssertionError: {}: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:888:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[49/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-02 Requester PATCH /api/actions/:id on an existing and a missing action -> 403, byte-identical; the action unchanged (AC-148, BR-17)
+AssertionError: {}: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:901:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[50/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-03 Requester POST /api/actions/:id/complete, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17)
+AssertionError: {}: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:912:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[51/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-04 Requester POST /api/actions/:id/cancel, existing and missing -> 403, byte-identical; still PLANNED; no action content (BR-17)
+AssertionError: {}: expected 404 to be 403 // Object.is equality
+
+- Expected
++ Received
+
+- 403
++ 404
+
+ ❯ expectCode tests/lab-04/actions-taken.api.test.ts:159:48
+    157| 
+    158| function expectCode(res: { status: number; body: any }, status: number…
+    159|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    160|   expect(res.body.error?.code).toBe(code);
+    161| }
+ ❯ tests/lab-04/actions-taken.api.test.ts:924:5
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[52/62]⎯
+
+ FAIL  tests/lab-04/actions-taken.api.test.ts > Requester and foreign-Origin refusals on the action writes > SEC-14 the four action writes with a foreign Origin -> 403 ORIGIN_NOT_ALLOWED each, nothing written; the same create without it -> 201 (L3 C-58)
+AssertionError: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/actions-taken.api.test.ts:945:70
+    943|     expect(await snapshot(t.id)).toEqual(before);
+    944|     // The refusal is the Origin's: the route itself accepts the reque…
+    945|     expect((await create(staffA.agent, t.id, plannedBody())).status).t…
+       |                                                                      ^
+    946|   });
+    947| });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[53/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/tickets/:id/actions: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+AssertionError: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/tickets/99999999/actions</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-04/authorization.api.test.ts:87:38
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[54/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 PATCH /api/actions/:id: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+AssertionError: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot PATCH /api/actions/99999999</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-04/authorization.api.test.ts:87:38
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[55/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/complete: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+AssertionError: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/actions/99999999/complete</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-04/authorization.api.test.ts:87:38
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[56/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-10 the specification.md 5.2 cells of the four action routes > SEC-10 POST /api/actions/:id/cancel: anonymous -> 401 AUTH_REQUIRED, MustChange -> 403 PASSWORD_CHANGE_REQUIRED, Requester -> 403 FORBIDDEN_ROLE on a missing id with no action content (AC-101, L3 C-61)
+AssertionError: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/actions/99999999/cancel</pre>
+</body>
+</html>
+: expected 404 to be 401 // Object.is equality
+
+- Expected
++ Received
+
+- 401
++ 404
+
+ ❯ tests/lab-04/authorization.api.test.ts:87:38
+
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[57/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-11 append-only records (AC-24, BR-15, BR-50, C-151) > SEC-11 no PUT, PATCH or DELETE addresses a Public Comment, Internal Note or status-history row; no DELETE or PUT on /api/actions/:id; the one action edit route is PATCH /api/actions/:id
+AssertionError: expected [] to deeply equal [ { method: 'PATCH', …(1) } ]
+
+- Expected
++ Received
+
+- Array [
+-   Object {
+-     "method": "PATCH",
+-     "path": "/api/actions/:id",
+-   },
+- ]
++ Array []
+
+ ❯ tests/lab-04/authorization.api.test.ts:116:26
+    114|     expect(appendOnly).toEqual([]);
+    115|     const actionWrites = writes.filter((r) => r.path.startsWith("/api/…
+    116|     expect(actionWrites).toEqual([{ method: "PATCH", path: "/api/actio…
+       |                          ^
+    117|     // The four action routes are registered at all (api-spec.md 3).
+    118|     const registered = routes.map((r) => `${r.method} ${r.path}`);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[58/62]⎯
+
+ FAIL  tests/lab-04/authorization.api.test.ts > SEC-12 no secret in any action-route response (CLAUDE.md security rules, L3 BR-88) > SEC-12 every success and error body from the four action routes carries no password, passwordHash, scrypt$ string or session token
+AssertionError: <!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Error</title>
+</head>
+<body>
+<pre>Cannot POST /api/tickets/5836/actions</pre>
+</body>
+</html>
+: expected 404 to be 201 // Object.is equality
+
+- Expected
++ Received
+
+- 201
++ 404
+
+ ❯ tests/lab-04/authorization.api.test.ts:136:42
+    134|       status: "PLANNED", actionAt: new Date(Date.now() - 60_000).toISO…
+    135|     }));
+    136|     expect(created.status, created.text).toBe(201);
+       |                                          ^
+    137|     const [first] = await prisma.actionTaken.findMany({ where: { ticke…
+    138|     record(await staff.agent.patch(`/api/actions/${first.id}`).send({ …
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[59/62]⎯
+
+ Test Files  2 failed (2)
+      Tests  62 failed | 1 passed (63)
+   Start at  17:06:25
+   Duration  6.65s (transform 527ms, setup 0ms, collect 1.31s, tests 2.33s, environment 0ms, prepare 149ms)
+

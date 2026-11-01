@@ -5,3 +5,12 @@
 export function trimmed(value: string): string {
   return value.trim();
 }
+
+// L3 C-74 - the Public Comment and Internal Note text rule: trimmed, then 1 to
+// `max` characters. Returns the trimmed text, or null when it fails. Lab 4
+// BR-04 reuses this same function for an action's description and result.
+export function trimmedWithin(value: unknown, max: number): string | null {
+  if (typeof value !== "string") return null;
+  const t = trimmed(value);
+  return t.length >= 1 && t.length <= max ? t : null;
+}

@@ -1,4 +1,6 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
+import { isPermittedTransition, TICKET_STATUSES } from "./status-transitions.js";
+import { allowedOperations, gateReasons, type Tx } from "./workflow.js";
 
 // The two Ticket DTOs of api-spec.md section 10 - one for the Requester (10.2)
 // and one for IT Staff and Administrator (10.5). Two DTOs rather than one
@@ -47,6 +49,87 @@ export function toEntryDto(e: EntryRow) {
 }
 
 // ---------------------------------------------------------------------------
+// Lab 4 - Actions Taken and status history (api-spec.md 6.1, 6.2).
+// Display order actionAt desc, id desc (BR-22); history oldest first (BR-23).
+// ---------------------------------------------------------------------------
+const actionOrder = [{ actionAt: "desc" }, { id: "desc" }] satisfies Prisma.ActionTakenOrderByWithRelationInput[];
+const historyOrder = [{ changedAt: "asc" }, { id: "asc" }] satisfies Prisma.TicketStatusChangeOrderByWithRelationInput[];
+
+const actionCore = {
+  id: true,
+  status: true,
+  actionAt: true,
+  description: true,
+  result: true,
+  followUpRequired: true,
+  followUpNote: true,
+  attachmentNotes: true,
+  createdAt: true,
+  finishedAt: true,
+} as const;
+
+const requesterActionSelect = {
+  ...actionCore,
+  assignee: { select: { name: true } },
+  creator: { select: { name: true } },
+  performer: { select: { name: true } },
+} satisfies Prisma.ActionTakenSelect;
+
+const staffActionSelect = {
+  ...actionCore,
+  version: true,
+  assignee: { select: { id: true, name: true, isActive: true } },
+  creator: { select: { id: true, name: true, isActive: true } },
+  performer: { select: { id: true, name: true, isActive: true } },
+} satisfies Prisma.ActionTakenSelect;
+
+type RequesterActionRow = Prisma.ActionTakenGetPayload<{ select: typeof requesterActionSelect }>;
+type StaffActionRow = Prisma.ActionTakenGetPayload<{ select: typeof staffActionSelect }>;
+
+function toRequesterAction(a: RequesterActionRow) {
+  return {
+    id: a.id,
+    status: a.status,
+    actionAt: a.actionAt,
+    description: a.description,
+    result: a.result,
+    followUpRequired: a.followUpRequired,
+    followUpNote: a.followUpNote,
+    attachmentNotes: a.attachmentNotes,
+    assignee: { name: a.assignee.name },
+    createdBy: { name: a.creator.name },
+    performedBy: a.performer ? { name: a.performer.name } : null,
+    createdAt: a.createdAt,
+    finishedAt: a.finishedAt,
+  };
+}
+
+function toStaffAction(a: StaffActionRow, ticketStatus: Parameters<typeof allowedOperations>[1]) {
+  return {
+    id: a.id,
+    status: a.status,
+    actionAt: a.actionAt,
+    description: a.description,
+    result: a.result,
+    followUpRequired: a.followUpRequired,
+    followUpNote: a.followUpNote,
+    attachmentNotes: a.attachmentNotes,
+    assignee: a.assignee,
+    createdBy: a.creator,
+    performedBy: a.performer,
+    createdAt: a.createdAt,
+    finishedAt: a.finishedAt,
+    version: a.version,
+    allowedOperations: allowedOperations(a.status, ticketStatus),
+  };
+}
+
+// C-179: true when the history holds the creation row (null -> NEW).
+function historyComplete(rows: { fromStatus: unknown; toStatus: unknown }[]): boolean {
+  return rows.some((r) => r.fromStatus === null && r.toStatus === "NEW");
+}
+
+// ---------------------------------------------------------------------------
 // 10.2 - the Requester Ticket DTO
 // ---------------------------------------------------------------------------
 export const ticketInclude = {
@@ -59,6 +142,9 @@ export const ticketInclude = {
   relatedSystem: { select: { id: true, name: true } },
   attachments: attachmentSelect,
   publicComments: { orderBy: newestFirst, select: entrySelect },
+  // Lab 4: every action, names only (BR-20, C-123), and the status history.
+  actions: { orderBy: actionOrder, select: requesterActionSelect },
+  statusChanges: { orderBy: historyOrder, select: { id: true, fromStatus: true, toStatus: true, changedAt: true, changedBy: { select: { name: true } } } },
 } satisfies Prisma.TicketInclude;
 
 export type TicketWithRelations = Prisma.TicketGetPayload<{ include: typeof ticketInclude }>;
@@ -81,8 +167,20 @@ export function toTicketDto(t: TicketWithRelations) {
     requesterResolvedAt: t.requesterResolvedAt,
     createdAt: t.createdAt,
     updatedAt: t.updatedAt,
+    version: t.version,
+    lastActivityAt: t.lastActivityAt,
+    resolvedAt: t.resolvedAt,
     attachments: t.attachments,
     publicComments: t.publicComments.map(toEntryDto),
+    actions: t.actions.map(toRequesterAction),
+    statusHistory: t.statusChanges.map((h) => ({
+      id: h.id,
+      fromStatus: h.fromStatus,
+      toStatus: h.toStatus,
+      changedBy: { name: h.changedBy.name },
+      changedAt: h.changedAt,
+    })),
+    historyComplete: historyComplete(t.statusChanges),
   };
 }
 
@@ -103,11 +201,13 @@ export const staffTicketInclude = {
   attachments: attachmentSelect,
   publicComments: { orderBy: newestFirst, select: entrySelect },
   internalNotes: { orderBy: newestFirst, select: entrySelect },
+  actions: { orderBy: actionOrder, select: staffActionSelect },
+  statusChanges: { orderBy: historyOrder, select: { id: true, fromStatus: true, toStatus: true, changedAt: true, changedBy: { select: { id: true, name: true } } } },
 } satisfies Prisma.TicketInclude;
 
 export type StaffTicketWithRelations = Prisma.TicketGetPayload<{ include: typeof staffTicketInclude }>;
 
-export function toStaffTicketDto(t: StaffTicketWithRelations) {
+export function toStaffTicketDto(t: StaffTicketWithRelations, reasons: readonly string[]) {
   return {
     id: t.id,
     ticketNumber: t.ticketNumber,
@@ -124,9 +224,25 @@ export function toStaffTicketDto(t: StaffTicketWithRelations) {
     requesterResolvedAt: t.requesterResolvedAt,
     createdAt: t.createdAt,
     updatedAt: t.updatedAt,
+    version: t.version,
+    lastActivityAt: t.lastActivityAt,
+    resolvedAt: t.resolvedAt,
     attachments: t.attachments,
     publicComments: t.publicComments.map(toEntryDto),
     internalNotes: t.internalNotes.map(toEntryDto),
+    actions: t.actions.map((a) => toStaffAction(a, t.currentStatus)),
+    statusHistory: t.statusChanges.map((h) => ({
+      id: h.id,
+      fromStatus: h.fromStatus,
+      toStatus: h.toStatus,
+      changedBy: { id: h.changedBy.id, name: h.changedBy.name },
+      changedAt: h.changedAt,
+    })),
+    historyComplete: historyComplete(t.statusChanges),
+    // C-171: every move the matrix permits, Resolved included even when the
+    // gate fails; the gate travels beside it so the screen can say why.
+    allowedTransitions: TICKET_STATUSES.filter((to) => isPermittedTransition(t.currentStatus, to)),
+    resolutionGate: { met: reasons.length === 0, reasons: [...reasons] },
   };
 }
 
@@ -134,5 +250,6 @@ export function toStaffTicketDto(t: StaffTicketWithRelations) {
 // is the only reason for a 404 on a staff route (api-spec.md 8.2).
 export async function loadStaffTicketDto(prisma: PrismaClient, id: number) {
   const row = await prisma.ticket.findUnique({ where: { id }, include: staffTicketInclude });
-  return row ? toStaffTicketDto(row) : null;
+  if (!row) return null;
+  return toStaffTicketDto(row, await gateReasons(prisma as unknown as Tx, id));
 }

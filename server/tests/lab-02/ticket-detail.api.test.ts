@@ -79,13 +79,20 @@ describe("GET /api/tickets/:id", () => {
     const res = await owner.agent.get(`/api/tickets/${ticketId}`);
     expect(res.status).toBe(200);
     const keys = Object.keys(res.body);
+    // Lab 4 adaptation (tests.md 4.1; C-123, C-136, C-141, C-179): the
+    // Requester DTO inverts in part - it now carries actions, statusHistory and
+    // historyComplete (with version, lastActivityAt, resolvedAt), and still no
+    // Internal Note key.
     expect(keys.sort()).toEqual(
       ["id", "ticketNumber", "requester", "category", "relatedSystem", "summary", "description",
         "requestedPriority", "itPriority", "currentStatus", "owner", "requesterResolvedAt", "createdAt", "updatedAt",
-        "attachments", "publicComments"].sort(),
+        "attachments", "publicComments",
+        "version", "lastActivityAt", "resolvedAt", "actions", "statusHistory", "historyComplete"].sort(),
     );
     expect(Array.isArray(res.body.publicComments)).toBe(true);
-    for (const forbidden of ["comments", "internalNotes", "notes", "actionsTaken", "transitions", "statusHistory", "storedFilename"]) {
+    expect(Array.isArray(res.body.actions)).toBe(true);
+    expect(Array.isArray(res.body.statusHistory)).toBe(true);
+    for (const forbidden of ["comments", "internalNotes", "notes", "actionsTaken", "transitions", "storedFilename"]) {
       expect(JSON.stringify(res.body)).not.toContain(`"${forbidden}"`);
     }
   });

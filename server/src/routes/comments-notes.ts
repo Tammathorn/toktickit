@@ -3,7 +3,7 @@ import { getPrisma } from "../prisma.js";
 import { sendError, sendInternalError } from "../lib/http-error.js";
 import { anyRole, authOf, staffOnly } from "../middleware/auth.js";
 import { MESSAGES } from "../lib/validation.js";
-import { trimmed } from "../lib/text.js";
+import { trimmedWithin } from "../lib/text.js";
 import { entrySelect, newestFirst, toEntryDto } from "../lib/ticket-dto.js";
 import { loadVisibleTicket, sendTicketClosed } from "../lib/ticket-access.js";
 import { isTerminal } from "../lib/status-transitions.js";
@@ -36,9 +36,7 @@ const MAX_LENGTH = 2000;
 
 function validEntryBody(req: Request): string | null {
   const raw = req.body && typeof req.body === "object" ? (req.body as Record<string, unknown>).body : undefined;
-  if (typeof raw !== "string") return null;
-  const text = trimmed(raw);
-  return text.length >= 1 && text.length <= MAX_LENGTH ? text : null;
+  return trimmedWithin(raw, MAX_LENGTH);
 }
 
 // ---------------------------------------------------------------------------
