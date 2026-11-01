@@ -1,0 +1,44 @@
+# Command: cd server; npx prisma migrate deploy   (DATABASE_URL names toktickit_final; password not shown)
+# Date: 2026-10-31
+# Commit: 6ccf79d (branch feature/lab4-10-release-docs; Issue #71 changes only documents, so the code under test is the code of feature/lab4-9-e2e-visual)
+# ANSI stripped; session tokens and database URLs redacted
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_final", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+Applying migration `20260816153850_init`
+Applying migration `20260908120000_lab02_data_model`
+Applying migration `20261001080726_lab03_ticket_status_values`
+Applying migration `20261001080813_lab03_user_rename_and_roles`
+Applying migration `20261001080916_lab03_ticket_workflow_fields`
+Applying migration `20261001080958_lab03_sessions_comments_notes`
+Applying migration `20261028090000_lab04_action_status_enum`
+Applying migration `20261028090100_lab04_ticket_activity_columns`
+Applying migration `20261028090200_lab04_actions_and_status_history`
+
+The following migration(s) have been applied:
+
+migrations/
+  └─ 20260816153850_init/
+    └─ migration.sql
+  └─ 20260908120000_lab02_data_model/
+    └─ migration.sql
+  └─ 20261001080726_lab03_ticket_status_values/
+    └─ migration.sql
+  └─ 20261001080813_lab03_user_rename_and_roles/
+    └─ migration.sql
+  └─ 20261001080916_lab03_ticket_workflow_fields/
+    └─ migration.sql
+  └─ 20261001080958_lab03_sessions_comments_notes/
+    └─ migration.sql
+  └─ 20261028090000_lab04_action_status_enum/
+    └─ migration.sql
+  └─ 20261028090100_lab04_ticket_activity_columns/
+    └─ migration.sql
+  └─ 20261028090200_lab04_actions_and_status_history/
+    └─ migration.sql
+      
+All migrations have been successfully applied.

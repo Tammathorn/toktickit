@@ -1,0 +1,114 @@
+Command: cd server; npx vitest run tests/lab-04/ticket-workflow.api.test.ts -t 'reused on another Ticket'
+Date: 2026-10-31
+Branch: feature/lab4-5-ticket-workflow  Commit: 81147fe
+
+
+ RUN  v2.1.9 C:/Downloads/Lab1_Starter_Scaffold/toktickit/server
+
+Environment variables loaded from .env
+Prisma schema loaded from prisma\schema.prisma
+Datasource "db": PostgreSQL database "toktickit_test", schema "public" at "localhost:5432"
+
+9 migrations found in prisma/migrations
+
+
+No pending migrations to apply.
+ ❯ tests/lab-04/ticket-workflow.api.test.ts (72 tests | 4 failed | 68 skipped) 3846ms
+   × a replay key reused on another Ticket (C-199) > API-129 a Public Comment key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged; K on A is still a 200 replay (C-199) 62ms
+     → {"id":142,"body":"API-129 on A.","author":{"id":664,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-31T15:50:50.578Z"}: expected 200 to be 409 // Object.is equality
+   × a replay key reused on another Ticket (C-199) > API-131 concurrent Public Comments with one K on two Tickets (the P2002 path) -> exactly one row; the other Ticket's requests are 409 IDEMPOTENCY_KEY_REUSED; none 500 (C-199) 1745ms
+     → {"id":143,"body":"API-131.","author":{"id":664,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-31T15:50:52.315Z"}: expected 200 to be 409 // Object.is equality
+   × a replay key reused on another Ticket (C-199) > API-130 a Internal Note key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged; K on A is still a 200 replay (C-199) 34ms
+     → {"id":133,"body":"API-130 on A.","author":{"id":662,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-31T15:50:52.370Z"}: expected 200 to be 409 // Object.is equality
+   × a replay key reused on another Ticket (C-199) > API-132 concurrent Internal Notes with one K on two Tickets (the P2002 path) -> exactly one row; the other Ticket's requests are 409 IDEMPOTENCY_KEY_REUSED; none 500 (C-199) 1720ms
+     → {"id":134,"body":"API-132.","author":{"id":662,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-31T15:50:54.077Z"}: expected 200 to be 409 // Object.is equality
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 4 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > a replay key reused on another Ticket (C-199) > API-129 a Public Comment key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged; K on A is still a 200 replay (C-199)
+AssertionError: {"id":142,"body":"API-129 on A.","author":{"id":664,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-31T15:50:50.578Z"}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1020:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/4]⎯
+
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > a replay key reused on another Ticket (C-199) > API-131 concurrent Public Comments with one K on two Tickets (the P2002 path) -> exactly one row; the other Ticket's requests are 409 IDEMPOTENCY_KEY_REUSED; none 500 (C-199)
+AssertionError: {"id":143,"body":"API-131.","author":{"id":664,"name":"[workflow-test] Requester A","role":"REQUESTER"},"createdAt":"2026-10-31T15:50:52.315Z"}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1058:14
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1055:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/4]⎯
+
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > a replay key reused on another Ticket (C-199) > API-130 a Internal Note key K used on Ticket A, sent again on Ticket B -> 409 IDEMPOTENCY_KEY_REUSED, no row on B, B's version and lastActivityAt unchanged; K on A is still a 200 replay (C-199)
+AssertionError: {"id":133,"body":"API-130 on A.","author":{"id":662,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-31T15:50:52.370Z"}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1020:7
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[3/4]⎯
+
+ FAIL  tests/lab-04/ticket-workflow.api.test.ts > a replay key reused on another Ticket (C-199) > API-132 concurrent Internal Notes with one K on two Tickets (the P2002 path) -> exactly one row; the other Ticket's requests are 409 IDEMPOTENCY_KEY_REUSED; none 500 (C-199)
+AssertionError: {"id":134,"body":"API-132.","author":{"id":662,"name":"[workflow-test] Staff A","role":"IT_STAFF"},"createdAt":"2026-10-31T15:50:54.077Z"}: expected 200 to be 409 // Object.is equality
+
+- Expected
++ Received
+
+- 409
++ 200
+
+ ❯ expectCode tests/lab-04/ticket-workflow.api.test.ts:136:48
+    134| 
+    135| function expectCode(res: { status: number; body: any }, status: number…
+    136|   expect(res.status, JSON.stringify(res.body)).toBe(status);
+       |                                                ^
+    137|   expect(res.body.error?.code).toBe(code);
+    138| }
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1058:14
+ ❯ tests/lab-04/ticket-workflow.api.test.ts:1055:17
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[4/4]⎯
+
+ Test Files  1 failed (1)
+      Tests  4 failed | 68 skipped (72)
+   Start at  22:50:47
+   Duration  6.81s (transform 193ms, setup 0ms, collect 499ms, tests 3.85s, environment 0ms, prepare 85ms)
+
