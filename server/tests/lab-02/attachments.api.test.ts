@@ -354,7 +354,10 @@ describe("GET /api/attachments/:id/download and DELETE /api/attachments/:id", ()
     const fresh = await newTicket(ownerId);
     const before = filesOnDisk();
     const rows = await prisma.attachment.count();
-    const spy = vi.spyOn(prisma.attachment, "create").mockRejectedValueOnce(new Error("insert failed at /var/lib/postgresql"));
+    // Adapted for Lab 4 (C-140): the row insert and the Ticket's lastActivityAt
+    // move now share one transaction, so the failure is injected there; the
+    // compensation assertions below are unchanged.
+    const spy = vi.spyOn(prisma, "$transaction").mockRejectedValueOnce(new Error("insert failed at /var/lib/postgresql"));
     const res = await upload(fresh, owner).attach("file", PNG, "doomed.png");
     spy.mockRestore();
 

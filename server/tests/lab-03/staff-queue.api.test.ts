@@ -377,7 +377,8 @@ describe("GET /api/staff/tickets", () => {
     const res = await queue(staffX.agent, { search: "QOWNER", owner: "unassigned" });
     expect(res.body.data).toHaveLength(1);
     expect(Object.keys(res.body.data[0]).sort()).toEqual(
-      ["category", "createdAt", "currentStatus", "id", "itPriority", "owner", "requestedPriority", "requesterResolvedAt", "summary", "ticketNumber", "updatedAt"].sort(),
+      // Adapted for Lab 4 (C-140, tests.md 4.1): the row gains lastActivityAt.
+      ["category", "createdAt", "currentStatus", "id", "itPriority", "lastActivityAt", "owner", "requestedPriority", "requesterResolvedAt", "summary", "ticketNumber", "updatedAt"].sort(),
     );
   });
 });

@@ -63,3 +63,22 @@ belong to the Playwright specs of Issue 9.
 | A successful row write returns the row to view mode | UI-31..UI-33 (extended) | `evidence/issue-65/red-panel-closes.txt`, `green-client-suite.txt` | 4 | captured |
 | Real app, dev database: create planned, edit, complete, cancel, Requester view, no console error | Task step 5 | `evidence/issue-65/manual-actions-card-check.txt` (+ script and the three earlier runs) | 4 | captured |
 | Labs 1-3 suites still pass; E2E-11, E2E-15, E2E-45, E2E-46 adapted (C-137, C-123) | see `evidence/issue-65/README.md` | `evidence/issue-65/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-before-adaptation.txt` | 4 | captured |
+
+## Ticket workflow - Issue 5 (#66)
+
+This Issue's folder is `evidence/issue-66/`, named by the GitHub number like the two above.
+No screenshots are committed in this Issue; the `ticket-workflow/` captures belong to the
+Playwright specs of Issue 9.
+
+| Requirement | Test ID / AC | Evidence | Issue | Status |
+|---|---|---|---|---|
+| e2e fixture PATCHes assert their status before any version change | C-156 | commit `5617a2c`; `evidence/issue-66/green-e2e-suite.txt` | 5 | captured |
+| Tests written first and shown failing | UNIT-05..07, WF-01..WF-64 | `evidence/issue-66/red-ticket-workflow.txt` | 5 | captured |
+| Resolution gate: `OWNER_REQUIRED` first, each reason alone, combined, fixed order, cancelled action after reopen, bypassing PATCH refused; cancel blocked by a planned action | UNIT-05, UNIT-06, WF-01..WF-13, WF-21; AC-43..AC-51, AC-130; C-137, C-186 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| `allowedTransitions` and `resolutionGate` in the staff DTO | UNIT-07, WF-11, WF-14; AC-42, AC-135 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| Status route's seven-step order | WF-15..WF-21; BR-89, C-164 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| Stale updates: missing/old `version` on status, owner, IT Priority and actions; races; the envelope; body before stale | WF-22..WF-34; AC-52..AC-55, AC-59, AC-61; C-138 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| `lastActivityAt` and `version` per write path; Internal Notes move neither; IT Priority re-sent unchanged is no write | WF-35..WF-49; AC-56..AC-58, AC-70, AC-71; C-140, C-187 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| `resolvedAt` set/kept/cleared; history row per change in the same transaction; legacy Tickets | WF-50..WF-55; AC-36, AC-74..AC-77, AC-129, AC-147 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| Replays on Public Comments and Internal Notes, concurrent and after closing; Ticket create ignores the key | WF-56..WF-64; AC-63, AC-65, AC-66, AC-127, AC-128; C-139, C-158 | `evidence/issue-66/green-server-suite.txt` | 5 | captured |
+| Labs 1-3 suites still pass; adaptations per `tests.md` 4.1/4.3 | see `evidence/issue-66/README.md` | `evidence/issue-66/green-server-suite.txt`, `green-client-suite.txt`, `green-e2e-suite.txt`, `e2e-suite-run1-before-adaptation.txt` | 5 | captured |

@@ -197,18 +197,35 @@ export async function gateReasons(db: Tx, ticketId: number): Promise<GateReason[
     orderBy: [{ changedAt: "desc" }, { id: "desc" }],
     select: { changedAt: true },
   });
+  // BR-31, C-186: only a COMPLETED action finished after the latest move into
+  // REOPENED counts; a cancelled one does not.
+  const since = latestReopen
+    ? await db.actionTaken.count({ where: { ticketId, status: "COMPLETED", finishedAt: { gt: latestReopen.changedAt } } })
+    : 0;
+  return gateReasonsFrom({
+    anyCompleted: completed > 0,
+    anyPlanned: planned > 0,
+    latestCompletedFollowUp: latestCompleted?.followUpRequired === true,
+    reopenedWithNoCompletedSince: latestReopen !== null && since === 0,
+  });
+}
+
+// The gate's four conditions as plain facts (UNIT-05). A follow-up flag means
+// nothing without a completed action to carry it, so NO_COMPLETED_ACTION and
+// FOLLOW_UP_REQUIRED never appear together. The order is C-167's.
+export type GateFacts = {
+  anyCompleted: boolean;
+  anyPlanned: boolean;
+  latestCompletedFollowUp: boolean;
+  reopenedWithNoCompletedSince: boolean;
+};
+
+export function gateReasonsFrom(f: GateFacts): GateReason[] {
   const reasons: GateReason[] = [];
-  if (completed === 0) reasons.push("NO_COMPLETED_ACTION");
-  if (planned > 0) reasons.push("PLANNED_ACTIONS_OPEN");
-  if (latestCompleted?.followUpRequired) reasons.push("FOLLOW_UP_REQUIRED");
-  if (latestReopen) {
-    // BR-31, C-186: only a COMPLETED action finished after the latest move
-    // into REOPENED counts; a cancelled one does not.
-    const since = await db.actionTaken.count({
-      where: { ticketId, status: "COMPLETED", finishedAt: { gt: latestReopen.changedAt } },
-    });
-    if (since === 0) reasons.push("NO_ACTION_SINCE_REOPEN");
-  }
+  if (!f.anyCompleted) reasons.push("NO_COMPLETED_ACTION");
+  if (f.anyPlanned) reasons.push("PLANNED_ACTIONS_OPEN");
+  if (f.anyCompleted && f.latestCompletedFollowUp) reasons.push("FOLLOW_UP_REQUIRED");
+  if (f.reopenedWithNoCompletedSince) reasons.push("NO_ACTION_SINCE_REOPEN");
   return reasons;
 }
 

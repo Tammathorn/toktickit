@@ -71,9 +71,26 @@ const setTicket = (id: number, data: Prisma.TicketUncheckedUpdateInput) => prism
 const row = (id: number) => prisma.ticket.findUniqueOrThrow({ where: { id } });
 const detail = (as: Agent, id: number | string) => as.get(`/api/staff/tickets/${id}`);
 const claim = (as: Agent, id: number) => as.post(`/api/staff/tickets/${id}/claim`);
-const setOwner = (as: Agent, id: number, body: object) => as.patch(`/api/staff/tickets/${id}/owner`).send(body);
-const setPriority = (as: Agent, id: number, itPriority: unknown) => as.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority });
-const setStatus = (as: Agent, id: number, currentStatus: unknown) => as.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus });
+// Adapted for Lab 4 (C-138, tests.md 4.1): every owner, IT Priority and status
+// PATCH sends the Ticket's current version, read first as a client holding a
+// fresh screen would. A body that names its own version keeps it. Assertions
+// are unchanged.
+const currentVersion = async (id: number) => (await prisma.ticket.findUniqueOrThrow({ where: { id }, select: { version: true } })).version;
+const setOwner = async (as: Agent, id: number, body: object) =>
+  as.patch(`/api/staff/tickets/${id}/owner`).send({ version: await currentVersion(id), ...body });
+const setPriority = async (as: Agent, id: number, itPriority: unknown) =>
+  as.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority, version: await currentVersion(id) });
+const setStatus = async (as: Agent, id: number, currentStatus: unknown) =>
+  as.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus, version: await currentVersion(id) });
+// Adapted for Lab 4 (C-137, tests.md 4.1): a move to Resolved needs the
+// resolution gate met, so a test that resolves records one completed action
+// first, finished now - after any earlier reopen (BR-31).
+const completedAction = (ticketId: number, by: number) => {
+  const now = new Date();
+  return prisma.actionTaken.create({
+    data: { ticketId, status: "COMPLETED", actionAt: now, finishedAt: now, description: `${TAG} checked`, result: "Fixed.", assigneeId: by, createdById: by, performedById: by },
+  });
+};
 const unassignedIds = async (as: Agent, ticketNumber: string) => {
   const res = await as.get(`/api/staff/tickets?owner=unassigned&search=${encodeURIComponent(ticketNumber)}`);
   expect(res.status).toBe(200);
@@ -325,6 +342,7 @@ describe("PATCH /api/staff/tickets/:id/status", () => {
       expect(refused.body.error.code).toBe("OWNER_REQUIRED");
       expect((await row(t.id)).currentStatus).toBe("OPEN");
       expect((await claim(staffY.agent, t.id)).status).toBe(200);
+      if (target === "RESOLVED") await completedAction(t.id, staffY.id); // C-137
       const moved = await setStatus(staffX.agent, t.id, target);
       expect(moved.status, `${target} after claim`).toBe(200);
       expect(moved.body.currentStatus).toBe(target);
@@ -337,6 +355,7 @@ describe("PATCH /api/staff/tickets/:id/status", () => {
     for (const from of STATUSES) {
       for (const to of STATUSES) {
         await setTicket(t.id, { currentStatus: from, ownerId: staffX.id });
+        if (to === "RESOLVED") await completedAction(t.id, staffX.id); // C-137
         const res = await setStatus(staffX.agent, t.id, to);
         const after = (await row(t.id)).currentStatus;
         const c = cell(from, to);
@@ -398,6 +417,7 @@ describe("PATCH /api/staff/tickets/:id/status", () => {
   it("API-70 moving to Resolved, Closed and Cancelled each clears requesterResolvedAt, and no Public Comment is created (AC-59, BR-61, C-76)", async () => {
     for (const [from, to] of [["IN_PROGRESS", "RESOLVED"], ["RESOLVED", "CLOSED"], ["OPEN", "CANCELLED"]] as const) {
       const t = await ticket({ ownerId: staffX.id, currentStatus: from, requesterResolvedAt: new Date() });
+      if (to === "RESOLVED") await completedAction(t.id, staffX.id); // C-137
       const res = await setStatus(staffX.agent, t.id, to);
       expect(res.status, `${from} -> ${to}`).toBe(200);
       expect(res.body.requesterResolvedAt).toBeNull();
@@ -585,7 +605,7 @@ describe("Closed and Cancelled Tickets refuse writes", () => {
         ["owner, empty body", await setOwner(staffX.agent, t.id, {})],
         ["owner, ownerId abc", await setOwner(staffX.agent, t.id, { ownerId: "abc" })],
         ["it-priority, out of set", await setPriority(staffX.agent, t.id, "URGENT")],
-        ["it-priority, absent", await staffX.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({})],
+        ["it-priority, absent", await staffX.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ version: before.version })], // C-138
         ["removal, no reason key", await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({})],
         ["removal, reason not a string", await reqA.agent.delete(`/api/attachments/${up.body.id}`).send({ removalReason: 42 })],
         ["upload, no file part", await reqA.agent.post(`/api/tickets/${t.id}/attachments`).field("note", "no file")],
@@ -642,9 +662,10 @@ describe("a malformed path id", () => {
     const staffCalls: [string, (id: string) => Promise<{ status: number; body: { error?: { code: string; fields?: object } } }>][] = [
       ["GET staff detail", (id) => staffX.agent.get(`/api/staff/tickets/${id}`)],
       ["POST claim", (id) => staffX.agent.post(`/api/staff/tickets/${id}/claim`)],
-      ["PATCH owner", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/owner`).send({ ownerId: staffY.id })],
-      ["PATCH it-priority", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority: "HIGH" })],
-      ["PATCH status", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus: "OPEN" })],
+      // Lab 4 (C-138): the PATCH bodies carry a version; the malformed id still wins.
+      ["PATCH owner", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/owner`).send({ ownerId: staffY.id, version: 0 })],
+      ["PATCH it-priority", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/it-priority`).send({ itPriority: "HIGH", version: 0 })],
+      ["PATCH status", (id) => staffX.agent.patch(`/api/staff/tickets/${id}/status`).send({ currentStatus: "OPEN", version: 0 })],
       ["GET public-comments (staff)", (id) => staffX.agent.get(`/api/tickets/${id}/public-comments`)],
       ["POST public-comments (staff)", (id) => staffX.agent.post(`/api/tickets/${id}/public-comments`).send({ body: "x" })],
       ["GET internal-notes", (id) => staffX.agent.get(`/api/tickets/${id}/internal-notes`)],

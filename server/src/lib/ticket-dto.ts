@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from "@prisma/client";
-import { isPermittedTransition, TICKET_STATUSES } from "./status-transitions.js";
+import { allowedTransitions } from "./status-transitions.js";
 import { allowedOperations, gateReasons, type Tx } from "./workflow.js";
 
 // The two Ticket DTOs of api-spec.md section 10 - one for the Requester (10.2)
@@ -241,7 +241,7 @@ export function toStaffTicketDto(t: StaffTicketWithRelations, reasons: readonly 
     historyComplete: historyComplete(t.statusChanges),
     // C-171: every move the matrix permits, Resolved included even when the
     // gate fails; the gate travels beside it so the screen can say why.
-    allowedTransitions: TICKET_STATUSES.filter((to) => isPermittedTransition(t.currentStatus, to)),
+    allowedTransitions: allowedTransitions(t.currentStatus),
     resolutionGate: { met: reasons.length === 0, reasons: [...reasons] },
   };
 }

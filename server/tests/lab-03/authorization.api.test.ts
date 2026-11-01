@@ -385,9 +385,11 @@ describe("staff ticket operations are refused to a Requester (C-63, C-65)", () =
     record("queue", 200, await admin.agent.get("/api/staff/tickets"));
     record("detail", 200, await admin.agent.get(`/api/staff/tickets/${t.id}`));
     record("claim", 200, await admin.agent.post(`/api/staff/tickets/${t.id}/claim`));
-    record("owner", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/owner`).send({ ownerId: staff.id }));
-    record("it-priority", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ itPriority: "HIGH" }));
-    record("status", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/status`).send({ currentStatus: "OPEN" }));
+    // Adapted for Lab 4 (C-138, tests.md 4.1): each PATCH sends the current version.
+    const version = async () => (await prisma.ticket.findUniqueOrThrow({ where: { id: t.id } })).version;
+    record("owner", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/owner`).send({ ownerId: staff.id, version: await version() }));
+    record("it-priority", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/it-priority`).send({ itPriority: "HIGH", version: await version() }));
+    record("status", 200, await admin.agent.patch(`/api/staff/tickets/${t.id}/status`).send({ currentStatus: "OPEN", version: await version() }));
     record("comment", 201, await admin.agent.post(`/api/tickets/${t.id}/public-comments`).send({ body: "An Administrator reply." }));
     record("note", 201, await admin.agent.post(`/api/tickets/${t.id}/internal-notes`).send({ body: "An Administrator note." }));
     expect(results.filter(([, expected, got]) => expected !== got)).toEqual([]);
