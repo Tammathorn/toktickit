@@ -1,0 +1,24 @@
+**/node_modules
+**/dist
+**/build
+**/.env
+*.log
+.git
+.gitignore
+test-results
+playwright-report
+server/uploads
+*.db
+*.sqlite
+gha-creds-*.json
+# TokTickIT: not needed in the image (tests, e2e, docs, evidence)
+e2e
+artifacts
+docs
+deploy
+.github
+server/tests
+client/tests
+**/*.test.ts
+**/*.test.tsx
+.claude

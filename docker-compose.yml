@@ -1,0 +1,61 @@
+# TokTickIT - local run of the production image (Lab 5, R-01 / check C-03)
+#
+#   cp .env.example .env        # then fill in the three passwords
+#   docker compose up --build   # http://localhost:3000
+#
+# It runs the SAME image Cloud Run runs (the root Dockerfile): PostgreSQL, a
+# one-off migrate + seed job (like the Cloud Run job toktickit-migrate), and
+# the app serving the API and the React build on one port. The kit's separate
+# client/nginx containers are not used; see docs/labs/lab-05/deployment.md 1.
+#
+# No password is written here: each comes from .env (git-ignored), and compose
+# stops with an error if one is missing.
+services:
+  db:
+    image: postgres:16-alpine
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: toktickit
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
+      POSTGRES_DB: toktickit
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U toktickit -d toktickit"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  migrate:
+    build: .
+    image: toktickit:local
+    restart: "no"
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_URL: postgresql://toktickit:${POSTGRES_PASSWORD}@db:5432/toktickit?schema=public
+      ADMIN_PASSWORD: ${ADMIN_PASSWORD:?set ADMIN_PASSWORD in .env}
+      DEMO_USER_PASSWORD: ${DEMO_USER_PASSWORD:?set DEMO_USER_PASSWORD in .env}
+      SEED_DEMO_DATA: ${SEED_DEMO_DATA:-true}
+    command: ["sh", "-c", "npx prisma migrate deploy && npm run prisma:seed"]
+
+  app:
+    image: toktickit:local
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+      migrate:
+        condition: service_completed_successfully
+    environment:
+      DATABASE_URL: postgresql://toktickit:${POSTGRES_PASSWORD}@db:5432/toktickit?schema=public
+      # Local http: the production image sets a Secure cookie, which a browser
+      # only sends over https or to localhost - so use http://localhost:3000,
+      # not 127.0.0.1 or a LAN address.
+      CLIENT_ORIGIN: http://localhost:3000
+    ports:
+      - "3000:3000"
+
+volumes:
+  postgres_data:
