@@ -30,9 +30,17 @@ const STATE_CHANGING = new Set(["POST", "PATCH", "DELETE"]);
 // present Origin that is not the client's is refused before the session is
 // looked at. An absent Origin is accepted: server-to-server callers and
 // Supertest send none, and a browser cannot suppress it on a cross-site write.
+//
+// Lab 5: on Cloud Run the built client is served by this same server, so the
+// browser's Origin is the service's own https URL. A same-origin write is
+// accepted too; req.protocol is https there because app.ts trusts the proxy.
+function ownOrigin(req: Request): string {
+  return `${req.protocol}://${req.get("host")}`;
+}
+
 export const originCheck: RequestHandler = (req, res, next) => {
   const origin = req.headers.origin;
-  if (STATE_CHANGING.has(req.method) && origin !== undefined && origin !== clientOrigin()) {
+  if (STATE_CHANGING.has(req.method) && origin !== undefined && origin !== clientOrigin() && origin !== ownOrigin(req)) {
     sendError(res, 403, "ORIGIN_NOT_ALLOWED", "This request did not come from the TokTickIT client.");
     return;
   }

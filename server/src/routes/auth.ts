@@ -3,7 +3,7 @@ import { getPrisma } from "../prisma.js";
 import { sendError, sendInternalError } from "../lib/http-error.js";
 import { hashPassword, verifyPassword } from "../lib/password.js";
 import { AUTH_MESSAGES, validatePasswordChange } from "../lib/password-policy.js";
-import { CLEARED_SESSION_COOKIE, createSession, deleteSession, sessionCookie } from "../lib/session.js";
+import { clearedSessionCookie, createSession, deleteSession, sessionCookie } from "../lib/session.js";
 import { toUserDto } from "../lib/user-dto.js";
 import { authOf, requireAuth } from "../middleware/auth.js";
 
@@ -116,7 +116,7 @@ authRouter.post("/api/auth/change-password", requireAuth, async (req, res) => {
 authRouter.post("/api/auth/logout", requireAuth, async (_req, res) => {
   try {
     await deleteSession(getPrisma(), authOf(res).sessionId);
-    res.setHeader("Set-Cookie", CLEARED_SESSION_COOKIE);
+    res.setHeader("Set-Cookie", clearedSessionCookie());
     res.status(204).end();
   } catch {
     sendInternalError(res);

@@ -11,13 +11,20 @@ export const SESSION_COOKIE = "tt_session";
 export const SESSION_TTL_MS = 8 * 60 * 60 * 1000;
 
 // api-spec.md 1.5. No Max-Age or Expires: the server-side expiresAt is the
-// authority. No Secure: the lab runs on http://localhost, where Secure would
-// stop the cookie being sent at all.
-const ATTRIBUTES = "HttpOnly; SameSite=Strict; Path=/";
-export const CLEARED_SESSION_COOKIE = `${SESSION_COOKIE}=; Max-Age=0; ${ATTRIBUTES}`;
+// authority. Secure only in production (Lab 5): Cloud Run serves HTTPS, while
+// local runs use http://localhost, where Secure would stop the cookie being
+// sent at all. Read per call so the value follows NODE_ENV.
+function attributes(): string {
+  const base = "HttpOnly; SameSite=Strict; Path=/";
+  return process.env.NODE_ENV === "production" ? `${base}; Secure` : base;
+}
+
+export function clearedSessionCookie(): string {
+  return `${SESSION_COOKIE}=; Max-Age=0; ${attributes()}`;
+}
 
 export function sessionCookie(token: string): string {
-  return `${SESSION_COOKIE}=${token}; ${ATTRIBUTES}`;
+  return `${SESSION_COOKIE}=${token}; ${attributes()}`;
 }
 
 const TOKEN_FORMAT = /^[0-9a-f]{64}$/;

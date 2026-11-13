@@ -220,6 +220,10 @@ model Attachment {
   isRemoved        Boolean   @default(false)
   removedAt        DateTime?
   removalReason    String?
+  // Lab 5 (R-04): the file bytes, when ATTACHMENT_STORAGE=database. Cloud Run
+  // has no lasting disk, so in the cloud the file lives in the row. NULL for
+  // rows written in disk mode (local development and the test suite).
+  content          Bytes?
 
   ticket Ticket @relation(fields: [ticketId], references: [id])
 
