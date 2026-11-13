@@ -23,7 +23,19 @@ import { isTerminal } from "../lib/status-transitions.js";
 
 export const attachmentsRouter = Router();
 
-export function toAttachmentDto(row: Attachment) {
+// Every field of the DTO, and not the file bytes (Lab 5: content can be 5 MB).
+export const attachmentDtoSelect = {
+  id: true,
+  originalFilename: true,
+  mimeType: true,
+  sizeBytes: true,
+  uploadedAt: true,
+  isRemoved: true,
+  removedAt: true,
+  removalReason: true,
+} as const;
+
+export function toAttachmentDto(row: Omit<Attachment, "content" | "ticketId" | "storedFilename">) {
   return {
     id: row.id,
     originalFilename: row.originalFilename,
@@ -87,8 +99,10 @@ attachmentsRouter.get(
         sendError(res, 400, "INVALID_QUERY_PARAM", "disposition must be attachment or inline.", { disposition: "disposition must be attachment or inline." });
         return;
       }
+      // Lab 5 (R-04): a row written in database mode carries its own bytes;
+      // any other row is read from UPLOAD_DIR as before.
       const file = path.join(UPLOAD_DIR, row.storedFilename);
-      if (!fs.existsSync(file)) {
+      if (!row.content && !fs.existsSync(file)) {
         sendInternalError(res);
         return;
       }
@@ -97,7 +111,8 @@ attachmentsRouter.get(
       res.setHeader("Content-Type", row.mimeType);
       res.setHeader("Content-Length", String(row.sizeBytes));
       res.setHeader("Content-Disposition", `${disposition}; filename="${safeName}"`);
-      fs.createReadStream(file).pipe(res);
+      if (row.content) res.end(Buffer.from(row.content));
+      else fs.createReadStream(file).pipe(res);
     } catch {
       sendInternalError(res);
     }

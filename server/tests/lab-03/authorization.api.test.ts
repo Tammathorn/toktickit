@@ -40,6 +40,10 @@ const PUBLIC_ROUTES = new Set([
   "GET /api/categories",
   "GET /api/related-systems",
   "POST /api/auth/login",
+  // Lab 5: the two read-only operational routes the deploy smoke test calls
+  // (docs/labs/lab-05/deployment.md 3.2). Neither returns any user data.
+  "GET /api/ready",
+  "GET /api/version",
 ]);
 
 type Person = { id: number; email: string; agent: Agent };

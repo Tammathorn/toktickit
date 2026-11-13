@@ -7,8 +7,8 @@ import { validateTicketShape, validateTicketReferences, type ValidTicketInput } 
 import { createTicketWithNumber } from "../lib/ticket-repository.js";
 import { loadTicketDto } from "../lib/ticket-dto.js";
 import { parseListQuery, listWhere, listOrderBy, type ListQuery } from "../lib/list-query.js";
-import { uploadSingleFile, unlinkQuietly, UnsupportedFileTypeError } from "../lib/uploads.js";
-import { toAttachmentDto } from "./attachments.js";
+import { uploadSingleFile, unlinkQuietly, UnsupportedFileTypeError, storageMode, generatedFilename } from "../lib/uploads.js";
+import { toAttachmentDto, attachmentDtoSelect } from "./attachments.js";
 import { loadVisibleTicket, sendTicketClosed, sendTicketNotFound } from "../lib/ticket-access.js";
 import { isTerminal, RESOLUTION_FLAG_STATUSES } from "../lib/status-transitions.js";
 
@@ -143,7 +143,7 @@ ticketsRouter.get("/api/tickets/:id/attachments", ...anyRole, async (req: Reques
   try {
     const ticket = await loadVisibleTicket(req, res);
     if (!ticket) return;
-    const rows = await getPrisma().attachment.findMany({ where: { ticketId: ticket.id }, orderBy: { id: "asc" } });
+    const rows = await getPrisma().attachment.findMany({ where: { ticketId: ticket.id }, orderBy: { id: "asc" }, select: attachmentDtoSelect });
     res.status(200).json(rows.map(toAttachmentDto));
   } catch {
     sendInternalError(res);
@@ -218,14 +218,18 @@ ticketsRouter.post(
       try {
         // Lab 4 (BR-46): an upload moves the Ticket's activity time, in the
         // same transaction as the row, and never its version (BR-37).
+        // Lab 5 (R-04): in database mode multer kept the file in memory and
+        // gave it no name, so the bytes go into the row with a generated name.
+        const inDatabase = storageMode() === "database";
         row = await prisma.$transaction(async (tx) => {
           const created = await tx.attachment.create({
             data: {
               ticketId,
               originalFilename: file.originalname,
-              storedFilename: file.filename,
+              storedFilename: inDatabase ? generatedFilename(file.mimetype) : file.filename,
               mimeType: file.mimetype,
               sizeBytes: file.size,
+              content: inDatabase ? file.buffer : null,
             },
           });
           await tx.ticket.update({ where: { id: ticketId }, data: { lastActivityAt: created.uploadedAt } });

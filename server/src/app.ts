@@ -1,4 +1,6 @@
 import express, { NextFunction, Request, Response } from "express";
+import fs from "node:fs";
+import path from "node:path";
 import cors from "cors";
 import { getPrisma } from "./prisma.js";
 import { sendError, sendInternalError } from "./lib/http-error.js";
@@ -17,6 +19,10 @@ import { dashboardRouter } from "./routes/dashboard.js";
 // The Express app is exported separately from app.listen() (see index.ts) so
 // Supertest can import `app` without opening a port. Do not merge these files.
 export const app = express();
+
+// Lab 5: Cloud Run ends TLS at its proxy and forwards X-Forwarded-Proto, so
+// req.protocol reads https there (used by the same-origin write check).
+app.set("trust proxy", 1);
 
 // C-56 - the client reaches this API same-origin through the Vite proxy, so the
 // Lab 2 wildcard cors() is pinned to CLIENT_ORIGIN: a wildcard origin cannot
@@ -47,6 +53,25 @@ app.use((error: { type?: unknown }, req: Request, _res: Response, next: NextFunc
 // ---------------------------------------------------------------------------
 app.get("/api/health", (_req: Request, res: Response) => {
   res.status(200).json({ status: "ok", service: "TokTickIT API" });
+});
+
+// Lab 5 (R-08) - which commit is running. APP_COMMIT is baked into the image
+// at build time (Dockerfile ARG), so the answer always matches the image, even
+// after a rollback to an older one. Local runs say "unknown".
+app.get("/api/version", (_req: Request, res: Response) => {
+  res.status(200).json({ commit: process.env.APP_COMMIT || "unknown" });
+});
+
+// Lab 5 - readiness: the database answers. The deploy smoke test calls it, so
+// a release whose service cannot reach Cloud SQL fails the pipeline. The error
+// itself is never returned (it can name the host or the user).
+app.get("/api/ready", async (_req: Request, res: Response) => {
+  try {
+    await getPrisma().$queryRaw`SELECT 1`;
+    res.status(200).json({ status: "ready", db: "connected" });
+  } catch {
+    res.status(503).json({ status: "not_ready", db: "unavailable" });
+  }
 });
 
 // ---------------------------------------------------------------------------
@@ -105,6 +130,19 @@ app.use(usersRouter);
 app.use(actionsRouter);
 // Lab 4 (#67, #68) - the dashboards.
 app.use(dashboardRouter);
+
+// Lab 5 - the built React app, served by this server from one container, so
+// the browser, the API and the session cookie share one origin. Only when the
+// build is present in production (the image); locally Vite serves the client.
+// Any GET that is not /api/* gets index.html, so a deep link or a reload on a
+// client route such as /tickets/12 works.
+const CLIENT_DIST = path.resolve(process.cwd(), process.env.CLIENT_DIST_DIR ?? "../client/dist");
+if (process.env.NODE_ENV === "production" && fs.existsSync(path.join(CLIENT_DIST, "index.html"))) {
+  app.use(express.static(CLIENT_DIST, { index: false }));
+  app.get(/^\/(?!api(\/|$)).*/, (_req: Request, res: Response) => {
+    res.sendFile(path.join(CLIENT_DIST, "index.html"));
+  });
+}
 
 // The one error handler, last. Express's own would answer with an HTML page
 // quoting the error - for a body express.json cannot parse, a page quoting the

@@ -128,7 +128,13 @@ describe("SEC-09 the route inventory versus the specification.md 5.2 matrix (AC-
   it("SEC-09 every method and path registered on the Express app is a 5.2 matrix row and every matrix row is registered: 36 rows, none missing either way", () => {
     const { routes, unwalked } = routesOf(app);
     expect(unwalked).toEqual([]);
-    const registered = [...new Set(routes.map((r) => `${r.method} ${r.path}`))].sort();
+    // Lab 5 adds two public operational routes outside the Lab 4 contract; they
+    // are listed in docs/labs/lab-05/deployment.md 3.2, and the Lab 3 SEC-01
+    // test holds them to "public, read-only".
+    const lab5Operational = ["GET /api/ready", "GET /api/version"];
+    const all = [...new Set(routes.map((r) => `${r.method} ${r.path}`))];
+    expect(all).toEqual(expect.arrayContaining(lab5Operational));
+    const registered = all.filter((r) => !lab5Operational.includes(r)).sort();
     const matrix = matrixRoutes();
     expect(new Set(matrix).size, "no matrix row is listed twice").toBe(matrix.length);
     expect(matrix).toHaveLength(36);

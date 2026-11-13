@@ -446,7 +446,46 @@ export function assertUniqueTicketKeys(
   }
 }
 
+// Lab 5 (R-02). In production no password comes from this file:
+//   ADMIN_PASSWORD       the first Administrator (required), who must change it
+//                        at the first sign-in
+//   SEED_DEMO_DATA=true  also seeds the demo personas and tickets, all with
+//   DEMO_USER_PASSWORD   (required then) - for the Lab 6 partner team
+// Both come from Secret Manager through the Cloud Run migration job. Without
+// SEED_DEMO_DATA only the reference data and the Administrator are created.
+export type SeedPlan = {
+  users: readonly SeedUser[];
+  firstLogin: SeedUser | null;
+  tickets: boolean;
+  adminMustChange: boolean;
+};
+
+function requiredEnv(env: NodeJS.ProcessEnv, name: string): string {
+  const value = env[name];
+  if (!value) throw new Error(`Seed: ${name} must be set when NODE_ENV=production.`);
+  return value;
+}
+
+export function seedPlan(env: NodeJS.ProcessEnv = process.env): SeedPlan {
+  if (env.NODE_ENV !== "production") {
+    return { users: SEED_USERS, firstLogin: FIRST_LOGIN_ACCOUNT, tickets: true, adminMustChange: false };
+  }
+  const admin = requiredEnv(env, "ADMIN_PASSWORD");
+  const admins = ADMINISTRATORS.map((u) => ({ ...u, password: admin }));
+  if (env.SEED_DEMO_DATA !== "true") {
+    return { users: admins, firstLogin: null, tickets: false, adminMustChange: true };
+  }
+  const demo = requiredEnv(env, "DEMO_USER_PASSWORD");
+  return {
+    users: [...REQUESTERS, ...IT_STAFF].map((u) => ({ ...u, password: demo })).concat(admins),
+    firstLogin: { ...FIRST_LOGIN_ACCOUNT, password: demo },
+    tickets: true,
+    adminMustChange: true,
+  };
+}
+
 export async function seedGraded(prisma: PrismaClient): Promise<void> {
+  const plan = seedPlan();
   assertUniqueTicketKeys(SEED_TICKETS);
 
   for (const name of CATEGORY_NAMES) {
@@ -456,7 +495,7 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
     await prisma.relatedSystem.upsert({ where: { name }, update: {}, create: { name } });
   }
 
-  for (const u of SEED_USERS) {
+  for (const u of plan.users) {
     await prisma.user.upsert({
       where: { email: u.email },
       update: {},
@@ -466,7 +505,7 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
         role: u.role,
         isActive: u.isActive,
         passwordHash: hashPassword(u.password),
-        mustChangePassword: false,
+        mustChangePassword: plan.adminMustChange && u.role === "ADMINISTRATOR",
       },
     });
     // C-72 — one guarded write. It reaches a row migrated out of Lab 2, whose
@@ -478,18 +517,22 @@ export async function seedGraded(prisma: PrismaClient): Promise<void> {
   }
 
   // Created flagged, and deliberately never updated after that.
-  await prisma.user.upsert({
-    where: { email: FIRST_LOGIN_ACCOUNT.email },
-    update: {},
-    create: {
-      name: FIRST_LOGIN_ACCOUNT.name,
-      email: FIRST_LOGIN_ACCOUNT.email,
-      role: FIRST_LOGIN_ACCOUNT.role,
-      isActive: FIRST_LOGIN_ACCOUNT.isActive,
-      passwordHash: hashPassword(FIRST_LOGIN_ACCOUNT.password),
-      mustChangePassword: true,
-    },
-  });
+  if (plan.firstLogin) {
+    await prisma.user.upsert({
+      where: { email: plan.firstLogin.email },
+      update: {},
+      create: {
+        name: plan.firstLogin.name,
+        email: plan.firstLogin.email,
+        role: plan.firstLogin.role,
+        isActive: plan.firstLogin.isActive,
+        passwordHash: hashPassword(plan.firstLogin.password),
+        mustChangePassword: true,
+      },
+    });
+  }
+  // Production without demo data: reference data and the Administrator only.
+  if (!plan.tickets) return;
 
   const users = await prisma.user.findMany({ select: { id: true, email: true } });
   const userId = (email: string): number => {
