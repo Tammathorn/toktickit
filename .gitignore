@@ -39,3 +39,6 @@ tmp/
 
 # Claude Code local settings and state (CLAUDE.md stays tracked)
 .claude/
+
+# Lab 5: Python bytecode from the deploy-script tests
+__pycache__/
